@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. The palette is built from the original logo: ink #111111, the gray
+ * wordmark, and the red dot #FF0000. Pure logo red is used only for graphics (3.7:1 on paper);
+ * text and button fills use --signal, a deeper red that passes WCAG AA (≈5.2:1 on paper).
+ */
+:root {
+  --paper: #f6f4ef;
+  --paper-deep: #ece8df;
+  --surface: #ffffff;
+  --ink: #111111;
+  --ink-soft: #2b2a28;
+  --muted: #5d5a54;
+  --line: #dcd6ca;
+  --line-strong: #bfb7a7;
+  /* Form field boundaries need 3:1 against their background (WCAG 1.4.11) */
+  --line-field: #857d71;
+  --signal: #d00000;
+  --signal-hover: #a90000;
+  --logo-red: #ff0000;
+  --night: #101011;
+  --night-raised: #19191b;
+  --night-line: #2e2d2b;
+  --night-muted: #a8a49c;
+  --night-text: #f1efe9;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-field: var(--line-field);
+  --color-signal: var(--signal);
+  --color-signal-hover: var(--signal-hover);
+  --color-logo-red: var(--logo-red);
+  --color-night: var(--night);
+  --color-night-raised: var(--night-raised);
+  --color-night-line: var(--night-line);
+  --color-night-muted: var(--night-muted);
+  --color-night-text: var(--night-text);
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Fluid type scale: ~40px → 80px display, tuned for the hero headline */
+  --text-display: clamp(2.5rem, 1.55rem + 3.7vw, 5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.038em;
+  --text-h1: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.034em;
+  --text-h2: clamp(1.875rem, 1.4rem + 1.9vw, 3.125rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.625rem);
+  --text-h3--line-height: 1.22;
+  --text-h3--letter-spacing: -0.018em;
+  --text-lead: clamp(1.125rem, 1.03rem + 0.4vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    font-weight: 600;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .on-night :focus-visible {
+    outline-color: var(--night-text);
+  }
+
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+@layer components {
+  /* Long-form article typography for MDX insights */
+  .prose-mig {
+    max-width: 68ch;
+    color: var(--ink-soft);
+  }
+  .prose-mig > * + * {
+    margin-top: 1.15em;
+  }
+  .prose-mig h2 {
+    margin-top: 2.2em;
+    color: var(--ink);
+    font-size: var(--text-h3);
+    line-height: 1.25;
+    letter-spacing: -0.018em;
+  }
+  .prose-mig h3 {
+    margin-top: 1.8em;
+    color: var(--ink);
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+  }
+  .prose-mig h2 + *,
+  .prose-mig h3 + * {
+    margin-top: 0.6em;
+  }
+  .prose-mig ul {
+    padding-left: 1.25rem;
+    list-style: none;
+  }
+  .prose-mig ul > li {
+    position: relative;
+    padding-left: 0.25rem;
+  }
+  .prose-mig ul > li + li {
+    margin-top: 0.5em;
+  }
+  .prose-mig ul > li::before {
+    content: "";
+    position: absolute;
+    left: -1.1rem;
+    top: 0.68em;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--logo-red);
+  }
+  .prose-mig strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .prose-mig a {
+    color: var(--signal);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-mig aside {
+    border-left: 2px solid var(--ink);
+    background: var(--surface);
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .draw-in {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-in 1.4s var(--ease-out-quint) 0.2s forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .draw-in {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet-overlay[data-state="open"] {
+    animation: fade-in 200ms ease-out;
+  }
+  .sheet-panel[data-state="open"] {
+    animation: sheet-in 320ms var(--ease-out-quint);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes draw-in {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
