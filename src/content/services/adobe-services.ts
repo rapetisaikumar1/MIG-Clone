@@ -5,7 +5,7 @@ import type { ServiceContent } from "@/lib/content/types";
  * (/adobe-experience-platform, /adobe-real-time-cdp, /adobe-experience-manager, /adobe-content-management,
  * /adobe-analytics, /adobe-target, /adobe-marketo-services, /adobe-commerce). Product names and
  * descriptions follow Adobe's current documentation naming as of November 2026.
- * No partner tier is claimed here — see company.adobePartner in config/site.ts.
+ * Partner status is displayed in the header from company.adobePartner in config/site.ts.
  */
 export const adobeServices: ServiceContent = {
   slug: "adobe-services",

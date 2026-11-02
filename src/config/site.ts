@@ -67,11 +67,13 @@ export const company = {
     { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61557012232816" },
   ],
   /**
-   * The current site shows an "Adobe Solution Partner — Bronze" lockup. It could not be confirmed
-   * in Adobe's public partner directory during the rebuild, so the badge stays hidden until
-   * someone confirms the current status and sets `verified: true`.
+   * Adobe Solution Partner status, shown in the header at Maverick InnoGarage's request (2026-11-03).
+   * The badge omits the partner tier by request. Set `verified: false` to hide it everywhere.
    */
-  adobePartner: { claimedTier: "Bronze", verified: false },
+  adobePartner: {
+    verified: true,
+    badge: { src: "/brand/adobe-solution-partner.svg", width: 294, height: 80 },
+  },
 } as const;
 
 /** Main line shown in calls to action (Delaware and Texas share this number). */

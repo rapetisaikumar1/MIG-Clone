@@ -17,7 +17,7 @@ export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
-        className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:border-ink/40 lg:hidden"
+        className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:border-ink/40 xl:hidden"
         aria-label="Open menu"
       >
         <Menu aria-hidden className="size-5" />

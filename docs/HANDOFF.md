@@ -14,7 +14,7 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 
 | Claim | Status on new site |
 |---|---|
-| Adobe Solution Partner (Bronze, per old co-brand asset) | Hidden. Could not be confirmed in Adobe's public partner directory. Set `company.adobePartner.verified = true` and render `public/brand/mig-adobe-solution-partner.svg` once confirmed |
+| Adobe Solution Partner | **Shown in the site header** at the owner's request (2026-11-03), without a tier name. It could not be confirmed in Adobe's public partner directory. The tier line was removed from Adobe's lockup, so check this against Adobe's partner badge guidelines. Set `company.adobePartner.verified = false` to remove it |
 | "Over 7 years" experience, "certified experts" | Omitted |
 | **All AI Governance service content** | **Proposed.** The old site has no AI governance offering. Confirm the scope you can deliver (every item is marked `provenance: "proposed"`) |
 | Data Management → "Foundations for analytics, AI and experiences" | Proposed |
