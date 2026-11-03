@@ -190,8 +190,8 @@ export default async function HomePage() {
               <Eyebrow tone="night">Our product</Eyebrow>
               <h3 className="mt-5 text-h2">MapleRecord</h3>
               <p className="mt-4 max-w-[48ch] text-night-muted">
-                Records management software for governments and municipalities, with dynamic retention schedules, workflow
-                automation and role-based access in one platform.
+                An AI-first hybrid records management system for electronic and physical records, with four integrated
+                modules: MR Records, MR Requests, MR Workflows and MR Forms.
               </p>
               <MapleRecordGraphic tone="night" className="mt-8" />
               <ArrowLink href="/maplerecord" className="mt-6 text-night-text decoration-night-line">

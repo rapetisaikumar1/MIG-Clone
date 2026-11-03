@@ -179,7 +179,7 @@ export const dataManagement: ServiceContent = {
     {
       question: "What is MapleRecord?",
       answer:
-        "MapleRecord is our records management software for government and public-sector organizations. It supports record series and retention schedules, workflow automation and role-based access control.",
+        "MapleRecord is an AI-first hybrid records management system for electronic and physical records, built for enterprises and public-sector organizations in regulated environments. It brings records, information requests, workflows and forms together in one platform.",
     },
     {
       question: "How does data management support AI and Adobe initiatives?",

@@ -125,6 +125,15 @@
 }
 
 @layer components {
+  /* Backdrop for MapleRecord product screenshots: warm paper tones with a faint dot grid */
+  .mr-panel {
+    background-color: #e9e5dc;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgb(17 17 17 / 0.07) 1px, transparent 0),
+      linear-gradient(160deg, #f1eee7 0%, #e6e1d6 100%);
+    background-size: 18px 18px, 100% 100%;
+  }
+
   /* Long-form article typography for MDX insights */
   .prose-mig {
     max-width: 68ch;

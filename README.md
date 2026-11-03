@@ -44,7 +44,9 @@ src/
     (marketing)/               Public routes sharing header/footer
       page.tsx                 Home
       ai-governance/ adobe-services/ data-management/   Specialization pages
-      maplerecord/ industries/ about/ privacy/
+      maplerecord/             MapleRecord section: overview, platform/[module], solutions/[slug],
+                               resources/[slug], about, contact (own sub-navigation layout)
+      industries/ about/ privacy/
       insights/ insights/[slug]/                       Article index + MDX articles
       contact/                 Inquiry form (dynamic: reads ?interest=)
     api/contact/route.ts       POST endpoint → validation → submission service
@@ -57,11 +59,14 @@ src/
   features/insights/           Article card, theme filter (client), draft banner
   features/contact/            Form (client), shared Zod schema, office list, CTA band
   features/home/               Connection diagram
-  content/                     Reviewed copy: services/*.ts, home.ts, industries.ts, insights/*.mdx + index.ts
+  features/maplerecord/        MapleRecord sub-navigation and section components
+  content/                     Reviewed copy: services/*.ts, home.ts, industries.ts, insights/*.mdx + index.ts,
+                               maplerecord/*.ts (from maplerecord.com — see docs/MAPLERECORD-SOURCES.md)
   lib/content/                 Typed content access (getService, getInsights, getInsight…)
   server/                      server-only: env validation, Resend client, submission service, rate limit
   config/                      site.ts (company facts), navigation.ts, redirects.ts
 public/brand/                  Original logo files, unchanged
+public/maplerecord/            MapleRecord logo and product images (WebP)
 tests/                         Playwright specs + mock email provider
 docs/                          Migration map, content inventory, review handoff
 ```

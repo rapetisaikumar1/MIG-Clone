@@ -1,142 +1,232 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, BarChart3, Database, ShieldCheck, Sparkles, Users, Zap } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
-import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { MapleRecordGraphic } from "@/components/graphics/service-graphics";
-import { CtaBand } from "@/features/contact/cta-band";
-import { contactHref } from "@/features/contact/links";
+import { ExternalLink } from "@/components/ui/external-link";
+import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
+import { Tabs } from "@/components/ui/tabs";
+import { mrDepartments, mrFaqs, mrFeatures, mrHero, mrOfficial, mrPillars, mrPlatformIntro } from "@/content/maplerecord/overview";
+import { MrChecklist, MrCta, MrFigure } from "@/features/maplerecord/mr-sections";
+import { FaqSection } from "@/features/services/sections";
+import { formatDate } from "@/features/insights/format";
+import { getMrArticles, getMrModules, getMrSolutions } from "@/lib/content/maplerecord";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: "MapleRecord — Records Management Software",
+  title: "MapleRecord — AI-First Hybrid Records Management",
   description:
-    "MapleRecord is records management software for governments and municipalities, with dynamic record series and retention schedules, workflow automation and role-based access control.",
+    "MapleRecord is an AI-first hybrid records management system for electronic and physical records, with four integrated modules: MR Records, MR Requests, MR Workflows and MR Forms.",
   path: "/maplerecord",
 });
 
-// Every feature below is described on the existing maverickinnogarage.com/maplerecord page.
-const features = [
-  {
-    title: "Dynamic record series and retention schedules",
-    body: "Organize records into series with retention schedules that automate retention processes, support compliance, and keep records management aligned with public-sector standards.",
-  },
-  {
-    title: "Workflow automation",
-    body: "Automate routine records workflows so government operations run more efficiently and consistently.",
-  },
-  {
-    title: "Role-based access control",
-    body: "Assign permissions by user role to simplify access management, support compliance, and protect records from unauthorized access.",
-  },
-  {
-    title: "Workspace management",
-    body: "A standalone module that helps government offices plan space, manage schedules and coordinate resources.",
-  },
-  {
-    title: "One unified platform",
-    body: "Records handling in a single system designed to fit into existing workflows rather than add another silo.",
-  },
-  {
-    title: "Configured to your organization",
-    body: "Set up around your own record series, workflows and roles.",
-  },
-];
+const featureIcons = { sparkles: Sparkles, shield: ShieldCheck, zap: Zap, database: Database, users: Users, chart: BarChart3 };
 
 export default function MapleRecordPage() {
+  const modules = getMrModules();
+  const industries = getMrSolutions("industry");
+  const departments = getMrSolutions("department");
+  const articles = getMrArticles();
+
   return (
     <>
-      <section className="on-night bg-night pb-20 pt-10 text-night-text lg:pb-28 lg:pt-14">
-        <Container>
-          <nav aria-label="Breadcrumb" className="text-sm text-night-muted">
-            <ol className="flex gap-2">
-              <li>
-                <Link href="/" className="hover:text-night-text hover:underline hover:underline-offset-4">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden>/</li>
-              <li aria-current="page" className="text-night-text">
-                MapleRecord
-              </li>
-            </ol>
-          </nav>
-          <div className="mt-12 grid items-center gap-14 lg:grid-cols-12">
-            <div className="lg:col-span-6">
-              <Eyebrow tone="night">MapleRecord · Records management software</Eyebrow>
-              <h1 className="mt-6 text-h1">Efficient records. Effective governance.</h1>
-              <p className="mt-6 max-w-[54ch] text-lead text-night-muted">
-                MapleRecord is records management software from Maverick InnoGarage, designed for the needs of governments and
-                municipalities. It brings retention, workflow and access control together in one platform.
-              </p>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <ButtonLink href={contactHref("data-management")} arrow>
-                  Discuss MapleRecord
-                </ButtonLink>
-                <ButtonLink href="#features" variant="outline-night">
-                  See the features
-                </ButtonLink>
-              </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-line">
+        <Container className="grid items-center gap-12 pb-16 pt-10 sm:pt-14 lg:grid-cols-12 lg:gap-14 lg:pb-20">
+          <div className="lg:col-span-6">
+            <Eyebrow>MapleRecord</Eyebrow>
+            <h1 className="mt-6 text-display font-semibold">{mrHero.eyebrow}</h1>
+            <p className="mt-6 max-w-[48ch] text-lead text-muted">{mrHero.title}</p>
+            <p className="mt-4 font-medium text-ink-soft">{mrHero.tagline}</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <ExternalLink href={mrOfficial.demo} variant="primary">
+                Request a demo
+              </ExternalLink>
+              <ButtonLink href="#platform" variant="outline">
+                Explore the platform
+              </ButtonLink>
             </div>
-            <div className="rounded-2xl border border-night-line bg-night-raised p-6 sm:p-8 lg:col-span-6">
-              <MapleRecordGraphic tone="night" />
-            </div>
+            <p className="mt-6 text-sm text-muted">
+              Information on these pages comes from{" "}
+              <a href={mrOfficial.site} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-ink">
+                maplerecord.com
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              .
+            </p>
+          </div>
+          <div className="lg:col-span-6">
+            <MrFigure image={mrHero.image} preload sizes="(min-width: 1024px) 40vw, 100vw" />
           </div>
         </Container>
       </section>
 
-      <Section id="features" aria-labelledby="features-title">
+      {/* Four modules */}
+      <Section id="platform" className="scroll-mt-36" aria-labelledby="platform-title">
         <Container>
-          <SectionHeading
-            id="features-title"
-            eyebrow="Capabilities"
-            title="Advanced management, built for public-sector security"
-            intro="Simplify records and get more done. These are MapleRecord's core capabilities."
+          <SectionHeading id="platform-title" eyebrow={mrPlatformIntro.eyebrow} title={mrPlatformIntro.title} intro={mrPlatformIntro.body} />
+          <Tabs
+            className="mt-12"
+            label="MapleRecord modules"
+            items={modules.map((m) => ({
+              value: m.slug,
+              label: m.name,
+              content: (
+                <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                  <div>
+                    <h3 className="text-h2">{m.name}</h3>
+                    <p className="mt-4 text-lead text-muted">{m.summary}</p>
+                    <div className="mt-6">
+                      <MrChecklist items={m.highlights} />
+                    </div>
+                    <ArrowLink href={`/maplerecord/platform/${m.slug}`} className="mt-8">
+                      Learn more about {m.name}
+                    </ArrowLink>
+                  </div>
+                  <MrFigure image={m.tabImage} sizes="(min-width: 1024px) 34rem, 100vw" />
+                </div>
+              ),
+            }))}
           />
-          <ul className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f) => (
-              <li key={f.title} className="border-t border-ink pt-6">
-                <Dot />
-                <h3 className="mt-5 text-h3">{f.title}</h3>
-                <p className="mt-3 text-muted">{f.body}</p>
+        </Container>
+      </Section>
+
+      {/* How we help — by department */}
+      <Section tone="surface" aria-labelledby="help-title">
+        <Container>
+          <SectionHeading id="help-title" eyebrow="How we help" title="How our records management system delivers impact across every department" />
+          <Tabs
+            className="mt-12"
+            label="Departments"
+            items={mrDepartments.map((d) => ({
+              value: d.solution,
+              label: d.name,
+              content: (
+                <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                  <div>
+                    <h3 className="text-h2">{d.name}</h3>
+                    <div className="mt-6 text-[1.0625rem]">
+                      <MrChecklist items={[...d.points]} />
+                    </div>
+                    <ArrowLink href={`/maplerecord/solutions/${d.solution}`} className="mt-8">
+                      See the {d.name.toLowerCase()} solution
+                    </ArrowLink>
+                  </div>
+                  <MrFigure image={d.image} sizes="(min-width: 1024px) 34rem, 100vw" />
+                </div>
+              ),
+            }))}
+          />
+          <p className="mt-8 text-sm text-muted">Figures as published by MapleRecord.</p>
+        </Container>
+      </Section>
+
+      {/* Four pillars */}
+      <Section aria-labelledby="pillars-title">
+        <Container>
+          <h2 id="pillars-title" className="sr-only">
+            Why MapleRecord
+          </h2>
+          <ul className="space-y-16 lg:space-y-24">
+            {mrPillars.map((p, i) => (
+              <li key={p.eyebrow} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+                <div className={i % 2 ? "lg:order-2 lg:col-span-6" : "lg:col-span-6"}>
+                  <Eyebrow>{p.eyebrow}</Eyebrow>
+                  <h3 className="mt-5 text-h2">{p.title}</h3>
+                  <div className="mt-7 text-[1.0625rem]">
+                    <MrChecklist items={[...p.points]} />
+                  </div>
+                  <ExternalLink href={mrOfficial.demo} className="mt-8">
+                    Get started today
+                  </ExternalLink>
+                </div>
+                <div className={i % 2 ? "lg:order-1 lg:col-span-6" : "lg:col-span-6"}>
+                  <MrFigure image={p.image} sizes="(min-width: 1024px) 34rem, 100vw" />
+                </div>
               </li>
             ))}
           </ul>
         </Container>
       </Section>
 
-      <Section tone="deep" aria-labelledby="fit-title">
-        <Container className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <SectionHeading
-              id="fit-title"
-              eyebrow="Where it fits"
-              title="Part of a governed information lifecycle"
-              intro="Records are one stage of a wider data lifecycle. MapleRecord makes the retention and disposition stages consistent, and our Data Management practice helps with the record series, schedules and ownership that sit behind them."
-            />
-            <ArrowLink href="/data-management#records" className="mt-8">
-              Records management services
-            </ArrowLink>
-          </div>
-          <div className="lg:col-span-6">
-            <ul className="divide-y divide-line rounded-2xl border border-line bg-surface">
-              {[
-                ["Who it's for", "Government bodies, municipalities and other public-sector organizations."],
-                ["What it replaces", "Retention schedules that live in documents, ad hoc disposition, and access that is hard to control."],
-                ["What it supports", "Consistent retention, documented decisions and appropriate access to records."],
-              ].map(([term, text]) => (
-                <li key={term} className="grid gap-2 p-6 sm:grid-cols-[10rem_1fr] sm:gap-6">
-                  <p className="font-mono text-label uppercase text-muted">{term}</p>
-                  <p className="text-ink-soft">{text}</p>
+      {/* Features */}
+      <Section tone="night" aria-labelledby="features-title">
+        <Container>
+          <SectionHeading tone="night" id="features-title" eyebrow={mrFeatures.eyebrow} title={mrFeatures.title} intro={mrFeatures.intro} />
+          <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-night-line bg-night-line sm:grid-cols-2 lg:grid-cols-3">
+            {mrFeatures.items.map((f) => {
+              const Icon = featureIcons[f.icon];
+              return (
+                <li key={f.title} className="bg-night-raised p-7">
+                  <Icon aria-hidden className="size-6 text-logo-red" />
+                  <h3 className="mt-5 text-lg font-semibold tracking-tight">{f.title}</h3>
+                  <p className="mt-2 text-[0.9375rem] text-night-muted">{f.body}</p>
                 </li>
-              ))}
-            </ul>
+              );
+            })}
+          </ul>
+        </Container>
+      </Section>
+
+      {/* Solutions */}
+      <Section aria-labelledby="solutions-title">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading id="solutions-title" eyebrow="Solutions" title="Built for your industry and your department" />
+            <ArrowLink href="/maplerecord/solutions">All solutions</ArrowLink>
+          </div>
+          <div className="mt-12 grid gap-10 lg:grid-cols-2">
+            {[
+              { heading: "Industries", items: industries },
+              { heading: "Departments", items: departments },
+            ].map((group) => (
+              <div key={group.heading}>
+                <h3 className="font-mono text-label uppercase text-muted">{group.heading}</h3>
+                <ul className="mt-4 border-t border-line">
+                  {group.items.map((s) => (
+                    <li key={s.slug} className="border-b border-line">
+                      <Link href={`/maplerecord/solutions/${s.slug}`} className="group flex min-h-14 items-center justify-between gap-4 py-3 font-medium">
+                        {s.label}
+                        <ArrowRight aria-hidden className="size-4 shrink-0 text-muted transition-colors group-hover:text-signal" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </Container>
       </Section>
 
-      <CtaBand
-        title="Embrace a better way to manage records."
-        body="Tell us about your records program and the systems you use today. We'll walk you through how MapleRecord could fit."
-        interest="data-management"
+      {/* Latest articles */}
+      <Section tone="deep" aria-labelledby="articles-title">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading id="articles-title" eyebrow="Resources" title="From the MapleRecord blog" />
+            <ArrowLink href="/maplerecord/resources">All resources</ArrowLink>
+          </div>
+          <ul className="mt-12 grid gap-8 md:grid-cols-3">
+            {articles.map((a) => (
+              <li key={a.slug}>
+                <Link href={`/maplerecord/resources/${a.slug}`} className="group block h-full overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-ink">
+                  <Image src={a.image.src} alt="" width={a.image.width} height={a.image.height} sizes="(min-width: 768px) 30vw, 100vw" className="aspect-[16/10] h-auto w-full object-cover" />
+                  <div className="p-6">
+                    <p className="font-mono text-label uppercase text-muted">
+                      {a.category} · <time dateTime={a.published}>{formatDate(a.published)}</time>
+                    </p>
+                    <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight group-hover:underline group-hover:underline-offset-4">{a.title}</h3>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
+      <FaqSection faqs={mrFaqs} title="Got questions? We've got answers" />
+
+      <MrCta
+        title="Ready to transform your record management?"
+        body="Discover how MapleRecord can help your organization streamline workflows, ensure compliance, and unlock the value in your documents."
       />
     </>
   );

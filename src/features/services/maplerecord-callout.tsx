@@ -10,12 +10,12 @@ export function MapleRecordCallout() {
           <div>
             <Eyebrow>Our product · MapleRecord</Eyebrow>
             <h2 id="maplerecord-callout-title" className="mt-5 text-h2">
-              Records management software for the public sector.
+              AI-first hybrid records management.
             </h2>
             <p className="mt-6 max-w-[54ch] text-muted">
-              MapleRecord brings record series, retention schedules, workflow automation and role-based access together
-              in one platform designed for governments and municipalities. It puts the lifecycle and records practices on
-              this page into day-to-day operation.
+              MapleRecord manages electronic and physical records with smart retention, full audit trails and role-based
+              access, alongside modules for information requests, workflows and forms. It puts the lifecycle and records
+              practices on this page into day-to-day operation.
             </p>
             <ArrowLink href="/maplerecord" className="mt-8">
               Explore MapleRecord
