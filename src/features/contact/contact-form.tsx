@@ -2,10 +2,20 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { AlertCircle, CheckCircle2, Info, Loader2 } from "lucide-react";
+import { AlertCircle, Check, CheckCircle2, Info, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { contactInterests, contactSchema, toFieldErrors, type ContactField, type ContactInterest, type FieldErrors } from "./schema";
+import {
+  adobeApplications,
+  contactInterests,
+  contactSchema,
+  MIN_FILL_MS,
+  toFieldErrors,
+  type AdobeApplication,
+  type ContactField,
+  type ContactInterest,
+  type FieldErrors,
+} from "./schema";
 
 type Status = "idle" | "pending" | "success" | "error";
 type ServerError = "invalid" | "rate_limited" | "not_configured" | "provider_error" | "bad_request" | "spam" | "network";
@@ -20,17 +30,34 @@ const errorCopy: Record<ServerError, string> = {
   network: "We couldn't reach the server. Please check your connection and try again.",
 };
 
-const fieldOrder: ContactField[] = ["fullName", "email", "company", "phone", "interest", "message"];
+const fieldOrder: ContactField[] = ["fullName", "email", "company", "phone", "interest", "adobeApplications", "message"];
 
 const inputClass =
   "mt-2 block w-full rounded-xl border bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 transition-colors focus:outline-none focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-ink/15 disabled:opacity-60";
 
-export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultInterest?: ContactInterest; deliveryConfigured: boolean }) {
+export function ContactForm({
+  defaultInterest,
+  defaultAdobeApplications = [],
+  defaultMessage,
+  deliveryConfigured,
+}: {
+  defaultInterest?: ContactInterest;
+  /** Pre-ticked in the Adobe applications fieldset, e.g. from a product page's CTA. */
+  defaultAdobeApplications?: AdobeApplication[];
+  /** Prefilled message for named entry points such as an assessment request (editable). */
+  defaultMessage?: string;
+  deliveryConfigured: boolean;
+}) {
   const [status, setStatus] = useState<Status>("idle");
+  const [interest, setInterest] = useState<string>(defaultInterest ?? "");
+  // Kept in state so ticks survive switching the interest away from Adobe Services and back.
+  const [selectedApplications, setSelectedApplications] = useState<AdobeApplication[]>(defaultAdobeApplications);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [serverError, setServerError] = useState<ServerError | null>(null);
   const [attempted, setAttempted] = useState(false);
   const startedAt = useRef(0);
+  // Synchronous guard: state updates aren't visible until re-render, so rapid repeat submits could slip through.
+  const submitting = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
@@ -46,15 +73,19 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
 
   function readForm() {
     const data = new FormData(formRef.current ?? undefined);
+    const interestValue = String(data.get("interest") ?? "");
     return {
       fullName: String(data.get("fullName") ?? ""),
       email: String(data.get("email") ?? ""),
       company: String(data.get("company") ?? ""),
       phone: String(data.get("phone") ?? ""),
-      interest: String(data.get("interest") ?? ""),
+      interest: interestValue,
+      // The fieldset is only rendered for Adobe Services; never send ticks for another interest.
+      adobeApplications: interestValue === "adobe-services" ? data.getAll("adobeApplications").map(String) : [],
       message: String(data.get("message") ?? ""),
       website: String(data.get("website") ?? ""),
       startedAt: startedAt.current || Date.now(),
+      fillMs: startedAt.current ? Math.max(0, Date.now() - startedAt.current) : 0,
     };
   }
 
@@ -66,7 +97,7 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "pending") return;
+    if (submitting.current) return;
     setAttempted(true);
     setServerError(null);
 
@@ -82,7 +113,15 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
 
     setErrors({});
     setStatus("pending");
+    submitting.current = true;
     try {
+      // Someone quick (or using autofill) can finish before the server's minimum fill time. Wait out
+      // the remainder here instead of letting the server reject a genuine inquiry as automated.
+      const remaining = MIN_FILL_MS + 250 - payload.fillMs;
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+        payload.fillMs = Math.max(0, Date.now() - startedAt.current);
+      }
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -99,6 +138,8 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
     } catch {
       setServerError("network");
       setStatus("error");
+    } finally {
+      submitting.current = false;
     }
     requestAnimationFrame(() => summaryRef.current?.focus());
   }
@@ -111,8 +152,8 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
           Thank you. Your message has been sent.
         </h2>
         <p className="mt-3 max-w-[52ch] text-muted">
-          Our email provider has accepted your inquiry and it is on its way to our team. We&apos;ll reply to the email address you
-          provided. If your request is urgent, please call one of our offices.
+          Your inquiry is on its way to our team, and we&apos;ll reply to the email address you provided. If your request is
+          urgent, please call one of our offices.
         </p>
       </div>
     );
@@ -137,6 +178,13 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
       {optional ? <span className="font-normal text-muted"> (optional)</span> : null}
     </label>
   );
+
+  function toggleApplication(value: AdobeApplication, checked: boolean) {
+    setSelectedApplications((current) =>
+      checked ? adobeApplications.map((a) => a.value).filter((v) => v === value || current.includes(v)) : current.filter((v) => v !== value),
+    );
+    revalidate();
+  }
 
   const fieldError = (name: ContactField) =>
     errors[name] ? (
@@ -192,7 +240,15 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
         </div>
         <div className="sm:col-span-2">
           {label("interest", "Area of interest")}
-          <select {...field("interest")} defaultValue={defaultInterest ?? ""} required className={cn(field("interest").className, "appearance-none bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat pr-10")} style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23111' stroke-width='1.5'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E\")" }}>
+          <select
+            {...field("interest")}
+            value={interest}
+            onChange={(event) => {
+              setInterest(event.target.value);
+              revalidate();
+            }}
+            required
+            className={cn(field("interest").className, "appearance-none bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat pr-10")} style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23111' stroke-width='1.5'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E\")" }}>
             <option value="" disabled>
               Select an area
             </option>
@@ -204,9 +260,50 @@ export function ContactForm({ defaultInterest, deliveryConfigured }: { defaultIn
           </select>
           {fieldError("interest")}
         </div>
+        {interest === "adobe-services" ? (
+          <fieldset
+            className="sm:col-span-2"
+            disabled={pending}
+            aria-describedby={errors.adobeApplications ? `${id}-adobeApplications-error` : undefined}
+          >
+            <legend className="text-[0.9375rem] font-medium">
+              Which Adobe applications are involved?<span className="font-normal text-muted"> (optional)</span>
+            </legend>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              {adobeApplications.map((application) => (
+                <label
+                  key={application.value}
+                  className={cn(
+                    "flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-2 text-[0.9375rem] transition-colors hover:border-ink has-checked:border-ink has-disabled:cursor-default has-disabled:opacity-60",
+                    errors.adobeApplications ? "border-signal" : "border-line-field",
+                  )}
+                >
+                  <span className="relative inline-flex size-5 shrink-0">
+                    <input
+                      type="checkbox"
+                      name="adobeApplications"
+                      value={application.value}
+                      checked={selectedApplications.includes(application.value)}
+                      onChange={(event) => toggleApplication(application.value, event.target.checked)}
+                      aria-invalid={errors.adobeApplications ? true : undefined}
+                      className="peer size-5 cursor-pointer appearance-none rounded-md border border-line-field bg-surface checked:border-ink checked:bg-ink disabled:cursor-default"
+                    />
+                    <Check
+                      aria-hidden
+                      strokeWidth={3}
+                      className="pointer-events-none absolute inset-0 m-auto hidden size-3.5 text-surface peer-checked:block"
+                    />
+                  </span>
+                  {application.label}
+                </label>
+              ))}
+            </div>
+            {fieldError("adobeApplications")}
+          </fieldset>
+        ) : null}
         <div className="sm:col-span-2">
           {label("message", "How can we help?")}
-          <textarea {...field("message")} rows={6} required maxLength={4000} placeholder="A few sentences about your goals, systems, or timeline." />
+          <textarea {...field("message")} rows={6} required maxLength={4000} defaultValue={defaultMessage} placeholder="A few sentences about your goals, systems, or timeline." />
           {fieldError("message")}
         </div>
       </div>

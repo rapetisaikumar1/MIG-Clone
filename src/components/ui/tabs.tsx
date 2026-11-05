@@ -21,7 +21,12 @@ export function Tabs({
 }) {
   return (
     <RadixTabs.Root defaultValue={items[0]?.value} className={className}>
-      <RadixTabs.List aria-label={label} className={cn("flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]", listClassName)}>
+      {/* The negative margin + padding gives the focus ring room inside the scroll container, which
+          would otherwise clip it (overflow-x: auto also clips vertically). */}
+      <RadixTabs.List
+        aria-label={label}
+        className={cn("-m-1.5 flex gap-2 overflow-x-auto p-1.5 [scrollbar-width:thin]", listClassName)}
+      >
         {items.map((item) => (
           <RadixTabs.Trigger
             key={item.value}
@@ -37,7 +42,9 @@ export function Tabs({
         ))}
       </RadixTabs.List>
       {items.map((item) => (
-        <RadixTabs.Content key={item.value} value={item.value} forceMount className="mt-8 outline-none data-[state=inactive]:hidden">
+        <RadixTabs.Content key={item.value} value={item.value} forceMount
+          className="mt-8 rounded-sm focus-visible:outline-offset-4 data-[state=inactive]:hidden"
+        >
           {item.content}
         </RadixTabs.Content>
       ))}

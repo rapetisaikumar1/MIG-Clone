@@ -22,7 +22,7 @@ export default async function InsightsPage() {
       <section className="border-b border-line pb-16 pt-14 sm:pt-20 lg:pb-20">
         <Container>
           <Eyebrow>Insights</Eyebrow>
-          <h1 className="mt-6 max-w-4xl text-h1">Practical thinking on data, AI and digital experience.</h1>
+          <h1 className="mt-6 max-w-4xl text-h1">Practical thinking on data and digital experience.</h1>
           <p className="mt-6 max-w-[58ch] text-lead text-muted">
             Articles from our team on data governance, Adobe platforms and customer experience, organized by theme.
           </p>

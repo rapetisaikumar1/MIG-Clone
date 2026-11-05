@@ -1,8 +1,12 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Container, Eyebrow } from "@/components/ui/layout";
 import { company } from "@/config/site";
 import { ContactForm } from "@/features/contact/contact-form";
 import { OfficeList } from "@/features/contact/office-list";
-import { isContactInterest } from "@/features/contact/schema";
+import { contactTopics, isContactTopic } from "@/features/contact/links";
+import { isAdobeApplication, isContactInterest, MAX_ADOBE_APPLICATIONS } from "@/features/contact/schema";
+import { adobeAssessmentPath } from "@/lib/content/adobe";
 import { pageMetadata } from "@/lib/metadata";
 import { isContactDeliveryConfigured } from "@/server/env";
 
@@ -15,9 +19,19 @@ export const metadata = pageMetadata({
 
 // Rendered per request: the selected area of interest comes from the query string
 // (e.g. /contact?interest=ai-governance) and delivery status from server configuration.
+// Adobe product pages add ?product=<slug> to pre-tick that application; unknown slugs are dropped.
 export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
-  const { interest } = await searchParams;
-  const defaultInterest = isContactInterest(interest) ? interest : undefined;
+  const { interest, product, topic } = await searchParams;
+  const contactTopic = isContactTopic(topic) ? contactTopics[topic] : undefined;
+  const products = (Array.isArray(product) ? product : product ? [product] : []).filter(isAdobeApplication);
+  const defaultAdobeApplications = [...new Set(products)].slice(0, MAX_ADOBE_APPLICATIONS);
+  const defaultInterest = isContactInterest(interest)
+    ? interest
+    : contactTopic
+      ? contactTopic.interest
+      : defaultAdobeApplications.length > 0
+        ? "adobe-services"
+        : undefined;
 
   return (
     <>
@@ -37,7 +51,13 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
           <div id="inquiry" className="lg:col-span-7">
             <h2 className="text-h3">Send us a message</h2>
             <div className="mt-8">
-              <ContactForm key={defaultInterest ?? "none"} defaultInterest={defaultInterest} deliveryConfigured={isContactDeliveryConfigured()} />
+              <ContactForm
+                key={`${defaultInterest ?? "none"}:${defaultAdobeApplications.join(",")}:${isContactTopic(topic) ? topic : ""}`}
+                defaultInterest={defaultInterest}
+                defaultMessage={contactTopic?.message}
+                defaultAdobeApplications={defaultAdobeApplications}
+                deliveryConfigured={isContactDeliveryConfigured()}
+              />
             </div>
           </div>
           <aside className="lg:col-span-5" aria-labelledby="next-title">
@@ -49,7 +69,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
                 {[
                   ["We read your message", "A member of the relevant team reviews your inquiry."],
                   ["We reply by email", "We may ask a few questions or suggest a short call."],
-                  ["We agree a first step", "Often an assessment or a scoped conversation, never a hard sell."],
+                  ["We agree on a first step", "Often an assessment or a scoped conversation, never a hard sell."],
                 ].map(([title, body], i) => (
                   <li key={title} className="flex gap-4">
                     <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-surface font-mono text-xs ring-1 ring-line-strong">
@@ -62,6 +82,19 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
                   </li>
                 ))}
               </ol>
+            </div>
+            <div className="mt-6 rounded-2xl border border-line-strong p-7 sm:p-9">
+              <h2 className="text-lg font-semibold">Starting with Adobe?</h2>
+              <p className="mt-2 text-[0.9375rem] text-muted">
+                A platform assessment reviews how your Adobe applications are configured and used, and where the gaps are.
+              </p>
+              <Link
+                href={adobeAssessmentPath}
+                className="mt-4 inline-flex min-h-11 items-center gap-2 font-medium text-ink underline underline-offset-4 hover:text-signal"
+              >
+                About the Adobe platform assessment
+                <ArrowRight aria-hidden className="size-4" />
+              </Link>
             </div>
             <div className="mt-10">
               <h2 className="font-mono text-label uppercase text-muted">Follow us</h2>

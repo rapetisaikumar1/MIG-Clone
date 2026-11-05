@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const pages = ["/", "/ai-governance", "/adobe-services", "/data-management", "/maplerecord", "/industries", "/insights", "/insights/data-governance-guide", "/about", "/contact", "/privacy"];
+const pages = ["/", "/ai-governance", "/adobe-services", "/adobe-services/assessment", "/adobe-services/experience-platform", "/adobe-services/real-time-cdp", "/adobe-services/experience-manager", "/adobe-services/analytics", "/adobe-services/target", "/adobe-services/marketo-engage", "/adobe-services/commerce", "/data-management", "/maplerecord", "/industries", "/insights", "/insights/data-governance-guide", "/about", "/contact", "/privacy"];
 
 for (const width of [390, 1280]) {
   test.describe(`axe WCAG 2.2 AA at ${width}px`, () => {

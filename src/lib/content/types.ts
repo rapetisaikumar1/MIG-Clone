@@ -85,6 +85,8 @@ export type MrSolution = {
   officialUrl: string;
   title: string;
   description: string;
+  /** Shorter meta description (≤ 160 characters) when `description` runs long; the hero keeps `description`. */
+  metaDescription?: string;
   tagline: string;
   image: MrImage;
   challenges: { heading: string; intro: string; items: TitledText[] };
@@ -96,14 +98,66 @@ export type MrSolution = {
   cta: { title: string; body: string };
 };
 
-export type MrArticleBlock = { type: "heading" | "paragraph"; text: string } | { type: "list"; items: string[] };
+export type MrArticleBlock =
+  | { type: "paragraph"; text: string }
+  /** `level` defaults to 2; 3 marks a subsection of the preceding level-2 heading. */
+  | { type: "heading"; text: string; level?: 2 | 3 }
+  | { type: "list"; items: string[] };
 
 export type MrArticle = {
   slug: string;
   title: string;
   category: string;
+  /** Shorter `<title>` when `title` would run past ~60 characters with the site suffix; the page h1 keeps `title`. */
+  metaTitle?: string;
   published: string;
   officialUrl: string;
   image: MrImage;
   blocks: MrArticleBlock[];
+};
+
+/* ---------- Adobe application pages (/adobe-services/[product]) ---------- */
+
+export type AdobeProductSlug =
+  | "experience-platform"
+  | "real-time-cdp"
+  | "experience-manager"
+  | "analytics"
+  | "target"
+  | "marketo-engage"
+  | "commerce";
+
+export type AdobeProduct = {
+  slug: AdobeProductSlug;
+  /** Adobe's current product name, e.g. "Adobe Experience Manager". */
+  name: string;
+  /** Short label for menus and cards, e.g. "Experience Manager". */
+  shortName: string;
+  /** Capability area, e.g. "Content". Matches the hub page's platform matrix. */
+  area: string;
+  /** Old WordPress URLs for this product; they redirect to this page. */
+  legacyPaths: string[];
+  /** One sentence (≤ 120 chars) for menus, cards and the footer. */
+  summary: string;
+  /** Neutral description of what the Adobe product is (checked against Adobe docs). */
+  description: string;
+  meta: { title: string; description: string };
+  hero: { title: string; lead: string };
+  /** What the application does: neutral facts about Adobe's product, never claims about MiG. */
+  overview: { heading: string; intro: string; features: { title: string; body: string }[] };
+  /** Situations that typically prompt an engagement (4–6). */
+  signals: string[];
+  /**
+   * How we help. Titles MUST be the verified service types for this product from the old site
+   * (see `services` in the seed); bodies/items explain what that service involves.
+   */
+  services: { title: string; body: string; items: string[]; provenance: Provenance }[];
+  /** Two hypothetical scenarios; rendered with the "Illustrative use case" label. */
+  scenarios: UseCase[];
+  /** Other Adobe applications on this site that this one commonly works with. */
+  related: { slug: AdobeProductSlug; why: string }[];
+  /** Slugs of PUBLISHED insights in src/content/insights/index.ts relevant to this product. */
+  insights: string[];
+  faqs: { question: string; answer: string }[];
+  cta: { title: string; body: string };
 };

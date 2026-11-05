@@ -44,6 +44,9 @@ src/
     (marketing)/               Public routes sharing header/footer
       page.tsx                 Home
       ai-governance/ adobe-services/ data-management/   Specialization pages
+      adobe-services/[product]/  Adobe application pages (experience-platform, real-time-cdp, experience-manager,
+                               analytics, target, marketo-engage, commerce), statically generated
+      adobe-services/assessment/ Adobe platform assessment landing page
       maplerecord/             MapleRecord section: overview, platform/[module], solutions/[slug],
                                resources/[slug], about, contact (own sub-navigation layout)
       industries/ about/ privacy/
@@ -54,15 +57,18 @@ src/
     sitemap.ts robots.ts opengraph-image.tsx icon.svg not-found.tsx
   components/ui/               Primitives: Button/ButtonLink, Container, Section, Eyebrow, Tag…
   components/layout/           Header, mobile nav (client), footer, logo, JSON-LD
+  components/seo/              Structured data helpers (BreadcrumbList, Service, FAQPage JSON-LD)
   components/graphics/         Original SVG illustrations (hero + per-service)
   features/services/           Service page template and sections
   features/insights/           Article card, theme filter (client), draft banner
   features/contact/            Form (client), shared Zod schema, office list, CTA band
-  features/home/               Connection diagram
+  features/home/               Connection diagram, home Adobe section
+  features/adobe/              Adobe product card, Adobe Solution Partner panel, product page sections
   features/maplerecord/        MapleRecord sub-navigation and section components
   content/                     Reviewed copy: services/*.ts, home.ts, industries.ts, insights/*.mdx + index.ts,
                                maplerecord/*.ts (from maplerecord.com — see docs/MAPLERECORD-SOURCES.md)
-  lib/content/                 Typed content access (getService, getInsights, getInsight…)
+                               adobe/products/*.ts (one file per Adobe application page), adobe/assessment.ts (assessment page copy)
+  lib/content/                 Typed content access (getService, getInsights, getAdobeProducts, adobeProductPath…)
   server/                      server-only: env validation, Resend client, submission service, rate limit
   config/                      site.ts (company facts), navigation.ts, redirects.ts
 public/brand/                  Original logo files, unchanged
@@ -84,8 +90,9 @@ docs/                          Migration map, content inventory, review handoff
 
 `ContactForm` (client validation for usability) → `POST /api/contact` → Zod validation → `submitInquiry()` → `sendWithResend()`.
 
-- Checks content type, same-origin `Origin`, a 16 KB body limit, a honeypot field, a minimum fill time (2.5 s) and a per-IP rate limit (5 per 10 minutes).
-- User content is HTML-escaped in the email body, and header values are stripped of CR/LF.
+- Checks the exact `application/json` media type, same-origin `Origin` and `Sec-Fetch-Site`, a 16 KB body limit (counted in bytes while streaming), a honeypot field, a minimum fill time (2.5 s, measured on the visitor's own clock as `fillMs` so device clock skew can't block real people; the form waits out any remainder before posting) and a per-IP rate limit (5 per 10 minutes; keys capped and evicted oldest-first).
+- Optional `adobeApplications` (Adobe product slugs) is accepted only for the Adobe Services interest. `?product=<slug>` pre-ticks an application and `?topic=assessment` pre-fills an editable assessment request (`src/features/contact/links.ts`).
+- User content is HTML-escaped in the email body, and header values are stripped of CR/LF, control and bidi-override characters.
 - Logs record outcome, interest area and provider reference, never names, emails or message text.
 - The form shows success **only** when the provider returns 2xx. Otherwise the user sees a specific failure message.
 - If `RESEND_API_KEY`, `CONTACT_TO_EMAIL` or `CONTACT_FROM_EMAIL` is missing, the form shows a visible "not configured" notice and the API returns `503 not_configured`.
@@ -113,6 +120,7 @@ Set production and preview values separately in the host. Previews can omit emai
 ## Content workflow
 
 - **Service, home and industry copy:** edit the typed objects in `src/content/`. TypeScript catches missing fields.
+- **Adobe application pages:** each page is one typed `AdobeProduct` object in `src/content/adobe/products/<slug>.ts`. The order in `src/content/adobe/products/index.ts` drives the header dropdown, hub grid, home section, footer and sitemap. Keep each service `title` exactly as verified (`provenance: "verified"`); mark new copy `provenance: "proposed"`. `related` takes other product slugs and `insights` takes slugs of **published** articles. Adding a product means a new slug in `AdobeProductSlug` (`src/lib/content/types.ts`), a file here, an entry in `adobeApplications` in `src/features/contact/schema.ts` (TypeScript enforces the match), and, if it replaces an old URL, its `legacyPaths` plus a matching literal entry in `src/config/redirects.ts` (that file can't import content because `next.config.ts` loads it). Assessment page copy lives in `src/content/adobe/assessment.ts`.
 - **Articles:** add `src/content/insights/<slug>.mdx` and an entry in `src/content/insights/index.ts`. Use `status: "draft"` until approved. Drafts are excluded from listings, the sitemap and static generation, return 404 publicly, and render with `noindex` in Draft Mode.
 - **Previewing drafts:** visit `/api/draft?secret=<PREVIEW_SECRET>&slug=<slug>`. A banner shows while Draft Mode is on, with an exit link.
 - **Optional CMS:** if editors need to publish without a deploy, add Sanity behind `src/lib/content/*`. Keep the function signatures, fetch with `draftMode()` deciding the perspective, tag fetches, and call `revalidateTag` from a Sanity webhook route. Pages won't need to change.

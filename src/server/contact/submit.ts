@@ -1,5 +1,5 @@
 import "server-only";
-import { contactInterests, type ContactSubmission } from "@/features/contact/schema";
+import { adobeApplicationLabel, contactInterests, type ContactSubmission } from "@/features/contact/schema";
 import { getEmailDeliveryConfig } from "@/server/env";
 import { sendWithResend } from "@/server/email/resend";
 import { escapeHtml, singleLine } from "./escape";
@@ -13,7 +13,13 @@ function interestLabel(value: ContactSubmission["interest"]) {
   return contactInterests.find((i) => i.value === value)?.label ?? value;
 }
 
+/** Adobe applications count only for Adobe inquiries; values sent with any other interest are ignored. */
+function adobeApplicationsFor(input: ContactSubmission) {
+  return input.interest === "adobe-services" ? input.adobeApplications : [];
+}
+
 function buildEmail(input: ContactSubmission) {
+  const applications = adobeApplicationsFor(input);
   const rows: [string, string][] = [
     ["Name", input.fullName],
     ["Email", input.email],
@@ -21,6 +27,9 @@ function buildEmail(input: ContactSubmission) {
     ["Telephone", input.phone || "Not provided"],
     ["Area of interest", interestLabel(input.interest)],
   ];
+  if (input.interest === "adobe-services") {
+    rows.push(["Adobe applications", applications.length ? applications.map(adobeApplicationLabel).join(", ") : "Not specified"]);
+  }
   const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111;line-height:1.5">
 <h2 style="margin:0 0 16px">New website inquiry</h2>
 <table cellpadding="6" style="border-collapse:collapse">${rows
@@ -42,13 +51,15 @@ function buildEmail(input: ContactSubmission) {
 export async function submitInquiry(input: ContactSubmission): Promise<SubmitOutcome> {
   const config = getEmailDeliveryConfig();
   if (!config) return { status: "not_configured" };
+  // Non-personal context for logs: the interest area and how many Adobe applications were selected.
+  const context = { interest: input.interest, adobeApplications: adobeApplicationsFor(input).length };
   try {
     const result = await sendWithResend(config, buildEmail(input));
     if (!result.ok) {
-      console.error("[contact] Provider rejected inquiry", { status: result.status, interest: input.interest });
+      console.error("[contact] Provider rejected inquiry", { status: result.status, ...context });
       return { status: "provider_error" };
     }
-    console.info("[contact] Inquiry accepted by provider", { reference: result.id, interest: input.interest });
+    console.info("[contact] Inquiry accepted by provider", { reference: result.id, ...context });
     return { status: "sent", reference: result.id };
   } catch (error) {
     console.error("[contact] Provider request failed", { reason: error instanceof Error ? error.name : "unknown" });

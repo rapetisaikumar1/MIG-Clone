@@ -10,6 +10,8 @@ export function OrganizationJsonLd() {
     url: siteUrl,
     logo: `${siteUrl}/brand/mig-logo.svg`,
     sameAs: company.social.map((s) => s.href),
+    // Confirmed by Maverick InnoGarage (2026-11-06): MapleRecord is its own product.
+    brand: { "@type": "Brand", name: "MapleRecord", url: `${siteUrl}/maplerecord` },
     address: company.offices.map((o) => ({
       "@type": "PostalAddress",
       streetAddress: o.streetLines.join(", "),

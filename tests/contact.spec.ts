@@ -99,3 +99,73 @@ test.describe("POST /api/contact", () => {
     expect(statuses[5]).toBe(429);
   });
 });
+
+test.describe("contact hardening", () => {
+  const ip = () => `10.5.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250)}`;
+  const post = (request: import("@playwright/test").APIRequestContext, data: unknown, headers: Record<string, string> = {}) =>
+    request.post("/api/contact", { data, headers: { "x-forwarded-for": ip(), ...headers } });
+  const ok = () => ({ ...valid, startedAt: Date.now() - 10_000 });
+
+  test("rejects lookalike content types, cross-site fetches and non-object JSON", async ({ request }) => {
+    const sneaky = await request.post("/api/contact", {
+      data: JSON.stringify(ok()),
+      headers: { "content-type": "text/plain; x=application/json", "x-forwarded-for": ip() },
+    });
+    expect(sneaky.status()).toBe(400);
+    expect((await post(request, ok(), { "sec-fetch-site": "cross-site" })).status()).toBe(400);
+    for (const body of ["null", "[]", "42"]) {
+      const res = await request.post("/api/contact", { data: body, headers: { "content-type": "application/json", "x-forwarded-for": ip() } });
+      expect(res.status()).toBe(400);
+      expect((await res.json()).error).toBe("bad_request");
+    }
+    const big = await post(request, { ...ok(), message: "a".repeat(17_000) });
+    expect(big.status()).toBe(413);
+  });
+
+  test("validates telephone digits and visible names", async ({ request }) => {
+    for (const [patch, field] of [
+      [{ phone: "-------" }, "phone"],
+      [{ phone: "(((((((" }, "phone"],
+      [{ fullName: "​​​" }, "fullName"],
+      [{ company: "." }, "company"],
+    ] as const) {
+      const res = await post(request, { ...ok(), ...patch });
+      expect(res.status()).toBe(422);
+      expect(Object.keys((await res.json()).fieldErrors)).toEqual([field]);
+    }
+    // Extensions are accepted.
+    const ext = await post(request, { ...ok(), phone: "+1 555 010 0000 ext. 12" });
+    expect((await ext.json()).error).not.toBe("invalid");
+  });
+
+  test("the fill-time check uses the client-measured duration, so device clock skew doesn't block people", async ({ request }) => {
+    // A device clock ten minutes ahead of the server, with a realistic fill time.
+    const skewed = await post(request, { ...valid, startedAt: Date.now() + 600_000, fillMs: 30_000 });
+    expect((await skewed.json()).error).not.toBe("spam");
+    // A genuinely fast fill is still rejected.
+    const fast = await post(request, { ...valid, startedAt: Date.now() - 60_000, fillMs: 400 });
+    expect(fast.status()).toBe(400);
+    expect((await fast.json()).error).toBe("spam");
+  });
+
+  test("a quick visitor is not rejected as automated, and repeat submits send once", async ({ page }) => {
+    await page.goto("/contact");
+    await fillValid(page);
+    const requests: import("@playwright/test").Request[] = [];
+    page.on("request", (r) => {
+      if (r.url().endsWith("/api/contact")) requests.push(r);
+    });
+    const responsePromise = page.waitForResponse("**/api/contact");
+    // Submit immediately (well under the minimum fill time) and several times in one task.
+    await page.locator("form").evaluate((form: HTMLFormElement) => {
+      form.requestSubmit();
+      form.requestSubmit();
+      form.requestSubmit();
+    });
+    const response = await responsePromise;
+    expect(response.request().postDataJSON().fillMs).toBeGreaterThanOrEqual(2500);
+    expect((await response.json()).error).not.toBe("spam");
+    await page.waitForTimeout(500);
+    expect(requests).toHaveLength(1);
+  });
+});

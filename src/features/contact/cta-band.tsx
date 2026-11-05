@@ -2,18 +2,27 @@ import { ButtonLink } from "@/components/ui/button";
 import { Container, Eyebrow } from "@/components/ui/layout";
 import { primaryPhone } from "@/config/site";
 import type { ContactInterest } from "./schema";
-import { contactHref } from "./links";
+import { contactHref, type ContactTopic } from "./links";
 import { OfficeList } from "./office-list";
 
 export function CtaBand({
   title,
   body,
   interest,
+  product,
+  topic,
+  ctaLabel = "Talk to an Expert",
   showOffices = false,
 }: {
   title: string;
   body: string;
   interest?: ContactInterest;
+  /** Adobe product slug; pre-ticks that application in the contact form. */
+  product?: string;
+  /** Named entry point that prefills the message, e.g. "assessment". */
+  topic?: ContactTopic;
+  /** Primary button label; defaults to the site-wide "Talk to an Expert". */
+  ctaLabel?: string;
   showOffices?: boolean;
 }) {
   return (
@@ -31,8 +40,8 @@ export function CtaBand({
         </h2>
         <p className="mt-6 max-w-[56ch] text-lead text-night-muted">{body}</p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <ButtonLink href={contactHref(interest)} arrow>
-            Talk to an Expert
+          <ButtonLink href={contactHref(interest, { product, topic })} arrow>
+            {ctaLabel}
           </ButtonLink>
           <ButtonLink href={`tel:${primaryPhone.e164}`} variant="outline-night">
             Call {primaryPhone.display}

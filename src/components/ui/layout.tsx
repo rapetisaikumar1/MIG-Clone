@@ -14,12 +14,23 @@ const toneClasses: Record<SectionTone, string> = {
   night: "on-night bg-night text-night-text",
 };
 
+/**
+ * Vertical rhythm: "default" for primary sections, "compact" for short supporting bands (benefit
+ * strips, related links). Prefer `spacing="compact"` over overriding py-* in className — a partial
+ * override such as "py-16 sm:py-20" silently keeps the default lg:py-32.
+ */
+const spacingClasses = {
+  default: "py-20 sm:py-24 lg:py-32",
+  compact: "py-16 sm:py-20 lg:py-24",
+} as const;
+
 export function Section({
   tone = "paper",
+  spacing = "default",
   className,
   ...props
-}: ComponentProps<"section"> & { tone?: SectionTone }) {
-  return <section className={cn("py-20 sm:py-24 lg:py-32", toneClasses[tone], className)} {...props} />;
+}: ComponentProps<"section"> & { tone?: SectionTone; spacing?: keyof typeof spacingClasses }) {
+  return <section className={cn(spacingClasses[spacing], toneClasses[tone], className)} {...props} />;
 }
 
 /** The logo's red i-dot, reused as the site's recurring marker. */

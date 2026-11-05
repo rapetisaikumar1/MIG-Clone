@@ -3,7 +3,7 @@ import type { ApproachStage } from "@/lib/content/types";
 export const hero = {
   eyebrow: ["AI Governance", "Adobe Services", "Data Management"],
   title: "Responsible AI. Trusted data. Better digital experiences.",
-  lead: "Maverick InnoGarage helps organizations establish AI oversight, implement Adobe platforms, and strengthen the quality and control of enterprise data.",
+  lead: "Maverick InnoGarage is a consultancy that implements and connects Adobe Experience Cloud applications, puts oversight in place for AI, and builds enterprise data your teams can trust.",
 };
 
 export const expertise = [
@@ -17,39 +17,47 @@ export const expertise = [
   {
     href: "/adobe-services",
     title: "Adobe Services",
-    summary: "Implementation, integration and optimization across Adobe's customer data, content, analytics, personalization, automation and commerce applications.",
-    services: ["Experience Platform and Real-Time CDP", "Experience Manager", "Analytics and Target", "Marketo Engage", "Commerce"],
+    summary: "Adobe Experience Cloud applications implemented, connected to each other and to your enterprise systems, and improved over time.",
+    services: ["Customer data and profiles", "Content and digital assets", "Analytics, testing and personalization", "Marketing automation and commerce", "Integration with enterprise systems"],
     glyph: "journey",
   },
   {
     href: "/data-management",
     title: "Data Management",
     summary: "Governed, integrated, high-quality data with clear owners, from creation through retention and records management.",
-    services: ["Strategy and governance", "Integration and migration", "Quality and metadata", "Lifecycle and retention", "Records management"],
+    services: ["Strategy and governance", "Integration and real-time access", "Quality and metadata", "Lifecycle and retention", "Records management"],
     glyph: "lifecycle",
   },
 ] as const;
 
-export const connection = [
-  {
-    step: "Data foundations",
-    title: "Trusted data",
-    body: "Owned, integrated, quality-checked data with known lineage and retention rules.",
-    href: "/data-management",
-  },
-  {
-    step: "Governance controls",
-    title: "Responsible use",
-    body: "Policies, risk tiers and human review that decide how data and AI may be used.",
-    href: "/ai-governance",
-  },
-  {
-    step: "Outcomes",
-    title: "AI and digital experiences",
-    body: "AI that people can rely on, and Adobe-powered journeys built on accurate, consented profiles.",
-    href: "/adobe-services",
-  },
-] as const;
+/**
+ * "How it connects": one hypothetical scenario walked through the three layers of the hero diagram.
+ * Illustrative only. It describes no client and is labeled as such on the page.
+ */
+export const connectionScenario = {
+  title: "Preparing data for an AI assistant",
+  steps: [
+    {
+      layer: "Data foundations",
+      area: "Data Management",
+      href: "/data-management",
+      body: "Classify the documents and customer data the assistant will draw on, confirm who owns them, and fix quality issues in critical fields.",
+    },
+    {
+      layer: "Governance controls",
+      area: "AI Governance",
+      href: "/ai-governance",
+      body: "Rate the use case as higher risk, require human review of customer-facing answers, and decide what to monitor.",
+    },
+    {
+      layer: "Digital experiences",
+      area: "Adobe Services",
+      href: "/adobe-services",
+      body: "Manage approved answer content in Adobe Experience Manager, and measure how customers use the assistant with Adobe Analytics.",
+    },
+  ],
+  feedback: "Monitoring what the assistant actually says feeds back into data quality and review rules.",
+} as const;
 
 export const problems = [
   {
@@ -111,12 +119,4 @@ export const deliveryApproach: ApproachStage[] = [
     activities: "Measure adoption and quality, refine controls and experiences, and extend to new areas.",
     deliverable: "Improvement backlog and ongoing support",
   },
-];
-
-/** Practical commitments (not performance claims) used in the credibility section. */
-export const commitments = [
-  { title: "Specialists in three connected areas", body: "Focused expertise in AI governance, Adobe platforms and data management, and in how they depend on each other." },
-  { title: "Tangible deliverables at every stage", body: "Assessments, designs, policies, configurations and runbooks that you own and can act on." },
-  { title: "Product experience in records management", body: "We build and support MapleRecord, our records management software for the public sector." },
-  { title: "Offices in the US and Canada", body: "Teams in Delaware, Texas and Ontario." },
 ];

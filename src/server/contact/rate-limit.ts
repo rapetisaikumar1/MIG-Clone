@@ -8,11 +8,20 @@ import "server-only";
  */
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 5;
+const MAX_KEYS = 5000;
+const MAX_KEY_LENGTH = 64; // an IPv6 address is at most 45 characters
 const hits = new Map<string, { count: number; resetAt: number }>();
 
-export function rateLimit(key: string, now = Date.now()) {
-  if (hits.size > 5000) {
+export function rateLimit(rawKey: string, now = Date.now()) {
+  // Keys come from request headers, so bound both their length and how many are held in memory.
+  const key = rawKey.slice(0, MAX_KEY_LENGTH);
+  if (hits.size >= MAX_KEYS && !hits.has(key)) {
     for (const [k, v] of hits) if (v.resetAt <= now) hits.delete(k);
+    // Still full: drop the oldest windows (Map iterates in insertion order).
+    for (const k of hits.keys()) {
+      if (hits.size < MAX_KEYS) break;
+      hits.delete(k);
+    }
   }
   const entry = hits.get(key);
   if (!entry || entry.resetAt <= now) {

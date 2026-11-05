@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
-import { Container, Dot, Eyebrow, IllustrativeLabel, Section, SectionHeading } from "@/components/ui/layout";
+import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
 import { HeroVisual } from "@/components/graphics/hero-visual";
 import { GovernanceGlyph, JourneyGlyph, LifecycleGlyph, MapleRecordGraphic } from "@/components/graphics/service-graphics";
-import { commitments, deliveryApproach, expertise, hero, problems } from "@/content/home";
+import { deliveryApproach, expertise, hero, problems } from "@/content/home";
 import { industries } from "@/content/industries";
 import { company } from "@/config/site";
 import { CtaBand } from "@/features/contact/cta-band";
+import { AdobeSection } from "@/features/home/adobe-section";
 import { ConnectionDiagram } from "@/features/home/connection-diagram";
 import { ArticleCard } from "@/features/insights/article-card";
 import { ApproachSteps } from "@/features/services/sections";
@@ -27,10 +28,11 @@ export default async function HomePage() {
       <section className="relative overflow-hidden border-b border-line">
         <Container className="grid items-center gap-12 pb-16 pt-12 sm:pt-16 lg:grid-cols-[55fr_45fr] lg:gap-14 lg:pb-24 lg:pt-20">
           <div>
-            <p className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-label uppercase text-muted">
-              {hero.eyebrow.map((item, i) => (
-                <span key={item} className="flex items-center gap-3">
-                  {i > 0 ? <Dot className="size-1.5" /> : null}
+            {/* Every item carries its own marker so the list wraps cleanly on narrow screens. */}
+            <p className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-label uppercase text-muted">
+              {hero.eyebrow.map((item) => (
+                <span key={item} className="flex items-center gap-2.5">
+                  <Dot className="size-1.5" />
                   {item}
                 </span>
               ))}
@@ -102,32 +104,15 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* How the specializations connect */}
-      <Section tone="night" aria-labelledby="connect-title">
-        <Container>
-          <div className="grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <Eyebrow tone="night">How it connects</Eyebrow>
-              <h2 id="connect-title" className="mt-5 text-h2">
-                {company.thesis}
-              </h2>
-            </div>
-            <p className="text-lead text-night-muted lg:col-span-5 lg:pt-12">
-              An AI model trained on unreliable data makes unreliable decisions. Personalization built on unconsented profiles
-              creates risk instead of loyalty. We work across all three layers so the foundation, the controls and the outcomes
-              are designed together.
-            </p>
-          </div>
-          <ConnectionDiagram />
-        </Container>
-      </Section>
+      {/* Adobe practice: applications by area, partner statement, assessment entry point */}
+      <AdobeSection />
 
       {/* Business problems */}
       <Section aria-labelledby="problems-title">
         <Container className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-28">
-              <SectionHeading id="problems-title" eyebrow="Where we help" title="The problems we're asked to solve" />
+              <SectionHeading id="problems-title" eyebrow="Where we help" title="Problems we help solve" />
             </div>
           </div>
           <ul className="border-t border-ink lg:col-span-8">
@@ -151,14 +136,34 @@ export default async function HomePage() {
         </Container>
       </Section>
 
+      {/* How the specializations connect */}
+      <Section tone="night" aria-labelledby="connect-title">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <Eyebrow tone="night">How it connects</Eyebrow>
+              <h2 id="connect-title" className="mt-5 text-h2">
+                {company.thesis}
+              </h2>
+            </div>
+            <p className="text-lead text-night-muted lg:col-span-5 lg:pt-12">
+              An AI assistant that draws on unreliable data gives unreliable answers. Personalization built on unconsented
+              profiles creates risk instead of loyalty. We work across all three layers, so the data, the controls and the
+              customer experience are designed together.
+            </p>
+          </div>
+          <ConnectionDiagram />
+        </Container>
+      </Section>
+
       {/* Delivery approach */}
       <Section tone="surface" aria-labelledby="approach-title">
         <Container>
           <SectionHeading
             id="approach-title"
-            eyebrow="Delivery approach"
+            eyebrow="How we work"
             title="Assess → Design → Implement → Improve"
-            intro="The same four stages shape every engagement, whatever the specialization. Each one ends with a deliverable you can review and use."
+            intro="The same four stages shape every engagement, whatever the specialization. Each one ends with a deliverable you own and can act on."
           />
           <ApproachSteps stages={deliveryApproach} />
         </Container>
@@ -174,7 +179,7 @@ export default async function HomePage() {
               title="Applied to the realities of your sector"
               intro="Regulations, customers and systems differ by industry. See how our specializations apply in each."
             />
-            <ul className="mt-10 grid border-t border-line sm:grid-cols-2 sm:gap-x-8">
+            <ul className="mt-10 grid border-t border-line sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-1">
               {industries.map((i) => (
                 <li key={i.id} className="border-b border-line">
                   <Link href={`/industries#${i.id}`} className="group flex min-h-14 items-center justify-between gap-4 py-3 font-medium">
@@ -202,65 +207,26 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* Credibility and insights */}
-      <Section tone="deep" aria-labelledby="why-title">
+      {/* Latest insights */}
+      <Section tone="deep" aria-labelledby="insights-title">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <SectionHeading id="why-title" eyebrow="Working with us" title="What you can expect" />
-            </div>
-            <ul className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-7">
-              {commitments.map((c) => (
-                <li key={c.title} className="border-t border-ink pt-5">
-                  <h3 className="text-lg font-semibold tracking-tight">{c.title}</h3>
-                  <p className="mt-2 text-[0.9375rem] text-muted">{c.body}</p>
-                </li>
-              ))}
-            </ul>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading id="insights-title" eyebrow="Insights" title="Recent articles" />
+            <ArrowLink href="/insights">All insights</ArrowLink>
           </div>
-
-          <div className="mt-16 grid gap-8 rounded-3xl border border-line bg-surface p-7 sm:p-10 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-4">
-              <IllustrativeLabel />
-              <h3 className="mt-5 text-h3">Preparing data for an AI assistant</h3>
-              <p className="mt-3 text-sm text-muted">A hypothetical scenario showing how the three specializations combine.</p>
-            </div>
-            <ol className="grid gap-6 sm:grid-cols-3 lg:col-span-8">
-              {[
-                ["Data Management", "Classify the documents and customer data the assistant would use, confirm owners, and fix quality issues in critical fields."],
-                ["AI Governance", "Tier the use case as higher risk, define human review for customer-facing answers, and set monitoring."],
-                ["Adobe Services", "Surface approved answers in digital journeys and measure their effect in analytics."],
-              ].map(([area, text], i) => (
-                <li key={area} className="border-t border-line-strong pt-4">
-                  <p className="font-mono text-label uppercase text-muted">
-                    {i + 1}. {area}
-                  </p>
-                  <p className="mt-2 text-[0.9375rem] text-ink-soft">{text}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="mt-20">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <h2 className="text-h2">Latest insights</h2>
-              <ArrowLink href="/insights">All insights</ArrowLink>
-            </div>
-            <ul className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-3">
-              {latest.map((a) => (
-                <li key={a.slug}>
-                  <ArticleCard article={a} />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul className="mt-12 grid gap-x-10 gap-y-12 md:grid-cols-3">
+            {latest.map((a) => (
+              <li key={a.slug}>
+                <ArticleCard article={a} />
+              </li>
+            ))}
+          </ul>
         </Container>
       </Section>
 
       <CtaBand
         title="Ready to build on a trusted foundation?"
         body="Tell us where you are with AI, Adobe or your data. We'll help you identify a practical first step."
-        showOffices
       />
     </>
   );

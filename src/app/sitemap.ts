@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/config/site";
+import { adobeAssessmentPath, adobeProductPath, getAdobeProducts } from "@/lib/content/adobe";
 import { getInsights } from "@/lib/content/insights";
 import { getMrArticles, getMrModules, getMrSolutions } from "@/lib/content/maplerecord";
 
@@ -7,6 +8,7 @@ const staticRoutes = [
   { path: "/", priority: 1 },
   { path: "/ai-governance", priority: 0.9 },
   { path: "/adobe-services", priority: 0.9 },
+  { path: adobeAssessmentPath, priority: 0.8 },
   { path: "/data-management", priority: 0.9 },
   { path: "/maplerecord", priority: 0.7 },
   { path: "/maplerecord/platform", priority: 0.6 },
@@ -26,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getInsights();
   return [
     ...staticRoutes.map(({ path, priority }) => ({ url: `${siteUrl}${path === "/" ? "" : path}`, priority })),
+    ...getAdobeProducts().map((p) => ({ url: `${siteUrl}${adobeProductPath(p.slug)}`, priority: 0.8 })),
     ...articles.map((a) => ({ url: `${siteUrl}/insights/${a.slug}`, lastModified: a.published, priority: 0.5 })),
     ...getMrModules().map((m) => ({ url: `${siteUrl}/maplerecord/platform/${m.slug}`, priority: 0.6 })),
     ...getMrSolutions().map((s) => ({ url: `${siteUrl}/maplerecord/solutions/${s.slug}`, priority: 0.5 })),

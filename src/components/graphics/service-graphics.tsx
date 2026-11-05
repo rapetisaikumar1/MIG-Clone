@@ -1,16 +1,17 @@
 import { cn } from "@/lib/utils";
-import { NodeLabel, Plane } from "./primitives";
+import { NodeLabel, Plane, svgSmallLabelSize } from "./primitives";
 
 type GraphicProps = { className?: string };
 
 function Box({ x, y, w = 128, h = 52, lines, dark }: { x: number; y: number; w?: number; h?: number; lines: string[]; dark?: boolean }) {
   const cx = x + w / 2;
-  const startY = y + h / 2 - (lines.length - 1) * 8 + 5;
+  const pitch = 19;
+  const startY = y + h / 2 - ((lines.length - 1) * pitch) / 2 + 6;
   return (
     <g>
       <rect x={x} y={y} width={w} height={h} rx="8" className={dark ? "fill-ink" : "fill-surface stroke-ink"} strokeWidth="1.5" />
       {lines.map((line, i) => (
-        <NodeLabel key={line} x={cx} y={startY + i * 16} className={dark ? "fill-night-text" : undefined}>
+        <NodeLabel fluid key={line} x={cx} y={startY + i * pitch} className={dark ? "fill-night-text" : undefined}>
           {line}
         </NodeLabel>
       ))}
@@ -48,16 +49,16 @@ export function AiGovernanceGraphic({ className }: GraphicProps) {
       <Arrow d="M168 82 H226" head={[226, 82, "right"]} />
       <rect x="239" y="61" width="42" height="42" rx="4" transform="rotate(45 260 82)" className="fill-ink" />
       <circle cx="260" cy="82" r="6" className="fill-logo-red" />
-      <NodeLabel x={260} y={38}>
+      <NodeLabel fluid x={260} y={38}>
         Risk tier?
       </NodeLabel>
       <Arrow d="M292 82 H348" head={[348, 82, "right"]} />
-      <text x="320" y="72" textAnchor="middle" className="fill-muted font-mono text-[12px] tracking-[0.06em]">
+      <text x="320" y="72" textAnchor="middle" className={cn("fill-muted font-mono", svgSmallLabelSize)}>
         LOWER
       </text>
       <Box x={352} y={56} lines={["Standard", "controls"]} />
       <Arrow d="M260 114 V164" head={[260, 164, "down"]} />
-      <text x="270" y="144" className="fill-muted font-mono text-[12px] tracking-[0.06em]">
+      <text x="270" y="144" className={cn("fill-muted font-mono", svgSmallLabelSize)}>
         HIGHER
       </text>
       <Box x={196} y={168} lines={["Human", "review"]} />
@@ -109,7 +110,7 @@ export function AdobeGraphic({ className }: GraphicProps) {
       {stages.map((s) => (
         <g key={s.label}>
           <circle cx={s.x} cy={s.y} r="9" className="fill-surface stroke-ink" strokeWidth="1.75" />
-          <NodeLabel x={s.x} y={s.y - 20}>
+          <NodeLabel fluid x={s.x} y={s.y - 20}>
             {s.label}
           </NodeLabel>
         </g>
@@ -123,7 +124,7 @@ export function AdobeGraphic({ className }: GraphicProps) {
       {tiles.map((t) => (
         <g key={t.label}>
           <rect x={t.x} y={t.y} width="128" height="52" rx="8" className={t.hub ? "fill-ink" : "fill-paper stroke-line-strong"} strokeWidth="1.25" />
-          <NodeLabel x={t.x + 64} y={t.y + 30} className={t.hub ? "fill-night-text" : undefined}>
+          <NodeLabel fluid x={t.x + 64} y={t.y + 30} className={t.hub ? "fill-night-text" : undefined}>
             {t.label}
           </NodeLabel>
           {t.hub ? <circle cx={t.x + 114} cy={t.y + 14} r="4" className="fill-logo-red" /> : null}
@@ -174,7 +175,7 @@ export function DataGraphic({ className }: GraphicProps) {
             {n.label === "Validate" ? (
               <path d={`M${n.x - 5} ${n.y} L${n.x - 1} ${n.y + 4} L${n.x + 5} ${n.y - 3}`} fill="none" className="stroke-night-text" strokeWidth="1.75" strokeLinecap="round" />
             ) : null}
-            <NodeLabel x={lx} y={n.label === "Create" ? ly - 6 : n.label === "Use" ? ly + 8 : ly} anchor={anchor}>
+            <NodeLabel fluid x={lx} y={n.label === "Create" ? ly - 6 : n.label === "Use" ? ly + 8 : ly} anchor={anchor}>
               {n.label}
             </NodeLabel>
           </g>
@@ -182,10 +183,10 @@ export function DataGraphic({ className }: GraphicProps) {
       })}
       <circle cx={cx} cy={cy} r="58" className="fill-ink" />
       <circle cx={cx} cy={cy - 30} r="5" className="fill-logo-red" />
-      <text x={cx} y={cy + 2} textAnchor="middle" className="fill-night-text font-mono text-[11px] uppercase tracking-[0.08em]">
+      <text x={cx} y={cy + 2} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgSmallLabelSize)}>
         Owners &amp;
       </text>
-      <text x={cx} y={cy + 18} textAnchor="middle" className="fill-night-text font-mono text-[11px] uppercase tracking-[0.08em]">
+      <text x={cx} y={cy + 18} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgSmallLabelSize)}>
         stewards
       </text>
     </svg>
@@ -210,8 +211,8 @@ export function MapleRecordGraphic({ className, tone = "light" }: GraphicProps &
             <rect x={x + 10} y={30} width="120" height="84" rx="6" className={night ? "fill-night-line" : "fill-paper-deep"} />
             <rect x={x + 5} y={36} width="120" height="84" rx="6" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-line-strong"} strokeWidth="1.25" />
             <rect x={x} y={42} width="120" height="84" rx="6" className={night ? "fill-night-raised stroke-night-muted" : "fill-surface stroke-ink"} strokeWidth="1.5" />
-            <path d={`M${x + 16} ${62} H${x + 76} M${x + 16} ${74} H${x + 100} M${x + 16} ${86} H${x + 88}`} className={night ? "stroke-night-line" : "stroke-line"} strokeWidth="3" strokeLinecap="round" />
-            <NodeLabel x={x + 16} y={114} anchor="start" className={night ? "fill-night-text" : undefined}>
+            <path d={`M${x + 12} ${62} H${x + 72} M${x + 12} ${74} H${x + 96} M${x + 12} ${86} H${x + 84}`} className={night ? "stroke-night-line" : "stroke-line"} strokeWidth="3" strokeLinecap="round" />
+            <NodeLabel fluid x={x + 12} y={114} anchor="start" className={night ? "fill-night-text" : undefined}>
               {label}
             </NodeLabel>
             <path d={`M${x + 60} 130 V176`} className={night ? "stroke-night-muted" : "stroke-ink"} strokeWidth="1.25" strokeDasharray="3 4" />
@@ -222,17 +223,17 @@ export function MapleRecordGraphic({ className, tone = "light" }: GraphicProps &
       <rect x="40" y="184" width="440" height="40" rx="20" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-ink"} strokeWidth="1.5" />
       <rect x="40" y="184" width="200" height="40" rx="20" className={night ? "fill-night-text" : "fill-ink"} />
       <path d="M340 184 V224" className={night ? "stroke-night-line" : "stroke-line-strong"} strokeWidth="1.5" />
-      <text x="140" y="209" textAnchor="middle" className={cn("font-mono text-[11px] uppercase tracking-[0.08em]", night ? "fill-night" : "fill-night-text")}>
+      <text x="140" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night" : "fill-night-text")}>
         Active
       </text>
-      <text x="290" y="209" textAnchor="middle" className={cn("font-mono text-[11px] uppercase tracking-[0.08em]", night ? "fill-night-text" : "fill-ink-soft")}>
+      <text x="294" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night-text" : "fill-ink-soft")}>
         Inactive
       </text>
-      <text x="410" y="209" textAnchor="middle" className={cn("font-mono text-[11px] uppercase tracking-[0.08em]", night ? "fill-night-text" : "fill-ink-soft")}>
+      <text x="410" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night-text" : "fill-ink-soft")}>
         Disposition
       </text>
       <circle cx="240" cy="204" r="7" className="fill-logo-red" />
-      <NodeLabel x={40} y={252} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
+      <NodeLabel fluid x={40} y={252} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
         Retention schedule
       </NodeLabel>
       {/* role-based access */}
@@ -243,13 +244,13 @@ export function MapleRecordGraphic({ className, tone = "light" }: GraphicProps &
             <rect x={x} y={286} width="140" height="48" rx="24" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-ink"} strokeWidth="1.5" />
             <rect x={x + 18} y={306} width="14" height="11" rx="2" className={night ? "fill-night-text" : "fill-ink"} />
             <path d={`M${x + 20.5} 306 V302 a4.5 4.5 0 0 1 9 0 V306`} fill="none" className={night ? "stroke-night-text" : "stroke-ink"} strokeWidth="1.5" />
-            <NodeLabel x={x + 42} y={315} anchor="start" className={night ? "fill-night-text" : undefined}>
+            <NodeLabel fluid x={x + 42} y={315} anchor="start" className={night ? "fill-night-text" : undefined}>
               {role}
             </NodeLabel>
           </g>
         );
       })}
-      <NodeLabel x={40} y={360} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
+      <NodeLabel fluid x={40} y={360} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
         Role-based access
       </NodeLabel>
     </svg>

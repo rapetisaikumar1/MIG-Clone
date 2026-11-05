@@ -4,6 +4,8 @@ import { mrArticles } from "../src/content/maplerecord/articles";
 import { mrModules } from "../src/content/maplerecord/modules";
 import { mrSolutions } from "../src/content/maplerecord/solutions";
 
+const mrNav = ["Overview", "Platform", "Solutions", "Resources", "About", "Contact"].map((label) => ({ label }));
+
 const mrPages = [
   "/maplerecord",
   "/maplerecord/platform",
@@ -50,6 +52,30 @@ test("MapleRecord sub-navigation reaches every section", async ({ page }) => {
   }
 });
 
+test("sub-navigation shows every section, the logo and the demo link on wider screens", async ({ page }) => {
+  for (const width of [768, 1024, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/maplerecord/solutions/legal-compliance");
+    const nav = page.getByRole("navigation", { name: "MapleRecord" });
+    await expect(nav.getByRole("button")).toBeHidden();
+    const right = await nav.evaluate((n) => n.getBoundingClientRect().right);
+    for (const item of mrNav) {
+      const box = (await nav.getByRole("link", { name: item.label, exact: true }).boundingBox())!;
+      expect(box.x + box.width, `${item.label} fits at ${width}px`).toBeLessThanOrEqual(right + 1);
+      expect(box.height, `${item.label} target at ${width}px`).toBeGreaterThanOrEqual(44);
+    }
+    await expect(nav.getByRole("link", { name: "Solutions", exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("link", { name: "MapleRecord overview" })).toHaveAttribute("href", "/maplerecord");
+    if (width >= 1024) {
+      const demo = page.locator("[data-mr-subnav]").getByRole("link", { name: /Request a demo/ }).filter({ visible: true });
+      await expect(demo).toHaveAttribute("target", "_blank");
+    }
+    // Sticky under the 4.75rem site header.
+    await page.mouse.wheel(0, 1500);
+    await expect.poll(() => page.locator("[data-mr-subnav]").evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBe(76);
+  }
+});
+
 test("module tabs switch panels by mouse and keyboard, and link to module pages", async ({ page }) => {
   await page.goto("/maplerecord");
   const tabs = page.getByRole("tablist", { name: "MapleRecord modules" });
@@ -92,7 +118,7 @@ test("department tabs show each department and link to its solution", async ({ p
 test("all tab panels are present in the server-rendered HTML", async ({ request }) => {
   const html = await (await request.get("/maplerecord")).text();
   for (const m of mrModules) expect(html).toContain(m.summary);
-  expect(html).toContain("FOI/RTI and legal requests resolved 2-4x faster with secure redaction");
+  expect(html).toContain("FOI/RTI and legal requests resolved 2–4× faster with secure redaction");
 });
 
 test("every MapleRecord page renders, with working links, fragments and images", async ({ page, request }) => {
@@ -105,7 +131,8 @@ test("every MapleRecord page renders, with working links, fragments and images",
     await expect(page.locator("h1"), path).toHaveCount(1);
     await page.evaluate(async () => {
       for (let y = 0; y < document.body.scrollHeight; y += 600) {
-        window.scrollTo(0, y);
+        // "instant": the site uses CSS smooth scrolling, which would otherwise leave lazy images below the fold unloaded.
+        window.scrollTo({ top: y, behavior: "instant" });
         await new Promise((r) => setTimeout(r, 30));
       }
     });
@@ -151,6 +178,14 @@ test("platform and solution pages show their full content", async ({ page }) => 
   for (const c of m.capabilities) await expect(page.getByRole("heading", { name: c.title })).toBeVisible();
   await page.getByRole("link", { name: "Explore capabilities" }).click();
   await expect(page).toHaveURL(/#capabilities$/);
+  // The fragment target lands below the sticky header + sub-navigation, not underneath them.
+  const barBottom = await page.locator("[data-mr-subnav]").evaluate((el) => el.getBoundingClientRect().bottom);
+  await expect
+    .poll(async () => {
+      const gap = (await page.locator("#capabilities").evaluate((el) => el.getBoundingClientRect().top)) - barBottom;
+      return gap >= 0 && gap < 48;
+    })
+    .toBe(true);
 
   const s = mrSolutions.find((x) => x.slug === "state-local-government")!;
   await page.goto(`/maplerecord/solutions/${s.slug}`);
@@ -165,8 +200,43 @@ test("blog articles render in full and credit the official source", async ({ pag
   await page.getByRole("link", { name: new RegExp(a.title) }).first().click();
   await expect(page).toHaveURL(new RegExp(`/maplerecord/resources/${a.slug}$`));
   const headings = a.blocks.filter((b) => b.type === "heading");
-  for (const h of headings) if ("text" in h) await expect(page.getByRole("heading", { name: h.text, exact: true })).toBeVisible();
+  for (const h of headings) await expect(page.getByRole("heading", { name: h.text, exact: true, level: h.level ?? 2 })).toBeVisible();
+  expect(headings.filter((h) => h.level === 3)).toHaveLength(6);
   await expect(page.getByRole("link", { name: /Read on maplerecord.com/ })).toHaveAttribute("href", a.officialUrl);
+});
+
+test("MapleRecord pages emit breadcrumb and article structured data", async ({ page }) => {
+  test.setTimeout(180_000);
+  const ld = () => page.$$eval('script[type="application/ld+json"]', (els) => els.flatMap((e) => [JSON.parse(e.textContent ?? "null")].flat()) as { "@type": string; [k: string]: unknown }[]);
+  for (const path of mrPages.filter((p) => p !== "/maplerecord")) {
+    await page.goto(path);
+    const crumbs = await page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("listitem").allTextContents();
+    const list = (await ld()).find((n) => n["@type"] === "BreadcrumbList");
+    expect(list, path).toBeTruthy();
+    const names = (list!.itemListElement as { name: string }[]).map((i) => i.name);
+    expect(names, path).toEqual(crumbs.map((c) => c.replace(/^\//, "").trim()));
+  }
+  for (const a of mrArticles) {
+    await page.goto(`/maplerecord/resources/${a.slug}`);
+    const article = (await ld()).find((n) => n["@type"] === "Article");
+    expect(article?.headline).toBe(a.title);
+    expect(article?.datePublished).toBe(a.published);
+    expect(article?.url).toMatch(new RegExp(`/maplerecord/resources/${a.slug}$`));
+    expect(article?.image).toMatch(new RegExp(`${a.image.src}$`));
+    await expect(page).toHaveTitle(`${a.metaTitle ?? a.title} · Maverick InnoGarage`);
+  }
+});
+
+test("MapleRecord meta descriptions stay within 70–160 characters", async ({ page }) => {
+  test.setTimeout(180_000);
+  const failures: string[] = [];
+  for (const path of mrPages) {
+    await page.goto(path);
+    const d = (await page.locator('meta[name="description"]').getAttribute("content")) ?? "";
+    if (d.length < 70 || d.length > 160) failures.push(`${path}: ${d.length}`);
+    if ((await page.title()).length > 70) failures.push(`${path}: title ${(await page.title()).length}`);
+  }
+  expect(failures, failures.join("\n")).toEqual([]);
 });
 
 test("contact page shows MapleRecord's published contact details", async ({ page }) => {
@@ -190,10 +260,29 @@ test.describe("mobile", () => {
   test.use({ viewport: { width: 375, height: 812 } });
 
   test("sub-navigation and tabs work on a phone", async ({ page }) => {
-    await page.goto("/maplerecord");
+    await page.goto("/maplerecord/resources");
     const nav = page.getByRole("navigation", { name: "MapleRecord" });
+    // Phones get one compact disclosure naming the current section instead of a clipped row of links.
+    const toggle = nav.getByRole("button", { name: /MapleRecord.*Resources/ });
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(nav.getByRole("link", { name: "Contact", exact: true })).toBeHidden();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    for (const item of mrNav) {
+      const link = nav.getByRole("link", { name: item.label, exact: true });
+      await expect(link).toBeVisible();
+      expect((await link.boundingBox())!.height, item.label).toBeGreaterThanOrEqual(44);
+    }
+    await expect(nav.getByRole("link", { name: "Resources", exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: /Request a demo/ })).toHaveAttribute("href", "https://maplerecord.com/contact-us/#schedule-demo");
+    // Escape closes the panel and returns focus to the toggle.
+    await page.keyboard.press("Escape");
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(toggle).toBeFocused();
+    await toggle.click();
     await nav.getByRole("link", { name: "Contact", exact: true }).click();
     await expect(page).toHaveURL(/\/maplerecord\/contact$/);
+    await expect(nav.getByRole("button", { name: /MapleRecord.*Contact/ })).toHaveAttribute("aria-expanded", "false");
     await page.goto("/maplerecord");
     const tab = page.getByRole("tablist", { name: "Departments" }).getByRole("tab", { name: "Customer Service" });
     await tab.click();

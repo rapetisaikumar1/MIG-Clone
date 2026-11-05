@@ -6,6 +6,7 @@ export const mrArticles: MrArticle[] = [
   {
     slug: "modernizing-government-records-management",
     title: "Modernizing Government Records Management for Transparency, Compliance, and Service Delivery",
+    metaTitle: "Modernizing Government Records",
     category: "Business Solution",
     published: "2025-12-22",
     officialUrl: "https://maplerecord.com/blog/modernizing-government-records-management-for-transparency/",
@@ -13,7 +14,7 @@ export const mrArticles: MrArticle[] = [
       src: "/maplerecord/blog-government.webp",
       width: 1080,
       height: 721,
-      alt: "Modernizing Government Records Management for Transparency, Compliance, and Service Delivery"
+      alt: "Two people reviewing paperwork beside a laptop"
     },
     blocks: [
       {
@@ -160,6 +161,7 @@ export const mrArticles: MrArticle[] = [
   {
     slug: "modern-records-management-enterprise-intelligence",
     title: "Modern Records Management: From Operational Overhead to Enterprise Intelligence",
+    metaTitle: "From Records Overhead to Intelligence",
     category: "Business Solution",
     published: "2025-12-20",
     officialUrl: "https://maplerecord.com/blog/modern-records-management-enterprise-intelligence/",
@@ -167,7 +169,7 @@ export const mrArticles: MrArticle[] = [
       src: "/maplerecord/blog-enterprise.webp",
       width: 1080,
       height: 721,
-      alt: "Modern Records Management: From Operational Overhead to Enterprise Intelligence"
+      alt: "A hand signing a paper document"
     },
     blocks: [
       {
@@ -241,7 +243,7 @@ export const mrArticles: MrArticle[] = [
       {
         type: "list",
         items: [
-          "Visibility into records lifecycle and access patterns",
+          "Visibility into the records lifecycle and access patterns",
           "Reduced risk exposure across regulated data",
           "Faster response to audits and investigations",
           "Operational metrics tied to document workflows"
@@ -264,6 +266,7 @@ export const mrArticles: MrArticle[] = [
   {
     slug: "roi-of-modern-records-management",
     title: "The ROI of Modern Records Management Systems",
+    metaTitle: "ROI of Modern Records Management",
     category: "Business Value",
     published: "2025-11-20",
     officialUrl: "https://maplerecord.com/blog/roi-modern-records-management/",
@@ -271,7 +274,7 @@ export const mrArticles: MrArticle[] = [
       src: "/maplerecord/blog-roi.webp",
       width: 1080,
       height: 720,
-      alt: "The ROI of Modern Records Management Systems"
+      alt: "A seedling growing from a pile of coins"
     },
     blocks: [
       {
@@ -392,7 +395,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Intelligent Classification and Metadata Enrichment"
+        text: "Intelligent Classification and Metadata Enrichment",
+        level: 3
       },
       {
         type: "paragraph",
@@ -412,7 +416,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Automated Retention and Policy Enforcement"
+        text: "Automated Retention and Policy Enforcement",
+        level: 3
       },
       {
         type: "paragraph",
@@ -432,7 +437,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "AI-Powered Search and Discovery"
+        text: "AI-Powered Search and Discovery",
+        level: 3
       },
       {
         type: "paragraph",
@@ -452,7 +458,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Predictive Risk and Compliance Insights"
+        text: "Predictive Risk and Compliance Insights",
+        level: 3
       },
       {
         type: "paragraph",
@@ -472,7 +479,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Scalable AI Architecture for Future Growth"
+        text: "Scalable AI Architecture for Future Growth",
+        level: 3
       },
       {
         type: "paragraph",
@@ -492,7 +500,8 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Improved Data Governance and Executive Visibility"
+        text: "Improved Data Governance and Executive Visibility",
+        level: 3
       },
       {
         type: "paragraph",

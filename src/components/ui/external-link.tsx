@@ -4,6 +4,16 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "./button";
 import type { VariantProps } from "class-variance-authority";
 
+/** "opens maplerecord.com in a new tab" — names the destination host when the href is absolute. */
+function defaultNewTabLabel(href: string | undefined) {
+  try {
+    const host = new URL(href ?? "").hostname.replace(/^www\./, "");
+    return host ? `opens ${host} in a new tab` : "opens in a new tab";
+  } catch {
+    return "opens in a new tab";
+  }
+}
+
 /** Link to another site: opens in a new tab and says so to assistive technology. */
 export function ExternalLink({
   href,
@@ -11,9 +21,10 @@ export function ExternalLink({
   className,
   variant,
   size,
-  newTabLabel = "opens maplerecord.com in a new tab",
+  newTabLabel,
   ...props
 }: ComponentProps<"a"> & VariantProps<typeof buttonVariants> & { newTabLabel?: string }) {
+  const label = newTabLabel ?? defaultNewTabLabel(href);
   return (
     <a
       href={href}
@@ -29,7 +40,7 @@ export function ExternalLink({
     >
       {children}
       <ArrowUpRight aria-hidden className="size-4 shrink-0" />
-      <span className="sr-only"> ({newTabLabel})</span>
+      <span className="sr-only"> ({label})</span>
     </a>
   );
 }

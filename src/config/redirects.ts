@@ -26,16 +26,17 @@ export const legacyRedirects: LegacyRedirect[] = [
   { source: "/feed", destination: "/insights", note: "retired" },
   { source: "/comments/feed", destination: "/insights", note: "retired" },
 
-  // Adobe product pages → one Adobe Services page, anchored by capability
+  // Adobe: the Experience Cloud overview → the hub; each legacy product URL → its dedicated page.
+  // Keep in sync with `legacyPaths` in src/content/adobe/products/*.ts (literal strings: next.config.ts imports this file).
   { source: "/adobe-experience-cloud", destination: "/adobe-services", note: "consolidated" },
-  { source: "/adobe-experience-platform", destination: "/adobe-services#experience-platform", note: "consolidated" },
-  { source: "/adobe-real-time-cdp", destination: "/adobe-services#real-time-cdp", note: "consolidated" },
-  { source: "/adobe-experience-manager", destination: "/adobe-services#experience-manager", note: "consolidated" },
-  { source: "/adobe-content-management", destination: "/adobe-services#experience-manager", note: "consolidated" },
-  { source: "/adobe-analytics", destination: "/adobe-services#analytics", note: "consolidated" },
-  { source: "/adobe-target", destination: "/adobe-services#target", note: "consolidated" },
-  { source: "/adobe-marketo-services", destination: "/adobe-services#marketo-engage", note: "consolidated" },
-  { source: "/adobe-commerce", destination: "/adobe-services#commerce", note: "consolidated" },
+  { source: "/adobe-experience-platform", destination: "/adobe-services/experience-platform", note: "renamed" },
+  { source: "/adobe-real-time-cdp", destination: "/adobe-services/real-time-cdp", note: "renamed" },
+  { source: "/adobe-experience-manager", destination: "/adobe-services/experience-manager", note: "renamed" },
+  { source: "/adobe-content-management", destination: "/adobe-services/experience-manager", note: "consolidated" },
+  { source: "/adobe-analytics", destination: "/adobe-services/analytics", note: "renamed" },
+  { source: "/adobe-target", destination: "/adobe-services/target", note: "renamed" },
+  { source: "/adobe-marketo-services", destination: "/adobe-services/marketo-engage", note: "renamed" },
+  { source: "/adobe-commerce", destination: "/adobe-services/commerce", note: "renamed" },
 
   // Data services → Data Management
   { source: "/data-governance", destination: "/data-management#governance", note: "consolidated" },

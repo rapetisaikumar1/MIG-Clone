@@ -109,6 +109,12 @@
     color: var(--paper);
   }
 
+  /* An ink highlight is invisible on the near-black night sections, so invert it there. */
+  .on-night ::selection {
+    background: var(--night-text);
+    color: var(--night);
+  }
+
   :focus-visible {
     outline: 2px solid var(--signal);
     outline-offset: 3px;
@@ -122,9 +128,64 @@
   [id] {
     scroll-margin-top: 6rem;
   }
+
+  /*
+   * Reduced motion: collapse CSS transitions and animations site-wide (hover shifts, disclosure icons,
+   * sheet slide-ins). SMIL <animateMotion> in the diagrams is removed separately with motion-reduce:hidden.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
+  /*
+   * MapleRecord product stages. Dark stage: hero and showcase bands (night ink, fine grid fading out,
+   * a low warm glow behind the product). Light stage: in-page product shots on paper.
+   */
+  .mr-stage-dark {
+    background-color: var(--night);
+    background-image:
+      radial-gradient(60% 55% at 78% 40%, rgb(208 0 0 / 0.16) 0%, transparent 70%),
+      radial-gradient(45% 40% at 10% 0%, rgb(241 239 233 / 0.06) 0%, transparent 70%),
+      linear-gradient(rgb(241 239 233 / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(241 239 233 / 0.045) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 56px 56px, 56px 56px;
+    background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+  }
+  .mr-stage-light {
+    background-color: #ece8df;
+    background-image:
+      radial-gradient(70% 60% at 50% 35%, rgb(255 255 255 / 0.75) 0%, transparent 72%),
+      linear-gradient(rgb(17 17 17 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(17 17 17 / 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 32px 32px, 32px 32px;
+    background-position: 0 0, -1px -1px, -1px -1px;
+  }
+  /*
+   * MapleRecord pages stack a 3.5rem sub-navigation under the 4.75rem site header (8.25rem of sticky
+   * bars at every width), so keyboard focus and #fragment targets must clear more than the site-wide
+   * 6rem. One offset for the whole section: scroll-padding clears the bars, and a small scroll-margin
+   * (important, so page-level scroll-mt-* utilities don't stack on top of it) adds breathing room.
+   */
+  html:has([data-mr-subnav]) {
+    scroll-padding-top: 8.75rem;
+  }
+  html:has([data-mr-subnav]) [id] {
+    scroll-margin-top: 0.75rem !important;
+  }
+  /* Fades a stage's grid toward its edges. */
+  .mr-grid-fade {
+    mask-image: radial-gradient(120% 90% at 50% 30%, black 55%, transparent 100%);
+  }
+
   /* Backdrop for MapleRecord product screenshots: warm paper tones with a faint dot grid */
   .mr-panel {
     background-color: #e9e5dc;
@@ -159,9 +220,30 @@
   .prose-mig h3 + * {
     margin-top: 0.6em;
   }
+  .prose-mig h4 {
+    margin-top: 1.6em;
+    color: var(--ink);
+    font-size: 1rem;
+  }
   .prose-mig ul {
     padding-left: 1.25rem;
     list-style: none;
+  }
+  /* Preflight strips list markers; restore numbering for ordered lists. */
+  .prose-mig ol {
+    padding-left: 1.5rem;
+    list-style: decimal;
+  }
+  .prose-mig ol > li {
+    padding-left: 0.25rem;
+  }
+  .prose-mig ol > li + li {
+    margin-top: 0.5em;
+  }
+  .prose-mig ol > li::marker {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.875em;
   }
   .prose-mig ul > li {
     position: relative;
@@ -187,12 +269,37 @@
   .prose-mig a {
     color: var(--signal);
     text-decoration: underline;
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+    transition: color 150ms ease-out;
+  }
+  .prose-mig a:hover {
+    color: var(--signal-hover);
+    text-decoration-thickness: 2px;
+  }
+  .prose-mig blockquote {
+    border-left: 2px solid var(--line-strong);
+    padding-left: 1.25rem;
+    color: var(--ink);
+  }
+  .prose-mig hr {
+    margin-block: 2.5em;
+    border-color: var(--line);
+  }
+  .prose-mig code {
+    border-radius: 0.375rem;
+    background: var(--paper-deep);
+    padding: 0.1em 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.875em;
   }
   .prose-mig aside {
     border-left: 2px solid var(--ink);
     background: var(--surface);
     padding: 1.25rem 1.5rem;
+  }
+  .prose-mig aside > * + * {
+    margin-top: 0.75em;
   }
 }
 

@@ -3,24 +3,31 @@
  * `published` dates are the original WordPress publication dates. Original posts showed only
  * WordPress usernames as authors, so no individual author is displayed.
  */
+import type { AdobeProductSlug } from "@/lib/content/types";
+
 export const insightThemes = ["AI Governance", "Adobe", "Data Management", "Customer Experience"] as const;
 export type InsightTheme = (typeof insightThemes)[number];
 
 export type InsightMeta = {
   slug: string;
   title: string;
+  /** Shorter <title> for search results when `title` plus the site suffix runs past ~60 characters. */
+  metaTitle?: string;
   description: string;
   theme: InsightTheme;
   status: "published" | "draft";
   published?: string;
   legacyUrl?: string;
+  /** Adobe application the article is about; its service page becomes the article's "Related expertise" link. */
+  adobeProduct?: AdobeProductSlug;
 };
 
 export const insights: InsightMeta[] = [
   {
     slug: "data-governance-guide",
-    title: "Unlocking the Power of Data: A Comprehensive Guide to Data Governance",
-    description: "What data governance is, why it matters, its core components, and the steps to put an effective strategy in place.",
+    metaTitle: "A Guide to Data Governance",
+    title: "A Comprehensive Guide to Data Governance",
+    description: "What data governance is, why it matters, its core components, and six steps to put an effective strategy in place.",
     theme: "Data Management",
     status: "published",
     published: "2024-12-05",
@@ -28,40 +35,48 @@ export const insights: InsightMeta[] = [
   },
   {
     slug: "the-importance-of-data-governance-in-the-digital-age",
+    metaTitle: "Why Data Governance Matters Today",
     title: "The Importance of Data Governance in the Digital Age",
-    description: "How quality management, stewardship, security, privacy and lifecycle management combine into a governance program.",
+    description: "How data quality, stewardship, security, privacy and lifecycle management combine into a governance program, and how to implement one.",
     theme: "Data Management",
     status: "published",
     published: "2024-12-06",
   },
   {
     slug: "driving-customer-experience-excellence-with-adobe-experience-platform",
+    metaTitle: "Adobe Experience Platform and CX",
     title: "Driving Customer Experience Excellence with Adobe Experience Platform",
-    description: "How unified profiles, real-time data and segmentation in Adobe Experience Platform support personalized experiences.",
+    description: "How unified profiles, streaming data, audiences and AI in Adobe Experience Platform support personalized customer experiences.",
     theme: "Adobe",
     status: "published",
     published: "2024-12-06",
+    adobeProduct: "experience-platform",
   },
   {
     slug: "revolutionizing-customer-engagement-with-adobe-real-time-cdp",
-    title: "Revolutionizing Customer Engagement with Adobe Real-Time CDP",
-    description: "An overview of Adobe Real-Time CDP: unified profiles, real-time processing, segmentation and privacy controls.",
+    metaTitle: "Customer Engagement with Real-Time CDP",
+    title: "Improving Customer Engagement with Adobe Real-Time CDP",
+    description: "An overview of Adobe Real-Time CDP: unified profiles, real-time audiences, activation to other channels, and privacy controls.",
     theme: "Adobe",
     status: "published",
     published: "2024-12-06",
+    adobeProduct: "real-time-cdp",
   },
   {
     slug: "maximizing-efficiency-with-adobe-experience-manager",
+    metaTitle: "Maximizing Efficiency with AEM",
     title: "Maximizing Efficiency with Adobe Experience Manager",
-    description: "How content management, digital asset management and multi-channel delivery in Adobe Experience Manager improve efficiency.",
+    description: "How AEM Sites, AEM Assets and multi-channel content delivery in Adobe Experience Manager help teams work more efficiently.",
     theme: "Adobe",
     status: "published",
     published: "2024-12-06",
+    adobeProduct: "experience-manager",
   },
   {
     slug: "enhancing-customer-experience-with-personalization-and-innovation",
+    metaTitle: "Personalizing the Customer Experience",
     title: "Enhancing Customer Experience with Personalization and Innovation",
-    description: "The role of personalization, unified customer data and AI-assisted engagement in a better customer experience.",
+    description: "Why customer experience matters, the role of personalization and unified customer data, and practical strategies to improve CX.",
     theme: "Customer Experience",
     status: "published",
     published: "2024-12-06",

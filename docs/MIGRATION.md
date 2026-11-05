@@ -15,6 +15,13 @@ The source list is `src/config/redirects.ts`. All redirects are permanent (308) 
 
 `/ai-governance`, `/adobe-services`, `/data-management`, `/industries`, `/insights`, `/privacy`
 
+Adobe application pages (one per product in `src/content/adobe/products/`; each product's `legacyPaths` lists the old URLs that redirect to it):
+`/adobe-services/experience-platform`, `/adobe-services/real-time-cdp`, `/adobe-services/experience-manager`, `/adobe-services/analytics`, `/adobe-services/target`, `/adobe-services/marketo-engage`, `/adobe-services/commerce`
+
+`/adobe-services/assessment`: Adobe platform assessment landing page (no legacy equivalent).
+
+All of these are in the sitemap (priority 0.8).
+
 ## Consolidated or redirected
 
 | Old URL | New URL | Note |
@@ -22,14 +29,14 @@ The source list is `src/config/redirects.ts`. All redirects are permanent (308) 
 | `/blog/` | `/insights` | Renamed |
 | `/feed/`, `/comments/feed/` | `/insights` | WordPress feeds retired |
 | `/adobe-experience-cloud/` | `/adobe-services` | Consolidated |
-| `/adobe-experience-platform/` | `/adobe-services#experience-platform` | Consolidated |
-| `/adobe-real-time-cdp/` | `/adobe-services#real-time-cdp` | Consolidated |
-| `/adobe-experience-manager/` | `/adobe-services#experience-manager` | Consolidated |
-| `/adobe-content-management/` | `/adobe-services#experience-manager` | Merged into Experience Manager |
-| `/adobe-analytics/` | `/adobe-services#analytics` | Consolidated |
-| `/adobe-target/` | `/adobe-services#target` | Consolidated |
-| `/adobe-marketo-services/` | `/adobe-services#marketo-engage` | Consolidated |
-| `/adobe-commerce/` | `/adobe-services#commerce` | Consolidated |
+| `/adobe-experience-platform/` | `/adobe-services/experience-platform` | Renamed (dedicated page) |
+| `/adobe-real-time-cdp/` | `/adobe-services/real-time-cdp` | Renamed (dedicated page) |
+| `/adobe-experience-manager/` | `/adobe-services/experience-manager` | Renamed (dedicated page) |
+| `/adobe-content-management/` | `/adobe-services/experience-manager` | Merged into Experience Manager |
+| `/adobe-analytics/` | `/adobe-services/analytics` | Renamed (dedicated page) |
+| `/adobe-target/` | `/adobe-services/target` | Renamed (dedicated page) |
+| `/adobe-marketo-services/` | `/adobe-services/marketo-engage` | Renamed (dedicated page) |
+| `/adobe-commerce/` | `/adobe-services/commerce` | Renamed (dedicated page) |
 | `/data-governance/` | `/data-management#governance` | Consolidated |
 | `/integrated-data-solutions/` | `/data-management#integration` | Consolidated |
 | `/microsoft-dynamics-365/` | `/data-management#integration` | **Retired, pending decision** (see HANDOFF) |

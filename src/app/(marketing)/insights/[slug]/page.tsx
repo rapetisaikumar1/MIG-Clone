@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Eyebrow } from "@/components/ui/layout";
 import { CtaBand } from "@/features/contact/cta-band";
@@ -8,8 +9,10 @@ import { ArticleCard } from "@/features/insights/article-card";
 import { DraftBanner } from "@/features/insights/draft-banner";
 import { formatDate } from "@/features/insights/format";
 import { Breadcrumbs } from "@/features/services/sections";
+import { adobeProductPath, getAdobeProduct } from "@/lib/content/adobe";
 import { getInsight, getInsights, getPublishedSlugs, loadInsightBody } from "@/lib/content/insights";
 import { pageMetadata } from "@/lib/metadata";
+import { company, siteUrl } from "@/config/site";
 import type { InsightTheme } from "@/content/insights";
 import type { ContactInterest } from "@/features/contact/schema";
 
@@ -31,7 +34,7 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
   const article = await getInsight(slug, { includeDrafts: isEnabled });
   if (!article) return {};
   return pageMetadata({
-    title: article.title,
+    title: article.metaTitle ?? article.title,
     description: article.description,
     path: `/insights/${slug}`,
     type: "article",
@@ -46,16 +49,47 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
   if (!article) notFound();
 
   const Body = await loadInsightBody(slug);
-  const related = (await getInsights({ includeDrafts: isEnabled })).filter((a) => a.slug !== slug && a.theme === article.theme).slice(0, 2);
-  const service = themeService[article.theme];
+  // Same-theme articles first, topped up with the latest others so no article ends without onward reading.
+  const others = (await getInsights({ includeDrafts: isEnabled })).filter((a) => a.slug !== slug);
+  const related = [...others.filter((a) => a.theme === article.theme), ...others.filter((a) => a.theme !== article.theme)].slice(0, 2);
+  const relatedTitle = related.every((a) => a.theme === article.theme) ? `More on ${article.theme}` : "More insights";
+  // Articles about one Adobe application link to that application's service page and pre-select it in the contact form.
+  const product = article.adobeProduct ? getAdobeProduct(article.adobeProduct) : undefined;
+  const service = product
+    ? { href: adobeProductPath(product.slug), label: `Adobe ${product.shortName} services`, interest: "adobe-services" as const }
+    : themeService[article.theme];
+  const path = `/insights/${slug}`;
+  const crumbs = [{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }];
+  // Structured data only for published articles; drafts are noindex previews.
+  const jsonLd =
+    article.status === "published"
+      ? [
+          breadcrumbJsonLd(crumbs, path),
+          {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: article.title,
+            description: article.description,
+            datePublished: article.published,
+            url: `${siteUrl}${path}`,
+            mainEntityOfPage: `${siteUrl}${path}`,
+            image: `${siteUrl}/opengraph-image`,
+            articleSection: article.theme,
+            inLanguage: "en-US",
+            author: { "@type": "Organization", name: company.name, url: siteUrl },
+            publisher: { "@type": "Organization", name: company.name, url: siteUrl },
+          },
+        ]
+      : null;
 
   return (
     <>
+      {jsonLd ? <JsonLd data={jsonLd} /> : null}
       {isEnabled ? <DraftBanner /> : null}
       <article>
         <header className="border-b border-line pb-14 pt-10 lg:pt-14">
           <Container>
-            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.theme }]} />
+            <Breadcrumbs items={crumbs} />
             <div className="mt-12 max-w-4xl">
               <Eyebrow>{article.theme}</Eyebrow>
               <h1 className="mt-6 text-h1">{article.title}</h1>
@@ -89,7 +123,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
         <section className="border-t border-line py-16" aria-labelledby="more-title">
           <Container>
             <h2 id="more-title" className="font-mono text-label uppercase text-muted">
-              More on {article.theme}
+              {relatedTitle}
             </h2>
             <ul className="mt-8 grid gap-10 md:grid-cols-2">
               {related.map((a) => (
@@ -101,7 +135,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
           </Container>
         </section>
       ) : null}
-      <CtaBand title="Want to apply this in your organization?" body="Tell us about your goals and constraints. We'll suggest a practical first step." interest={service.interest} />
+      <CtaBand title="Want to apply this in your organization?" body="Tell us about your goals and constraints. We'll suggest a practical first step." interest={service.interest} product={product?.slug} />
     </>
   );
 }

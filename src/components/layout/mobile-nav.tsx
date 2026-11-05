@@ -5,14 +5,20 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Dialog } from "radix-ui";
 import { Menu, X, ArrowRight } from "lucide-react";
-import type { NavItem } from "@/config/navigation";
+import type { AdobeNav, NavItem } from "@/config/navigation";
 import { company, primaryPhone } from "@/config/site";
+import { cn } from "@/lib/utils";
 import { isActivePath } from "./nav-links";
 
 /** Full-screen sheet built on Radix Dialog: focus trap, Escape to close, scroll lock, labelled. */
-export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
-  const [open, setOpen] = useState(false);
+export function MobileNav({ items, cta, adobe }: { items: NavItem[]; cta: NavItem; adobe?: AdobeNav }) {
   const pathname = usePathname();
+  // Open only for the path it was opened on, so any navigation (including Back) closes the sheet.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  // Drop a stale value during render so returning to that path later doesn't reopen it.
+  if (openOn !== null && openOn !== pathname) setOpenOn(null);
+  const open = openOn === pathname;
+  const setOpen = (next: boolean) => setOpenOn(next ? pathname : null);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -25,9 +31,9 @@ export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
       <Dialog.Portal>
         <Dialog.Overlay className="sheet-overlay fixed inset-0 z-50 bg-ink/30" />
         <Dialog.Content
-          className="sheet-panel fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col bg-paper shadow-2xl"
+          className="sheet-panel fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col overflow-y-auto overscroll-contain bg-paper shadow-2xl"
         >
-          <div className="flex items-center justify-between border-b border-line px-5 py-4">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-paper px-5 py-4">
             <Dialog.Title className="font-mono text-label uppercase text-muted">Menu</Dialog.Title>
             <Dialog.Description className="sr-only">Site navigation for {company.name}</Dialog.Description>
             <Dialog.Close
@@ -37,7 +43,7 @@ export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
               <X aria-hidden className="size-5" />
             </Dialog.Close>
           </div>
-          <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-5 py-6">
+          <nav aria-label="Mobile" className="flex-1 px-5 py-6">
             <ul className="divide-y divide-line border-y border-line">
               {[...items, { label: "MapleRecord", href: "/maplerecord" }].map((item) => {
                 const active = isActivePath(pathname, item.href);
@@ -55,12 +61,42 @@ export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
                       </span>
                       <ArrowRight aria-hidden className="size-4 text-muted" />
                     </Link>
+                    {adobe && item.href === adobe.overview.href ? (
+                      <ul aria-label="Adobe applications" className="-mt-1 mb-3 ml-1 border-l border-line pl-4">
+                        {[
+                          ...adobe.products.map((p) => ({ href: p.href, label: p.label })),
+                          { href: adobe.assessment.href, label: "Platform assessment" },
+                        ].map((sub) => {
+                          const current = pathname === sub.href;
+                          return (
+                            <li key={sub.href}>
+                              <Link
+                                href={sub.href}
+                                onClick={() => setOpen(false)}
+                                aria-current={current ? "page" : undefined}
+                                className={cn(
+                                  "flex min-h-11 items-center gap-2 text-base text-ink-soft hover:text-ink",
+                                  current && "font-medium text-ink",
+                                )}
+                              >
+                                {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
+                                <span>
+                                  <span className="sr-only">Adobe </span>
+                                  {sub.label}
+                                </span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
                   </li>
                 );
               })}
             </ul>
           </nav>
-          <div className="border-t border-line p-5">
+          {/* Pinned on tall screens; on short ones (phones in landscape) it scrolls with the links. */}
+          <div className="bottom-0 border-t border-line bg-paper p-5 [@media(min-height:560px)]:sticky">
             <Link
               href={cta.href}
               onClick={() => setOpen(false)}
@@ -68,9 +104,9 @@ export function MobileNav({ items, cta }: { items: NavItem[]; cta: NavItem }) {
             >
               {cta.label}
             </Link>
-            <p className="mt-4 text-center text-sm text-muted">
-              Or call{" "}
-              <a className="font-medium text-ink underline underline-offset-4" href={`tel:${primaryPhone.e164}`}>
+            <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-sm text-muted">
+              Or call
+              <a className="inline-flex min-h-11 items-center font-medium text-ink underline underline-offset-4" href={`tel:${primaryPhone.e164}`}>
                 {primaryPhone.display}
               </a>
             </p>

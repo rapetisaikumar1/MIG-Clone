@@ -1,8 +1,28 @@
+import { adobeAssessmentPath, adobeProductPath, adobeServicesPath, getAdobeProducts } from "@/lib/content/adobe";
+
 export type NavItem = { label: string; href: string; description?: string };
+
+/** A serializable Adobe application link for menus (safe to pass to client components). */
+export type AdobeNavItem = {
+  /** Short menu label, e.g. "Experience Manager"; render with a visually hidden "Adobe " prefix. */
+  label: string;
+  href: string;
+  /** Capability area, e.g. "Content". */
+  area: string;
+  /** One-line summary, omitted while the copy is still a placeholder. */
+  summary?: string;
+};
+
+/** Everything the header, mobile sheet and footer need to link into the Adobe section. */
+export type AdobeNav = {
+  overview: NavItem;
+  products: AdobeNavItem[];
+  assessment: NavItem;
+};
 
 export const expertiseNav: NavItem[] = [
   { label: "AI Governance", href: "/ai-governance", description: "Oversight, accountability and review for AI use" },
-  { label: "Adobe Services", href: "/adobe-services", description: "Implementation and optimization of Adobe platforms" },
+  { label: "Adobe Services", href: adobeServicesPath, description: "Implementation and optimization of Adobe platforms" },
   { label: "Data Management", href: "/data-management", description: "Governance, integration, quality and lifecycle" },
 ];
 
@@ -13,19 +33,56 @@ export const primaryNav: NavItem[] = [
   { label: "About", href: "/about" },
 ];
 
-export const footerNav: { heading: string; items: NavItem[] }[] = [
-  { heading: "Expertise", items: expertiseNav },
-  {
-    heading: "Company",
-    items: [
-      { label: "About", href: "/about" },
-      { label: "MapleRecord", href: "/maplerecord" },
-      { label: "Industries", href: "/industries" },
-      { label: "Insights", href: "/insights" },
-      { label: "Contact", href: "/contact" },
-    ],
-  },
+/**
+ * Builds the small Adobe menu model from the product content. Call it only from Server
+ * Components and pass the result down as props, so product copy never reaches the client bundle.
+ */
+export function getAdobeNav(): AdobeNav {
+  return {
+    overview: { label: "All Adobe services", href: adobeServicesPath },
+    products: getAdobeProducts().map((p) => {
+      const summary = p.summary.trim();
+      return {
+        label: p.shortName,
+        href: adobeProductPath(p.slug),
+        area: p.area,
+        ...(summary && !/^todo\b/i.test(summary) ? { summary } : {}),
+      };
+    }),
+    assessment: {
+      label: "Adobe platform assessment",
+      href: adobeAssessmentPath,
+      description: "A structured review of how your Adobe applications are set up, connected and used, with prioritized next steps.",
+    },
+  };
+}
+
+export type NavGroup = { heading: string; items: (NavItem & { srPrefix?: string })[] };
+
+const companyNav: NavItem[] = [
+  { label: "About", href: "/about" },
+  { label: "MapleRecord", href: "/maplerecord" },
+  { label: "Industries", href: "/industries" },
+  { label: "Insights", href: "/insights" },
+  { label: "Contact", href: "/contact" },
 ];
+
+/** Footer link columns. Server-only, like `getAdobeNav`. */
+export function getFooterNav(): NavGroup[] {
+  const adobe = getAdobeNav();
+  return [
+    { heading: "Expertise", items: expertiseNav },
+    {
+      heading: "Adobe Services",
+      // Short labels read as "Adobe Analytics", "Adobe platform assessment"… out of context.
+      items: [
+        ...adobe.products.map((p) => ({ label: p.label, href: p.href, srPrefix: "Adobe " })),
+        { label: "Platform assessment", href: adobe.assessment.href, srPrefix: "Adobe " },
+      ],
+    },
+    { heading: "Company", items: companyNav },
+  ];
+}
 
 export const legalNav: NavItem[] = [{ label: "Privacy notice", href: "/privacy" }];
 
