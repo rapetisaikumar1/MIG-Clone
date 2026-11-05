@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { company, isIndexable, siteUrl } from "@/config/site";
 import { siteTitle } from "@/lib/metadata";
+import { CookieConsent } from "@/features/consent/cookie-consent";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     // data-scroll-behavior lets Next.js turn off the CSS smooth scrolling during route changes,
     // so a new page starts at the top instead of animating there.
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`} data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }

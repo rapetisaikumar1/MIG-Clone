@@ -2,7 +2,10 @@ import Link from "next/link";
 import { company, formatAddress } from "@/config/site";
 import { getFooterNav, legalNav } from "@/config/navigation";
 import { Container } from "@/components/ui/layout";
+import { CookieSettingsButton } from "@/features/consent/cookie-settings-button";
 import { Logo } from "./logo";
+
+const legalLinkClass = "inline-flex min-h-8 items-center hover:text-night-text hover:underline hover:underline-offset-4";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -80,14 +83,18 @@ export function SiteFooter() {
           <p>
             © {year} {company.name}. All rights reserved.
           </p>
-          <ul className="flex gap-6">
+          <ul className="flex flex-wrap gap-x-6 gap-y-1">
             {legalNav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="inline-flex min-h-8 items-center hover:text-night-text hover:underline hover:underline-offset-4">
+                <Link href={item.href} className={legalLinkClass}>
                   {item.label}
                 </Link>
               </li>
             ))}
+            <li>
+              {/* Reopens the cookie preferences panel; tests rely on this exact accessible name. */}
+              <CookieSettingsButton className={`${legalLinkClass} cursor-pointer`}>Cookie settings</CookieSettingsButton>
+            </li>
           </ul>
         </div>
       </Container>

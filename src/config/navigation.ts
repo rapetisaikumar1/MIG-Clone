@@ -84,6 +84,9 @@ export function getFooterNav(): NavGroup[] {
   ];
 }
 
-export const legalNav: NavItem[] = [{ label: "Privacy notice", href: "/privacy" }];
+export const legalNav: NavItem[] = [
+  { label: "Privacy notice", href: "/privacy" },
+  { label: "Cookie policy", href: "/cookies" },
+];
 
 export const contactCta: NavItem = { label: "Talk to an Expert", href: "/contact" };

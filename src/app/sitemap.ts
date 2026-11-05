@@ -21,6 +21,7 @@ const staticRoutes = [
   { path: "/insights", priority: 0.6 },
   { path: "/contact", priority: 0.8 },
   { path: "/privacy", priority: 0.2 },
+  { path: "/cookies", priority: 0.2 },
 ];
 
 // Drafts are never listed: getInsights() returns published articles only.

@@ -8,7 +8,7 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 2. **Resend account and verified sending domain** (or approval of another provider). The swap would touch only `src/server/email/resend.ts`.
 3. **MapleRecord product screenshots** and confirmation of whether to link to `maplerecord.com`.
 4. **Team or leadership information**, if it should appear on About. None is shown now.
-5. **Terms of service**, if required. Only a privacy notice exists.
+5. **Terms of service**, if required. Only a privacy notice and a cookie policy exist.
 
 ## Claims requiring confirmation
 
@@ -37,7 +37,8 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 | Industries | Adobe rows now name specific applications (e.g. Marketo Engage for healthcare, Commerce B2B for manufacturing). Typical applications, not client claims — confirm they reflect MiG's focus |
 | Contact page | "Never a hard sell" (tone); Delaware and Texas share one phone number in `src/config/site.ts` — confirm |
 | Insights articles | The six 2024 articles were corrected for 2026 Adobe product facts and naming (original dates kept; there is no "Updated" date field). Two display titles changed (slugs unchanged): "A Comprehensive Guide to Data Governance", "Improving Customer Engagement with Adobe Real-Time CDP". "Continuous improvement" softened to "we review and recommend" — confirm it's an ongoing service |
-| Privacy notice (`/privacy`) | Describes this implementation factually (no analytics cookies, email delivery provider, minimal logs). **Needs legal review**, including retention periods |
+| Privacy notice (`/privacy`) | Describes this implementation factually (no analytics cookies, essential `mig_consent` cookie, email delivery provider, minimal logs). **Needs legal review**, including retention periods |
+| **Cookie policy** (`/cookies`, added 2026-11-06) | Generated from `src/features/consent/config.ts` and factual about today's setup: only the essential `mig_consent` consent cookie (180 days) and the editor-only Draft Mode cookie `__prerender_bypass`. It makes no legal guarantees. **Needs legal review**, including whether the consent model and wording suit the jurisdictions MiG targets (e.g. Canada, US states) |
 
 All use cases and the homepage scenario are labeled "Illustrative use case" on the page and describe no clients.
 
@@ -49,6 +50,8 @@ All use cases and the homepage scenario are labeled "Illustrative use case" on t
 - **MapleRecord inquiries** use the Data Management interest on the contact form. Add a dedicated "MapleRecord" interest if inquiries should be routed separately.
 - **Freshness.** All published articles date from December 2024, so "Recent articles" on the home page looks dated. Publishing the drafts (below) would help.
 - **Draft articles** in `src/content/insights/`: *Start AI Governance with an Inventory* and *Records Retention: From Schedule to System*. Both are new, unapproved and hidden. Change `status` to `"published"` and add a `published` date to release them.
+
+- **Optional cookie categories.** The consent banner and settings offer **Analytics** and **Marketing** categories, off by default, but neither has any service today, so both say "Not currently in use". Decide whether to keep showing them until a tool is adopted. Adding one means listing it in `src/features/consent/config.ts`, loading it with `ConsentScript`/`ConsentGate`, bumping `CONSENT_VERSION`, and updating `/cookies` and `/privacy` (see README, "Cookie consent").
 
 ## External configuration
 

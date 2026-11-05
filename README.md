@@ -49,7 +49,7 @@ src/
       adobe-services/assessment/ Adobe platform assessment landing page
       maplerecord/             MapleRecord section: overview, platform/[module], solutions/[slug],
                                resources/[slug], about, contact (own sub-navigation layout)
-      industries/ about/ privacy/
+      industries/ about/ privacy/ cookies/
       insights/ insights/[slug]/                       Article index + MDX articles
       contact/                 Inquiry form (dynamic: reads ?interest=)
     api/contact/route.ts       POST endpoint → validation → submission service
@@ -65,6 +65,7 @@ src/
   features/home/               Connection diagram, home Adobe section
   features/adobe/              Adobe product card, Adobe Solution Partner panel, product page sections
   features/maplerecord/        MapleRecord sub-navigation and section components
+  features/consent/            Cookie consent: config (source of truth), store, banner, gates, policy table
   content/                     Reviewed copy: services/*.ts, home.ts, industries.ts, insights/*.mdx + index.ts,
                                maplerecord/*.ts (from maplerecord.com — see docs/MAPLERECORD-SOURCES.md)
                                adobe/products/*.ts (one file per Adobe application page), adobe/assessment.ts (assessment page copy)
@@ -100,6 +101,14 @@ docs/                          Migration map, content inventory, review handoff
 ### Abuse protection
 
 The built-in rate limiter is in-memory, so it applies per server instance. On Vercel, add a **Firewall rate-limit rule** for `POST /api/contact` (for example 5 requests per 10 minutes per IP) for cross-instance enforcement. Alternatively, replace `src/server/contact/rate-limit.ts` with a shared store such as Upstash Redis. The limiter keys on `x-forwarded-for`, which Vercel sets. On self-hosted setups, make sure your proxy overwrites it.
+
+## Cookie consent
+
+The site sets no analytics, advertising or third-party cookies today. The only cookies are the essential `mig_consent` (stores the visitor's choice) and the editor-only Draft Mode cookie. Optional **Analytics** and **Marketing** categories are wired end to end but have no services yet.
+
+- **Configuration:** `src/features/consent/config.ts` is the single source of truth for categories, the cookies each sets, and their services. The `/cookies` policy table, the preferences panel and the consent store all read from it. The footer's "Cookie settings" button (`CookieSettingsButton`) reopens the preferences panel on any page.
+- **Adding a service:** list it under its category's `services` and every cookie it sets under `cookies` (use `prefix: true` for names like `_ga_*`, so they are deleted when consent is withdrawn). Load scripts with `<ConsentScript category="analytics" src="…" />` and embeds with `<ConsentGate category="marketing">…</ConsentGate>` (`src/features/consent/gate.tsx`); nothing loads before consent. Then bump `CONSENT_VERSION` so returning visitors are asked again, and update the "Last updated" date on `/cookies` and `/privacy`.
+- The choice is kept for `CONSENT_MAX_AGE_DAYS` (180) days.
 
 ## Environment variables
 

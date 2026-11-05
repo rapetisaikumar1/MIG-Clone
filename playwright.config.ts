@@ -13,11 +13,32 @@ const configuredEnv = {
   PREVIEW_SECRET: "playwright-preview-secret",
 };
 
+/**
+ * Every project starts as a returning visitor who already made a cookie choice (both optional
+ * categories off), so the consent banner never overlaps the pages under test. tests/consent.spec.ts
+ * opts out with an empty storageState to exercise the first-visit flow.
+ */
+const returningVisitor = {
+  cookies: [
+    {
+      name: "mig_consent",
+      value: encodeURIComponent(JSON.stringify({ v: 1, at: new Date().toISOString(), choices: { analytics: false, marketing: false } })),
+      domain: "localhost",
+      path: "/",
+      expires: Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60,
+      httpOnly: false,
+      secure: false,
+      sameSite: "Lax" as const,
+    },
+  ],
+  origins: [],
+};
+
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   reporter: [["list"]],
-  use: { trace: "retain-on-failure" },
+  use: { trace: "retain-on-failure", storageState: returningVisitor },
   projects: [
     {
       name: "configured",

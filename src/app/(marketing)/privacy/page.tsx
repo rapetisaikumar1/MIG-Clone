@@ -4,6 +4,9 @@ import { company } from "@/config/site";
 import { Breadcrumbs } from "@/features/services/sections";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
+import { buttonVariants } from "@/components/ui/button";
+import { CONSENT_COOKIE, CONSENT_MAX_AGE_DAYS } from "@/features/consent/config";
+import { CookieSettingsButton } from "@/features/consent/cookie-settings-button";
 
 export const metadata = pageMetadata({
   title: "Privacy notice",
@@ -17,6 +20,7 @@ export const metadata = pageMetadata({
  * - delivery and logging: src/server/contact/submit.ts, src/server/email/resend.ts
  * - abuse controls: src/app/api/contact/route.ts, src/server/contact/rate-limit.ts
  * - prefill query parameters: src/app/(marketing)/contact/page.tsx, src/features/contact/links.ts
+ * - cookies and consent categories: src/features/consent/config.ts (also drives /cookies)
  * Status: factual draft that still needs legal review (docs/HANDOFF.md), including retention periods.
  */
 export default function PrivacyPage() {
@@ -73,9 +77,21 @@ export default function PrivacyPage() {
             <h2>Cookies and analytics</h2>
             <p>
               This website doesn&apos;t use advertising or analytics cookies, analytics scripts or third-party trackers, and its
-              fonts are served from this site rather than a third-party font service. Our editors use a technical cookie to
-              preview unpublished pages; visitors don&apos;t receive it.
+              fonts are served from this site rather than a third-party font service. It sets one essential cookie,{" "}
+              <code className="whitespace-nowrap font-mono text-[0.875em] text-ink">{CONSENT_COOKIE}</code>, which remembers your
+              cookie choices for {CONSENT_MAX_AGE_DAYS} days. Our editors use a technical cookie to preview unpublished pages;
+              visitors don&apos;t receive it.
             </p>
+            <p>
+              Our cookie settings also include optional Analytics and Marketing categories. They are off unless you allow them,
+              and nothing in either category is in use today. Our <Link href="/cookies">cookie policy</Link> lists every cookie
+              this site can set, and you can change your choice at any time.
+            </p>
+            <div>
+              <CookieSettingsButton className={buttonVariants({ variant: "outline", size: "sm", className: "cursor-pointer" })}>
+                Open cookie settings
+              </CookieSettingsButton>
+            </div>
             <p>
               Our hosting provider may keep standard technical logs (for example IP address and request time) to operate and
               protect the site. Our own server logs record whether a form submission was delivered, the area of interest, and how
