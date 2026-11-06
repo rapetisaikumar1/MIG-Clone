@@ -73,7 +73,7 @@ src/
   server/                      server-only: env validation, Resend client, submission service, rate limit
   config/                      site.ts (company facts), navigation.ts, redirects.ts
 public/brand/                  Original logo files, unchanged
-public/maplerecord/            MapleRecord logo and product images (WebP)
+public/maplerecord/            MapleRecord logos and images; screens/ holds recreated product screens (see docs/MAPLERECORD-SOURCES.md)
 tests/                         Playwright specs + mock email provider
 docs/                          Migration map, content inventory, review handoff
 ```

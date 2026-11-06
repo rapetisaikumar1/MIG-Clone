@@ -4,11 +4,11 @@ import {
   Activity,
   AlarmClock,
   ArrowRight,
-  Archive,
   Barcode,
   Calculator,
   ChartColumn,
-  ClipboardList,
+  CreditCard,
+  DatabaseBackup,
   EyeOff,
   FlaskConical,
   GitBranch,
@@ -16,9 +16,11 @@ import {
   HeartPulse,
   History,
   Inbox,
+  KeyRound,
   Lock,
   MousePointerClick,
   PanelsTopLeft,
+  Plug,
   Scale,
   Search,
   Settings2,
@@ -30,28 +32,31 @@ import {
 } from "lucide-react";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
-import { mrModuleHowLabels, mrPlatformFlow } from "@/content/maplerecord/modules";
+import { mrPlatformFlow, mrPlatformPage } from "@/content/maplerecord/modules";
 import { MrChecklist, MrSteps } from "@/features/maplerecord/mr-sections";
-import { MrFeatureCard, MrIconTile, MrStage, MrWindow } from "@/features/maplerecord/mr-ui";
+import { MrChips, MrFeatureCard, MrIconTile, mrModuleIcons, MrStage, MrWindow } from "@/features/maplerecord/mr-ui";
 import { getMrModule, getMrSolution } from "@/lib/content/maplerecord";
-import type { MrImage, MrModule, MrModuleSlug } from "@/lib/content/types";
+import type { MrImage, MrModule } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
 /*
  * Page sections for /maplerecord/platform and /maplerecord/platform/[module], built on the MapleRecord
  * design system (mr-ui, mr-sections). Section rhythm on a module page: dark hero → problems (paper) →
- * how it works (surface) → figures (dark band) → capabilities (paper) → audience (deep) → other modules
- * (surface) → closing CTA.
+ * how it works (surface) → figures (dark band) → product tour (deep) → capabilities (paper) → audience
+ * (deep) → other modules (surface) → closing CTA. Sections a module has no content for (MR Admin has no
+ * published figures, problems or department use cases) are skipped. Product images are recreated
+ * MapleRecord screens (16:10, src/content/maplerecord/screens.ts), shown in wide app windows.
  */
 
 type Icon = ComponentType<{ className?: string }>;
 
-export const mrModuleIcons: Record<MrModuleSlug, Icon> = {
-  "mr-records": Archive,
-  "mr-requests": Inbox,
-  "mr-workflows": Workflow,
-  "mr-forms": ClipboardList,
-};
+/** Re-exported so pages can import the module icons with the platform sections. */
+export { mrModuleIcons };
+
+/** Shown once on every page that displays recreated product screens. */
+export function MrSampleDataNote({ className }: { className?: string }) {
+  return <p className={cn("text-sm text-muted", className)}>Product screens show sample data.</p>;
+}
 
 /** Icons for capability cards, keyed by title (see modules.ts); unknown titles fall back to Sparkles. */
 const capabilityIcons: Record<string, Icon> = {
@@ -74,6 +79,12 @@ const capabilityIcons: Record<string, Icon> = {
   "Conditional logic": GitBranch,
   "Analytics and insights": ChartColumn,
   "Security and compliance": Lock,
+  "Users and access": Users,
+  "Products and licensing": CreditCard,
+  "Security settings": KeyRound,
+  "API and integrations": Plug,
+  "Backup and recovery": DatabaseBackup,
+  "System and suite settings": Settings2,
 };
 
 /** Department teams → icon and the matching MapleRecord solution page. */
@@ -124,16 +135,16 @@ export function MrDarkChips({ label, items }: { label: string; items: { label: s
 /* ---------- Module cards (platform index grid and "other modules") ---------- */
 
 const cardSizes = {
-  // Window is 82% of the card; cards are two columns (gap-6) from md.
-  lg: "(min-width: 1248px) 29rem, (min-width: 1024px) calc(41vw - 3rem), (min-width: 768px) calc(41vw - 2.25rem), (min-width: 640px) calc(82vw - 3.25rem), calc(82vw - 2rem)",
-  // Three columns (gap-6) from md.
-  sm: "(min-width: 1248px) 19rem, (min-width: 1024px) calc(27vw - 2.5rem), (min-width: 768px) calc(27vw - 1.75rem), (min-width: 640px) calc(82vw - 3.25rem), calc(82vw - 2rem)",
+  // Window is 86% of the card; cards are two columns (gap-6) from md.
+  lg: "(min-width: 1248px) 31rem, (min-width: 1024px) calc(43vw - 3.25rem), (min-width: 768px) calc(43vw - 2.25rem), (min-width: 640px) calc(86vw - 3.5rem), calc(86vw - 2.25rem)",
+  // Four columns (gap-6) from xl, two from md.
+  sm: "(min-width: 1280px) 15rem, (min-width: 1024px) calc(43vw - 3.25rem), (min-width: 768px) calc(43vw - 2.25rem), (min-width: 640px) calc(86vw - 3.5rem), calc(86vw - 2.25rem)",
 };
 
 /**
- * Module card: the product rises out of a light stage (the window's lower half is cut off by the stage on
- * purpose, so tall mock-ups read as a scrolled app rather than a cropped picture), then name, summary and
- * an "Explore" link that covers the whole card.
+ * Module card: the module's hero screen rises out of a light stage (the window runs past the stage's lower
+ * edge on purpose, so it reads as a live app rather than a cropped picture), then name, summary and an
+ * "Explore" link that covers the whole card.
  */
 export function MrModuleCard({ module: m, size = "lg", index }: { module: MrModule; size?: "lg" | "sm"; index?: number }) {
   const ModuleIcon = mrModuleIcons[m.slug];
@@ -142,15 +153,10 @@ export function MrModuleCard({ module: m, size = "lg", index }: { module: MrModu
     <article
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-surface ring-1 ring-line transition-[box-shadow] duration-300 hover:shadow-[0_24px_56px_-32px_rgb(17_17_17/0.35)]"
     >
-      <div className={cn("mr-stage-light relative overflow-hidden border-b border-line", lg ? "aspect-[16/10]" : "aspect-[16/9]")}>
-        <div className={cn("absolute inset-x-[9%] transition-transform duration-300 ease-out group-hover:-translate-y-1", lg ? "top-[11%]" : "top-[12%]")}>
-          <MrWindow
-            image={m.tabImage}
-            label={m.name}
-            aspect={mrWindowAspect(m.tabImage) === "tall" ? "tall" : "square"}
-            fit="top"
-            sizes={cardSizes[size]}
-          />
+      <div className={cn("mr-stage-light relative overflow-hidden border-b border-line", lg ? "aspect-[16/10]" : "aspect-[16/11]")}>
+        <div className="absolute inset-x-[7%] top-[13%] transition-transform duration-300 ease-out group-hover:-translate-y-1">
+          {/* Small cards get the module name: the full screen label would truncate in a quarter-width card. */}
+          <MrWindow image={m.hero.image} label={lg ? m.hero.image.label : m.name} aspect="wide" fit="top" sizes={cardSizes[size]} />
         </div>
       </div>
       <div className={cn("flex flex-1 flex-col", lg ? "p-7 sm:p-9" : "p-6 sm:p-7")}>
@@ -181,17 +187,13 @@ export function MrModuleCard({ module: m, size = "lg", index }: { module: MrModu
   );
 }
 
-/** Platform index: the four modules as a 2 × 2 grid of product cards. */
+/** Platform index: the four lifecycle modules as a 2 × 2 grid of product cards (MR Admin follows in its own band). */
 export function MrModuleGrid({ modules }: { modules: MrModule[] }) {
+  const { eyebrow, title, intro } = mrPlatformPage.showcase;
   return (
     <Section id="modules" className="scroll-mt-36" aria-labelledby="modules-title">
       <Container>
-        <SectionHeading
-          id="modules-title"
-          eyebrow="Modules"
-          title="Start with the module you need"
-          intro="Each module covers one part of the records lifecycle. Use one on its own or combine all four on the same platform."
-        />
+        <SectionHeading id="modules-title" eyebrow={eyebrow} title={title} intro={intro} />
         <ul className="mt-12 grid gap-6 md:grid-cols-2">
           {modules.map((m, i) => (
             <li key={m.slug}>
@@ -199,19 +201,46 @@ export function MrModuleGrid({ modules }: { modules: MrModule[] }) {
             </li>
           ))}
         </ul>
+        <MrSampleDataNote className="mt-6" />
       </Container>
     </Section>
   );
 }
 
-/** Platform index: how the four modules connect, as a four-step strip joined by hairlines. */
+/** Window in the 7-of-12 column (inside MrStage padding); full container width below lg. */
+const bandSizes = "(min-width: 1248px) 36rem, (min-width: 1024px) calc(50vw - 5rem), (min-width: 640px) calc(100vw - 8rem), calc(100vw - 5rem)";
+
+/** Platform index: MR Admin as the suite's administration console, with its hero screen and the areas it covers. */
+export function MrAdminBand({ module: m }: { module: MrModule }) {
+  const band = mrPlatformPage.admin;
+  return (
+    <Section id="mr-admin" tone="surface" className="scroll-mt-36" aria-labelledby="admin-title">
+      <Container className="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div className="lg:col-span-5">
+          <SectionHeading id="admin-title" eyebrow={band.eyebrow} title={band.title} intro={band.body} />
+          <MrChips label="What MR Admin manages" items={band.areas} className="mt-8" />
+          <div className="mt-9">
+            <ArrowLink href={`/maplerecord/platform/${m.slug}`}>Explore {m.name}</ArrowLink>
+          </div>
+        </div>
+        <div className="lg:col-span-7">
+          <MrStage className="mx-auto max-w-2xl lg:max-w-none">
+            <MrWindow image={m.hero.image} label={m.hero.image.label} aspect="wide" fit="top" sizes={bandSizes} />
+          </MrStage>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+/** Platform index: how the five modules connect, as a five-step strip joined by hairlines. */
 export function MrPlatformFlow() {
   const steps = mrPlatformFlow.steps.map((s) => ({ ...s, name: getMrModule(s.module)?.name ?? s.module }));
   return (
     <Section tone="deep" aria-labelledby="flow-title">
       <Container>
         <SectionHeading id="flow-title" eyebrow={mrPlatformFlow.eyebrow} title={mrPlatformFlow.heading} intro={mrPlatformFlow.intro} />
-        <ol className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
           {steps.map((s, i) => {
             const StepIcon = mrModuleIcons[s.module];
             return (
@@ -241,8 +270,9 @@ export function MrPlatformFlow() {
 
 /* ---------- Module page sections ---------- */
 
-/** "Why MR …?": the problems, as numbered columns in one panel divided by hairlines. */
+/** "Why MR …?": the problems, as numbered columns in one panel divided by hairlines. Skipped without `why`. */
 export function MrModuleProblems({ module: m }: { module: MrModule }) {
+  if (!m.why) return null;
   const items = m.why.problems;
   return (
     <Section aria-labelledby="problems-title">
@@ -276,7 +306,7 @@ export function MrModuleProblems({ module: m }: { module: MrModule }) {
 /** Window width in the 7-of-12 column (inside MrStage padding); capped at 36rem below lg. */
 const howSizes = "(min-width: 1248px) 36rem, (min-width: 1024px) calc(50vw - 5rem), (min-width: 640px) 32rem, calc(100vw - 5rem)";
 
-/** "How it operates": steps beside a large framed product window that stays in view. */
+/** "How it operates": steps beside a large framed product screen that stays in view. */
 export function MrModuleHow({ module: m }: { module: MrModule }) {
   return (
     <Section tone="surface" aria-labelledby="how-title">
@@ -289,9 +319,47 @@ export function MrModuleHow({ module: m }: { module: MrModule }) {
         </div>
         <div className="lg:sticky lg:top-40 lg:col-span-7">
           <MrStage className="mx-auto max-w-xl lg:max-w-none">
-            <MrWindow image={m.how.image} label={mrModuleHowLabels[m.slug]} aspect={mrWindowAspect(m.how.image)} fit="top" sizes={howSizes} />
+            <MrWindow image={m.how.image} label={m.how.image.label} aspect="wide" fit="top" sizes={howSizes} />
           </MrStage>
         </div>
+      </Container>
+    </Section>
+  );
+}
+
+/** Tour window: the 7-of-12 column from lg (gap-14), the full container width below. */
+const tourSizes = "(min-width: 1248px) 41rem, (min-width: 1024px) calc(58vw - 5rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)";
+
+/**
+ * Product tour: 2–4 recreated screens, each beside a numbered caption of what it shows. Rows alternate
+ * sides from lg; on smaller screens the caption comes first so the heading leads into its screen.
+ */
+export function MrModuleTour({ module: m }: { module: MrModule }) {
+  const stops = m.tour.stops;
+  return (
+    <Section id="tour" tone="deep" className="scroll-mt-36" aria-labelledby="tour-title">
+      <Container>
+        <SectionHeading id="tour-title" eyebrow="Product tour" title={`Inside ${m.name}`} intro={m.tour.intro} />
+        <ol className="mt-14 grid gap-16 lg:mt-16 lg:gap-24">
+          {stops.map((stop, i) => (
+            <li key={stop.screen.src} className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
+              <div className={cn("lg:col-span-5", i % 2 === 0 ? "lg:order-2" : "lg:order-1")}>
+                <div className="flex items-center gap-3" aria-hidden>
+                  <span className="font-mono text-label text-signal">
+                    {String(i + 1).padStart(2, "0")} / {String(stops.length).padStart(2, "0")}
+                  </span>
+                  <span className="h-px w-12 bg-line-strong" />
+                </div>
+                <h3 className="mt-5 text-h3">{stop.title}</h3>
+                <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-muted">{stop.body}</p>
+              </div>
+              <div className={cn("lg:col-span-7", i % 2 === 0 ? "lg:order-1" : "lg:order-2")}>
+                <MrWindow image={stop.screen} label={stop.screen.label} aspect="wide" fit="top" sizes={tourSizes} />
+              </div>
+            </li>
+          ))}
+        </ol>
+        <MrSampleDataNote className="mt-12 lg:mt-16" />
       </Container>
     </Section>
   );
@@ -326,9 +394,9 @@ export function MrModuleCapabilities({ module: m }: { module: MrModule }) {
     </Section>
   );
 }
-
-/** "Who it helps": department rows with icons, linked to the matching MapleRecord solution pages. */
+/** "Who it helps": department rows with icons, linked to the matching MapleRecord solution pages. Skipped without `audience`. */
 export function MrModuleAudience({ module: m }: { module: MrModule }) {
+  if (!m.audience) return null;
   return (
     <Section tone="deep" aria-labelledby="who-title">
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-14">
@@ -365,7 +433,7 @@ export function MrModuleAudience({ module: m }: { module: MrModule }) {
   );
 }
 
-/** Switcher to the other three modules, as compact product cards. */
+/** Switcher to the other modules (four of the five), as compact product cards (2 × 2 on tablets, one row from xl). */
 export function MrOtherModules({ modules }: { modules: MrModule[] }) {
   return (
     <Section tone="surface" spacing="compact" aria-labelledby="other-title">
@@ -374,7 +442,7 @@ export function MrOtherModules({ modules }: { modules: MrModule[] }) {
           <SectionHeading id="other-title" eyebrow="Platform" title="Explore the other modules" />
           <ArrowLink href="/maplerecord/platform">Platform overview</ArrowLink>
         </div>
-        <ul className="mt-10 grid gap-6 md:grid-cols-3">
+        <ul className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {modules.map((o) => (
             <li key={o.slug}>
               <MrModuleCard module={o} size="sm" />

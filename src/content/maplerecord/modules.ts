@@ -5,6 +5,11 @@
 // MR Forms hero uses MapleRecord's MR Forms builder image; the source reuses the MR Workflows dashboard there.
 // Editorial pass (2026-11-06): sentence case, "and" in titles, consistent step verbs, periods on body text, hype words
 // trimmed ("seamlessly", "perfectly", "empowers"). Figures and claims are unchanged; stat bodies no longer repeat their label.
+// Product screens (2026-11-06): hero and "how it works" images are recreated MapleRecord screens (screens.ts), and each
+// module has a product tour whose captions describe only what the screen shows (its content is sample data).
+// MR Admin (fifth module, confirmed by Maverick InnoGarage) has no page on maplerecord.com: its copy is written only from
+// what the MR Admin product UI shows. It has no published figures, problem statements or department use cases.
+import { mrScreens } from "@/content/maplerecord/screens";
 import type { MrModule, MrModuleSlug } from "@/lib/content/types";
 
 export const mrModules: MrModule[] = [
@@ -32,12 +37,7 @@ export const mrModules: MrModule[] = [
         "Compliant",
         "Enterprise-ready"
       ],
-      image: {
-        src: "/maplerecord/records-app.webp",
-        width: 1024,
-        height: 990,
-        alt: "MR Records application screen"
-      }
+      image: mrScreens.recordsLifecycle
     },
     why: {
       heading: "Fragmented records. Manual handling. Compliance and audit risk.",
@@ -76,12 +76,16 @@ export const mrModules: MrModule[] = [
           body: "Orchestrate workflows for approvals, compliance reviews, and cross-departmental requests without manual steps."
         }
       ],
-      image: {
-        src: "/maplerecord/records-flow.webp",
-        width: 935,
-        height: 1353,
-        alt: "MR Records list of organization records grouped by record series"
-      }
+      image: mrScreens.recordsRetention
+    },
+    tour: {
+      intro: "A closer look at the screens records teams work in, from the file browser to the audit trail.",
+      stops: [
+        { screen: mrScreens.recordsFiles, title: "Browse files by folder", body: "The file browser pairs a folder tree with the contents of the selected folder. Each file shows its classification and retention status, with its size, who created it and when it last changed." },
+        { screen: mrScreens.recordsSearch, title: "Search in four modes", body: "Search runs across workspaces in Simple, Advanced, Query and AI modes, and lists the matching records in a results table." },
+        { screen: mrScreens.recordsBoxes, title: "Track physical storage boxes", body: "Physical records are kept in numbered boxes. The list shows each box’s type, how many files it holds, a capacity bar and its status." },
+        { screen: mrScreens.recordsAudit, title: "Review the audit trail", body: "Each action is logged with a timestamp, the user, the action ID and type, and the device, operating system and browser it came from." },
+      ],
     },
     impact: [
       {
@@ -206,12 +210,7 @@ export const mrModules: MrModule[] = [
         "Compliant",
         "Enterprise-ready"
       ],
-      image: {
-        src: "/maplerecord/requests-app.webp",
-        width: 1024,
-        height: 991,
-        alt: "MR Requests application screen"
-      }
+      image: mrScreens.requestsKanban
     },
     why: {
       heading: "Manage requests. Track deadlines. Respond with confidence.",
@@ -250,12 +249,15 @@ export const mrModules: MrModule[] = [
           body: "Deliver accurate responses, manage bulk disclosures, and maintain a complete audit trail for every request."
         }
       ],
-      image: {
-        src: "/maplerecord/requests-flow.webp",
-        width: 965,
-        height: 1210,
-        alt: "Illustration of requests from forms and email routed through AI to a requester portal"
-      }
+      image: mrScreens.requestsTriage
+    },
+    tour: {
+      intro: "A closer look at the screens request coordinators work in, from the operational overview to redaction.",
+      stops: [
+        { screen: mrScreens.requestsDashboard, title: "See the operational overview", body: "The overview counts active, due-soon, overdue and closed requests, and shows request and appeal breakdowns, SLA risk and the pipeline by stage." },
+        { screen: mrScreens.requestsRedaction, title: "Redact with a full history", body: "The redaction history logs every step on a document, from AI analysis and accepted suggestions to manual redactions, applied exemptions and the redacted copy." },
+        { screen: mrScreens.requestsExemptions, title: "Manage exemption codes", body: "Exemption management lists each exemption code with its name, category and status." },
+      ],
     },
     impact: [
       {
@@ -387,12 +389,7 @@ export const mrModules: MrModule[] = [
         "Compliant",
         "Enterprise-ready"
       ],
-      image: {
-        src: "/maplerecord/workflows-app.webp",
-        width: 1024,
-        height: 987,
-        alt: "MR Workflows application screen"
-      }
+      image: mrScreens.workflowsCanvas
     },
     why: {
       heading: "Manual processes slow you down",
@@ -431,12 +428,14 @@ export const mrModules: MrModule[] = [
           body: "Every workflow execution is logged for audit readiness. Version history, execution logs, and role-based access ensure secure governance."
         }
       ],
-      image: {
-        src: "/maplerecord/workflows-flow.webp",
-        width: 1400,
-        height: 933,
-        alt: "MR Workflows visual builder connecting schedule, webhook, form submit and file upload triggers"
-      }
+      image: mrScreens.workflowsRuns
+    },
+    tour: {
+      intro: "A closer look at the screens process owners work in, from the dashboard to the workflow list.",
+      stops: [
+        { screen: mrScreens.workflowsDashboard, title: "Start from the dashboard", body: "The dashboard counts workflows and pending approvals, summarizes run outcomes and lists the latest runs, with quick links to common tasks." },
+        { screen: mrScreens.workflowsList, title: "Manage published and draft workflows", body: "The workflow list shows whether each workflow is published or a draft, what triggers it, its revision and when it was last updated." },
+      ],
     },
     impact: [
       {
@@ -560,12 +559,7 @@ export const mrModules: MrModule[] = [
         "Secure",
         "Mobile-ready"
       ],
-      image: {
-        src: "/maplerecord/module-forms.webp",
-        width: 1024,
-        height: 1536,
-        alt: "MR Forms form builder: generate a form with AI, apply themes and branding, and connect it to MR Records"
-      }
+      image: mrScreens.formsBuilder
     },
     why: {
       heading: "Manual form creation. Disconnected data. Slow deployment cycles.",
@@ -604,12 +598,15 @@ export const mrModules: MrModule[] = [
           body: "Submissions flow automatically into MapleRecord, with full audit trails and secure storage."
         }
       ],
-      image: {
-        src: "/maplerecord/forms-flow.webp",
-        width: 989,
-        height: 945,
-        alt: "Illustration of an AI-routed process: new request, file approval, compliance review, task assignment and notification"
-      }
+      image: mrScreens.formsLogic
+    },
+    tour: {
+      intro: "A closer look at the screens form owners work in, from a new form to its submissions.",
+      stops: [
+        { screen: mrScreens.formsChooser, title: "Choose what the form is for", body: "A new form starts with one choice: is it for Records, FOI or Workflow?" },
+        { screen: mrScreens.formsSubmissions, title: "Track every submission", body: "The submissions archive lists each submission’s tracking number, form version, mode, status and routing, with its statutory deadline." },
+        { screen: mrScreens.formsDashboard, title: "Follow activity on the dashboard", body: "The dashboard counts published forms, open requests, pending approvals and overdue items, charts recent submissions and breaks them down by status." },
+      ],
     },
     impact: [
       {
@@ -705,16 +702,121 @@ export const mrModules: MrModule[] = [
       title: "Ready to build smarter forms?",
       body: "Modernize data collection with AI-powered form building, direct records integration, and enterprise-grade security."
     }
+  },
+  {
+    slug: "mr-admin",
+    name: "MR Admin",
+    summary: "Suite administration for MapleRecord: users, products and licenses, security, integrations and backups in one console.",
+    highlights: [
+      "Shared staff directory",
+      "Products and licensing",
+      "Organization-wide security"
+    ],
+    tabImage: mrScreens.adminProducts,
+    hero: {
+      title: "One console to administer the MapleRecord suite",
+      description: "Manage the staff directory, products and licenses, roles, security policies and integrations that every MapleRecord module shares.",
+      trust: [
+        "Shared staff directory",
+        "Two-factor authentication policy",
+        "AES-256 backup encryption"
+      ],
+      image: mrScreens.adminProducts
+    },
+    how: {
+      heading: "How MR Admin works",
+      steps: [
+        {
+          title: "Enable products",
+          body: "Turn MapleRecord modules on or off for your organization and manage their licenses."
+        },
+        {
+          title: "Add people once",
+          body: "Keep one staff directory for every module. Invite users or set their password as an administrator, then assign global roles and groups."
+        },
+        {
+          title: "Set security policy",
+          body: "Apply an organization-wide two-factor authentication policy, access control, security policies, and audit logging with a log-retention period."
+        },
+        {
+          title: "Connect services",
+          body: "Configure object storage, OpenAI, DocuSign, DiDit, Stripe, Microsoft Entra, blockchain, search, and SharePoint, and manage API keys."
+        },
+        {
+          title: "Monitor and back up",
+          body: "Check the health of every MapleRecord service, and schedule daily backups with a retention period and AES-256 encryption."
+        }
+      ],
+      image: mrScreens.adminSecurity
+    },
+    tour: {
+      intro: "A closer look at the screens administrators work in, from service health to integrations and backups.",
+      stops: [
+        { screen: mrScreens.adminStatus, title: "Check system status", body: "System status checks every MapleRecord service and shows a health card for each, with its latency and HTTP status, followed by the infrastructure the suite runs on." },
+        { screen: mrScreens.adminIntegrations, title: "Connect external services", body: "Integration settings are grouped in tabs, from object storage, OpenAI, DocuSign, DiDit and Stripe to Microsoft Entra, blockchain, search, SharePoint and API keys." },
+        { screen: mrScreens.adminBackup, title: "Schedule backups", body: "Automated backups run on a daily schedule, with a retention period and AES-256 encryption for backup files." },
+      ],
+    },
+    impact: [],
+    capabilities: [
+      {
+        title: "Users and access",
+        items: [
+          "Staff directory shared by all modules",
+          "Global roles and groups",
+          "Invite users or set an initial password"
+        ]
+      },
+      {
+        title: "Products and licensing",
+        items: [
+          "Enable or disable each MapleRecord module",
+          "Module licenses, license and billing",
+          "Organizations and subscription plans"
+        ]
+      },
+      {
+        title: "Security settings",
+        items: [
+          "Organization-wide two-factor authentication policy",
+          "Access control, encryption and data settings",
+          "Monitoring, logs and security policies",
+          "Audit logging with a log-retention period"
+        ]
+      },
+      {
+        title: "API and integrations",
+        items: [
+          "Object storage (S3), search and SharePoint",
+          "OpenAI, DocuSign, DiDit and Stripe",
+          "Microsoft Entra and blockchain",
+          "API keys"
+        ]
+      },
+      {
+        title: "Backup and recovery",
+        items: [
+          "Scheduled daily backups",
+          "Backup retention period",
+          "AES-256 backup encryption"
+        ]
+      },
+      {
+        title: "System and suite settings",
+        items: [
+          "Health status of every MapleRecord service",
+          "Notifications",
+          "Organization logo, used on warehouse print labels",
+          "Suite timezone and language"
+        ]
+      }
+    ],
+    cta: {
+      title: "See MR Admin with the rest of the suite",
+      body: "Schedule a demo with the MapleRecord team to see how MR Admin manages users, products, security, and integrations for every module."
+    }
   }
 ];
-
-/** App-window title-bar labels for the "How it works" screenshots (kept short so they fit on phones). */
-export const mrModuleHowLabels: Record<MrModuleSlug, string> = {
-  "mr-records": "Record list",
-  "mr-requests": "Intake flow",
-  "mr-workflows": "Automation",
-  "mr-forms": "AI routing",
-};
 
 /**
  * "How the modules work together" on /maplerecord/platform. Each line restates what the module pages
@@ -723,7 +825,7 @@ export const mrModuleHowLabels: Record<MrModuleSlug, string> = {
 export const mrPlatformFlow = {
   eyebrow: "Connected platform",
   heading: "How the modules work together",
-  intro: "Each module handles one part of the records lifecycle, and all four run on one platform.",
+  intro: "Four modules each handle one part of the records lifecycle, and MR Admin administers all of them on the same platform.",
   steps: [
     {
       module: "mr-records",
@@ -745,5 +847,42 @@ export const mrPlatformFlow = {
       role: "Collect",
       body: "Build forms with AI. Submissions flow into MapleRecord with full audit trails and secure storage.",
     },
+    {
+      module: "mr-admin",
+      role: "Administer",
+      body: "Manage the staff directory, products and licenses, security policies, integrations, and backups for every module.",
+    },
   ] satisfies { module: MrModuleSlug; role: string; body: string }[],
+};
+
+/** Platform index (/maplerecord/platform) copy that is specific to that page. */
+export const mrPlatformPage = {
+  title: "One unified platform. Five integrated modules.",
+  metaDescription: "One unified platform with five integrated modules: MR Records, MR Requests, MR Workflows, MR Forms and MR Admin.",
+  /** Hero screen: the MR Records workspace overview. */
+  heroScreen: mrScreens.recordsDashboard,
+  showcase: {
+    eyebrow: "Modules",
+    title: "Start with the module you need",
+    intro: "Four modules cover the records lifecycle. Use one on its own or combine them on the same platform.",
+  },
+  /** "Administered from MR Admin" band: MR Admin's role, as shown in its product UI. */
+  admin: {
+    eyebrow: "Module 05 · Suite administration",
+    title: "Administered from MR Admin",
+    body: "Every module shares one staff directory and one set of security, integration, and backup settings. Administrators manage them in MR Admin.",
+    areas: [
+      "Staff directory and global roles",
+      "Products and licenses",
+      "Two-factor authentication policy",
+      "API and integrations",
+      "Daily encrypted backups",
+      "System status",
+    ],
+    screens: [mrScreens.adminStatus, mrScreens.adminIntegrations],
+  },
+  cta: {
+    title: "See the platform in action",
+    body: "Schedule a personalized demo with the MapleRecord team to see how the five modules fit your records management.",
+  },
 };

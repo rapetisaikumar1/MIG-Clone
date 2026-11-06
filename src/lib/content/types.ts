@@ -58,23 +58,32 @@ export type ServiceContent = {
 /* ---------- MapleRecord (source of truth: maplerecord.com) ---------- */
 
 export type MrImage = { src: string; width: number; height: number; alt: string };
-export type MrModuleSlug = "mr-records" | "mr-requests" | "mr-workflows" | "mr-forms";
+export type MrModuleSlug = "mr-records" | "mr-requests" | "mr-workflows" | "mr-forms" | "mr-admin";
 type TitledText = { title: string; body: string };
+/** A recreated MapleRecord product screen (see src/content/maplerecord/screens.ts) with its app-window label. */
+export type MrScreenImage = MrImage & { label: string };
+/** One stop in a module's product tour: the screen, and a factual caption of what it shows. */
+export type MrTourStop = { screen: MrScreenImage; title: string; body: string };
 
 export type MrModule = {
   slug: MrModuleSlug;
   name: string;
-  officialUrl: string;
+  /** The module's page on maplerecord.com; absent when the module has no public page (MR Admin). */
+  officialUrl?: string;
   summary: string;
   highlights: string[];
   tabImage: MrImage;
-  hero: { title: string; description: string; trust: string[]; image: MrImage };
-  why: { heading: string; problems: TitledText[] };
-  how: { heading: string; steps: TitledText[]; image: MrImage };
-  /** Figures as published by MapleRecord; `value` is absent for qualitative items. */
+  hero: { title: string; description: string; trust: string[]; image: MrScreenImage };
+  /** Problems the module addresses (absent for MR Admin, which has no published copy). */
+  why?: { heading: string; problems: TitledText[] };
+  how: { heading: string; steps: TitledText[]; image: MrScreenImage };
+  /** Product tour on the module page: 2–4 recreated screens with captions. */
+  tour: { intro: string; stops: MrTourStop[] };
+  /** Figures as published by MapleRecord; `value` is absent for qualitative items. Empty when none are published. */
   impact: { value?: string; label: string; body: string }[];
   capabilities: { title: string; items: string[] }[];
-  audience: { intro: string; teams: TitledText[] };
+  /** Department use cases (absent for MR Admin). */
+  audience?: { intro: string; teams: TitledText[] };
   cta: { title: string; body: string };
 };
 

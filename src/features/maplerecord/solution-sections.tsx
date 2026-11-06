@@ -28,9 +28,10 @@ import {
 } from "lucide-react";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
+import { mrScreens, type MrScreenKey } from "@/content/maplerecord/screens";
 import { mrSolutionSummaries } from "@/content/maplerecord/solutions";
-import { MrProblemSection, MrSteps } from "@/features/maplerecord/mr-sections";
-import { MrChips, MrIconTile, MrLinkCard, mrModuleIcons } from "@/features/maplerecord/mr-ui";
+import { MrProblemSection, MrSampleNote, MrSteps } from "@/features/maplerecord/mr-sections";
+import { MrChips, MrIconTile, MrLinkCard, MrStage, MrWindow, mrModuleIcons } from "@/features/maplerecord/mr-ui";
 import { getMrModuleName, getMrModules } from "@/lib/content/maplerecord";
 import type { MrModuleSlug, MrSolution } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
@@ -65,6 +66,24 @@ function solutionIcon(slug: string): Icon {
 
 /** Module icons. Candidates for mr-ui so the platform pages can share them. */
 const moduleIcons = mrModuleIcons;
+
+/** The screen each module card shows on industry pages (clean, legible at thumbnail size). */
+const moduleCardScreens: Record<MrModuleSlug, MrScreenKey> = {
+  "mr-records": "recordsRetention",
+  "mr-requests": "requestsKanban",
+  "mr-workflows": "workflowsCanvas",
+  "mr-forms": "formsBuilder",
+  "mr-admin": "adminProducts",
+};
+
+/*
+ * `sizes` for the module-card thumbnail: a third of the container from xl (1.5rem gaps), capped at 36rem
+ * (max-w-xl) while cards stack full width; minus the stage padding (1.5rem / 1.75rem a side).
+ */
+const moduleCardSizes = "(min-width: 1280px) 19.5rem, (min-width: 696px) 36rem, (min-width: 640px) calc(100vw - 7.5rem), calc(100vw - 5.5rem)";
+
+/* Department workflow window: 7 of 12 columns from lg (3.5rem gap), inside MrStage padding. */
+const workflowSizes = "(min-width: 1248px) 35.5rem, (min-width: 1024px) calc(58.33vw - 10rem), (min-width: 640px) calc(100vw - 8rem), calc(100vw - 5rem)";
 
 /** Focus areas from a solution's `tagline` ("A · B · C"). */
 function focusAreas(s: MrSolution) {
@@ -149,20 +168,26 @@ export function SolutionDirectory({
   );
 }
 
-/** Index: the four modules every solution is built from. */
+/** Index: the five modules every solution is built from (3 + 2 from lg, 2 + 2 + 1 on tablets). */
 export function SolutionPlatformBand() {
   return (
     <Section tone="deep" spacing="compact" aria-labelledby="platform-title">
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHeading id="platform-title" eyebrow="Platform" title="One platform behind every solution" intro="Each solution runs on the same unified platform and its four integrated modules." />
+          <SectionHeading id="platform-title" eyebrow="Platform" title="One platform behind every solution" intro="Each solution runs on the same unified platform and its five integrated modules." />
           <ArrowLink href="/maplerecord/platform" className="shrink-0">
             Explore the platform
           </ArrowLink>
         </div>
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {getMrModules().map((m) => (
-            <li key={m.slug}>
+        <ul className={cn("mt-12 grid gap-5 sm:grid-cols-2 lg:gap-6", getMrModules().length === 5 ? "lg:grid-cols-6" : "lg:grid-cols-4")}>
+          {getMrModules().map((m, i, all) => (
+            <li
+              key={m.slug}
+              className={cn(
+                all.length === 5 && (i < 3 ? "lg:col-span-2" : "lg:col-span-3"),
+                all.length % 2 === 1 && i === all.length - 1 && "sm:col-span-2 lg:col-span-3",
+              )}
+            >
               <MrLinkCard href={`/maplerecord/platform/${m.slug}`} title={m.name} body={m.summary} icon={moduleIcons[m.slug]} cta="Explore module" />
             </li>
           ))}
@@ -202,7 +227,7 @@ export function SolutionModules({ label, heading, items }: { label: string } & N
             id="modules-title"
             eyebrow="How it works"
             title={heading}
-            intro={`Three integrated modules on one platform, and what each one does for ${label.toLowerCase().replace(" & ", " and ")}.`}
+            intro={`${listNames(items.map((m) => getMrModuleName(m.module)))} on one platform, and what each one does for ${label.toLowerCase().replace(" & ", " and ")}.`}
           />
           <ArrowLink href="/maplerecord/platform" className="shrink-0">
             Explore the platform
@@ -211,11 +236,16 @@ export function SolutionModules({ label, heading, items }: { label: string } & N
         <ul className="mt-12 grid gap-5 lg:mt-14 lg:gap-6 xl:grid-cols-3">
           {items.map((m) => {
             const name = getMrModuleName(m.module);
+            const screen = mrScreens[moduleCardScreens[m.module]];
             return (
               <li key={m.module} className="flex flex-col overflow-hidden rounded-2xl bg-paper ring-1 ring-line">
                 <div className="on-night flex items-center gap-3 bg-night px-6 py-4 text-night-text sm:px-7">
                   <MrIconTile icon={moduleIcons[m.module]} tone="dark" className="size-9 rounded-lg" />
                   <p className="font-mono text-label uppercase">{name}</p>
+                </div>
+                {/* Screen peek: the window is cut by the stage's bottom edge, like the overview pillars. */}
+                <div className="mr-stage-light border-b border-line px-6 pt-6 sm:px-7">
+                  <MrWindow image={screen} label={screen.label} fit="top" aspect="wide" sizes={moduleCardSizes} className="mx-auto max-w-xl rounded-b-none" />
                 </div>
                 {/* Side by side inside the card while cards stack full width (md–lg); stacked at xl (three columns). */}
                 <div className="flex flex-1 flex-col p-6 sm:p-7 md:grid md:grid-cols-2 md:gap-x-10 xl:flex">
@@ -239,9 +269,15 @@ export function SolutionModules({ label, heading, items }: { label: string } & N
             );
           })}
         </ul>
+        <MrSampleNote className="mt-6" />
       </Container>
     </Section>
   );
+}
+
+/** "A, B and C". */
+function listNames(names: string[]) {
+  return names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : (names[0] ?? "");
 }
 
 /* -------------------------------------------------------------- workflow */
@@ -249,12 +285,25 @@ export function SolutionModules({ label, heading, items }: { label: string } & N
 /** Department pages walk one request through intake, records, approvals and delivery. */
 const flowModules: MrModuleSlug[] = ["mr-requests", "mr-records", "mr-workflows"];
 
+const workflowScreen = mrScreens.workflowsCanvas;
+
 export function SolutionWorkflow({ heading, steps }: NonNullable<MrSolution["workflow"]>) {
   return (
     <Section id="workflow" tone="surface" className="scroll-mt-36" aria-labelledby="workflow-title">
       <Container>
         <SectionHeading id="workflow-title" eyebrow="How it works" title={heading} />
-        <MrSteps steps={steps} layout="horizontal" className="mt-12 lg:mt-16" />
+        <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:items-start lg:gap-14">
+          <MrSteps steps={steps} className="lg:col-span-5" />
+          <figure className="lg:sticky lg:top-40 lg:col-span-7">
+            <MrStage>
+              <MrWindow image={workflowScreen} label={workflowScreen.label} fit="top" aspect="wide" sizes={workflowSizes} />
+            </MrStage>
+            <figcaption className="mt-4 text-sm text-muted">
+              The MR Workflows designer, where approval steps like these are laid out: here a destruction authorization with trigger, approval, assignment
+              and end nodes. <MrSampleNote className="inline" />
+            </figcaption>
+          </figure>
+        </div>
         <div className="mt-12 flex flex-col gap-3 border-t border-line pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 lg:mt-14">
           <p className="font-mono text-label uppercase text-muted">Modules in this flow</p>
           <ul className="flex flex-wrap gap-2">

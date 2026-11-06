@@ -9,6 +9,7 @@ import {
   MrModuleCapabilities,
   MrModuleHow,
   MrModuleProblems,
+  MrModuleTour,
   MrOtherModules,
 } from "@/features/maplerecord/platform-sections";
 import { getMrModule, getMrModules } from "@/lib/content/maplerecord";
@@ -40,7 +41,7 @@ export default async function ModulePage({ params }: PageProps<"/maplerecord/pla
         title={m.hero.title}
         description={m.hero.description}
         image={m.hero.image}
-        imageAspect="square"
+        imageLabel={m.hero.image.label}
         officialUrl={m.officialUrl}
         meta={<MrDarkChips label="Highlights" items={m.hero.trust.map((t) => ({ label: t }))} />}
       >
@@ -50,7 +51,9 @@ export default async function ModulePage({ params }: PageProps<"/maplerecord/pla
       </MrHero>
       <MrModuleProblems module={m} />
       <MrModuleHow module={m} />
-      <MrStatsSection heading="Benefits you can measure" items={m.impact} />
+      {/* Only modules with published figures get the figures band (MR Admin has none). */}
+      {m.impact.length > 0 ? <MrStatsSection heading="Benefits you can measure" items={m.impact} /> : null}
+      <MrModuleTour module={m} />
       <MrModuleCapabilities module={m} />
       <MrModuleAudience module={m} />
       <MrOtherModules modules={others} />

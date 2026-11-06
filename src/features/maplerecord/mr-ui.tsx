@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ComponentType, ReactNode } from "react";
-import { Archive, ArrowRight, ClipboardList, Inbox, Workflow, type LucideIcon } from "lucide-react";
+import { Archive, ArrowRight, ClipboardList, Inbox, UserCog, Workflow, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MrImage, MrModuleSlug } from "@/lib/content/types";
 
@@ -394,4 +394,5 @@ export const mrModuleIcons: Record<MrModuleSlug, LucideIcon> = {
   "mr-requests": Inbox,
   "mr-workflows": Workflow,
   "mr-forms": ClipboardList,
+  "mr-admin": UserCog,
 };

@@ -1,8 +1,10 @@
 // Written from maplerecord.com (/about-us), crawled 2026-11-03. Wording follows the official site.
 // Edited for clarity only: value titles are short labels drawn from each value's own copy, mission and
 // vision are split into a lead clause and the rest for display, and stat captions read as full sentences.
-// No claims or figures were added or changed.
+// No claims or figures were added or changed. The story figure is a recreated product screen (screens.ts) with
+// sample data; the module list reads "five modules" now that MR Admin is listed (owner-confirmed).
 import type { MrImage } from "@/lib/content/types";
+import { mrScreens } from "./screens";
 
 const image = (name: string, width: number, height: number, alt: string): MrImage => ({ src: `/maplerecord/${name}.webp`, width, height, alt });
 
@@ -25,6 +27,7 @@ export const mrAbout = {
     rest: "setting the standard for secure, efficient, and intelligent document management.",
   },
   storyTitle: "Rethinking how organizations manage information",
+  modulesTitle: "One platform, five modules",
   story: [
     "MapleRecord was founded to rethink how organizations manage information in a fast-changing digital world. As data volumes grow and regulations tighten, many teams still rely on fragmented tools and manual processes that slow them down.",
     "We built MapleRecord as an AI-driven platform that unifies records, requests, and workflows in one place. By simplifying how information is captured, governed, and shared, we help teams work faster and respond with confidence.",
@@ -78,6 +81,7 @@ export const mrAbout = {
   },
   images: {
     hero: image("about-meeting", 1080, 608, "Four colleagues in business attire talking around a meeting table with a laptop"),
-    platform: image("records-app", 1024, 990, "MR Records organization view listing workspaces for regional hubs"),
+    /** Story figure: a recreated product screen (carries its own window label). */
+    platform: mrScreens.requestsDashboard,
   },
 };

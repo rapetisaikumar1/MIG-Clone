@@ -28,8 +28,10 @@ import { mrAbout, type MrAboutIndustryIcon, type MrAboutValueIcon } from "@/cont
 import { mrContact } from "@/content/maplerecord/contact";
 import { mrOfficial } from "@/content/maplerecord/official";
 import { contactHref } from "@/features/contact/links";
-import { MrBadge, MrCrumbs, MrFeatureCard, MrIconTile, MrStage, MrWindow, mrHalfSizes } from "@/features/maplerecord/mr-ui";
+import { MrBadge, MrCrumbs, MrFeatureCard, MrIconTile, MrStage, MrWindow } from "@/features/maplerecord/mr-ui";
+import { MrSampleNote } from "@/features/maplerecord/mr-sections";
 import { getMrModules } from "@/lib/content/maplerecord";
+import { cn } from "@/lib/utils";
 
 /*
  * Page sections for the MapleRecord company pages (/maplerecord/about and /maplerecord/contact).
@@ -52,6 +54,10 @@ const industryIcons: Record<MrAboutIndustryIcon, Icon> = {
 /* ------------------------------------------------------------------------------------------------
  * About
  * ---------------------------------------------------------------------------------------------- */
+
+/** The story window: half the container from lg (3.5rem gap), inside MrStage's padding (1.25 / 2 / 2.5rem). */
+const storySizes =
+  "(min-width: 1248px) 29.25rem, (min-width: 1024px) calc(50vw - 9.75rem), (min-width: 640px) calc(100vw - 8rem), calc(100vw - 5rem)";
 
 /** Mission and vision as two large statements: the lead clause in ink, the rest in muted ink. */
 export function MrPurposeSection() {
@@ -86,7 +92,7 @@ export function MrPurposeSection() {
   );
 }
 
-/** Company story beside the platform it describes, with links to the four modules. */
+/** Company story beside the platform it describes, with links to the five modules. */
 export function MrStorySection() {
   const modules = getMrModules();
   return (
@@ -100,10 +106,10 @@ export function MrStorySection() {
             ))}
           </div>
           <div className="mt-10 border-t border-line pt-8">
-            <h3 className="font-mono text-label uppercase text-muted">One platform, four modules</h3>
+            <h3 className="font-mono text-label uppercase text-muted">{mrAbout.modulesTitle}</h3>
             <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
-              {modules.map((m) => (
-                <li key={m.slug}>
+              {modules.map((m, i) => (
+                <li key={m.slug} className={cn(modules.length % 2 === 1 && i === modules.length - 1 && "sm:col-span-2")}>
                   <Link
                     href={`/maplerecord/platform/${m.slug}`}
                     className="group flex min-h-12 items-center justify-between gap-3 rounded-xl bg-paper px-4 text-[0.9375rem] font-medium ring-1 ring-line transition-shadow hover:ring-ink"
@@ -118,8 +124,9 @@ export function MrStorySection() {
         </div>
         <div className="lg:sticky lg:top-40 lg:col-span-6">
           <MrStage>
-            <MrWindow image={mrAbout.images.platform} label="MR Records" aspect="square" sizes={mrHalfSizes} />
+            <MrWindow image={mrAbout.images.platform} label={mrAbout.images.platform.label} fit="top" aspect="wide" sizes={storySizes} />
           </MrStage>
+          <MrSampleNote className="mt-4" />
         </div>
       </Container>
     </Section>

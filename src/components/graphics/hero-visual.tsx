@@ -1,153 +1,233 @@
 import { cn } from "@/lib/utils";
-import { Plane, NodeLabel } from "./primitives";
 
 /**
- * Signature illustration: governed data moving upward through control points into
- * AI and digital experiences. Conceptual only — no metrics or simulated results.
- * Below `sm`, SVG text is hidden and an HTML legend (rendered by the caller) carries the labels.
+ * Signature illustration: the Maverick InnoGarage operating model as a closed loop.
+ * Modelled on consulting operating-model wheels (outcome at the hub, contributing elements around it,
+ * an open enabling ring at the edge): the three practices as overlapping circles (data management at
+ * the base) with customer and business outcomes where they meet, and the four delivery stages —
+ * assess, design, implement, improve — as a continuous ring. Conceptual only: no metrics or simulated results.
+ * Below `sm`, SVG text is hidden and the caller renders an HTML legend instead.
  */
+
+const C = 280; // centre
+const RING = 226; // delivery-loop radius
+const LOBE_OFFSET = 66; // distance from centre to each practice circle's centre
+const LOBE_R = 92; // practice circle radius
+
+const practices = [
+  { id: "data", short: "Data", lines: ["Data", "Management"], angle: 90 }, // foundation: at the base
+  { id: "ai", short: "AI", lines: ["AI", "Governance"], angle: 210 },
+  { id: "adobe", short: "Adobe", lines: ["Adobe", "Services"], angle: 330 },
+] as const;
+
+const stages = [
+  { label: "Assess", angle: -90 },
+  { label: "Design", angle: 0 },
+  { label: "Implement", angle: 90 },
+  { label: "Improve", angle: 180 },
+] as const;
+
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const onCircle = (r: number, deg: number) =>
+  [C + r * Math.cos(rad(deg)), C + r * Math.sin(rad(deg))] as const;
+const f = (n: number) => n.toFixed(2);
+
+/** Ring arc from a to b degrees (clockwise in screen space). */
+function arc(a: number, b: number) {
+  const [x1, y1] = onCircle(RING, a);
+  const [x2, y2] = onCircle(RING, b);
+  return `M${f(x1)} ${f(y1)} A${RING} ${RING} 0 0 1 ${f(x2)} ${f(y2)}`;
+}
+
 export function HeroVisual({ className }: { className?: string }) {
-  const signalPath = "M410 440 V330 H280 V250 C280 222 431 222 431 192";
+  // The ring is drawn as four arcs with small gaps on the diagonals; an arrowhead after each gap
+  // shows the direction of travel (assess → design → implement → improve → assess).
+  const gaps = [-45, 45, 135, 225];
+  const arcs = gaps.map((g, i) =>
+    arc(
+      g + 5,
+      (gaps[(i + 1) % gaps.length] ?? 0) +
+        (i === gaps.length - 1 ? 360 : 0) -
+        5,
+    ),
+  );
+  const loopPath = `M${C} ${C - RING} A${RING} ${RING} 0 1 1 ${C - 0.01} ${C - RING}`;
+
   return (
     <svg
-      viewBox="0 0 580 620"
+      viewBox="-12 -12 584 584"
       role="img"
       aria-labelledby="hero-visual-title hero-visual-desc"
       className={cn("h-auto w-full", className)}
     >
-      <title id="hero-visual-title">How trusted data supports responsible AI and digital experiences</title>
+      <title id="hero-visual-title">
+        Our operating model: three connected practices, delivered in a
+        continuous loop
+      </title>
       <desc id="hero-visual-desc">
-        Three layers. At the base, enterprise data sources such as CRM, ERP and records pass a quality check. In the
-        middle, governance controls apply policy, review and clear ownership. At the top, the governed data supports
-        AI models and digital experiences such as websites and customer journeys. A loop on the right shows
-        monitoring feeding improvements back to the foundation.
+        A closed-loop model. At the centre are customer and business outcomes.
+        Around them sit three connected practices, drawn as overlapping circles:
+        data management at the base, with AI governance and Adobe services above
+        it. An outer ring shows the four delivery stages in a continuous cycle:
+        assess, design, implement and improve, then back to assess.
       </desc>
 
-      {/* Connectors: data → controls */}
-      <g className="stroke-ink" strokeWidth="1.5" fill="none">
-        {[150, 280, 410].map((x) => (
-          <path key={x} d={`M${x} 440 V386`} className="draw-in" pathLength={1} />
+      {/* Outer ring: delivery loop */}
+      <g
+        fill="none"
+        className="stroke-ink"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      >
+        {arcs.map((d) => (
+          <path key={d} d={d} className="draw-in" pathLength={1} />
         ))}
-        {/* controls → experiences */}
-        <path d="M280 250 C280 222 139 222 139 192" className="draw-in" pathLength={1} />
-        <path d="M280 250 V192" className="draw-in" pathLength={1} />
-        <path d="M280 250 C280 222 431 222 431 192" className="draw-in" pathLength={1} />
       </g>
-      <g className="fill-ink">
-        {[150, 280, 410].map((x) => (
-          <path key={x} d={`M${x - 4} 389 L${x} 381 L${x + 4} 389 Z`} />
-        ))}
+      {/* Direction arrows just after each gap */}
+      <g
+        fill="none"
+        className="stroke-ink"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {gaps.map((g) => {
+          const [x, y] = onCircle(RING, g + 6);
+          return (
+            <path
+              key={g}
+              d="M-7 -6.5 L1 0 L-7 6.5"
+              transform={`translate(${f(x)} ${f(y)}) rotate(${g + 6 + 90})`}
+            />
+          );
+        })}
       </g>
 
-      {/* Feedback loop: monitor & improve */}
+      {/* Inner hairline: where the practices meet */}
+      <circle
+        cx={C}
+        cy={C}
+        r={182}
+        fill="none"
+        className="stroke-line"
+        strokeWidth="1"
+        strokeDasharray="2 6"
+      />
+
+      {/* Practices: three overlapping circles (multiply blend darkens where they overlap) */}
+      <g style={{ mixBlendMode: "multiply" }}>
+        {practices.map((p) => {
+          const [cx, cy] = onCircle(LOBE_OFFSET, p.angle);
+          return (
+            <circle
+              key={p.id}
+              cx={f(cx)}
+              cy={f(cy)}
+              r={LOBE_R}
+              className={p.id === "data" ? "fill-paper-deep" : "fill-[#f1eee7]"}
+            />
+          );
+        })}
+      </g>
+      <g fill="none" className="stroke-ink" strokeWidth="1.25">
+        {practices.map((p) => {
+          const [cx, cy] = onCircle(LOBE_OFFSET, p.angle);
+          return <circle key={p.id} cx={f(cx)} cy={f(cy)} r={LOBE_R} />;
+        })}
+      </g>
+      {practices.map((p) => {
+        const [tx, ty] = onCircle(LOBE_OFFSET + 46, p.angle);
+        return (
+          <g key={p.id}>
+            <g className="max-sm:hidden">
+              {p.lines.map((line, i) => (
+                <text
+                  key={line}
+                  x={f(tx)}
+                  y={f(ty - 4 + i * 18)}
+                  textAnchor="middle"
+                  className="fill-ink text-[14.5px] font-semibold tracking-[-0.01em]"
+                >
+                  {line}
+                </text>
+              ))}
+            </g>
+            <text
+              x={f(tx)}
+              y={f(ty + 9)}
+              textAnchor="middle"
+              className="fill-ink text-[26px] font-semibold tracking-[-0.01em] sm:hidden"
+            >
+              {p.short}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Hub: outcomes */}
+      <circle cx={C} cy={C} r={38} className="fill-ink" />
+      <circle cx={C} cy={C - 15} r={4.5} className="fill-logo-red" />
       <g className="max-sm:hidden">
-        <path d="M534 112 C548 112 548 120 548 140 V500 C548 520 546 522 534 522" fill="none" className="stroke-line-strong" strokeWidth="1.5" strokeDasharray="4 5" />
-        <path d="M538 517 L530 522 L538 527" fill="none" className="stroke-line-strong" strokeWidth="1.5" />
-        <text x="0" y="0" transform="translate(564 330) rotate(90)" textAnchor="middle" className="fill-muted font-mono text-[11px] uppercase tracking-[0.1em]">
-          Monitor &amp; improve
+        <text
+          x={C}
+          y={C + 5}
+          textAnchor="middle"
+          className="fill-night-text font-mono text-[9.5px] uppercase tracking-[0.08em]"
+        >
+          Customer
+        </text>
+        <text
+          x={C}
+          y={C + 17}
+          textAnchor="middle"
+          className="fill-night-text font-mono text-[9.5px] uppercase tracking-[0.08em]"
+        >
+          outcomes
         </text>
       </g>
 
-      {/* Top tier: AI & digital experiences */}
-      <Plane x={40} y={40} w={480} h={150} />
-      <text x="64" y="72" className="fill-muted font-mono text-[12px] uppercase tracking-[0.1em] max-sm:hidden">
-        AI &amp; digital experiences
-      </text>
-      {/* Web experience tile */}
-      <g>
-        <rect x="64" y="92" width="150" height="78" rx="6" className="fill-paper stroke-ink" strokeWidth="1.25" />
-        <path d="M64 106 H214" className="stroke-ink" strokeWidth="1.25" />
-        {[73, 81, 89].map((cx) => (
-          <circle key={cx} cx={cx} cy="99" r="2" className="fill-line-strong" />
-        ))}
-        <rect x="76" y="116" width="58" height="40" rx="3" className="fill-paper-deep" />
-        <path d="M144 120 H200 M144 130 H192 M144 140 H198 M144 150 H178" className="stroke-line-strong" strokeWidth="3" strokeLinecap="round" />
-      </g>
-      {/* AI model tile */}
-      <g>
-        <rect x="230" y="92" width="120" height="78" rx="6" className="fill-ink" />
-        <g className="stroke-night-muted" strokeWidth="1">
-          <path d="M252 112 L290 131 L252 150 M290 131 L328 112 M290 131 L328 150 M252 112 V150 M328 112 V150" fill="none" />
-        </g>
-        {[
-          [252, 112],
-          [252, 150],
-          [328, 112],
-          [328, 150],
-        ].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="3.5" className="fill-night-text" />
-        ))}
-        <circle cx="290" cy="131" r="6" className="fill-logo-red" />
-      </g>
-      {/* Customer journey tile */}
-      <g>
-        <rect x="366" y="92" width="130" height="78" rx="6" className="fill-paper stroke-ink" strokeWidth="1.25" />
-        <path d="M382 150 C404 150 404 112 428 112 S452 150 480 150" fill="none" className="stroke-ink" strokeWidth="1.25" />
-        {[
-          [382, 150],
-          [428, 112],
-          [480, 150],
-        ].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4" className="fill-surface stroke-ink" strokeWidth="1.25" />
-        ))}
-      </g>
+      {/* Stage labels sit on the ring */}
+      {stages.map((s) => {
+        const [x, y] = onCircle(RING, s.angle);
+        const w = s.label.length * 8.6 + 30;
+        return (
+          <g key={s.label}>
+            <circle cx={f(x)} cy={f(y)} r="9" className="fill-paper stroke-ink sm:hidden" strokeWidth="2" />
+            <g className="max-sm:hidden">
+              <rect
+                x={f(x - w / 2)}
+                y={f(y - 15)}
+                width={f(w)}
+                height="30"
+                rx="15"
+                className="fill-paper stroke-ink"
+                strokeWidth="1.25"
+              />
+              <text
+                x={f(x)}
+                y={f(y + 4.5)}
+                textAnchor="middle"
+                className="fill-ink font-mono text-[12px] uppercase tracking-[0.08em]"
+              >
+                {s.label}
+              </text>
+            </g>
+          </g>
+        );
+      })}
 
-      {/* Middle tier: governance controls */}
-      <Plane x={40} y={250} w={480} h={130} />
-      <text x="64" y="282" className="fill-muted font-mono text-[12px] uppercase tracking-[0.1em] max-sm:hidden">
-        Governance controls
-      </text>
-      <path d="M110 330 H450" className="stroke-line-strong" strokeWidth="1.5" />
-      <circle cx="150" cy="330" r="13" className="fill-surface stroke-ink" strokeWidth="1.5" />
-      <path d="M144 325 H156 M144 330 H156 M144 335 H152" className="stroke-ink" strokeWidth="1.25" />
-      <rect x="266" y="316" width="28" height="28" rx="3" transform="rotate(45 280 330)" className="fill-ink" />
-      <circle cx="280" cy="330" r="5" className="fill-logo-red" />
-      <circle cx="410" cy="330" r="13" className="fill-surface stroke-ink" strokeWidth="1.5" />
-      <circle cx="410" cy="326" r="4" className="fill-none stroke-ink" strokeWidth="1.25" />
-      <path d="M402 338 C402 332 418 332 418 338" className="fill-none stroke-ink" strokeWidth="1.25" />
-      <g className="max-sm:hidden">
-        <NodeLabel x={150} y={366}>Policy</NodeLabel>
-        <NodeLabel x={280} y={366}>Review</NodeLabel>
-        <NodeLabel x={410} y={366}>Owner</NodeLabel>
-      </g>
-
-      {/* Bottom tier: data foundations */}
-      <Plane x={40} y={440} w={480} h={150} />
-      <text x="64" y="472" className="fill-muted font-mono text-[12px] uppercase tracking-[0.1em] max-sm:hidden">
-        Data foundations
-      </text>
-      <path d="M100 526 H440" className="stroke-line-strong" strokeWidth="1.5" />
-      {[
-        { x: 110, label: "CRM" },
-        { x: 210, label: "ERP" },
-        { x: 310, label: "Records" },
-      ].map(({ x, label }) => (
-        <g key={label}>
-          <path
-            d={`M${x - 22} 506 V542 C${x - 22} 550 ${x + 22} 550 ${x + 22} 542 V506`}
-            className="fill-surface stroke-ink"
-            strokeWidth="1.5"
-          />
-          <ellipse cx={x} cy="506" rx="22" ry="7" className="fill-paper-deep stroke-ink" strokeWidth="1.5" />
-          <path d={`M${x - 22} 524 C${x - 22} 532 ${x + 22} 532 ${x + 22} 524`} fill="none" className="stroke-ink" strokeWidth="1" />
-          <NodeLabel x={x} y={572} className="max-sm:hidden">
-            {label}
-          </NodeLabel>
-        </g>
-      ))}
-      <circle cx="430" cy="526" r="18" className="fill-ink" />
-      <path d="M422 526 L428 532 L439 520" fill="none" className="stroke-night-text" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <NodeLabel x={430} y={572} className="max-sm:hidden">
-        Quality
-      </NodeLabel>
-
-      {/* Travelling signal — hidden entirely when reduced motion is requested */}
+      {/* Travelling signal around the loop — hidden when reduced motion is requested */}
       <g className="motion-reduce:hidden">
-        <circle r="6" className="fill-logo-red">
-          <animateMotion dur="5s" repeatCount="indefinite" path={signalPath} keyPoints="0;1" keyTimes="0;1" calcMode="linear" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="5s" repeatCount="indefinite" />
+        <circle r="5.5" className="fill-logo-red">
+          <animateMotion dur="14s" repeatCount="indefinite" path={loopPath} />
         </circle>
       </g>
     </svg>
   );
 }
+
+/** Labels for the HTML legend shown under the diagram on small screens. */
+export const heroVisualLegend = {
+  practices: practices.map((p) => p.lines.join(" ")),
+  stages: stages.map((s) => s.label),
+};

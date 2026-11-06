@@ -2,7 +2,7 @@
   "name": "maverick-innogarage-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Maverick InnoGarage corporate website — Next.js App Router, TypeScript, Tailwind CSS.",
+  "description": "Maverick InnoGarage corporate website \u2014 Next.js App Router, TypeScript, Tailwind CSS.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run lint && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run build",
+    "render:mr-screens": "node scripts/render-mr-screens.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "3.1.1",

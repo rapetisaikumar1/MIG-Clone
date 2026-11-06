@@ -2,6 +2,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { mrArticles } from "../src/content/maplerecord/articles";
 import { mrModules } from "../src/content/maplerecord/modules";
+import { mrModuleTabScreens } from "../src/content/maplerecord/overview";
+import { mrScreens } from "../src/content/maplerecord/screens";
 import { mrSolutions } from "../src/content/maplerecord/solutions";
 
 const mrNav = ["Overview", "Platform", "Solutions", "Resources", "About", "Contact"].map((label) => ({ label }));
@@ -38,7 +40,7 @@ test("MapleRecord sub-navigation reaches every section", async ({ page }) => {
   await page.goto("/maplerecord");
   const nav = page.getByRole("navigation", { name: "MapleRecord" });
   for (const [label, path, h1] of [
-    ["Platform", "/maplerecord/platform", /Four integrated modules/],
+    ["Platform", "/maplerecord/platform", /Five integrated modules/],
     ["Solutions", "/maplerecord/solutions", /by industry and department/],
     ["Resources", "/maplerecord/resources", /MapleRecord blog/],
     ["About", "/maplerecord/about", /About MapleRecord/],
@@ -81,11 +83,11 @@ test("module tabs switch panels by mouse and keyboard, and link to module pages"
   const tabs = page.getByRole("tablist", { name: "MapleRecord modules" });
   for (const m of mrModules) {
     await tabs.getByRole("tab", { name: m.name }).click();
-    const panel = page.getByRole("tabpanel", { name: m.name });
+    const panel = page.getByRole("tabpanel", { name: m.name, exact: true });
     await expect(panel).toBeVisible();
     await expect(panel).toContainText(m.summary);
     for (const h of m.highlights) await expect(panel).toContainText(h);
-    const img = panel.getByRole("img", { name: m.tabImage.alt });
+    const img = panel.getByRole("img", { name: mrScreens[mrModuleTabScreens[m.slug]].alt });
     await expect(img).toBeVisible();
     await expect.poll(() => img.evaluate((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0)).toBe(true);
   }
@@ -94,7 +96,7 @@ test("module tabs switch panels by mouse and keyboard, and link to module pages"
   await page.keyboard.press("ArrowRight");
   await expect(tabs.getByRole("tab", { name: "MR Requests" })).toBeFocused();
   await expect(tabs.getByRole("tab", { name: "MR Requests" })).toHaveAttribute("aria-selected", "true");
-  await page.getByRole("tabpanel", { name: "MR Requests" }).getByRole("link", { name: "Learn more about MR Requests" }).click();
+  await page.getByRole("tabpanel", { name: "MR Requests", exact: true }).getByRole("link", { name: "Learn more about MR Requests" }).click();
   await expect(page).toHaveURL(/\/maplerecord\/platform\/mr-requests$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/request management/i);
 });
@@ -192,6 +194,65 @@ test("platform and solution pages show their full content", async ({ page }) => 
   for (const u of s.useCases.items) await expect(page.getByRole("heading", { name: u.title })).toBeVisible();
   await page.getByRole("link", { name: "Learn more about MR Records" }).click();
   await expect(page).toHaveURL(/\/maplerecord\/platform\/mr-records$/);
+});
+
+test("platform index presents all five modules with their product screens", async ({ page }) => {
+  await page.goto("/maplerecord/platform");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Five integrated modules/);
+  const chips = page.getByRole("list", { name: "Modules" });
+  for (const m of mrModules) await expect(chips.getByRole("link", { name: m.name, exact: true })).toHaveAttribute("href", `/maplerecord/platform/${m.slug}`);
+  expect(mrModules.map((m) => m.slug)).toContain("mr-admin");
+  // Lifecycle modules as cards with their hero screens, then MR Admin in its own band.
+  const grid = page.locator("#modules");
+  for (const m of mrModules.filter((x) => x.slug !== "mr-admin")) {
+    await expect(grid.getByRole("heading", { name: m.name, exact: true })).toBeVisible();
+    await expect(grid.getByRole("img", { name: m.hero.image.alt })).toBeVisible();
+  }
+  const band = page.locator("#mr-admin");
+  await expect(band.getByRole("heading", { name: "Administered from MR Admin" })).toBeVisible();
+  await expect(band.getByRole("img", { name: mrModules.find((m) => m.slug === "mr-admin")!.hero.image.alt })).toBeVisible();
+  await expect(page.getByText("Product screens show sample data.")).toHaveCount(1);
+  // Only the hero screen is preloaded.
+  const preloads = await page.$$eval('link[rel="preload"][as="image"]', (ls) => ls.map((l) => l.getAttribute("imagesrcset") ?? l.getAttribute("href") ?? ""));
+  expect(preloads.filter((h) => h.includes("maplerecord"))).toHaveLength(1);
+  await band.getByRole("link", { name: "Explore MR Admin" }).click();
+  await expect(page).toHaveURL(/\/maplerecord\/platform\/mr-admin$/);
+});
+
+test("every module page has a product tour of recreated screens", async ({ page }) => {
+  test.setTimeout(120_000);
+  for (const m of mrModules) {
+    await page.goto(`/maplerecord/platform/${m.slug}`);
+    await expect(page.getByRole("img", { name: m.hero.image.alt }).first()).toBeVisible();
+    const tour = page.locator("#tour");
+    await expect(tour.getByRole("heading", { name: `Inside ${m.name}`, level: 2 })).toBeVisible();
+    expect(m.tour.stops.length, m.slug).toBeGreaterThanOrEqual(2);
+    expect(m.tour.stops.length, m.slug).toBeLessThanOrEqual(4);
+    for (const stop of m.tour.stops) {
+      await expect(tour.getByRole("heading", { name: stop.title, level: 3 })).toBeVisible();
+      const img = tour.getByRole("img", { name: stop.screen.alt });
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0), stop.screen.src).toBe(true);
+    }
+    await expect(page.getByText("Product screens show sample data.")).toHaveCount(1);
+  }
+});
+
+test("MR Admin page has no published figures, problems or source link", async ({ page }) => {
+  const m = mrModules.find((x) => x.slug === "mr-admin")!;
+  expect(m.officialUrl).toBeUndefined();
+  expect(m.impact).toEqual([]);
+  await page.goto("/maplerecord/platform/mr-admin");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(m.hero.title);
+  await expect(page.getByRole("heading", { name: "Benefits you can measure" })).toHaveCount(0);
+  await expect(page.getByText("Figures as published by MapleRecord.")).toHaveCount(0);
+  await expect(page.getByText(/^Source:/)).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Who it helps" })).toHaveCount(0);
+  for (const s of m.how.steps) await expect(page.getByRole("heading", { name: s.title, exact: true })).toBeVisible();
+  for (const c of m.capabilities) await expect(page.getByRole("heading", { name: c.title, exact: true })).toBeVisible();
+  // The other four modules are offered as next steps.
+  const others = page.locator("section", { has: page.getByRole("heading", { name: "Explore the other modules" }) });
+  for (const o of mrModules.filter((x) => x.slug !== "mr-admin")) await expect(others.getByRole("link", { name: `Explore ${o.name}` })).toBeVisible();
 });
 
 test("blog articles render in full and credit the official source", async ({ page }) => {
@@ -301,7 +362,7 @@ test.describe("mobile", () => {
 for (const width of [390, 1280]) {
   test.describe(`axe WCAG 2.2 AA at ${width}px`, () => {
     test.use({ viewport: { width, height: 900 } });
-    for (const path of ["/maplerecord", "/maplerecord/platform/mr-workflows", "/maplerecord/solutions/finance-accounting", "/maplerecord/solutions/insurance", "/maplerecord/resources/modern-records-management-enterprise-intelligence", "/maplerecord/about", "/maplerecord/contact"]) {
+    for (const path of ["/maplerecord", "/maplerecord/platform", "/maplerecord/platform/mr-workflows", "/maplerecord/platform/mr-admin", "/maplerecord/solutions/finance-accounting", "/maplerecord/solutions/insurance", "/maplerecord/resources/modern-records-management-enterprise-intelligence", "/maplerecord/about", "/maplerecord/contact"]) {
       test(path, async ({ page }) => {
         await page.goto(path);
         const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();

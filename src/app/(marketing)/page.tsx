@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { HeroVisual } from "@/components/graphics/hero-visual";
+import { HeroVisual, heroVisualLegend } from "@/components/graphics/hero-visual";
 import { GovernanceGlyph, JourneyGlyph, LifecycleGlyph, MapleRecordGraphic } from "@/components/graphics/service-graphics";
 import { deliveryApproach, expertise, hero, problems } from "@/content/home";
 import { industries } from "@/content/industries";
@@ -49,15 +49,30 @@ export default async function HomePage() {
             </div>
           </div>
           <div>
-            <HeroVisual className="mx-auto max-w-[34rem]" />
-            <ol className="mt-6 grid gap-2 sm:hidden" aria-label="Diagram layers">
-              {["AI & digital experiences", "Governance controls", "Data foundations"].map((label, i) => (
-                <li key={label} className="flex items-center gap-3 font-mono text-label uppercase text-muted">
-                  <span className="inline-flex size-6 items-center justify-center rounded-full border border-line-strong text-[0.625rem]">{3 - i}</span>
-                  {label}
-                </li>
-              ))}
-            </ol>
+            <figure className="mx-auto max-w-[34rem]">
+              <HeroVisual />
+              <figcaption className="mt-5 border-t border-line pt-4">
+                <span className="font-mono text-label uppercase text-muted">Our operating model</span>
+                <span className="mt-1.5 block text-[0.9375rem] leading-snug text-ink-soft">
+                  Three connected practices around the outcomes you need, delivered and improved in a continuous loop.
+                </span>
+              </figcaption>
+              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-1.5 font-mono text-label uppercase text-muted sm:hidden">
+                <ul aria-label="Practices" className="space-y-1.5">
+                  {heroVisualLegend.practices.map((label) => (
+                    <li key={label}>{label}</li>
+                  ))}
+                </ul>
+                <ol aria-label="Delivery loop" className="space-y-1.5">
+                  {heroVisualLegend.stages.map((label, i) => (
+                    <li key={label}>
+                      {label}
+                      {i < heroVisualLegend.stages.length - 1 ? <span aria-hidden> →</span> : <span aria-hidden> ↺</span>}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </figure>
           </div>
         </Container>
       </section>
@@ -72,12 +87,11 @@ export default async function HomePage() {
             intro="Each specialization stands on its own, and each works better with the other two."
           />
           <ul className="mt-14 grid border-t border-ink lg:grid-cols-3 lg:divide-x lg:divide-line">
-            {expertise.map((e, i) => {
+            {expertise.map((e) => {
               const Glyph = glyphs[e.glyph];
               return (
                 <li key={e.href} className="flex flex-col border-b border-line py-10 lg:border-b-0 lg:px-10 lg:first:pl-0 lg:last:pr-0">
                   <div className="flex items-start justify-between">
-                    <span className="font-mono text-label text-muted">{String(i + 1).padStart(2, "0")}</span>
                     <Glyph />
                   </div>
                   <h3 className="mt-6 text-[clamp(1.75rem,1.45rem+0.9vw,2.25rem)] leading-tight tracking-[-0.03em]">
@@ -195,8 +209,8 @@ export default async function HomePage() {
               <Eyebrow tone="night">Our product</Eyebrow>
               <h3 className="mt-5 text-h2">MapleRecord</h3>
               <p className="mt-4 max-w-[48ch] text-night-muted">
-                An AI-first hybrid records management system for electronic and physical records, with four integrated
-                modules: MR Records, MR Requests, MR Workflows and MR Forms.
+                An AI-first hybrid records management system for electronic and physical records, with five integrated
+                modules: MR Records, MR Requests, MR Workflows, MR Forms and MR Admin.
               </p>
               <MapleRecordGraphic tone="night" className="mt-8" />
               <ArrowLink href="/maplerecord" className="mt-6 text-night-text decoration-night-line">

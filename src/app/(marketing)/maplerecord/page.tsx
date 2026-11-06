@@ -9,14 +9,12 @@ import {
   BriefcaseBusiness,
   BarChart3,
   Building,
-  ClipboardList,
   Database,
   Factory,
   FlaskConical,
   GraduationCap,
   Headset,
   HeartPulse,
-  Inbox,
   Landmark,
   Network,
   Plug,
@@ -32,20 +30,33 @@ import {
 } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
-import { Container, Section, SectionHeading } from "@/components/ui/layout";
-import { mrDepartments, mrFaqs, mrFeatures, mrHero, mrOfficial, mrOverviewCopy, mrPillars, mrPlatformIntro } from "@/content/maplerecord/overview";
-import { MrChecklist, MrCta } from "@/features/maplerecord/mr-sections";
-import { MrBadge, MrFeatureCard, MrIconTile, MrWindow } from "@/features/maplerecord/mr-ui";
-import { MrDepartmentExplorer, MrModuleExplorer } from "@/features/maplerecord/overview-sections";
+import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
+import {
+  mrDepartments,
+  mrFaqs,
+  mrFeatures,
+  mrHero,
+  mrModuleTabScreens,
+  mrOfficial,
+  mrOverviewCopy,
+  mrPillars,
+  mrPlatformIntro,
+  mrTour,
+  mrTrust,
+} from "@/content/maplerecord/overview";
+import { mrScreens } from "@/content/maplerecord/screens";
+import { MrChecklist, MrCta, MrSampleNote } from "@/features/maplerecord/mr-sections";
+import { MrBadge, MrFeatureCard, MrIconTile, MrWindow, mrModuleIcons } from "@/features/maplerecord/mr-ui";
+import { MrDepartmentExplorer, MrModuleExplorer, MrTourExplorer } from "@/features/maplerecord/overview-sections";
 import { FaqSection } from "@/features/services/sections";
 import { formatDate } from "@/features/insights/format";
-import { getMrArticles, getMrModules, getMrSolutions } from "@/lib/content/maplerecord";
+import { getMrArticles, getMrModuleName, getMrModules, getMrSolutions } from "@/lib/content/maplerecord";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "MapleRecord Hybrid Records Management",
   description:
-    "MapleRecord is an AI-first hybrid records management system for electronic and physical records, with MR Records, MR Requests, MR Workflows and MR Forms.",
+    "AI-first hybrid records management for electronic and physical records, with five modules: MR Records, MR Requests, MR Workflows, MR Forms and MR Admin.",
   path: "/maplerecord",
 });
 
@@ -53,7 +64,7 @@ type Icon = ComponentType<{ className?: string }>;
 
 const featureIcons: Record<(typeof mrFeatures.items)[number]["icon"], Icon> = { sparkles: Sparkles, shield: ShieldCheck, zap: Zap, database: Database, users: Users, chart: BarChart3 };
 const pillarIcons: Record<(typeof mrPillars)[number]["icon"], Icon> = { governance: SlidersHorizontal, workflows: Workflow, security: ShieldCheck, integration: Plug };
-const moduleIcons: Record<string, Icon> = { "mr-records": Archive, "mr-requests": Inbox, "mr-workflows": Workflow, "mr-forms": ClipboardList };
+const moduleIcons: Record<string, Icon> = mrModuleIcons;
 const solutionIcons: Record<string, Icon> = {
   "financial-services": Landmark,
   insurance: Umbrella,
@@ -78,6 +89,10 @@ const sizes = {
   module: "(min-width: 1248px) 37rem, (min-width: 1024px) calc(58vw - 8.5rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 5.5rem)",
   department: "(min-width: 1280px) 20rem, (min-width: 1024px) calc(33vw - 6rem), (min-width: 768px) calc(50vw - 6rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 5.5rem)",
   pillar: "(min-width: 1248px) 29rem, (min-width: 768px) calc(50vw - 7rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 6.5rem)",
+  /* Tour panel: 9 of 12 columns from xl, 8 from lg (2.5rem gaps); full width below. */
+  tour: "(min-width: 1280px) 53.5rem, (min-width: 1248px) 47.25rem, (min-width: 1024px) calc(66.67vw - 4.85rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)",
+  /* Trust cards: thirds from lg inside the sub-band (2.5rem padding), window beside the text from sm (2rem padding); 1.25rem stage padding. */
+  trust: "(min-width: 1248px) 19rem, (min-width: 1024px) calc(33.33vw - 7rem), (min-width: 640px) calc(50vw - 6.5rem), calc(100vw - 7.5rem)",
   article: "(min-width: 1248px) 23rem, (min-width: 768px) calc(33vw - 3rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)",
 };
 
@@ -109,11 +124,11 @@ export default function MapleRecordPage() {
             </div>
           </div>
           <div className="lg:col-span-7">
-            <MrWindow image={mrHero.image} label={mrHero.imageLabel} fit="top" aspect="wide" sizes={sizes.hero} preload tone="dark" />
+            <MrWindow image={mrHero.screen} label={mrHero.screen.label} fit="top" aspect="wide" sizes={sizes.hero} preload tone="dark" />
           </div>
           <div className="flex flex-col gap-4 border-t border-white/10 pt-7 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 lg:col-span-12">
             <p id="mr-hero-modules" className="font-mono text-label uppercase text-night-muted">
-              Four integrated modules
+              Five integrated modules
             </p>
             <ul aria-labelledby="mr-hero-modules" className="flex flex-wrap gap-2">
               {modules.map((m) => {
@@ -139,7 +154,7 @@ export default function MapleRecordPage() {
       <Section id="platform" className="scroll-mt-36" aria-labelledby="platform-title">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-            <SectionHeading id="platform-title" eyebrow={mrPlatformIntro.eyebrow} title={mrPlatformIntro.title} intro={mrPlatformIntro.body} />
+            <SectionHeading id="platform-title" eyebrow={mrPlatformIntro.eyebrow} title={mrPlatformIntro.title} intro={`${mrPlatformIntro.body} ${mrPlatformIntro.modules}`} />
             <ArrowLink href="/maplerecord/platform">Explore the full platform</ArrowLink>
           </div>
           <MrModuleExplorer
@@ -147,6 +162,7 @@ export default function MapleRecordPage() {
             label="MapleRecord modules"
             items={modules.map((m) => {
               const ModuleIcon = moduleIcons[m.slug] ?? Archive;
+              const screen = mrScreens[mrModuleTabScreens[m.slug]];
               return {
                 value: m.slug,
                 label: m.name,
@@ -164,13 +180,14 @@ export default function MapleRecordPage() {
                       </ArrowLink>
                     </div>
                     <div className="mr-stage-light border-t border-line p-6 sm:p-10 lg:col-span-7 lg:border-l lg:border-t-0">
-                      <MrWindow image={m.tabImage} label={m.name} fit="top" aspect="video" sizes={sizes.module} />
+                      <MrWindow image={screen} label={screen.label} fit="top" aspect="wide" sizes={sizes.module} />
                     </div>
                   </div>
                 ),
               };
             })}
           />
+          <MrSampleNote className="mt-6" />
         </Container>
       </Section>
 
@@ -217,7 +234,6 @@ export default function MapleRecordPage() {
           <SectionHeading id="pillars-title" eyebrow={mrOverviewCopy.pillars.eyebrow} title={mrOverviewCopy.pillars.title} />
           <ul className="mt-12 grid gap-6 md:grid-cols-2">
             {mrPillars.map((p) => {
-              const diagram = p.icon === "integration";
               return (
                 <li key={p.eyebrow} className="flex flex-col overflow-hidden rounded-3xl bg-surface ring-1 ring-line">
                   <div className="p-7 sm:p-9">
@@ -232,34 +248,88 @@ export default function MapleRecordPage() {
                   </div>
                   <div className="mr-stage-light mt-auto border-t border-line px-6 pt-6 sm:px-9 sm:pt-8">
                     {/* The window is cropped by the card's bottom edge, so it reads as a peek into the product. */}
-                    <MrWindow
-                      image={p.image}
-                      label={p.label}
-                      fit={diagram ? "contain" : "top"}
-                      aspect="wide"
-                      sizes={sizes.pillar}
-                      className="rounded-b-none"
-                    />
+                    <MrWindow image={p.screen} label={p.screen.label} fit="top" aspect="wide" sizes={sizes.pillar} className="rounded-b-none" />
                   </div>
                 </li>
               );
             })}
           </ul>
           <p className="mt-8 text-sm text-muted">Figures as published by MapleRecord.</p>
+
+          {/* Trust & compliance: the records evidence trail, as a sub-band of the pillars */}
+          <div className="mt-16 rounded-3xl bg-paper-deep p-5 ring-1 ring-line sm:p-8 lg:mt-20 lg:p-10">
+            <div className="grid gap-x-10 gap-y-4 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-6">
+                <Eyebrow>{mrTrust.eyebrow}</Eyebrow>
+                <h3 className="mt-4 text-h3">{mrTrust.title}</h3>
+              </div>
+              <p className="text-muted lg:col-span-6">{mrTrust.intro}</p>
+            </div>
+            <ul className="mt-8 grid gap-5 lg:mt-10 lg:grid-cols-3">
+              {mrTrust.items.map((t) => (
+                <li key={t.title} className="grid overflow-hidden rounded-2xl bg-surface ring-1 ring-line sm:grid-cols-2 lg:grid-cols-1">
+                  <div className="mr-stage-light border-b border-line p-5 sm:border-b-0 sm:border-r lg:border-b lg:border-r-0">
+                    {/* No title-bar label: at a third of the width it would truncate, and the caption below names the screen. */}
+                    <MrWindow image={t.screen} fit="top" aspect="wide" sizes={sizes.trust} />
+                  </div>
+                  <div className="p-6 sm:self-center lg:self-auto">
+                    <h4 className="text-lg font-semibold leading-snug tracking-tight">{t.title}</h4>
+                    <p className="mt-2 text-[0.9375rem] text-muted">{t.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </Container>
       </Section>
 
-      {/* Features: the page's one dark band */}
-      <Section tone="night" className="mr-stage-dark" aria-labelledby="features-title">
+      {/* Product tour and features: the page's one dark band */}
+      <Section tone="night" className="mr-stage-dark" aria-labelledby="tour-title">
         <Container>
-          <SectionHeading tone="night" id="features-title" eyebrow={mrFeatures.eyebrow} title={mrFeatures.title} />
-          <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-            {mrFeatures.items.map((f) => (
-              <li key={f.title}>
-                <MrFeatureCard tone="dark" icon={featureIcons[f.icon]} title={f.title} body={f.body} />
-              </li>
-            ))}
-          </ul>
+          <SectionHeading tone="night" id="tour-title" eyebrow={mrTour.eyebrow} title={mrTour.title} intro={mrTour.intro} />
+          <MrTourExplorer
+            className="mt-12"
+            label="Product screens"
+            items={mrTour.stops.map((stop) => {
+              const slug = `mr-${stop.screen.product}` as const;
+              const name = getMrModuleName(slug);
+              return {
+                value: stop.screen.id,
+                module: name,
+                label: stop.title,
+                content: (
+                  <figure>
+                    <MrWindow image={stop.screen} label={stop.screen.label} fit="top" aspect="wide" sizes={sizes.tour} tone="dark" />
+                    <figcaption className="mt-6 grid gap-x-10 gap-y-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                      <p className="max-w-[62ch] text-night-muted">
+                        <span className="font-semibold text-night-text">{stop.title}.</span> {stop.body}
+                      </p>
+                      <Link
+                        href={`/maplerecord/platform/${slug}`}
+                        className="group inline-flex min-h-11 items-center gap-2 self-start font-medium text-night-text underline decoration-night-line underline-offset-[6px] hover:decoration-night-text sm:-mt-2.5"
+                      >
+                        Explore {name}
+                        <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                    </figcaption>
+                  </figure>
+                ),
+              };
+            })}
+          />
+
+          <div className="mt-20 border-t border-white/10 pt-16 lg:mt-24 lg:pt-20">
+            <h3 id="features-title" className="text-h3">
+              {mrFeatures.title}
+            </h3>
+            <ul aria-labelledby="features-title" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+              {mrFeatures.items.map((f) => (
+                <li key={f.title}>
+                  <MrFeatureCard tone="dark" icon={featureIcons[f.icon]} title={f.title} body={f.body} headingLevel="h4" />
+                </li>
+              ))}
+            </ul>
+          </div>
         </Container>
       </Section>
 

@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { mrOfficial } from "@/content/maplerecord/official";
-import { mrContact } from "@/content/maplerecord/overview";
+import { mrContact, mrSampleDataNote } from "@/content/maplerecord/overview";
 import { contactHref } from "@/features/contact/links";
 import { MrBadge, MrCrumbs, MrIconTile, MrLinkCard, MrWindow, mrHalfSizes } from "@/features/maplerecord/mr-ui";
 import type { MrImage } from "@/lib/content/types";
@@ -190,6 +190,11 @@ export function MrHero({
       </Container>
     </section>
   );
+}
+
+/** The small print shown once near the recreated product screens on each page. */
+export function MrSampleNote({ tone = "light", className }: { tone?: "light" | "dark"; className?: string }) {
+  return <p className={cn("text-sm", tone === "dark" ? "text-night-muted" : "text-muted", className)}>{mrSampleDataNote}</p>;
 }
 
 type Stat = { value?: string; label: string; body: string };

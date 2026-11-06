@@ -6,7 +6,11 @@
 // Editorial edits for the overview redesign (2026-11-06): headings shortened and put in sentence case, hype labels
 // toned down ("Powerful features" → "Features", "Lightning fast" → "Fast search and retrieval", "Advanced analytics" →
 // "Analytics and reporting"); feature bodies, figures and checklist copy are unchanged.
-import type { MrImage } from "@/lib/content/types";
+// Product screens (2026-11-06): the hero, module tabs, pillars, product tour and trust strip show recreated
+// MapleRecord screens (screens.ts) with sample data. Captions describe what each screen shows; no new claims.
+// MR Admin is the fifth module (owner-confirmed); the platform intro names what it covers.
+import type { MrImage, MrModuleSlug } from "@/lib/content/types";
+import { mrScreens, type MrScreen, type MrScreenKey } from "./screens";
 
 const image = (name: string, width: number, height: number, alt: string): MrImage => ({ src: `/maplerecord/${name}.webp`, width, height, alt });
 
@@ -17,15 +21,30 @@ export const mrHero = {
   headline: "Manage your information ecosystem",
   lead: "An AI-first hybrid records management system for electronic and physical records",
   tagline: "Secure records. Automate requests. Streamline operations.",
-  image: image("hero-dashboard", 1400, 898, "MapleRecord records dashboard"),
-  imageLabel: "Dashboard",
+  screen: mrScreens.recordsDashboard,
+  /** Kept for existing imports (the platform page hero). */
+  image: mrScreens.recordsDashboard as MrImage,
 };
 
 export const mrPlatformIntro = {
   eyebrow: "The platform",
   body: "Eliminate legacy system risk by automating record handling into secure, compliant, audit-ready workflows.",
-  title: "One unified platform. Four integrated modules.",
+  title: "One unified platform. Five integrated modules.",
+  /** How the five modules divide the work (overview module explorer intro). */
+  modules: "MR Records, MR Requests, MR Workflows and MR Forms do the work. MR Admin runs the suite: users, products and licensing, roles, security, integrations, backup and system status.",
 };
+
+/** The screen each module's tab shows in the overview's module explorer. */
+export const mrModuleTabScreens: Record<MrModuleSlug, MrScreenKey> = {
+  "mr-records": "recordsLifecycle",
+  "mr-requests": "requestsKanban",
+  "mr-workflows": "workflowsCanvas",
+  "mr-forms": "formsBuilder",
+  "mr-admin": "adminProducts",
+};
+
+/** Small print shown once near product screens on each MapleRecord page. */
+export const mrSampleDataNote = "Product screens show sample data.";
 
 /** Section headings on the overview page (sentence case; no claims beyond the official site). */
 export const mrOverviewCopy = {
@@ -131,49 +150,45 @@ export const mrPillars = [
     eyebrow: "Smart data governance",
     icon: "governance",
     title: "Intelligent information management",
-    label: "Governance",
     points: [
       "Find records up to 10× faster with metadata-driven search",
       "Organize everything with secure, custom workspaces",
       "Gain actionable process insights through built-in analytics",
     ],
-    image: image("pillar-governance", 1024, 1536, "MapleRecord retention, access and workflow settings"),
+    screen: mrScreens.recordsRetention,
   },
   {
     eyebrow: "Zero-friction workflows",
     icon: "workflows",
     title: "Low-code workflow automation",
-    label: "Document upload",
     points: [
       "Automate creation, review, and approvals",
       "Configure workflows quickly with low-code templates",
       "Reduce manual finance and invoice handling by 84%",
     ],
-    image: image("pillar-workflows", 950, 887, "MapleRecord document upload with retention policy"),
+    screen: mrScreens.workflowsRuns,
   },
   {
     eyebrow: "Security and access",
     icon: "security",
     title: "Enterprise-grade security with context-based access",
-    label: "Version history",
     points: [
       "Maintain 100% version control with complete audit trails",
       "Enforce retention and compliance policies automatically",
       "Stay audit-ready with secure archiving",
     ],
-    image: image("pillar-security", 844, 1170, "MapleRecord document version history and audit trail"),
+    screen: mrScreens.adminSecurity,
   },
   {
     eyebrow: "Seamless integration",
     icon: "integration",
     title: "Built to integrate. Designed to deploy anywhere.",
-    label: "Integrations",
     points: [
       "Enable secure access across web, mobile, and desktop",
       "Integrate seamlessly with ERP/CRM systems in weeks, not months",
       "Deploy flexibly across cloud or on-premise infrastructure",
     ],
-    image: image("pillar-integration", 1023, 1148, "MapleRecord integrations with ERP, CRM, cloud and on-premise systems"),
+    screen: mrScreens.adminIntegrations,
   },
 ] as const;
 
@@ -212,6 +227,37 @@ export const mrFaqs = [
     answer: "MapleRecord is designed for rapid deployment and can be configured in weeks, depending on organizational needs.",
   },
 ];
+
+type Stop = { screen: MrScreen; title: string; body: string };
+
+/** "See it in action": one stop per screen, across all five modules. Captions describe the screen only. */
+export const mrTour = {
+  eyebrow: "See it in action",
+  title: "A closer look at the product",
+  intro: "Screens from each of the five modules, from searching records to monitoring the suite.",
+  stops: [
+    { screen: mrScreens.recordsSearch, title: "Search", body: "Search across workspaces in Simple, Advanced, Query or AI mode, with matching records listed in one results table." },
+    { screen: mrScreens.recordsBoxes, title: "Physical storage", body: "Physical records are tracked in storage boxes, each with its box number, box type, file count, capacity and status." },
+    { screen: mrScreens.requestsTriage, title: "Request triage", body: "A request in triage: the validation checklist, fee assessment and payment steps, with a countdown to the due date." },
+    { screen: mrScreens.requestsRedaction, title: "Redaction", body: "The redaction history of each document in a request, with AI analysis, manual redactions and status changes." },
+    { screen: mrScreens.workflowsDashboard, title: "Workflow dashboard", body: "Workflow counts, pending approvals, run outcomes and the latest runs, with quick links to common tasks." },
+    { screen: mrScreens.formsLogic, title: "Conditional logic", body: "Rules that show or hide fields as a form is filled in, here a payment field that depends on the request type." },
+    { screen: mrScreens.formsSubmissions, title: "Submissions", body: "The submissions archive, with each tracking number, form version, mode, status, routing and statutory deadline." },
+    { screen: mrScreens.adminStatus, title: "System status", body: "Service health for each MapleRecord service, with latency and the state of the underlying infrastructure." },
+  ] satisfies Stop[],
+};
+
+/** Trust strip: the records evidence trail. */
+export const mrTrust = {
+  eyebrow: "Trust & compliance",
+  title: "Audit trails, verification and defensible disposal",
+  intro: "MR Records logs user actions, tracks blockchain verification and keeps a register of authorized destructions.",
+  items: [
+    { screen: mrScreens.recordsAudit, title: "Audit trail", body: "Actions are logged with timestamp, device, operating system, browser, user, action ID and action type." },
+    { screen: mrScreens.recordsBlockchain, title: "Blockchain verification", body: "The verification network's connection status, with block and write statistics." },
+    { screen: mrScreens.recordsDestruction, title: "Destruction register", body: "Authorized destructions with certificate numbers, medium, record series, method and approvers." },
+  ] satisfies Stop[],
+};
 
 /** Re-exported for existing imports; each page group now owns its own content file. */
 export { mrAbout } from "./about";
