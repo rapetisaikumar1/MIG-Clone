@@ -28,7 +28,7 @@ export function NavMenu({
   item: NavItem;
   active: boolean;
   linkClassName: string;
-  /** Width and layout of the floating card, e.g. "max-w-[60rem]". */
+  /** Extra classes for the floating card (it already spans the page container). */
   panelClassName?: string;
   children: ReactNode;
 }) {
@@ -145,8 +145,23 @@ export function NavMenu({
         </span>
       </button>
 
-      {/* Positioned against the sticky header, so the panel sits flush beneath it. */}
-      <div id={panelId} ref={panelRef} hidden={!open} className="pointer-events-none absolute inset-x-0 top-full pt-2">
+      {/*
+       * Positioned against the sticky header, so the panel sits flush beneath it, and spans the page
+       * container so every panel lines up with the header's edges. `hidden` still decides whether it is
+       * shown; where motion is allowed it eases in (@starting-style) and, on close, fades out before the
+       * hidden attribute's display:none lands (transition-behavior: allow-discrete).
+       */}
+      <div
+        id={panelId}
+        ref={panelRef}
+        hidden={!open}
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-full pt-2",
+          "motion-safe:transition-[opacity,translate,display] motion-safe:transition-discrete motion-safe:duration-200 motion-safe:ease-out-quint",
+          "motion-safe:starting:-translate-y-1.5 motion-safe:starting:opacity-0",
+          "[&[hidden]]:-translate-y-1 [&[hidden]]:opacity-0 motion-safe:[&[hidden]]:duration-150",
+        )}
+      >
         <Container>
           {/* Any link followed inside the panel closes it (clicks bubble up from the links). */}
           <div
@@ -154,7 +169,9 @@ export function NavMenu({
               if ((event.target as Element).closest("a")) close();
             }}
             className={cn(
-              "pointer-events-auto mx-auto max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl border border-line bg-surface shadow-[0_18px_40px_-24px_rgb(17_17_17/0.35)]",
+              "pointer-events-auto max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain rounded-2xl border border-line bg-surface shadow-[0_24px_48px_-28px_rgb(17_17_17/0.4),0_2px_6px_-2px_rgb(17_17_17/0.06)]",
+              // A closing panel no longer takes clicks meant for the page beneath it.
+              "in-[[hidden]]:pointer-events-none",
               panelClassName,
             )}
           >

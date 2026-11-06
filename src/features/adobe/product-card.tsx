@@ -4,7 +4,10 @@ import type { AdobeProduct } from "@/lib/content/types";
 import { adobeProductPath } from "@/lib/content/adobe";
 import { cn } from "@/lib/utils";
 
-/** Linked card for one Adobe application. Whole card is the link target; heading level is configurable. */
+/**
+ * Linked card for one Adobe application. Whole card is the link target; heading level is configurable.
+ * `card-lift` (globals.css, motion-safe) lifts it on hover and focus-within.
+ */
 export function AdobeProductCard({
   product,
   note,
@@ -21,7 +24,7 @@ export function AdobeProductCard({
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink focus-within:border-ink has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-signal sm:p-7",
+        "card-lift group relative flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink focus-within:border-ink has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-signal sm:p-7",
         className,
       )}
     >

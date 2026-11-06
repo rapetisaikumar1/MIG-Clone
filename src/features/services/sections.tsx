@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Dot, Eyebrow, IllustrativeLabel, Section, SectionHeading, Tag } from "@/components/ui/layout";
 import type { AdobePlatform, ApproachStage, Capability, ServiceContent, UseCase } from "@/lib/content/types";
 import { contactHref } from "@/features/contact/links";
+import { keepHyphenatedWords } from "@/features/adobe/keep-hyphenated";
+import { adobeProductPath, getAdobeProducts } from "@/lib/content/adobe";
 import { cn } from "@/lib/utils";
 
 /**
@@ -32,22 +35,29 @@ export function Breadcrumbs({ items }: { items: { label: string; href?: string }
   return (
     <nav aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+        {/*
+          Each "/" trails the item before it (not leading the next), so a wrapped trail never starts a line with a
+          lone slash. A long current page (an article title) truncates to one line; the full title is the h1 below.
+        */}
         {items.map((item, i) => (
-          <li key={item.label} className="flex items-center gap-2">
-            {i > 0 ? <span aria-hidden className="text-line-strong">/</span> : null}
-            {/* min-h-6 keeps each link at the WCAG 2.2 minimum 24px target height (2.5.8). */}
+          <li key={item.label} className={`flex min-w-0 items-center gap-2 ${item.href ? "whitespace-nowrap" : "max-w-full"}`}>
+            {/*
+              min-h-6 keeps each link at the WCAG 2.2 minimum 24px target height (2.5.8). On touch-sized
+              screens the link grows to 44px and a matching negative margin keeps the visual spacing.
+            */}
             {item.href ? (
               <Link
                 href={item.href}
-                className="inline-flex min-h-6 items-center underline-offset-4 transition-colors hover:text-ink hover:underline"
+                className="inline-flex min-h-6 items-center underline-offset-4 transition-colors hover:text-ink hover:underline max-sm:-my-2.5 max-sm:min-h-11"
               >
                 {item.label}
               </Link>
             ) : (
-              <span aria-current="page" className="inline-flex min-h-6 items-center text-ink">
+              <span aria-current="page" className="block min-w-0 truncate text-ink">
                 {item.label}
               </span>
             )}
+            {i < items.length - 1 ? <span aria-hidden className="text-line-strong">/</span> : null}
           </li>
         ))}
       </ol>
@@ -73,7 +83,11 @@ export function ServiceHero({
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: content.name }]} />
         <div className="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <Eyebrow>{content.hero.eyebrow}</Eyebrow>
+            {/* Multi-term eyebrows can wrap on phones: keep the dot on the first line and each separator with the
+                term before it, so a wrapped line never starts with "·". */}
+            <Eyebrow className="items-start [&>span:first-child]:mt-[0.2rem]">
+              <span>{content.hero.eyebrow.replaceAll(" · ", " · ")}</span>
+            </Eyebrow>
             <h1 className="mt-6 text-h1">{content.hero.title}</h1>
             <p className="mt-7 max-w-[60ch] text-lead text-muted">{content.hero.lead}</p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -85,8 +99,9 @@ export function ServiceHero({
               </ButtonLink>
             </div>
           </div>
-          <div className="lg:col-span-5">
-            <div className="rounded-2xl border border-line bg-surface/70 p-4 sm:p-8">{graphic}</div>
+          {/* Below lg the graphic stacks under the CTAs; capping its width keeps the hero to about one screen. */}
+          <div className="w-full max-lg:max-w-lg lg:col-span-5">
+            <div className="rounded-2xl border border-line bg-surface/70 p-4 sm:p-6 lg:p-8">{graphic}</div>
           </div>
         </div>
       </Container>
@@ -102,7 +117,8 @@ export function ProblemSection({ content }: { content: ServiceContent }) {
           <div className="lg:col-span-7">
             <Eyebrow>The challenge</Eyebrow>
             <h2 id="problem-title" className="mt-5 text-h2">
-              {content.problem.title}
+              {/* Keeps hyphenated words whole on phones ("off-the-shelf" broke as "off-the-" / "shelf"). */}
+              {keepHyphenatedWords(content.problem.title)}
             </h2>
             <div className="mt-8 space-y-5 text-[1.0625rem] text-ink-soft">
               {content.problem.body.map((p) => (
@@ -128,9 +144,11 @@ export function ProblemSection({ content }: { content: ServiceContent }) {
         </div>
 
         <div className="mt-20 border-t border-ink pt-10">
-          <h3 id="audience-title" className="font-mono text-label uppercase text-muted">
+          <h3 id="audience-title" className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
+            <Dot />
             Who this is for
           </h3>
+          {/* Each item is a two-row subgrid (role, need) so descriptions start on one line across columns. */}
           <ul
             className={cn(
               "mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2",
@@ -138,7 +156,10 @@ export function ProblemSection({ content }: { content: ServiceContent }) {
             )}
           >
             {content.audience.map((a, i) => (
-              <li key={a.role} className={balancedItem(i, content.audience.length, 4)}>
+              <li
+                key={a.role}
+                className={cn("sm:row-span-2 sm:grid sm:grid-rows-subgrid sm:gap-y-0", balancedItem(i, content.audience.length, 4))}
+              >
                 <p className="text-h3 font-semibold">{a.role}</p>
                 <p className="mt-2 max-w-[48ch] text-muted">{a.need}</p>
               </li>
@@ -150,68 +171,137 @@ export function ProblemSection({ content }: { content: ServiceContent }) {
   );
 }
 
+/** Adobe product names and short names ("Adobe Experience Platform", "Real-Time CDP") → product page. */
+const adobeTagHrefs = new Map(
+  getAdobeProducts().flatMap((p) => [
+    [p.name, adobeProductPath(p.slug)],
+    [p.shortName, adobeProductPath(p.slug)],
+  ]),
+);
+
+/** Links the first occurrence of each term in `text` (e.g. a product name) to its page. */
+function withTermLinks(text: string, termLinks?: Record<string, string>): ReactNode {
+  if (!termLinks) return text;
+  const entry = Object.entries(termLinks).find(([term]) => text.includes(term));
+  if (!entry) return text;
+  const [term, href] = entry;
+  const at = text.indexOf(term);
+  return (
+    <>
+      {text.slice(0, at)}
+      <Link href={href} className="font-medium text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-signal">
+        {term}
+      </Link>
+      {text.slice(at + term.length)}
+    </>
+  );
+}
+
 /**
- * The grid is 2 columns from sm and 3 from lg. When the last card would sit alone on its row, it spans
- * the row at that breakpoint and lays its content out side by side instead of leaving an orphan.
+ * The grid is 2 columns from sm and 3 from lg. Items are subgrids spanning four shared rows (title,
+ * summary, list, tags), so summaries and lists start at the same height across a row however the
+ * titles wrap. When the last item would sit alone on its row, it spans the row at that breakpoint and
+ * lays its content out side by side instead of leaving an orphan. Services are modular, so items
+ * are unnumbered.
  */
-function CapabilityItem({ capability, index, count }: { capability: Capability; index: number; count: number }) {
+function CapabilityItem({
+  capability,
+  index,
+  count,
+  termLinks,
+}: {
+  capability: Capability;
+  index: number;
+  count: number;
+  termLinks?: Record<string, string>;
+}) {
   const isLast = index === count - 1;
   const wideSm = isLast && count % 2 === 1;
   const wideLg = isLast && count % 3 === 1;
+  // Wrappers dissolve (display: contents) wherever the item is a subgrid, so their children sit on the shared rows.
+  const wrapper = cn(!wideSm && "sm:contents", wideSm && !wideLg && "lg:contents", !wideSm && wideLg && "lg:block");
   return (
     <li
       id={capability.id}
       className={cn(
-        "flex flex-col border-t border-line-strong pt-6",
+        "reveal flex flex-col border-t border-line-strong pt-6",
+        !wideSm && "sm:row-span-4 sm:grid sm:grid-rows-subgrid sm:gap-y-0",
         wideSm && "sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-x-10",
-        wideSm && !wideLg && "lg:col-span-1 lg:flex",
-        wideLg && "lg:col-span-3 lg:grid lg:grid-cols-12 lg:gap-x-10",
+        wideSm && !wideLg && "lg:col-span-1 lg:row-span-4 lg:grid-cols-1 lg:grid-rows-subgrid lg:gap-y-0",
+        wideLg && "lg:col-span-3 lg:row-span-1 lg:grid lg:grid-cols-12 lg:grid-rows-none lg:gap-x-10",
       )}
     >
-      <div className={cn(wideLg && "lg:col-span-5")}>
-        <span className="font-mono text-label text-muted">{String(index + 1).padStart(2, "0")}</span>
-        <h3 className="mt-4 text-h3">{capability.title}</h3>
+      <div className={cn(wrapper, wideLg && "lg:col-span-5")}>
+        <h3 className="text-h3">{capability.title}</h3>
         <p className="mt-3 max-w-[48ch] text-muted">{capability.summary}</p>
       </div>
-      <div
-        className={cn(
-          "mt-5 flex flex-1 flex-col",
-          wideSm && "sm:mt-0",
-          wideSm && !wideLg && "lg:mt-5",
-          wideLg && "lg:col-span-7 lg:mt-0",
-        )}
-      >
-        <ul className={cn("grid gap-y-2 text-[0.9375rem] text-ink-soft", wideLg && "lg:grid-cols-2 lg:gap-x-8")}>
+      <div className={cn("flex flex-1 flex-col", wrapper, wideLg && "lg:col-span-7")}>
+        <ul
+          className={cn(
+            "mt-5 grid content-start gap-y-2 text-[0.9375rem] text-ink-soft",
+            wideSm && "sm:mt-0",
+            wideSm && !wideLg && "lg:mt-5",
+            wideLg && "lg:mt-0 lg:grid-cols-2 lg:gap-x-8",
+          )}
+        >
           {capability.items.map((item) => (
             <li key={item} className="flex gap-3">
               <span aria-hidden className="mt-[0.7rem] h-px w-3 shrink-0 bg-ink" />
-              {item}
+              <span>{withTermLinks(item, termLinks)}</span>
             </li>
           ))}
         </ul>
         {capability.platforms ? (
-          <div className="mt-auto flex flex-wrap gap-2 pt-6">
-            {capability.platforms.map((p) => (
-              <Tag key={p}>{p}</Tag>
-            ))}
-          </div>
+          <ul className="mt-auto flex flex-wrap content-start gap-2 pt-6" aria-label={`Platforms for ${capability.title}`}>
+            {capability.platforms.map((p) => {
+              const href = adobeTagHrefs.get(p);
+              return (
+                <li key={p} className="flex">
+                  {href ? (
+                    // The ::before layer extends the hit area to 44px tall without enlarging the chip.
+                    <Link
+                      href={href}
+                      className="group relative rounded-full before:absolute before:inset-x-0 before:-inset-y-2.5 before:content-['']"
+                    >
+                      <Tag className="transition-colors group-hover:border-ink group-hover:text-ink">{p}</Tag>
+                    </Link>
+                  ) : (
+                    <Tag>{p}</Tag>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         ) : null}
       </div>
     </li>
   );
 }
 
-export function CapabilitiesSection({ content }: { content: ServiceContent }) {
+export function CapabilitiesSection({
+  content,
+  termLinks,
+}: {
+  content: ServiceContent;
+  /** Terms in capability bullets to link, e.g. { MapleRecord: "/maplerecord" }. */
+  termLinks?: Record<string, string>;
+}) {
   const count = content.capabilities.length;
   return (
     <Section tone="surface" id="capabilities" aria-labelledby="capabilities-title">
       <Container>
-        <SectionHeading id="capabilities-title" eyebrow="What an engagement includes" title="Services and capabilities" intro={content.capabilitiesIntro} />
-        <ol className="mt-14 grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        <SectionHeading
+          id="capabilities-title"
+          eyebrow="What we deliver"
+          title="Services and capabilities"
+          intro={content.capabilitiesIntro}
+          className="reveal"
+        />
+        <ul className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
           {content.capabilities.map((c, i) => (
-            <CapabilityItem key={c.id} capability={c} index={i} count={count} />
+            <CapabilityItem key={c.id} capability={c} index={i} count={count} termLinks={termLinks} />
           ))}
-        </ol>
+        </ul>
       </Container>
     </Section>
   );
@@ -273,7 +363,7 @@ export function PlatformMatrix({
         </ul>
         <p className="mt-8 max-w-3xl text-sm text-night-muted">
           Adobe, Adobe Experience Platform, Experience Manager, Marketo Engage and the other product names above are
-          trademarks of Adobe Inc. Maverick InnoGarage is an independent consultancy.
+          trademarks of Adobe Inc.
         </p>
       </Container>
     </Section>
@@ -289,33 +379,62 @@ const STEP_COLS: Record<number, string> = {
 };
 
 /**
- * Numbered stages. Each step is a subgrid spanning four shared rows (number, title, activities,
- * deliverable), so titles and deliverable rules line up across columns however long the text is.
+ * Numbered stages. From md each step is a subgrid spanning shared rows (number, title, activities and,
+ * unless hidden, deliverable), so titles and deliverable rules line up across columns however long the
+ * text is. A hairline joins the stage markers: across the row at lg, and down the left edge below md,
+ * where the steps stack as a timeline.
  */
-export function ApproachSteps({ stages, tone = "light" }: { stages: ApproachStage[]; tone?: "light" | "night" }) {
+export function ApproachSteps({
+  stages,
+  tone = "light",
+  showDeliverable = true,
+}: {
+  stages: ApproachStage[];
+  tone?: "light" | "night";
+  /** Set false where a separate deliverables section already lists each stage's output. */
+  showDeliverable?: boolean;
+}) {
   const night = tone === "night";
   const count = stages.length;
+  const rule = night ? "bg-night-line" : "bg-line-strong";
   return (
     <ol className={cn("relative mt-14 grid gap-10 lg:gap-x-8", STEP_COLS[count] ?? STEP_COLS[4])}>
-      {count <= 5 ? (
-        <span aria-hidden className={cn("absolute left-0 right-0 top-[1.375rem] hidden h-px lg:block", night ? "bg-night-line" : "bg-line-strong")} />
-      ) : null}
       {stages.map((s, i) => (
-        <li key={s.stage} className="relative md:row-span-4 md:grid md:grid-rows-subgrid md:gap-y-0">
+        <li
+          key={s.stage}
+          className={cn(
+            "reveal relative max-md:pl-16 md:grid md:grid-rows-subgrid md:gap-y-0",
+            showDeliverable ? "md:row-span-4" : "md:row-span-3",
+          )}
+        >
+          {i < count - 1 ? (
+            // Runs from below this marker, through the gap, to the top of the next one.
+            <span aria-hidden className={cn("absolute -bottom-10 left-[1.375rem] top-11 w-px md:hidden", rule)} />
+          ) : null}
+          {count <= 5 ? (
+            // lg connecting line, drawn per stage (through the column gap) so it rises with the stage's reveal and
+            // never sits off-centre from the markers mid-scroll.
+            <span
+              aria-hidden
+              className={cn("absolute left-0 top-[1.375rem] hidden h-px lg:block", i < count - 1 ? "-right-8" : "right-0", rule)}
+            />
+          ) : null}
           <span
             className={cn(
-              "relative z-10 inline-flex size-11 items-center justify-center rounded-full font-mono text-sm",
+              "relative z-10 inline-flex size-11 items-center justify-center rounded-full font-mono text-sm max-md:absolute max-md:left-0 max-md:top-0",
               i === 0 ? "bg-signal text-white" : night ? "bg-night-raised text-night-text ring-1 ring-night-line" : "bg-surface text-ink ring-1 ring-line-strong",
             )}
           >
             {String(i + 1).padStart(2, "0")}
           </span>
-          <h3 className="mt-6 text-h3">{s.stage}</h3>
-          <p className={cn("mt-3 max-w-[48ch]", night ? "text-night-muted" : "text-muted")}>{s.activities}</p>
-          <div className={cn("mt-6 border-t pt-4", night ? "border-night-line" : "border-line")}>
-            <p className={cn("font-mono text-label uppercase", night ? "text-night-muted" : "text-muted")}>Deliverable</p>
-            <p className="mt-2 font-medium leading-snug">{s.deliverable}</p>
-          </div>
+          <h3 className="text-h3 max-md:flex max-md:min-h-11 max-md:items-center md:mt-6">{s.stage}</h3>
+          <p className={cn("mt-3 max-w-[48ch] max-md:mt-2", night ? "text-night-muted" : "text-muted")}>{s.activities}</p>
+          {showDeliverable ? (
+            <div className={cn("mt-6 border-t pt-4 max-md:mt-5", night ? "border-night-line" : "border-line")}>
+              <p className={cn("font-mono text-label uppercase", night ? "text-night-muted" : "text-muted")}>Deliverable</p>
+              <p className="mt-2 font-medium leading-snug">{s.deliverable}</p>
+            </div>
+          ) : null}
         </li>
       ))}
     </ol>
@@ -330,37 +449,49 @@ export function ApproachSection({ content }: { content: ServiceContent }) {
           id="approach-title"
           eyebrow="Delivery approach"
           title="Assess, design, implement, improve"
-          intro="Each stage ends with something tangible you can review, use, and build on."
+          intro="Four stages, each ending in something tangible you can review, use and build on. The deliverables below are what you keep."
+          className="reveal"
         />
-        <ApproachSteps stages={content.approach} />
+        {/* The deliverables section that follows lists each stage's outputs in full, so the steps omit them. */}
+        <ApproachSteps stages={content.approach} showDeliverable={false} />
       </Container>
     </Section>
   );
 }
 
 export function DeliverablesSection({ content }: { content: ServiceContent }) {
+  const count = content.deliverables.length;
   return (
     <Section tone="deep" aria-labelledby="deliverables-title">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionHeading id="deliverables-title" eyebrow="Deliverables" title="What you receive" intro="Practical outputs written for the people who will use them." />
+            <SectionHeading
+              id="deliverables-title"
+              eyebrow="Deliverables"
+              title="What you receive"
+              intro="Practical outputs your teams can use, run and maintain."
+              className="reveal lg:sticky lg:top-28"
+            />
           </div>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+          {/* One divided list on phones; separate cards from sm. */}
+          <ul className="grid divide-y divide-line rounded-2xl border border-line bg-surface sm:grid-cols-2 sm:gap-4 sm:divide-y-0 sm:rounded-none sm:border-0 sm:bg-transparent lg:col-span-8">
             {content.deliverables.map((d, i) => (
               <li
                 key={d.title}
                 className={cn(
-                  "relative rounded-2xl border border-line bg-surface p-6 pr-12",
-                  i === content.deliverables.length - 1 && content.deliverables.length % 2 === 1 && "sm:col-span-2",
+                  "reveal flex gap-4 p-6 sm:rounded-2xl sm:border sm:border-line sm:bg-surface",
+                  i === count - 1 && count % 2 === 1 && "sm:col-span-2",
                 )}
               >
-                <svg aria-hidden viewBox="0 0 20 24" className="absolute right-5 top-6 h-6 w-5 text-line-strong">
+                <svg aria-hidden viewBox="0 0 20 24" className="mt-0.5 h-6 w-5 shrink-0 text-line-strong">
                   <path d="M1 1 H13 L19 7 V23 H1 Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
                   <path d="M13 1 V7 H19" fill="none" stroke="currentColor" strokeWidth="1.5" />
                 </svg>
-                <h3 className="text-lg font-semibold tracking-tight">{d.title}</h3>
-                <p className="mt-2 text-[0.9375rem] text-muted">{d.description}</p>
+                <div>
+                  <h3 className="text-lg font-semibold tracking-tight">{d.title}</h3>
+                  <p className="mt-2 text-[0.9375rem] text-muted">{d.description}</p>
+                </div>
               </li>
             ))}
           </ul>
@@ -377,8 +508,9 @@ function UseCaseCard({ useCase, className }: { useCase: UseCase; className?: str
     ["Intended outcome", useCase.outcome],
   ];
   return (
-    <li className={cn("flex flex-col rounded-2xl border border-line bg-surface p-7", className)}>
-      <IllustrativeLabel className="self-start" />
+    <li className={cn("flex flex-col rounded-2xl border border-line bg-paper p-6 sm:p-7", className)}>
+      {/* Outline variant: the label stays for accuracy without being the darkest thing on the card. */}
+      <IllustrativeLabel className="self-start border border-line-strong bg-transparent text-muted" />
       <h3 className="mt-6 text-h3">{useCase.title}</h3>
       <dl className="mt-6 space-y-5">
         {rows.map(([term, text]) => (
@@ -393,18 +525,46 @@ function UseCaseCard({ useCase, className }: { useCase: UseCase; className?: str
 }
 
 export function UseCasesSection({ content }: { content: ServiceContent }) {
+  const count = content.useCases.length;
   return (
-    <Section aria-labelledby="usecases-title">
+    // Surface tone keeps it distinct from the paper FAQ that follows on pages without a benefits strip.
+    <Section tone="surface" aria-labelledby="usecases-title">
       <Container>
         <SectionHeading
           id="usecases-title"
           eyebrow="Practical applications"
           title="How this work applies in practice"
-          intro="These are illustrative scenarios that show typical situations and approaches. They are not descriptions of specific client engagements."
+          intro="These are illustrative scenarios that show typical situations and approaches. They are not descriptions of specific client projects."
+          className="reveal"
         />
-        <ul className={cn("mt-14 grid gap-6", LG_COLS[balancedGrid(content.useCases.length, 3).cols])}>
+        {count > 1 ? (
+          <p aria-hidden className="mt-10 flex items-center gap-2 font-mono text-label uppercase text-muted md:hidden">
+            Swipe for more scenarios
+            <ArrowRight className="size-3.5 text-signal" />
+          </p>
+        ) : null}
+        {/*
+          Below md the scenarios sit in a horizontal snap row (the next card peeks in as the cue), which
+          keeps three long cards from adding several screens of scrolling. The row is focusable so
+          keyboard users can scroll it with the arrow keys.
+        */}
+        <ul
+          aria-labelledby="usecases-title"
+          tabIndex={0}
+          className={cn(
+            "reveal mt-14 grid gap-6 max-md:mt-4 max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:pb-4 max-sm:gap-4",
+            // Bleed to the screen edges (matching Container's gutter) so cards scroll edge to edge.
+            "max-sm:-mx-5 max-sm:scroll-px-5 max-sm:px-5 sm:max-md:-mx-8 sm:max-md:scroll-px-8 sm:max-md:px-8",
+            "max-md:[scrollbar-width:thin] max-md:focus-visible:outline-offset-[-2px]",
+            LG_COLS[balancedGrid(count, 3).cols],
+          )}
+        >
           {content.useCases.map((u, i) => (
-            <UseCaseCard key={u.title} useCase={u} className={balancedItem(i, content.useCases.length, 3, false)} />
+            <UseCaseCard
+              key={u.title}
+              useCase={u}
+              className={cn("max-md:w-[85%] max-md:shrink-0 max-md:snap-start", balancedItem(i, count, 3, false))}
+            />
           ))}
         </ul>
       </Container>
@@ -412,11 +572,13 @@ export function UseCasesSection({ content }: { content: ServiceContent }) {
   );
 }
 
+/** Supporting strip of intended benefits. Optional on the service pages (see ServicePage `showBenefits`). */
 export function BenefitsSection({ content }: { content: ServiceContent }) {
   return (
     <Section tone="surface" spacing="compact" aria-labelledby="benefits-title">
       <Container>
-        <h2 id="benefits-title" className="font-mono text-label uppercase text-muted">
+        <h2 id="benefits-title" className="reveal flex items-center gap-2.5 font-mono text-label uppercase text-muted">
+          <Dot />
           Intended benefits
         </h2>
         <ul
@@ -427,8 +589,7 @@ export function BenefitsSection({ content }: { content: ServiceContent }) {
         >
           {content.benefits.map((b, i) => (
             <li key={b.title} className={cn("bg-surface p-7", balancedItem(i, content.benefits.length, 4))}>
-              <Dot />
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{b.title}</h3>
+              <h3 className="text-lg font-semibold tracking-tight">{b.title}</h3>
               <p className="mt-2 text-[0.9375rem] text-muted">{b.description}</p>
             </li>
           ))}
@@ -438,19 +599,29 @@ export function BenefitsSection({ content }: { content: ServiceContent }) {
   );
 }
 
+/**
+ * Answers open with a short height transition where the browser supports ::details-content and
+ * interpolate-size (progressive; others open instantly). Questions stay visible at all times.
+ */
 export function FaqSection({ faqs, title = "Frequently asked questions" }: { faqs: ServiceContent["faqs"]; title?: string }) {
   return (
     <Section aria-labelledby="faq-title">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <SectionHeading id="faq-title" eyebrow="FAQ" title={title} />
+            <SectionHeading id="faq-title" eyebrow="FAQ" title={title} className="reveal lg:sticky lg:top-28" />
           </div>
           <div className="lg:col-span-8">
             <ul className="border-t border-ink">
               {faqs.map((f) => (
                 <li key={f.question} className="border-b border-line">
-                  <details className="group">
+                  <details
+                    className={cn(
+                      "group [interpolate-size:allow-keywords]",
+                      "details-content:h-0 details-content:overflow-clip open:details-content:h-auto",
+                      "motion-safe:details-content:transition-[height,content-visibility] motion-safe:details-content:transition-discrete motion-safe:details-content:duration-200 motion-safe:details-content:ease-out",
+                    )}
+                  >
                     <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-medium tracking-tight marker:hidden [&::-webkit-details-marker]:hidden">
                       {f.question}
                       <span
@@ -473,26 +644,36 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
   );
 }
 
-export function RelatedServices({ current }: { current: ServiceContent["slug"] }) {
+export type ReadingLink = { title: string; href: string };
+
+export function RelatedServices({ current, reading }: { current: ServiceContent["slug"]; reading?: ReadingLink[] }) {
+  // The four specializations in the site's order of prominence; each page lists the other three.
   const all = [
-    { slug: "ai-governance", name: "AI Governance", line: "Oversight, accountability and review for AI use." },
-    { slug: "adobe-services", name: "Adobe Services", line: "Implementation and optimization of Adobe platforms." },
-    { slug: "data-management", name: "Data Management", line: "Governance, integration, quality and lifecycle." },
+    { slug: "ai-governance", name: "AI Governance", line: "Responsible AI, AI risk management and compliance support." },
+    { slug: "adobe-services", name: "Adobe Services", line: "Adobe Experience Cloud implementation, integration and support." },
+    { slug: "data-management", name: "Data Management", line: "Data governance, integration, quality and lifecycle." },
+    { slug: "software-development", name: "Software Development", line: "Enterprise applications, workflow automation and integration." },
   ] as const;
   return (
     <Section tone="deep" spacing="compact" aria-labelledby="related-title">
       <Container>
-        <h2 id="related-title" className="font-mono text-label uppercase text-muted">
+        <h2 id="related-title" className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
+          <Dot />
           Connected expertise
         </h2>
-        <ul className="mt-8 grid gap-4 md:grid-cols-2">
+        {/*
+          auto-rows-fr keeps the three cards the same height when they stack, as well as side by side. Below lg they
+          stack (three columns at 768px squeezed the arrow out of the card); from lg each card is a column with the
+          arrow at the bottom, so the names line up across the row and the descriptions get the full card width.
+        */}
+        <ul className="mt-8 grid auto-rows-fr gap-4 lg:grid-cols-3">
           {all
             .filter((s) => s.slug !== current)
             .map((s) => (
               <li key={s.slug}>
                 <Link
                   href={`/${s.slug}`}
-                  className="group flex items-center justify-between gap-6 rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink"
+                  className="card-lift group flex h-full items-center justify-between gap-6 rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink lg:flex-col lg:items-start"
                 >
                   <span>
                     <span className="block text-h3 font-semibold">{s.name}</span>
@@ -500,14 +681,30 @@ export function RelatedServices({ current }: { current: ServiceContent["slug"] }
                   </span>
                   <span
                     aria-hidden
-                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line-strong transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white"
+                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line-strong text-signal transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white lg:self-end"
                   >
-                    →
+                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </span>
                 </Link>
               </li>
             ))}
         </ul>
+        {reading?.length ? (
+          <div className="mt-12 border-t border-line-strong pt-8 sm:flex sm:items-baseline sm:gap-10">
+            <h3 className="shrink-0 font-mono text-label uppercase text-muted">Further reading</h3>
+            <ul className="mt-3 flex flex-col gap-x-10 sm:mt-0 lg:flex-row lg:flex-wrap">
+              {reading.map((r) => (
+                <li key={r.href}>
+                  {/* Block with an inline arrow, so a title that wraps on phones keeps the arrow after its last word
+                      (as a flex row, the wrapped text filled the line and pushed the arrow to the far edge). */}
+                  <ArrowLink href={r.href} className="block py-2 [&>svg]:ml-2 [&>svg]:inline [&>svg]:align-[-0.125em]">
+                    {r.title}
+                  </ArrowLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </Container>
     </Section>
   );

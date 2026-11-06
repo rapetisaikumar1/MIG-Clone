@@ -71,7 +71,7 @@ export function InsightsFilter({ articles, themes }: { articles: ArticleCardData
       </p>
       <ul className="mt-12 grid gap-x-10 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
         {visible.map((a) => (
-          <li key={a.slug}>
+          <li key={a.slug} className="reveal">
             <ArticleCard article={a} headingLevel="h2" />
           </li>
         ))}

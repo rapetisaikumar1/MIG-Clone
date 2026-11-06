@@ -24,7 +24,7 @@ export const experiencePlatform: AdobeProduct = {
   },
   hero: {
     title: "Build customer profiles your Adobe applications can rely on.",
-    lead: "We implement and integrate Adobe Experience Platform, customize and optimize existing setups, shape the data strategy behind it, and train your teams to run it.",
+    lead: "We implement and integrate Adobe Experience Platform, customize and optimize existing setups, plan the data strategy and governance behind it, and train your teams to run it.",
   },
   overview: {
     heading: "What Adobe Experience Platform does",
@@ -90,7 +90,7 @@ export const experiencePlatform: AdobeProduct = {
     },
     {
       title: "Data strategy and management",
-      body: "We work out with you which data belongs in the platform, how identities connect, and how the use of that data is governed.",
+      body: "We define with you which data belongs in the platform, configure how identities connect, and set up the rules that govern how that data is used.",
       items: [
         "Data inventory prioritized by use case",
         "Identity strategy, identity namespaces and identity graph linking rules",
@@ -101,12 +101,12 @@ export const experiencePlatform: AdobeProduct = {
     },
     {
       title: "Training and support",
-      body: "We train the people who will run the platform and stay available as you add sources and use cases.",
+      body: "We train the people who will run the platform and support it as you add sources and use cases.",
       items: [
         "Role-based training for marketers, analysts and data engineers",
         "Runbooks and documentation for your configuration",
         "Monitoring of data flows and resolution of ingestion errors",
-        "Help as new sources and use cases are added",
+        "Configuration support as new sources and use cases are added",
       ],
       provenance: "verified",
     },
@@ -152,17 +152,17 @@ export const experiencePlatform: AdobeProduct = {
     {
       question: "How does Experience Platform relate to Real-Time CDP?",
       answer:
-        "Experience Platform is the foundation. It ingests data, standardizes it in XDM schemas and builds Real-Time Customer Profiles. Real-Time CDP is an application built on it that uses those profiles to build audiences and activate them to destinations. Many projects involve both, and we provide services for each.",
+        "Experience Platform is the foundation. It ingests data, standardizes it in XDM schemas and builds Real-Time Customer Profiles. Real-Time CDP is an application built on it that uses those profiles to build audiences and activate them to destinations. The two are often used together, and we deliver services for each.",
     },
     {
       question: "Can you work with an implementation that's already live?",
       answer:
-        "Yes. Many engagements start with an assessment of your schemas, identity setup, data flows and governance, followed by fixes and optimization where they're needed.",
+        "Yes. We start with an assessment of your schemas, identity setup, data flows and governance, followed by fixes and optimization where they're needed.",
     },
     {
       question: "How do you handle consent and data governance?",
       answer:
-        "We work with your privacy and legal teams to apply data usage labels to schemas and datasets and to enable the data governance policies that restrict how labeled data is used. If you license Adobe Healthcare Shield or Adobe Privacy & Security Shield, consent policies can also exclude profiles that lack the required consent. The configuration supports your compliance program but doesn't replace your own legal review. This is where our Adobe work connects with our Data Management practice.",
+        "We work with your privacy and legal teams to apply data usage labels to schemas and datasets and to enable the data governance policies that restrict how labeled data is used. If you license Adobe Healthcare Shield or Adobe Privacy & Security Shield, consent policies can also exclude profiles that lack the required consent. The configuration supports your compliance program but doesn't replace your own legal review. This is where our Adobe work connects with our Data Management services.",
     },
     {
       question: "Does Experience Platform replace our data warehouse?",
@@ -182,6 +182,6 @@ export const experiencePlatform: AdobeProduct = {
   ],
   cta: {
     title: "Start with your customer data.",
-    body: "Tell us what data you have, where it lives, and what you want your profiles to support. We'll recommend where to start.",
+    body: "Tell us what data you have, where it lives, and what you want your profiles to support. We'll scope a practical first step with you.",
   },
 };

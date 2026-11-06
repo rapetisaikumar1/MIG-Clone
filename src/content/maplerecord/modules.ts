@@ -1,14 +1,22 @@
-// Generated from maplerecord.com (crawled 2026-11-03). Source of truth: the official MapleRecord website.
+// Generated from maplerecord.com, MapleRecord's product site (crawled 2026-11-03). MapleRecord is designed and built by
+// Maverick InnoGarage; MR Admin and the product screens come from the product itself.
 // Light edits only: acronym casing, sentence-case headings, typos, list punctuation. See docs/MAPLERECORD-SOURCES.md.
 // MR Workflows "why" cards: the crawl had shifted each heading onto the previous card's text; they are re-paired here
 // as on the source, and the first card (which repeats MR Requests' intake text and has no heading) is omitted.
 // MR Forms hero uses MapleRecord's MR Forms builder image; the source reuses the MR Workflows dashboard there.
 // Editorial pass (2026-11-06): sentence case, "and" in titles, consistent step verbs, periods on body text, hype words
 // trimmed ("seamlessly", "perfectly", "empowers"). Figures and claims are unchanged; stat bodies no longer repeat their label.
+// Accuracy pass (2026-11-07, messaging guide §4 and §5.5): copy is checked against the recreated product screens. Steps,
+// heroes and CTAs describe what the screens show; capabilities the screens do not show are kept as published but not
+// inflated (register MR-11, owner question). Compliance is "supported", never guaranteed (MR-09). No figures were added.
+// Review pass (2026-11-07): "Smart retention" → "Retention schedules" (what the screens show); "Compliance-ready
+// framework" → "Compliance and governance support" (no readiness guarantee; the icon map key changed with it).
 // Product screens (2026-11-06): hero and "how it works" images are recreated MapleRecord screens (screens.ts), and each
 // module has a product tour whose captions describe only what the screen shows (its content is sample data).
 // MR Admin (fifth module, confirmed by Maverick InnoGarage) has no page on maplerecord.com: its copy is written only from
 // what the MR Admin product UI shows. It has no published figures, problem statements or department use cases.
+// Platform pass (2026-11-06): the platform hero shows MR Admin's products table (it lists all five modules), so MR Admin's
+// own hero is its system status screen and the products table moved into its tour; MR Workflows' tour adds the designer.
 import { mrScreens } from "@/content/maplerecord/screens";
 import type { MrModule, MrModuleSlug } from "@/lib/content/types";
 
@@ -19,7 +27,7 @@ export const mrModules: MrModule[] = [
     officialUrl: "https://maplerecord.com/platform/mr-records/",
     summary: "Your central hub for secure, structured, and searchable recordkeeping.",
     highlights: [
-      "Smart retention",
+      "Retention schedules",
       "Full audit trails",
       "Role-based access"
     ],
@@ -31,10 +39,10 @@ export const mrModules: MrModule[] = [
     },
     hero: {
       title: "An intelligent, secure, and scalable records management core",
-      description: "Manage electronic documents and physical records in one AI-powered platform, with intelligent automation and complete lifecycle control.",
+      description: "Manage electronic documents and physical records in one platform, with record series, retention schedules, AI search and an audit trail for every record.",
       trust: [
         "Secure",
-        "Compliant",
+        "Compliance support",
         "Enterprise-ready"
       ],
       image: mrScreens.recordsLifecycle
@@ -61,19 +69,19 @@ export const mrModules: MrModule[] = [
       steps: [
         {
           title: "Ingest and classify",
-          body: "Automatically categorize records on intake using AI-enabled metadata and smart tagging."
+          body: "File records into record series with templates and metadata fields, so each record carries its classification and retention schedule from intake."
         },
         {
           title: "Govern and secure",
-          body: "Apply retention policies and access controls to every record, with full audit visibility."
+          body: "Apply retention schedules and access controls to every record, and log every action in the audit trail."
         },
         {
           title: "Find and respond",
-          body: "Use AI search to locate records quickly and fulfill internal or public information requests."
+          body: "Search in Simple, Advanced, Query or AI mode, and handle transfer, retrieval and lending requests for records."
         },
         {
           title: "Automate workflows",
-          body: "Orchestrate workflows for approvals, compliance reviews, and cross-departmental requests without manual steps."
+          body: "Send approvals, such as destruction authorizations and archive retrievals, through MR Workflows instead of email and paper."
         }
       ],
       image: mrScreens.recordsRetention
@@ -101,7 +109,7 @@ export const mrModules: MrModule[] = [
       {
         value: "50%",
         label: "Less audit-related effort",
-        body: "Automated compliance cuts the work audits require."
+        body: "Retention schedules and audit trails cut the work audits require."
       },
       {
         value: "30–50%",
@@ -119,8 +127,8 @@ export const mrModules: MrModule[] = [
         title: "AI-powered hybrid search",
         items: [
           "Unified search across electronic and physical records",
-          "Real-time location tracking for physical files",
-          "Intelligent metadata extraction with AI"
+          "Location tracking for physical files",
+          "AI-assisted metadata extraction"
         ]
       },
       {
@@ -136,7 +144,7 @@ export const mrModules: MrModule[] = [
         items: [
           "Hybrid retention policy management",
           "Automated disposition workflows",
-          "Complete audit trails for both formats"
+          "Audit trails for electronic and physical records"
         ]
       },
       {
@@ -144,7 +152,7 @@ export const mrModules: MrModule[] = [
         items: [
           "AI-driven classification and indexing",
           "Automated workflow triggers",
-          "Smart recommendations for lifecycle actions"
+          "Recommendations for lifecycle actions"
         ]
       }
     ],
@@ -157,7 +165,7 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Legal & compliance",
-          body: "Enhance eDiscovery, legal holds, and regulatory reporting."
+          body: "Support legal holds, eDiscovery, and regulatory reporting."
         },
         {
           title: "Human resources",
@@ -169,11 +177,11 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Healthcare administration",
-          body: "Maintain retention compliance and respond quickly to data requests."
+          body: "Apply retention schedules consistently and respond quickly to data requests."
         },
         {
           title: "Research & development",
-          body: "Protect research assets and ensure version traceability."
+          body: "Protect research assets and keep version history traceable."
         },
         {
           title: "Customer service",
@@ -183,7 +191,7 @@ export const mrModules: MrModule[] = [
     },
     cta: {
       title: "Ready to unify your electronic and physical records?",
-      body: "See how an AI-first hybrid platform brings all your records together, with intelligent automation, unified governance, and complete lifecycle management."
+      body: "See how one hybrid platform brings your electronic and physical records together, with retention schedules, audit trails and lifecycle tracking through to disposition."
     }
   },
   {
@@ -204,10 +212,10 @@ export const mrModules: MrModule[] = [
     },
     hero: {
       title: "AI-driven request management for timely and transparent responses",
-      description: "Capture, track, and fulfill information requests with intelligent workflows while meeting deadlines and ensuring accountability.",
+      description: "Capture, triage, track and fulfill information requests in one system, with deadline tracking, redaction and an audit trail for every request.",
       trust: [
         "Secure",
-        "Compliant",
+        "Compliance support",
         "Enterprise-ready"
       ],
       image: mrScreens.requestsKanban
@@ -225,7 +233,7 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Limited transparency and control",
-          body: "Without structured workflows, approvals, and audit trails, it becomes difficult to ensure accuracy, consistency, and accountability."
+          body: "Without structured workflows, approvals, and audit trails, it becomes difficult to keep responses accurate, consistent, and accountable."
         }
       ]
     },
@@ -234,15 +242,15 @@ export const mrModules: MrModule[] = [
       steps: [
         {
           title: "Centralize request intake",
-          body: "Capture all public and internal requests in one place using custom request forms, email intake, and a dedicated requester portal."
+          body: "Capture public and internal requests in one place using custom request forms, email intake, and a requester portal."
         },
         {
           title: "Track deadlines automatically",
-          body: "Monitor statutory and internal deadlines with automated tracking, alerts, and escalation rules to ensure every request stays on schedule."
+          body: "Monitor statutory and internal deadlines with automated tracking, alerts, and escalation rules, so requests stay on schedule."
         },
         {
           title: "Review, approve, and redact",
-          body: "Route requests through approval workflows, apply secure redaction tools, and control access to sensitive information."
+          body: "Route requests through approval workflows, redact documents with AI suggestions and manual redactions, apply exemption codes, and control access to sensitive information."
         },
         {
           title: "Respond and audit",
@@ -268,7 +276,7 @@ export const mrModules: MrModule[] = [
       {
         value: undefined,
         label: "Complete deadline visibility",
-        body: "Ensure every request meets compliance and service level requirements."
+        body: "Track every request against its statutory and service-level deadlines."
       },
       {
         value: "40–60%",
@@ -295,7 +303,7 @@ export const mrModules: MrModule[] = [
         items: [
           "Track statutory and internal deadlines automatically",
           "Receive alerts, reminders, and escalations",
-          "Ensure consistent, on-time responses"
+          "Keep responses consistent and on time"
         ]
       },
       {
@@ -309,17 +317,17 @@ export const mrModules: MrModule[] = [
       {
         title: "Secure redaction and governance",
         items: [
-          "Apply secure redaction tools to protect sensitive data",
+          "AI-assisted and manual redaction of sensitive information",
           "Enforce role-based access and permissions",
           "Maintain a full request audit trail"
         ]
       },
       {
-        title: "Compliance-ready framework",
+        title: "Compliance and governance support",
         items: [
-          "Align with regulatory and governance requirements",
+          "Supports regulatory and governance requirements",
           "Support reporting, audits, and reviews",
-          "Ensure consistent, compliant request handling"
+          "Exemption codes managed in one place"
         ]
       },
       {
@@ -352,7 +360,7 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Healthcare administration",
-          body: "Respond to information requests while maintaining privacy and compliance."
+          body: "Respond to information requests while protecting patient privacy."
         },
         {
           title: "Customer service",
@@ -362,14 +370,14 @@ export const mrModules: MrModule[] = [
     },
     cta: {
       title: "Ready to modernize your request management?",
-      body: "Automate information requests with centralized intake, automated tracking, secure redaction, and compliance-ready workflows."
+      body: "Handle information requests with centralized intake, deadline tracking, redaction, and an audit-ready history for every request."
     }
   },
   {
     slug: "mr-workflows",
     name: "MR Workflows",
     officialUrl: "https://maplerecord.com/platform/mr-workflow/",
-    summary: "No-code automation that connects your apps, teams, and data.",
+    summary: "No-code automation that connects your MapleRecord modules, teams, and data.",
     highlights: [
       "Cross-app triggers",
       "Ready-made templates",
@@ -383,10 +391,10 @@ export const mrModules: MrModule[] = [
     },
     hero: {
       title: "AI-driven workflow automation for enterprise efficiency",
-      description: "Design, automate, and monitor business processes with a no-code workflow engine that scales securely across your organization.",
+      description: "Design, run and monitor approvals and business processes with a no-code designer, form, email and scheduled triggers, run history and audit logs.",
       trust: [
         "Secure",
-        "Compliant",
+        "Compliance support",
         "Enterprise-ready"
       ],
       image: mrScreens.workflowsCanvas
@@ -396,11 +404,11 @@ export const mrModules: MrModule[] = [
       problems: [
         {
           title: "Complexity across systems",
-          body: "Processes often span multiple applications and teams; traditional workflow tools struggle to integrate seamlessly."
+          body: "Processes often span multiple applications and teams; traditional workflow tools struggle to connect them."
         },
         {
           title: "Lack of visibility and accountability",
-          body: "Without real-time monitoring and audit logs, it is hard to ensure process compliance or measure performance."
+          body: "Without real-time monitoring and audit logs, it is hard to show process compliance or measure performance."
         }
       ]
     },
@@ -413,27 +421,28 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Trigger across systems",
-          body: "Set up cross-app triggers that connect to other MR products, ERP, CRM, databases, and downstream systems so workflows act across your entire ecosystem."
+          body: "Start workflows when a form is submitted, an email arrives, on a schedule or interval, or manually. Cross-app triggers connect them to other MR products and downstream systems such as ERP and CRM."
         },
         {
           title: "Route with logic",
-          body: "Use conditional logic and dynamic routing to ensure tasks follow the right paths based on real-time data, roles, and outcomes."
+          body: "Use gateways, conditions and parallel approvals so tasks follow the right path based on data, roles, and outcomes."
         },
         {
           title: "Monitor in real time",
-          body: "Track workflow execution as it happens. Monitor performance, bottlenecks, and outcomes with dashboards that provide visibility across processes."
+          body: "Track workflow runs as they happen. The dashboard and run history show successful, partial and failed runs and pending approvals."
         },
         {
           title: "Govern and audit",
-          body: "Every workflow execution is logged for audit readiness. Version history, execution logs, and role-based access ensure secure governance."
+          body: "Every workflow run is logged for audit readiness. Published revisions, run logs, and role-based access keep workflows under control."
         }
       ],
       image: mrScreens.workflowsRuns
     },
     tour: {
-      intro: "A closer look at the screens process owners work in, from the dashboard to the workflow list.",
+      intro: "A closer look at the screens process owners work in, from the dashboard to the designer and the workflow list.",
       stops: [
         { screen: mrScreens.workflowsDashboard, title: "Start from the dashboard", body: "The dashboard counts workflows and pending approvals, summarizes run outcomes and lists the latest runs, with quick links to common tasks." },
+        { screen: mrScreens.workflowsCanvas, title: "Design on a canvas", body: "The designer shows a destruction authorization workflow as connected nodes: a form submission, two approvals, a gateway, an action, an email and an end. Triggers, approvals, gateways, actions, conditions and delays are added from the node palette." },
         { screen: mrScreens.workflowsList, title: "Manage published and draft workflows", body: "The workflow list shows whether each workflow is published or a draft, what triggers it, its revision and when it was last updated." },
       ],
     },
@@ -455,7 +464,7 @@ export const mrModules: MrModule[] = [
       },
       {
         value: "100%",
-        label: "Enterprise-ready compliance",
+        label: "Execution traceability",
         body: "Audit traceability for every execution, with logs and role-based access controls."
       }
     ],
@@ -489,7 +498,7 @@ export const mrModules: MrModule[] = [
         items: [
           "Audit-ready execution logs with timestamps",
           "Role-based access and controlled privileges",
-          "End-to-end data protection and policy enforcement"
+          "Data protection and policy enforcement"
         ]
       },
       {
@@ -497,7 +506,7 @@ export const mrModules: MrModule[] = [
         items: [
           "Designed for enterprise scale and reliability",
           "Versioned workflow history with rollback support",
-          "Consistent performance under high volume"
+          "Built to handle high volumes of runs"
         ]
       }
     ],
@@ -532,14 +541,14 @@ export const mrModules: MrModule[] = [
     },
     cta: {
       title: "Ready to automate your processes?",
-      body: "Streamline your enterprise with AI-enabled workflows, secure governance, and real-time process visibility."
+      body: "Automate approvals and routine processes with no-code workflows, governed revisions, and real-time visibility into every run."
     }
   },
   {
     slug: "mr-forms",
     name: "MR Forms",
     officialUrl: "https://maplerecord.com/platform/mr-forms/",
-    summary: "Create professional forms in seconds with AI-powered generation and direct records integration.",
+    summary: "Build forms with a drag-and-drop builder or AI generation, and send submissions straight into MapleRecord.",
     highlights: [
       "AI form generation",
       "Mobile-responsive design",
@@ -553,7 +562,7 @@ export const mrModules: MrModule[] = [
     },
     hero: {
       title: "Build smart forms with AI",
-      description: "Create professional forms in seconds with MapleRecord's AI-powered form builder, and connect data collection directly to your records management system.",
+      description: "Build forms with a drag-and-drop builder, conditional logic and AI generation, and route each submission into MapleRecord with a tracking number.",
       trust: [
         "AI-powered",
         "Secure",
@@ -583,7 +592,7 @@ export const mrModules: MrModule[] = [
       steps: [
         {
           title: "Generate with AI",
-          body: "Describe what you need in plain English, and AI builds a complete form with the right fields, validations, and logic."
+          body: "Describe the form you need in plain English, and AI drafts its fields, validations, and logic for you to review."
         },
         {
           title: "Customize and brand",
@@ -595,7 +604,7 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Collect and integrate",
-          body: "Submissions flow automatically into MapleRecord, with full audit trails and secure storage."
+          body: "Submissions flow into MapleRecord with a tracking number, the form version, audit trails, and secure storage."
         }
       ],
       image: mrScreens.formsLogic
@@ -631,7 +640,7 @@ export const mrModules: MrModule[] = [
       },
       {
         value: undefined,
-        label: "Seamless data integration",
+        label: "Direct records integration",
         body: "Direct integration with MapleRecord's records management system."
       }
     ],
@@ -657,14 +666,14 @@ export const mrModules: MrModule[] = [
         items: [
           "Real-time submission dashboards",
           "Completion rate tracking",
-          "Export to Excel or PDF"
+          "Export to CSV, Excel or PDF"
         ]
       },
       {
         title: "Security and compliance",
         items: [
           "End-to-end encryption",
-          "HIPAA and GDPR compliance",
+          "Supports HIPAA and GDPR requirements",
           "Role-based access control"
         ]
       }
@@ -678,7 +687,7 @@ export const mrModules: MrModule[] = [
         },
         {
           title: "Healthcare administration",
-          body: "Run HIPAA-compliant patient intake, consent forms, and satisfaction surveys."
+          body: "Run patient intake, consent forms and satisfaction surveys with access controls and audit trails that support HIPAA requirements."
         },
         {
           title: "Legal & compliance",
@@ -700,7 +709,7 @@ export const mrModules: MrModule[] = [
     },
     cta: {
       title: "Ready to build smarter forms?",
-      body: "Modernize data collection with AI-powered form building, direct records integration, and enterprise-grade security."
+      body: "Collect information with forms that feed MapleRecord directly, with conditional logic, versioned forms, and role-based access."
     }
   },
   {
@@ -721,7 +730,7 @@ export const mrModules: MrModule[] = [
         "Two-factor authentication policy",
         "AES-256 backup encryption"
       ],
-      image: mrScreens.adminProducts
+      image: mrScreens.adminStatus
     },
     how: {
       heading: "How MR Admin works",
@@ -750,9 +759,9 @@ export const mrModules: MrModule[] = [
       image: mrScreens.adminSecurity
     },
     tour: {
-      intro: "A closer look at the screens administrators work in, from service health to integrations and backups.",
+      intro: "A closer look at the screens administrators work in, from products and licenses to integrations and backups.",
       stops: [
-        { screen: mrScreens.adminStatus, title: "Check system status", body: "System status checks every MapleRecord service and shows a health card for each, with its latency and HTTP status, followed by the infrastructure the suite runs on." },
+        { screen: mrScreens.adminProducts, title: "Enable products and licenses", body: "The products table lists each MapleRecord module, from MR Admin to MR Forms, with its code, license status and an Enabled switch, and actions to add or deactivate a license." },
         { screen: mrScreens.adminIntegrations, title: "Connect external services", body: "Integration settings are grouped in tabs, from object storage, OpenAI, DocuSign, DiDit and Stripe to Microsoft Entra, blockchain, search, SharePoint and API keys." },
         { screen: mrScreens.adminBackup, title: "Schedule backups", body: "Automated backups run on a daily schedule, with a retention period and AES-256 encryption for backup files." },
       ],
@@ -819,23 +828,25 @@ export const mrModules: MrModule[] = [
 ];
 
 /**
- * "How the modules work together" on /maplerecord/platform. Each line restates what the module pages
- * above say (Workflows' cross-app triggers to other MR products, Forms' submissions flowing into MapleRecord).
+ * "How the modules work together" on /maplerecord/platform, in lifecycle order (collect → respond → automate →
+ * store and govern), with MR Admin as the layer underneath. Each line restates what the module pages say (Forms'
+ * submissions flowing into MapleRecord, Requests' intake from email, forms and portals, Workflows' cross-app
+ * triggers to other MR products).
  */
 export const mrPlatformFlow = {
   eyebrow: "Connected platform",
   heading: "How the modules work together",
-  intro: "Four modules each handle one part of the records lifecycle, and MR Admin administers all of them on the same platform.",
+  intro: "Each module handles one stage of the records lifecycle, from collecting information to keeping it as a governed record. MR Admin sits underneath all four.",
   steps: [
     {
-      module: "mr-records",
-      role: "Store and govern",
-      body: "Manage electronic and physical records with retention policies, access controls, and full audit trails.",
+      module: "mr-forms",
+      role: "Collect",
+      body: "Build forms with drag-and-drop fields and conditional logic. Submissions flow into MapleRecord with a tracking number and an audit trail.",
     },
     {
       module: "mr-requests",
       role: "Respond",
-      body: "Capture public and internal information requests, track deadlines, and respond with secure redaction.",
+      body: "Capture public and internal requests from email, forms and portals, track deadlines, and respond with secure redaction.",
     },
     {
       module: "mr-workflows",
@@ -843,28 +854,35 @@ export const mrPlatformFlow = {
       body: "Route approvals and reviews with no-code workflows and cross-app triggers that connect to other MR products.",
     },
     {
-      module: "mr-forms",
-      role: "Collect",
-      body: "Build forms with AI. Submissions flow into MapleRecord with full audit trails and secure storage.",
-    },
-    {
-      module: "mr-admin",
-      role: "Administer",
-      body: "Manage the staff directory, products and licenses, security policies, integrations, and backups for every module.",
+      module: "mr-records",
+      role: "Store and govern",
+      body: "Manage electronic and physical records with retention policies, access controls, and full audit trails.",
     },
   ] satisfies { module: MrModuleSlug; role: string; body: string }[],
+  base: {
+    module: "mr-admin",
+    role: "Underneath all four",
+    body: "One staff directory, products and licenses, security policies, integrations, and backups for every module.",
+  } satisfies { module: MrModuleSlug; role: string; body: string },
 };
 
 /** Platform index (/maplerecord/platform) copy that is specific to that page. */
 export const mrPlatformPage = {
   title: "One unified platform. Five integrated modules.",
-  metaDescription: "One unified platform with five integrated modules: MR Records, MR Requests, MR Workflows, MR Forms and MR Admin.",
-  /** Hero screen: the MR Records workspace overview. */
-  heroScreen: mrScreens.recordsDashboard,
+  description:
+    "MapleRecord, our records management platform, is built from five modules. Four cover the records lifecycle: collect information, respond to requests, automate processes, and store and govern records. The fifth, MR Admin, manages the staff directory and the security, integration and backup settings they all share.",
+  metaDescription: "The MapleRecord platform: five integrated modules, MR Records, MR Requests, MR Workflows, MR Forms and MR Admin, for electronic and physical records.",
+  /** Hero screen: MR Admin's products table, which lists all five modules with their licenses. */
+  heroScreen: mrScreens.adminProducts,
+  /**
+   * The products table fills only the top half of that screen; shown whole, the hero reads as mostly blank.
+   * Zoom in on the table (MrFocus: x/y in %, around which the screen is scaled), leaving out the sidebar.
+   */
+  heroFocus: { x: 89, y: 0, zoom: 1.32 },
   showcase: {
     eyebrow: "Modules",
     title: "Start with the module you need",
-    intro: "Four modules cover the records lifecycle. Use one on its own or combine them on the same platform.",
+    intro: "Use one lifecycle module on its own or combine several on the same platform. MR Admin, the fifth module, administers them all.",
   },
   /** "Administered from MR Admin" band: MR Admin's role, as shown in its product UI. */
   admin: {
@@ -879,10 +897,53 @@ export const mrPlatformPage = {
       "Daily encrypted backups",
       "System status",
     ],
-    screens: [mrScreens.adminStatus, mrScreens.adminIntegrations],
   },
   cta: {
     title: "See the platform in action",
     body: "Schedule a personalized demo with the MapleRecord team to see how the five modules fit your records management.",
   },
+};
+
+/**
+ * Focus regions for product screens shown at small sizes (product tour, "How it operates", module cards). Each
+ * screen is 2560 × 1600; a region is its left edge `x`, top edge `y` and width `w`, as fractions of the screen,
+ * so the window shows that part enlarged (mostly: the page content without the app's navigation sidebar).
+ * `phone` is the region for the 4:3 detail shown below 640px. Screens without an entry are shown whole.
+ */
+export type MrFocusRegion = { x: number; y: number; w: number };
+export type MrScreenFocus = MrFocusRegion & { phone?: MrFocusRegion };
+
+const content = (y = 0.06, w = 0.8, phone: MrFocusRegion = { x: 0.185, y: 0.06, w: 0.48 }): MrScreenFocus => ({ x: 0.185, y, w, phone });
+
+export const mrScreenFocus: Record<string, MrScreenFocus> = {
+  // MR Records
+  [mrScreens.recordsFiles.src]: { x: 0.045, y: 0.08, w: 0.72, phone: { x: 0.045, y: 0.12, w: 0.4 } },
+  [mrScreens.recordsSearch.src]: { x: 0.185, y: 0.06, w: 0.8, phone: { x: 0.185, y: 0.1, w: 0.45 } },
+  [mrScreens.recordsBoxes.src]: { x: 0.185, y: 0.06, w: 0.8, phone: { x: 0.185, y: 0.09, w: 0.45 } },
+  [mrScreens.recordsAudit.src]: { x: 0.185, y: 0.09, w: 0.8, phone: { x: 0.185, y: 0.09, w: 0.48 } },
+  [mrScreens.recordsRetention.src]: content(0.06),
+  [mrScreens.recordsLifecycle.src]: content(0.04, 0.8, { x: 0.15, y: 0.06, w: 0.48 }),
+  // MR Requests
+  [mrScreens.requestsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.45 }),
+  [mrScreens.requestsRedaction.src]: content(0.1, 0.78, { x: 0.185, y: 0.2, w: 0.45 }),
+  [mrScreens.requestsExemptions.src]: content(0.06, 0.8, { x: 0.185, y: 0.15, w: 0.48 }),
+  [mrScreens.requestsTriage.src]: { x: 0.05, y: 0.08, w: 0.9, phone: { x: 0.06, y: 0.2, w: 0.48 } },
+  [mrScreens.requestsKanban.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
+  // MR Workflows
+  [mrScreens.workflowsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.06, w: 0.48 }),
+  [mrScreens.workflowsList.src]: content(0.05, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
+  [mrScreens.workflowsCanvas.src]: { x: 0.4, y: 0.17, w: 0.6, phone: { x: 0.42, y: 0.22, w: 0.46 } },
+  [mrScreens.workflowsRuns.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
+  // MR Forms
+  [mrScreens.formsChooser.src]: { x: 0.17, y: 0.1, w: 0.8, phone: { x: 0.185, y: 0.06, w: 0.62 } },
+  [mrScreens.formsSubmissions.src]: content(0.06, 0.8, { x: 0.185, y: 0.2, w: 0.48 }),
+  [mrScreens.formsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.06, w: 0.48 }),
+  [mrScreens.formsLogic.src]: content(0.06, 0.8, { x: 0.185, y: 0.14, w: 0.48 }),
+  [mrScreens.formsBuilder.src]: { x: 0.185, y: 0.06, w: 0.62, phone: { x: 0.185, y: 0.1, w: 0.4 } },
+  // MR Admin
+  [mrScreens.adminProducts.src]: { x: 0.22, y: 0.04, w: 0.76, phone: { x: 0.22, y: 0.1, w: 0.45 } },
+  [mrScreens.adminStatus.src]: { x: 0.22, y: 0.07, w: 0.78, phone: { x: 0.22, y: 0.31, w: 0.48 } },
+  [mrScreens.adminIntegrations.src]: content(0.06, 0.6, { x: 0.185, y: 0.06, w: 0.46 }),
+  [mrScreens.adminBackup.src]: content(0.06, 0.62, { x: 0.185, y: 0.09, w: 0.48 }),
+  [mrScreens.adminSecurity.src]: content(0.05, 0.6, { x: 0.185, y: 0.06, w: 0.48 }),
 };

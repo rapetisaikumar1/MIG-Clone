@@ -34,12 +34,24 @@ export type MapleRecordNav = {
 
 export const mapleRecordPath = "/maplerecord";
 
+/** The specializations shown in the desktop header (three, for space). Spread into `primaryNav`; don't append to it. */
 export const expertiseNav: NavItem[] = [
-  { label: "AI Governance", href: "/ai-governance", description: "Oversight, accountability and review for AI use" },
-  { label: "Adobe Services", href: adobeServicesPath, description: "Implementation and optimization of Adobe platforms" },
-  { label: "Data Management", href: "/data-management", description: "Governance, integration, quality and lifecycle" },
+  { label: "AI Governance", href: "/ai-governance", description: "Responsible AI, AI risk management and compliance support" },
+  { label: "Adobe Services", href: adobeServicesPath, description: "Adobe Experience Cloud implementation, integration and support" },
+  { label: "Data Management", href: "/data-management", description: "Data governance, integration, quality and lifecycle" },
 ];
 
+/** The fourth specialization (owner directive 2026-11-07). Not in the desktop header, which has no room for it. */
+export const softwareDevelopmentNav: NavItem = {
+  label: "Software Development",
+  href: "/software-development",
+  description: "Enterprise applications, automation and integration",
+};
+
+/** All four service specializations in priority order (footer, mobile menu, 404). The desktop header uses `expertiseNav`. */
+export const servicesNav: NavItem[] = [...expertiseNav, softwareDevelopmentNav];
+
+/** Desktop header: exactly seven items, so it fits on one row (tests/navigation.spec.ts). */
 export const primaryNav: NavItem[] = [
   ...expertiseNav,
   { label: "MapleRecord", href: mapleRecordPath },
@@ -47,6 +59,9 @@ export const primaryNav: NavItem[] = [
   { label: "Insights", href: "/insights" },
   { label: "About", href: "/about" },
 ];
+
+/** Mobile sheet: all four specializations, then the rest of the header items. */
+export const mobileNav: NavItem[] = [...servicesNav, ...primaryNav.slice(expertiseNav.length)];
 
 /**
  * Builds the small Adobe menu model from the product content. Call it only from Server
@@ -92,8 +107,8 @@ export function getMapleRecordNav(): MapleRecordNav {
 export type NavGroup = { heading: string; items: (NavItem & { srPrefix?: string })[] };
 
 const companyNav: NavItem[] = [
-  { label: "About", href: "/about" },
   { label: "MapleRecord", href: "/maplerecord" },
+  { label: "About", href: "/about" },
   { label: "Industries", href: "/industries" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
@@ -103,7 +118,7 @@ const companyNav: NavItem[] = [
 export function getFooterNav(): NavGroup[] {
   const adobe = getAdobeNav();
   return [
-    { heading: "Expertise", items: expertiseNav },
+    { heading: "Expertise", items: servicesNav },
     {
       heading: "Adobe Services",
       // Short labels read as "Adobe Analytics", "Adobe platform assessment"… out of context.

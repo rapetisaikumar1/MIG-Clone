@@ -31,13 +31,15 @@ export const insights: InsightMeta[] = [
     theme: "Data Management",
     status: "published",
     published: "2024-12-05",
+    // Verified: despite its slug, this WordPress URL served this data governance guide, not an Adobe Experience Cloud
+    // article (docs/CONTENT-INVENTORY.md, docs/MIGRATION.md), so the redirect to this article is correct.
     legacyUrl: "/benefits-of-adobe-experience-cloud-for-your-business/",
   },
   {
     slug: "the-importance-of-data-governance-in-the-digital-age",
     metaTitle: "Why Data Governance Matters Today",
     title: "The Importance of Data Governance in the Digital Age",
-    description: "How data quality, stewardship, security, privacy and lifecycle management combine into a governance program, and how to implement one.",
+    description: "A short overview of why data governance matters, the components of a governance program, and where to start.",
     theme: "Data Management",
     status: "published",
     published: "2024-12-06",

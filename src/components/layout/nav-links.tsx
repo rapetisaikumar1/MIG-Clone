@@ -14,11 +14,14 @@ export function isActivePath(pathname: string, href: string) {
 function linkClassName(active: boolean, withMenu: boolean) {
   return cn(
     "relative inline-flex min-h-11 items-center whitespace-nowrap rounded-full text-[0.875rem] text-ink-soft transition-colors hover:text-ink",
-    "after:absolute after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-300 hover:after:scale-x-100",
+    // The ring stays on the pill's edge (inside the 44px hit area) instead of spilling over the next item.
+    "focus-visible:outline-offset-0",
+    "after:absolute after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:rounded-full after:bg-ink after:transition-transform after:duration-300 after:ease-out-quint hover:after:scale-x-100",
     withMenu
       ? "pl-2 pr-0.5 after:left-2 after:right-0.5"
       : "px-2 after:inset-x-2",
-    active && "text-ink after:scale-x-100 after:bg-signal",
+    // "You are here" is a heavier red rule, not just a colour change from the 1px hover line.
+    active && "text-ink after:h-0.5 after:scale-x-100 after:bg-signal",
   );
 }
 

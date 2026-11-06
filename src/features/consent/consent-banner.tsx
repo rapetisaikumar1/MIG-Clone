@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /** Accept and reject share one style so rejecting is exactly as easy and as visible as accepting. */
 export const choiceButton = cn(
   "inline-flex min-h-11 items-center justify-center rounded-full px-3 text-center text-sm font-medium leading-tight sm:px-4",
-  "bg-ink text-paper transition-[background-color,transform] duration-200 ease-out hover:bg-ink-soft active:translate-y-px",
+  "bg-ink text-paper transition-[background-color,translate] duration-200 ease-out hover:bg-ink-soft active:translate-y-px",
 );
 
 type ConsentBannerProps = {

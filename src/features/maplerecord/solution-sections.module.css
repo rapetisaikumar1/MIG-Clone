@@ -1,0 +1,125 @@
+/*
+ * Motion for the MapleRecord solution pages. Transform (and the opacity of purely decorative layers) only;
+ * no text ever fades. Everything is gated on prefers-reduced-motion: no-preference, and the scroll-driven
+ * parts also on @supports (animation-timeline: view()), so without either the page shows its static state.
+ */
+
+/* ------------------------------------------------ industry module cards: screen pan on hover/focus */
+
+/* The zoomed screen inside a module card's window; `--pan` (a negative %) is set per screen. */
+.peek {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .peek {
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .peekCard:hover .peek,
+  .peekCard:focus-within .peek {
+    transform: translateY(var(--pan, 0));
+  }
+}
+
+/* ------------------------------------------------------ department workflow: steps draw as they scroll */
+
+/* Signal rail laid over the grey rail between two step nodes; hidden in the static state. */
+.railFill {
+  display: none;
+  transform-origin: top center;
+}
+
+/* Signal ring on a step node; shown in the static state, drawn in on scroll when supported. */
+.nodeRing {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .railFill {
+      display: block;
+      animation: rail-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 55%;
+    }
+    .nodeRing {
+      animation: ring-in linear both;
+      animation-timeline: view();
+      animation-range: entry 60% cover 35%;
+    }
+  }
+}
+
+@keyframes rail-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes ring-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ------------------------------------------------------------- solutions index: platform map */
+
+/* A dot that travels along a connector (decorative). Static and hidden with reduced motion. */
+.dot {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot {
+    display: block;
+    animation: dot-down 3.6s cubic-bezier(0.45, 0, 0.55, 1) infinite both;
+  }
+  .dotUp {
+    animation-name: dot-up;
+  }
+}
+
+/* Travels the connector (2.5rem) in the first half of the cycle, then rests out of sight. */
+@keyframes dot-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  8% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+    transform: translateY(2.25rem);
+  }
+}
+
+@keyframes dot-up {
+  0% {
+    opacity: 0;
+    transform: translateY(2.25rem);
+  }
+  8% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}

@@ -10,7 +10,7 @@ import {
   Building2,
   CircleHelp,
   Columns3,
-  LayoutGrid,
+  Grid2x2,
   PanelLeft,
   Search,
   SlidersHorizontal,
@@ -84,7 +84,7 @@ export function TopBar({
     <div className="flex h-10 shrink-0 items-center border-b border-[#e4e4e7] bg-white px-3">
       <div className="flex items-center gap-2">
         <span className="flex items-center gap-2 px-1.5 text-[13px] font-medium text-[#18181b]">
-          <LayoutGrid className="size-[15px]" strokeWidth={1.75} />
+          <Grid2x2 className="size-[15px]" strokeWidth={1.75} />
           {product}
         </span>
         <span className="flex h-7 items-center gap-1.5 rounded-md border border-[#e4e4e7] px-2 text-[11.5px] font-medium">
@@ -152,7 +152,8 @@ function NavRow({ item, depth = 0 }: { item: NavItem; depth?: number }) {
           "flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px]",
           item.active ? "bg-[#f0f0f1] font-medium text-[#18181b]" : "text-[#27272a]",
           item.locked && "text-[#71717a]",
-          depth > 0 && "h-7",
+          // Nested rows (Admin Console tree) are tighter so the fully expanded tree fits above the footer, as in the real app.
+          depth > 0 && "h-6",
         )}
       >
         {IconC ? <IconC className="size-[15px] shrink-0" strokeWidth={1.75} /> : null}
@@ -343,6 +344,7 @@ const toneClass: Record<Tone, string> = {
   dark: "bg-[#18181b] text-white ring-[#18181b]",
 };
 
+/** Standard status pill for every module (e.g. Published = green, Draft = gray, Overdue = red). */
 export function Badge({ children, tone = "gray", className, dot }: { children: ReactNode; tone?: Tone; className?: string; dot?: boolean }) {
   return (
     <span className={cn("inline-flex items-center gap-1 whitespace-nowrap rounded-md px-1.5 py-[1px] text-[11px] font-medium ring-1 ring-inset", toneClass[tone], className)}>
@@ -382,7 +384,10 @@ export function Card({ children, className, title, action }: { children?: ReactN
   );
 }
 
-/** KPI tile: label, big value, caption, icon in a tinted square. */
+/**
+ * KPI tile: label, big value, caption, icon in a tinted square.
+ * `upper` + `caption` is the standard MR Requests / Workflows / Forms dashboard KPI style — use it rather than local KPI copies.
+ */
 export function StatTile({
   label,
   value,
@@ -404,7 +409,7 @@ export function StatTile({
   return (
     <div className="flex items-start justify-between rounded-xl border border-[#e4e4e7] bg-white px-4 py-3.5">
       <div>
-        <p className={cn(upper ? "text-[10.5px] font-medium uppercase tracking-[0.04em] text-[#71717a]" : "text-[12.5px] text-[#52525b]")}>{label}</p>
+        <p className={cn(upper ? "text-[11px] font-medium uppercase tracking-[0.04em] text-[#71717a]" : "text-[12.5px] text-[#52525b]")}>{label}</p>
         <p className={cn("mt-1.5 text-[24px] font-semibold leading-none tracking-[-0.02em]", valueClass)}>{value}</p>
         {caption ? <p className="mt-2 text-[11.5px] text-[#71717a]">{caption}</p> : null}
       </div>
@@ -421,7 +426,10 @@ export function StatTile({
 
 export type Column = { label: ReactNode; width?: number | string; align?: "left" | "right" | "center"; sort?: boolean };
 
-/** Data table in the MR style: optional checkbox column, header row, rows, footer with pagination. */
+/**
+ * Data table in the MR style: optional checkbox column, header row, rows, footer with pagination.
+ * Every cell has 12px right padding, so a trailing icon-only column (row actions) needs width >= 28.
+ */
 export function DataTable({
   columns,
   rows,
@@ -511,8 +519,8 @@ export function Donut({ segments, size = 84, thickness = 9, label, sub }: { segm
 export function LegendRow({ color, label, value }: { color: string; label: string; value: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-4 text-[12px]">
-      <span className="flex items-center gap-2 text-[#3f3f46]">
-        <span className="size-2 rounded-full" style={{ background: color }} />
+      <span className="flex items-center gap-2 whitespace-nowrap text-[#3f3f46]">
+        <span className="size-2 shrink-0 rounded-full" style={{ background: color }} />
         {label}
       </span>
       <span className="font-medium">{value}</span>

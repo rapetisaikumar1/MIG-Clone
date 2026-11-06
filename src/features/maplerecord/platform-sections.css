@@ -1,0 +1,88 @@
+/*
+ * Platform pages (/maplerecord/platform and module pages): focus crops for product screens and the "data
+ * packet" that travels along the flow connectors. Everything that moves is decorative and only runs when the
+ * visitor has not asked for reduced motion.
+ */
+
+/* Focus crop: the screen is drawn larger than its window and offset so a region of it fills the window.
+   The offsets come from CSS variables set inline (--mrp-w/l/t on 640px and up, --mrp-wp/lp/tp below). */
+.mrp-shot > img {
+  position: absolute;
+  max-width: none;
+  height: auto;
+  width: var(--mrp-wp);
+  left: var(--mrp-lp);
+  top: var(--mrp-tp);
+}
+@media (min-width: 40rem) {
+  .mrp-shot > img {
+    width: var(--mrp-w);
+    left: var(--mrp-l);
+    top: var(--mrp-t);
+  }
+}
+
+/* Flow connectors: a small signal dot runs Forms → Requests → Workflows → Records, one segment at a time
+   (each segment is active for a third of the 7.5s cycle, staggered by --mrp-i). Down the rail below lg,
+   across from lg. */
+.mrp-packet {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mrp-seg {
+    container-type: size;
+  }
+  .mrp-packet {
+    display: block;
+    position: absolute;
+    left: calc(50% - 3px);
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-signal);
+    box-shadow: 0 0 0 3px rgb(208 0 0 / 0.14);
+    opacity: 0;
+    animation: mrp-packet-y 7.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    animation-delay: calc(var(--mrp-i, 0) * 2.5s);
+  }
+  @media (min-width: 64rem) {
+    .mrp-packet {
+      left: -3px;
+      top: calc(50% - 3px);
+      animation-name: mrp-packet-x;
+    }
+  }
+}
+
+@keyframes mrp-packet-y {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  4%,
+  29% {
+    opacity: 1;
+  }
+  33.333%,
+  100% {
+    transform: translateY(100cqh);
+    opacity: 0;
+  }
+}
+
+@keyframes mrp-packet-x {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  4%,
+  29% {
+    opacity: 1;
+  }
+  33.333%,
+  100% {
+    transform: translateX(100cqw);
+    opacity: 0;
+  }
+}

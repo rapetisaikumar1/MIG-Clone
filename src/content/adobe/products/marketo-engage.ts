@@ -144,7 +144,7 @@ export const marketoEngage: AdobeProduct = {
     {
       question: "Can you clean up an existing Marketo Engage instance?",
       answer:
-        "Yes. We usually start with a review of programs, fields, smart campaigns and CRM sync settings, then agree with you what to fix first, so cleanup doesn't break campaigns that are still running.",
+        "Yes. We start with a review of programs, fields, smart campaigns and CRM sync settings, then agree with you what to fix first, so cleanup doesn't break campaigns that are still running.",
     },
     {
       question: "Do you integrate Marketo Engage with our CRM?",
@@ -164,11 +164,11 @@ export const marketoEngage: AdobeProduct = {
     {
       question: "Can Marketo Engage work with other Adobe applications?",
       answer:
-        "Yes. Real-Time CDP can send audiences to Marketo Engage, and Experience Platform can take in Marketo Engage data. We can help you decide whether those connections are worth it for your goals.",
+        "Yes. Real-Time CDP can send audiences to Marketo Engage, and Experience Platform can take in Marketo Engage data. We assess whether those connections suit your goals before anything is built.",
     },
   ],
   cta: {
     title: "Get more from Marketo Engage.",
-    body: "Tell us how your instance and CRM are set up today and where lead flow breaks down.",
+    body: "Tell us how your instance and CRM are set up today and where lead flow breaks down. We'll scope a practical first step with you.",
   },
 };

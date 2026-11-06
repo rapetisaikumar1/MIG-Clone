@@ -1,0 +1,59 @@
+/*
+ * Motion and small layout helpers for the MapleRecord company pages (resources, articles, about, contact).
+ * Everything here is decorative, transform-only and switched off under reduced motion or without support.
+ */
+
+/*
+ * Reading progress: a 2px signal rule across the top of the viewport that fills as the article body is
+ * read (a view timeline on the body, from its top reaching the top of the viewport to its end reaching
+ * the bottom). Same look as the Insights articles' bar. Hidden where scroll-driven animations are
+ * unsupported and under reduced motion, so it never shows as a static, meaningless bar.
+ */
+.progress {
+  display: none;
+}
+
+@supports (view-timeline-name: --a) {
+  .article {
+    view-timeline: --mr-article block;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .progress {
+      display: block;
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 45; /* above the sticky header (z-40), below menus and sheets (z-50) */
+      height: 2px;
+      background: var(--signal);
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      pointer-events: none;
+      animation: progress-grow linear both;
+      animation-timeline: --mr-article;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+
+@keyframes progress-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/*
+ * Desktop "On this page" list: scrolls on its own when it is taller than the viewport, with a soft fade at
+ * the bottom edge (the list carries matching bottom padding, so its last entry can scroll clear of it).
+ */
+.tocScroll {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5rem), transparent);
+  scrollbar-width: thin;
+}
+
+/*
+ * Card grids: items rise into place with the site's .reveal, each a little later than the one before it
+ * in its row (the scroll range shifts by --i × 28px, so the stagger follows scrolling, not a timer).
+ */
+.stagger > :global(.reveal) {
+  animation-range: entry calc(var(--i, 0) * 28px) entry calc(220px + var(--i, 0) * 28px);
+}

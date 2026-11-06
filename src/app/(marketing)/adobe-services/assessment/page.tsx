@@ -3,7 +3,6 @@ import { adobeAssessment as content } from "@/content/adobe/assessment";
 import {
   AssessmentDeliverables,
   AssessmentHero,
-  AssessmentPartnerSection,
   RequirementsSection,
   ReviewSection,
   SituationsSection,
@@ -44,7 +43,6 @@ export default function AdobeAssessmentPage() {
       <AssessmentDeliverables content={content} />
       <RequirementsSection content={content} />
       <FaqSection faqs={content.faqs} title="Questions about the assessment" />
-      <AssessmentPartnerSection />
       <CtaBand title={content.cta.title} body={content.cta.body} interest="adobe-services" topic="assessment" ctaLabel="Request an assessment" />
     </>
   );

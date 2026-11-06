@@ -1,11 +1,16 @@
 import { z } from "zod";
 import type { AdobeProductSlug } from "@/lib/content/types";
 
-/** Shared by the client form (usability) and the API route (enforcement). Contains no secrets. */
+/**
+ * Shared by the client form (usability) and the API route (enforcement). Contains no secrets.
+ * Interests follow the site's order of prominence (AI Governance, Adobe Services, Data Management,
+ * Software Development); the email subject and body take their labels from this list.
+ */
 export const contactInterests = [
   { value: "ai-governance", label: "AI Governance" },
   { value: "adobe-services", label: "Adobe Services" },
   { value: "data-management", label: "Data Management" },
+  { value: "software-development", label: "Software Development" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 
@@ -24,7 +29,7 @@ export function isContactInterest(value: unknown): value is ContactInterest {
  */
 export const adobeApplications = [
   { value: "experience-platform", label: "Adobe Experience Platform" },
-  { value: "real-time-cdp", label: "Real-Time CDP" },
+  { value: "real-time-cdp", label: "Adobe Real-Time CDP" },
   { value: "experience-manager", label: "Adobe Experience Manager" },
   { value: "analytics", label: "Adobe Analytics" },
   { value: "target", label: "Adobe Target" },

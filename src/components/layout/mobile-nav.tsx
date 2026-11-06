@@ -2,13 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Dialog } from "radix-ui";
 import { Menu, X, ArrowRight } from "lucide-react";
 import type { AdobeNav, MapleRecordNav, NavItem } from "@/config/navigation";
 import { company, primaryPhone } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { isActivePath } from "./nav-links";
+
+/** Child links of a top-level item: two columns on a tinted, captioned block, so they read as that item's pages. */
+const subListClass = "grid grid-cols-2 gap-x-3";
+const subLinkClass =
+  "flex min-h-11 items-center gap-2 rounded-lg text-[0.9375rem] leading-snug text-ink-soft transition-colors hover:text-ink focus-visible:outline-offset-0";
+
+function SubList({ caption, children }: { caption: string; children: ReactNode }) {
+  return (
+    <div className="-mt-1 mb-4 rounded-xl bg-paper-deep/70 px-4 pt-3 pb-1.5">
+      {/* Each list keeps its own accessible name; this caption is its visible equivalent. */}
+      <p aria-hidden className="font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-muted">
+        {caption}
+      </p>
+      {children}
+    </div>
+  );
+}
 
 /** Full-screen sheet built on Radix Dialog: focus trap, Escape to close, scroll lock, labelled. */
 export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]; cta: NavItem; adobe?: AdobeNav; mapleRecord?: MapleRecordNav }) {
@@ -37,7 +54,7 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
             <Dialog.Title className="font-mono text-label uppercase text-muted">Menu</Dialog.Title>
             <Dialog.Description className="sr-only">Site navigation for {company.name}</Dialog.Description>
             <Dialog.Close
-              className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 hover:border-ink/40"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-ink/15 transition-colors hover:border-ink/40 hover:bg-ink/[0.03]"
               aria-label="Close menu"
             >
               <X aria-hidden className="size-5" />
@@ -53,65 +70,63 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
                       href={item.href}
                       onClick={() => setOpen(false)}
                       aria-current={active ? "page" : undefined}
-                      className="flex min-h-14 items-center justify-between py-3 text-xl font-medium tracking-tight"
+                      className="group flex min-h-14 items-center justify-between py-3 text-xl font-medium tracking-tight"
                     >
                       <span className="flex items-center gap-3">
                         {active ? <span aria-hidden className="size-2 rounded-full bg-logo-red" /> : null}
                         {item.label}
                       </span>
-                      <ArrowRight aria-hidden className="size-4 text-muted" />
+                      <ArrowRight aria-hidden className="size-4 text-muted transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                     {adobe && item.href === adobe.overview.href ? (
-                      <ul aria-label="Adobe applications" className="-mt-1 mb-3 ml-1 border-l border-line pl-4">
-                        {[
-                          ...adobe.products.map((p) => ({ href: p.href, label: p.label })),
-                          { href: adobe.assessment.href, label: "Platform assessment" },
-                        ].map((sub) => {
-                          const current = pathname === sub.href;
-                          return (
-                            <li key={sub.href}>
-                              <Link
-                                href={sub.href}
-                                onClick={() => setOpen(false)}
-                                aria-current={current ? "page" : undefined}
-                                className={cn(
-                                  "flex min-h-11 items-center gap-2 text-base text-ink-soft hover:text-ink",
-                                  current && "font-medium text-ink",
-                                )}
-                              >
-                                {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
-                                <span>
-                                  <span className="sr-only">Adobe </span>
-                                  {sub.label}
-                                </span>
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      <SubList caption="Adobe applications">
+                        <ul aria-label="Adobe applications" className={subListClass}>
+                          {[
+                            ...adobe.products.map((p) => ({ href: p.href, label: p.label })),
+                            { href: adobe.assessment.href, label: "Platform assessment" },
+                          ].map((sub) => {
+                            const current = pathname === sub.href;
+                            return (
+                              <li key={sub.href}>
+                                <Link
+                                  href={sub.href}
+                                  onClick={() => setOpen(false)}
+                                  aria-current={current ? "page" : undefined}
+                                  className={cn(subLinkClass, current && "font-medium text-ink")}
+                                >
+                                  {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
+                                  <span>
+                                    <span className="sr-only">Adobe </span>
+                                    {sub.label}
+                                  </span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </SubList>
                     ) : null}
                     {mapleRecord && item.href === mapleRecord.overview.href ? (
-                      <ul aria-label="MapleRecord pages" className="-mt-1 mb-3 ml-1 border-l border-line pl-4">
-                        {mapleRecord.sections.slice(1).map((sub) => {
-                          const current = isActivePath(pathname, sub.href);
-                          return (
-                            <li key={sub.href}>
-                              <Link
-                                href={sub.href}
-                                onClick={() => setOpen(false)}
-                                aria-current={current ? "page" : undefined}
-                                className={cn(
-                                  "flex min-h-11 items-center gap-2 text-base text-ink-soft hover:text-ink",
-                                  current && "font-medium text-ink",
-                                )}
-                              >
-                                {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
-                                {sub.label}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      <SubList caption="MapleRecord">
+                        <ul aria-label="MapleRecord pages" className={subListClass}>
+                          {mapleRecord.sections.slice(1).map((sub) => {
+                            const current = isActivePath(pathname, sub.href);
+                            return (
+                              <li key={sub.href}>
+                                <Link
+                                  href={sub.href}
+                                  onClick={() => setOpen(false)}
+                                  aria-current={current ? "page" : undefined}
+                                  className={cn(subLinkClass, current && "font-medium text-ink")}
+                                >
+                                  {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </SubList>
                     ) : null}
                   </li>
                 );
@@ -123,7 +138,7 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
             <Link
               href={cta.href}
               onClick={() => setOpen(false)}
-              className="flex min-h-12 w-full items-center justify-center rounded-full bg-signal font-medium text-white hover:bg-signal-hover"
+              className="flex min-h-12 w-full items-center justify-center rounded-full bg-signal font-medium text-white transition-[background-color,translate] duration-200 hover:bg-signal-hover active:translate-y-px"
             >
               {cta.label}
             </Link>

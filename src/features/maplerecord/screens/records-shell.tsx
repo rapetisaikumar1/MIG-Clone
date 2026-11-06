@@ -14,6 +14,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { AppFrame, Sidebar, SidebarHeader, TopBar, type Icon, type NavSection } from "./kit";
 
+/** MR Records sidebar width on the 1280 canvas. Pinned here because the MR Records tables are sized against it. */
+const RECORDS_SIDEBAR_WIDTH = 232;
+
 /*
  * MR Records shells. Two real navigation contexts:
  *  - Organization (admin console): Overview, Records Management, Requests, Reports, Admin Console tree
@@ -100,7 +103,7 @@ export function OrgShell({ active, children, adminOpen, search, aside, mainClass
   return (
     <AppFrame
       topBar={<TopBar product="MR Records" search={search} />}
-      sidebar={<Sidebar header={<SidebarHeader name="City of Harbourview" sub="Organization" icon={Command} />} sections={orgSections(active, adminOpen)} />}
+      sidebar={<Sidebar width={RECORDS_SIDEBAR_WIDTH} header={<SidebarHeader name="City of Harbourview" sub="Organization" icon={Command} />} sections={orgSections(active, adminOpen)} />}
       aside={aside}
       mainClassName={mainClassName}
     >
@@ -141,6 +144,7 @@ export function WorkspaceShell({
       topBar={<TopBar product="MR Records" />}
       sidebar={
         <Sidebar
+          width={RECORDS_SIDEBAR_WIDTH}
           header={<SidebarHeader name={workspace} sub={code} icon={Building2} />}
           sections={[
             {

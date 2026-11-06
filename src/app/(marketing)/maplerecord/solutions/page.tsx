@@ -1,6 +1,6 @@
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
-import { MrCta, MrHero } from "@/features/maplerecord/mr-sections";
-import { SolutionDirectory, SolutionJumpLinks, SolutionPlatformBand } from "@/features/maplerecord/solution-sections";
+import { MrCta } from "@/features/maplerecord/mr-sections";
+import { SolutionDirectory, SolutionPlatformBand, SolutionsIndexHero } from "@/features/maplerecord/solution-sections";
 import { getMrSolutions } from "@/lib/content/maplerecord";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -18,38 +18,32 @@ export default function SolutionsPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs, "/maplerecord/solutions")} />
-      <MrHero
+      <SolutionsIndexHero
         crumbs={crumbs}
-        eyebrow="Solutions"
         title="MapleRecord solutions by industry and department"
-        description="See how MapleRecord's records, requests and workflow modules address the challenges of each sector and each team."
-        meta={
-          <SolutionJumpLinks
-            groups={[
-              { id: "industries", label: "Industries", count: industries.length },
-              { id: "departments", label: "Departments", count: departments.length },
-            ]}
-          />
-        }
+        description="See how MapleRecord, our records management platform, meets the challenges of each sector and each team with five modules for records, requests, workflows, forms and administration."
+        industries={industries}
+        departments={departments}
       />
       <SolutionDirectory
         id="industries"
         tone="paper"
         eyebrow="Industries"
         title="Built for regulated industries"
-        intro="Secure, compliant information management for sectors where every record, request and audit has to stand up to scrutiny."
+        intro="Secure information management, with controls that support regulatory requirements, for sectors where every record, request and audit has to stand up to scrutiny."
         items={industries}
       />
       <SolutionDirectory
         id="departments"
         tone="surface"
+        variant="rows"
         eyebrow="Departments"
         title="Built for the teams that run on records"
         intro="Records, requests and workflows for the departments that depend on them every day."
         items={departments}
       />
       <SolutionPlatformBand />
-      <MrCta title="Ready to transform your operations?" body="Tell MapleRecord about your organization and see how the platform fits your records, requests and workflows." />
+      <MrCta title="Not sure which solution fits?" body="Tell us about your organization. We'll show how MapleRecord fits your records, requests and workflows, and scope the configuration and implementation with you." />
     </>
   );
 }

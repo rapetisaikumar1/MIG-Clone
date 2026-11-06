@@ -10,6 +10,7 @@ const staticRoutes = [
   { path: "/adobe-services", priority: 0.9 },
   { path: adobeAssessmentPath, priority: 0.8 },
   { path: "/data-management", priority: 0.9 },
+  { path: "/software-development", priority: 0.9 },
   { path: "/maplerecord", priority: 0.7 },
   { path: "/maplerecord/platform", priority: 0.6 },
   { path: "/maplerecord/solutions", priority: 0.6 },

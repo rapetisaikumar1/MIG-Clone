@@ -2,7 +2,7 @@ import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { mrResourceHubs } from "@/content/maplerecord/resources";
-import { MrArticleGrid, MrFeaturedArticle, MrHubCard } from "@/features/maplerecord/resource-sections";
+import { MrArticleGrid, MrFeaturedArticle, MrHubGrid } from "@/features/maplerecord/resource-sections";
 import { MrCta, MrHero } from "@/features/maplerecord/mr-sections";
 import { getMrArticles } from "@/lib/content/maplerecord";
 import { pageMetadata } from "@/lib/metadata";
@@ -33,13 +33,8 @@ export default function ResourcesPage() {
 
       <Section spacing="compact" aria-labelledby="articles-title">
         <Container>
-          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-            <h2 id="articles-title" className="text-h3">
-              Latest articles
-            </h2>
-            <p className="font-mono text-label uppercase text-muted">From the MapleRecord blog</p>
-          </div>
-          <div className="mt-8 lg:mt-10">{featured ? <MrFeaturedArticle article={featured} /> : null}</div>
+          <SectionHeading id="articles-title" eyebrow="From the MapleRecord blog" title="Latest articles" />
+          <div className="reveal mt-10 lg:mt-12">{featured ? <MrFeaturedArticle article={featured} /> : null}</div>
           {rest.length ? (
             <div className="mt-6 lg:mt-8">
               <MrArticleGrid articles={rest} />
@@ -48,7 +43,7 @@ export default function ResourcesPage() {
         </Container>
       </Section>
 
-      <Section id="resource-hubs" tone="surface" aria-labelledby="hubs-title" className="border-t border-line">
+      <Section id="resource-hubs" tone="surface" spacing="compact" aria-labelledby="hubs-title" className="border-t border-line">
         <Container>
           <SectionHeading
             id="hubs-title"
@@ -56,20 +51,16 @@ export default function ResourcesPage() {
             title="Videos, webinars, events and press"
             intro="Published and kept up to date on maplerecord.com. Each link opens in a new tab."
           />
-          <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {mrResourceHubs.map((h) => (
-              <li key={h.kind}>
-                <MrHubCard hub={h} className="bg-paper" />
-              </li>
-            ))}
-          </ul>
-          <ArrowLink href="/insights" className="mt-10">
-            Maverick InnoGarage insights on data and records
+          <div className="mt-10 lg:mt-12">
+            <MrHubGrid hubs={mrResourceHubs} />
+          </div>
+          <ArrowLink href="/insights" className="mt-8">
+            Maverick InnoGarage insights
           </ArrowLink>
         </Container>
       </Section>
 
-      <MrCta title="Ready to transform your records management?" body="Discover how MapleRecord can help your organization streamline workflows, ensure compliance, and unlock the value in your documents." />
+      <MrCta title="Put these ideas into practice with MapleRecord" body="Discover how MapleRecord can help your organization streamline workflows, support compliance, and unlock the value in your documents." />
     </>
   );
 }

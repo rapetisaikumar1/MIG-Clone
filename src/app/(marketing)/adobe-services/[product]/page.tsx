@@ -42,7 +42,8 @@ export default async function AdobeProductPage({ params }: PageProps<"/adobe-ser
     const r = slug === product.slug ? undefined : getAdobeProduct(slug);
     return r ? [{ product: r, why }] : [];
   });
-  const others = getAdobeProducts().filter((p) => p.slug !== product.slug);
+  // The closing index lists only applications the page hasn't already linked: not itself, not its related ones.
+  const others = getAdobeProducts().filter((p) => p.slug !== product.slug && !related.some((r) => r.product.slug === p.slug));
 
   // getInsight returns null for drafts and unknown slugs; only published articles are listed.
   const articles = (await Promise.all(product.insights.map((slug) => getInsight(slug)))).filter((a): a is Insight => a !== null);
@@ -53,18 +54,25 @@ export default async function AdobeProductPage({ params }: PageProps<"/adobe-ser
     ...(product.faqs.length > 0 ? [faqJsonLd(product.faqs)] : []),
   ];
 
+  // On screen only, "Real-Time" in the FAQ heading gets a non-breaking hyphen so it never wraps as "Real-" /
+  // "Time CDP" in its narrow lg column. Questions keep the plain text: they must match the FAQPage structured data.
+  const keepName = (text: string) => text.replaceAll("Real-Time", "Real\u2011Time");
+
   return (
     <>
       <JsonLd data={jsonLd} />
-      <ProductHero product={product} crumbs={crumbs} related={related} />
+      {/* The product's own content first (overview → signals → services → scenarios → FAQ), then the ways onward
+          (related applications → reading → remaining applications). Tones alternate: deep, paper, surface, deep,
+          paper, surface, deep, then paper (or deep when there is no reading section above it). */}
+      <ProductHero product={product} crumbs={crumbs} />
       <ProductOverview product={product} />
       <ProductSignals product={product} />
       <ProductServices product={product} />
       <ProductScenarios product={product} />
+      {product.faqs.length > 0 ? <FaqSection faqs={product.faqs} title={keepName(`${product.shortName} questions`)} /> : null}
       <RelatedProducts product={product} related={related} />
       <RelatedInsights articles={articles} />
-      {product.faqs.length > 0 ? <FaqSection faqs={product.faqs} title={`${product.shortName} questions`} /> : null}
-      <OtherProducts others={others} />
+      <OtherProducts others={others} tone={articles.length > 0 ? "paper" : "deep"} />
       <CtaBand title={product.cta.title} body={product.cta.body} interest="adobe-services" product={product.slug} />
     </>
   );

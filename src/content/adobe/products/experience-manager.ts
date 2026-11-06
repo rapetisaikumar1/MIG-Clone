@@ -107,13 +107,13 @@ export const experienceManager: AdobeProduct = {
         "Blueprint and live copy structure for related sites",
         "Rollout configurations that define what's inherited and what's local",
         "Language copies and translation workflows",
-        "Guidance for local teams on inheritance and rollouts",
+        "Training and documentation for local teams on inheritance and rollouts",
       ],
       provenance: "verified",
     },
     {
       title: "Content strategy",
-      body: "We help you decide what content you need, how it should be structured, and who owns it, before it's built into templates and models.",
+      body: "We define with you what content you need, how it is structured and who owns it, before it's built into templates and models.",
       items: [
         "Audit of existing content and assets: what to keep, merge or retire",
         "Content model and reuse plan across sites and channels",
@@ -171,7 +171,7 @@ export const experienceManager: AdobeProduct = {
     {
       question: "Do you work on existing AEM sites?",
       answer:
-        "Yes, often. Many engagements start with an assessment of the current setup, covering components, templates, content structure and authoring workflows, followed by fixes, custom development or ongoing improvements.",
+        "Yes. We start with an assessment of the current setup, covering components, templates, content structure and authoring workflows, followed by fixes, custom development or ongoing improvements.",
     },
     {
       question: "How are AEM Sites and AEM Assets different?",
@@ -181,7 +181,7 @@ export const experienceManager: AdobeProduct = {
     {
       question: "Can AEM handle several regional or language sites?",
       answer:
-        "Yes. Multi Site Manager lets related sites inherit content from a shared blueprint while allowing local changes, and language copies support translation. We help design that structure and set up the rollout and translation workflows.",
+        "Yes. Multi Site Manager lets related sites inherit content from a shared blueprint while allowing local changes, and language copies support translation. We design that structure with you and set up the rollout and translation workflows.",
     },
     {
       question: "Do you train content authors?",
@@ -196,6 +196,6 @@ export const experienceManager: AdobeProduct = {
   ],
   cta: {
     title: "Make Adobe Experience Manager easier to run.",
-    body: "Tell us about your sites, content and assets, and where publishing slows down. We'll recommend where to start.",
+    body: "Tell us about your sites, content and assets, and where publishing slows down. We'll scope a practical first step with you.",
   },
 };

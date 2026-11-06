@@ -22,7 +22,8 @@ export function Plane({ x, y, w, h, tone = "surface" }: { x: number; y: number; 
 /*
  * Diagram text sizes, in viewBox units. A 520-unit diagram renders at ~280px on a 360px phone and again
  * in the narrow lg hero column (scale ≈ 0.55), but at full size or larger between sm and lg — so labels
- * are set larger outside that band to stay legible (~10px rendered) everywhere.
+ * are set larger outside that band to stay legible (~10px rendered) everywhere. 18 units is the ceiling:
+ * at 19–20 "Automation" fills its 128-unit tile and "Lower" meets its arrow.
  */
 export const svgLabelSize = "text-[18px] tracking-[0.02em] sm:max-lg:text-[14px] sm:max-lg:tracking-[0.04em]";
 export const svgSmallLabelSize = "text-[16px] tracking-[0.02em] sm:max-lg:text-[12px] sm:max-lg:tracking-[0.06em]";

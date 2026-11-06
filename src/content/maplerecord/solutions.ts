@@ -1,11 +1,22 @@
-// Generated from maplerecord.com (crawled 2026-11-03). Source of truth: the official MapleRecord website.
+// Generated from maplerecord.com, MapleRecord's product site (crawled 2026-11-03). MapleRecord is designed and
+// built by Maverick InnoGarage.
 // Edited for clarity and consistency (sentence case, American English, full sentences in challenge
 // cards, de-duplicated headings and stat text, one copy-paste error fixed); no figures or capabilities
 // were added. See docs/MAPLERECORD-SOURCES.md.
+// 2026-11-07 (messaging guide §4, §5.5; register MR-07, MR-08): compliance is worded as supported, never
+// guaranteed (claims that the product meets, guarantees or is built for a regulation were reworded, and the
+// banking-grade encryption wording dropped); impact headings say "Potential impact" so the published figures
+// don't read as client history;
+// a few use cases that described adjacent products (CLM, ELN, CRM, fraud detection) now say what a
+// records platform does. No figures, regulations or capabilities were added.
 //
 // `tagline` lists the page's focus areas, separated by " · " (shown as chips in the hero).
 // Impact items with value "✓" are qualitative (the source showed "Improved"); the label carries the claim.
-import type { MrSolution } from "@/lib/content/types";
+// `image` is a recreated MapleRecord product screen (screens.ts) chosen for each sector or team; it shows
+// sample data, so the hero carries the sample-data note. The marketing illustrations from maplerecord.com
+// were dropped here: they had figures baked in that contradicted the published figures on the same page.
+import type { MrModuleSlug, MrSolution } from "@/lib/content/types";
+import { mrScreens, type MrScreenKey } from "./screens";
 
 export const mrSolutions: MrSolution[] = [
   {
@@ -15,15 +26,10 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/financial-services/",
     title: "MapleRecord for financial services",
     description:
-      "Modernize your financial institution with intelligent document management, automated workflows, and enterprise-grade compliance built for banking, wealth management, and insurance.",
+      "Modernize your financial institution with intelligent document management, automated workflows, and compliance support built for banking, wealth management, and insurance.",
     metaDescription: "Intelligent document management, automated workflows and compliance support for banking, wealth management and insurance.",
     tagline: "Loan and account records · KYC/AML workflows · Audit trails",
-    image: {
-      src: "/maplerecord/industry-financial.webp",
-      width: 945,
-      height: 1017,
-      alt: "Illustration of invoices, contracts and financial statements shared with view and edit permissions",
-    },
+    image: mrScreens.recordsRetention,
     challenges: {
       heading: "Financial services challenges",
       intro:
@@ -54,7 +60,7 @@ export const mrSolutions: MrSolution[] = [
             "Centralized loan and account document storage",
             "Automated classification and metadata tagging",
             "Regulatory retention schedule enforcement",
-            "Bank-grade encryption and access controls",
+            "Encryption and role-based access controls",
           ],
         },
         {
@@ -82,7 +88,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for financial institutions",
+      heading: "Potential impact for financial institutions",
       items: [
         { value: "30–50%", label: "Faster response times", body: "For regulatory and audit requests." },
         { value: "60%", label: "Reduced manual effort", body: "Across compliance tasks." },
@@ -102,7 +108,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Regulatory reporting",
-          body: "Automate data collection, report generation, and submission for SEC, FINRA, FDIC, and other regulatory requirements.",
+          body: "Collect the records behind SEC, FINRA, FDIC, and other regulatory reports, and route each report through review and approval.",
         },
         {
           title: "Audits & examinations",
@@ -110,7 +116,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Claims processing",
-          body: "Automate claims intake, document review, fraud detection, and payment approval workflows for insurance carriers.",
+          body: "Automate claims intake, document review, fraud review routing, and payment approval workflows for insurance carriers.",
         },
         {
           title: "Client onboarding",
@@ -121,7 +127,7 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for financial services security",
       intro:
-        "MapleRecord meets the stringent security and compliance requirements of banks, credit unions, insurance companies, and investment firms.",
+        "MapleRecord is designed to support the security and compliance requirements of banks, credit unions, insurance companies, and investment firms.",
       items: [
         "End-to-end encryption (256-bit AES)",
         "Multi-factor authentication (MFA)",
@@ -145,12 +151,7 @@ export const mrSolutions: MrSolution[] = [
       "Accelerate claims processing, streamline policy administration, and support compliance with intelligent document management and automated workflows built for insurance carriers, brokers, and MGAs.",
     metaDescription: "Speed up claims, streamline policy administration and support compliance with document management and workflows for carriers, brokers and MGAs.",
     tagline: "Claims processing · Policy administration · Regulatory audits",
-    image: {
-      src: "/maplerecord/industry-financial.webp",
-      width: 945,
-      height: 1017,
-      alt: "Illustration of invoices, contracts and financial statements shared with view and edit permissions",
-    },
+    image: mrScreens.requestsKanban,
     challenges: {
       heading: "Insurance industry challenges",
       intro:
@@ -200,8 +201,8 @@ export const mrSolutions: MrSolution[] = [
           title: "Workflow management",
           body: "Automate claims processing, policy underwriting, new business, and renewals with AI-enabled workflow orchestration.",
           bullets: [
-            "End-to-end claims adjudication automation",
-            "Underwriting workflow and risk assessment",
+            "Claims review and approval workflow automation",
+            "Underwriting review and approval workflows",
             "Policy renewal and endorsement processing",
             "Real-time workflow analytics and reporting",
           ],
@@ -209,7 +210,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for insurers",
+      heading: "Potential impact for insurers",
       items: [
         { value: "30–50%", label: "Faster processing", body: "For claims and request processing." },
         { value: "60%", label: "Reduced manual work", body: "Across document handling." },
@@ -248,10 +249,10 @@ export const mrSolutions: MrSolution[] = [
     },
     security: {
       heading: "Built for insurance security",
-      intro: "MapleRecord meets the strict security and compliance requirements of insurance carriers, MGAs, brokers, and reinsurers.",
+      intro: "MapleRecord is designed to support the security and compliance requirements of insurance carriers, MGAs, brokers, and reinsurers.",
       items: [
         "Enterprise-grade security and data protection",
-        "Built for regulatory compliance and audit readiness",
+        "Supports regulatory requirements and audit readiness",
         "Scales across high-volume claims and policy operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -269,15 +270,10 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/healthcare/",
     title: "MapleRecord for healthcare",
     description:
-      "Simplify healthcare administration with secure patient record management, automated workflows, and HIPAA-compliant document handling built for hospitals, clinics, and health systems.",
-    metaDescription: "Secure patient record management, automated workflows and compliant document handling for hospitals, clinics and health systems.",
-    tagline: "Patient record requests · Authorizations · HIPAA compliance",
-    image: {
-      src: "/maplerecord/industry-healthcare.webp",
-      width: 1024,
-      height: 1267,
-      alt: "Illustration of a patient record and administrative records protected by access controls",
-    },
+      "Simplify healthcare administration with secure patient record management, automated workflows, and document handling with controls that support HIPAA requirements, built for hospitals, clinics, and health systems.",
+    metaDescription: "Patient record management, automated workflows and access controls that support HIPAA requirements, for hospitals, clinics and health systems.",
+    tagline: "Patient record requests · Authorizations · HIPAA requirements",
+    image: mrScreens.requestsTriage,
     challenges: {
       heading: "Healthcare industry challenges",
       intro:
@@ -303,7 +299,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-records",
           title: "Intelligent records management",
-          body: "A central repository for administrative records, operational documentation, and patient-related files, with automated retention and HIPAA-compliant security.",
+          body: "A central repository for administrative records, operational documentation, and patient-related files, with automated retention and security controls that support HIPAA requirements.",
           bullets: [
             "Unified storage for administrative and operational records",
             "AI-powered document classification and indexing",
@@ -314,7 +310,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-requests",
           title: "Request intake and management",
-          body: "Respond faster to patient record requests, legal inquiries, regulatory audits, and subpoenas with intelligent search and HIPAA-compliant retrieval.",
+          body: "Respond faster to patient record requests, legal inquiries, regulatory audits, and subpoenas, with intelligent search and access controls that support HIPAA requirements.",
           bullets: [
             "Fast response to patient record requests",
             "Automated handling of authorization and release forms",
@@ -336,7 +332,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for healthcare organizations",
+      heading: "Potential impact for healthcare organizations",
       items: [
         { value: "3×", label: "Faster fulfillment", body: "Through automated request handling." },
         { value: "60%", label: "Reduced admin work", body: "Across manual administrative tasks." },
@@ -349,7 +345,7 @@ export const mrSolutions: MrSolution[] = [
       items: [
         {
           title: "Patient record requests",
-          body: "Automate request intake, authorization verification, record retrieval, redaction, and delivery with complete HIPAA compliance.",
+          body: "Automate request intake, authorization verification, record retrieval, redaction, and delivery, with audit trails and access controls that support HIPAA requirements.",
         },
         {
           title: "Administrative records",
@@ -369,16 +365,16 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Inter-facility transfers",
-          body: "Share records securely between facilities, providers, and care teams while maintaining HIPAA compliance.",
+          body: "Share records securely between facilities, providers, and care teams, with controls that support HIPAA requirements.",
         },
       ],
     },
     security: {
       heading: "Built for healthcare security",
-      intro: "MapleRecord meets the strict security and compliance requirements of hospitals, health systems, clinics, and healthcare providers.",
+      intro: "MapleRecord is designed to support the security and compliance requirements of hospitals, health systems, clinics, and healthcare providers.",
       items: [
         "Enterprise-grade security and data protection",
-        "Built for HIPAA compliance and audit readiness",
+        "Supports HIPAA requirements and audit readiness",
         "Scales across multi-facility healthcare operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -386,7 +382,7 @@ export const mrSolutions: MrSolution[] = [
     },
     cta: {
       title: "Ready to simplify healthcare administration?",
-      body: "See how MapleRecord can help your organization modernize records management, automate workflows, and support HIPAA compliance.",
+      body: "See how MapleRecord can help your organization modernize records management, automate workflows, and support HIPAA requirements.",
     },
   },
   {
@@ -396,14 +392,10 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/education/",
     title: "MapleRecord for education",
     description:
-      "Modernize academic administration with secure, compliant student record management and automated workflows for K–12 schools, colleges, and universities.",
-    tagline: "Transcript requests · Student records · FERPA compliance",
-    image: {
-      src: "/maplerecord/industry-education.webp",
-      width: 1024,
-      height: 1080,
-      alt: "Illustration of shared files with full or limited access set per person",
-    },
+      "Modernize academic administration with secure student record management, automated workflows, and controls that support FERPA requirements, for K–12 schools, colleges, and universities.",
+    metaDescription: "Secure student record management, automated workflows and controls that support FERPA requirements, for K–12 schools, colleges and universities.",
+    tagline: "Transcript requests · Student records · FERPA requirements",
+    image: mrScreens.formsDashboard,
     challenges: {
       heading: "Education industry challenges",
       intro:
@@ -429,7 +421,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-records",
           title: "Intelligent records management",
-          body: "A central repository for student records, academic transcripts, enrollment documents, and administrative files, with automated retention and compliant security.",
+          body: "A central repository for student records, academic transcripts, enrollment documents, and administrative files, with automated retention and security controls that support FERPA requirements.",
           bullets: [
             "Unified storage for student and administrative records",
             "AI-powered document classification and indexing",
@@ -440,7 +432,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-requests",
           title: "Request intake and management",
-          body: "Respond faster to transcript requests, student record inquiries, verification requests, and subpoenas with intelligent search and compliant retrieval.",
+          body: "Respond faster to transcript requests, student record inquiries, verification requests, and subpoenas with intelligent search and controlled retrieval.",
           bullets: [
             "Fast response to transcript and record requests",
             "Automated handling of verification and authorization forms",
@@ -462,7 +454,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for educational institutions",
+      heading: "Potential impact for educational institutions",
       items: [
         { value: "3×", label: "Faster fulfillment", body: "For transcript and record requests." },
         { value: "60%", label: "Reduced admin work", body: "Across manual administrative tasks." },
@@ -475,7 +467,7 @@ export const mrSolutions: MrSolution[] = [
       items: [
         {
           title: "Transcript requests",
-          body: "Automate transcript request intake, verification, record retrieval, processing, and delivery with complete FERPA compliance and audit trails.",
+          body: "Automate transcript request intake, verification, record retrieval, processing, and delivery, with audit trails and access controls that support FERPA requirements.",
         },
         {
           title: "Student records management",
@@ -495,16 +487,16 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Records transfer",
-          body: "Share records securely between institutions, districts, and external parties while maintaining FERPA compliance.",
+          body: "Share records securely between institutions, districts, and external parties, with controls that support FERPA requirements.",
         },
       ],
     },
     security: {
       heading: "Built for education security",
-      intro: "MapleRecord meets the strict security and compliance requirements of K–12 schools, colleges, universities, and school districts.",
+      intro: "MapleRecord is designed to support the security and compliance requirements of K–12 schools, colleges, universities, and school districts.",
       items: [
         "Enterprise-grade security and data protection",
-        "Built for FERPA compliance and audit readiness",
+        "Supports FERPA requirements and audit readiness",
         "Scales across multi-campus operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -512,7 +504,7 @@ export const mrSolutions: MrSolution[] = [
     },
     cta: {
       title: "Ready to modernize campus administration?",
-      body: "See how MapleRecord can help your institution modernize student records management, automate workflows, and support FERPA compliance.",
+      body: "See how MapleRecord can help your institution modernize student records management, automate workflows, and support FERPA requirements.",
     },
   },
   {
@@ -525,16 +517,11 @@ export const mrSolutions: MrSolution[] = [
       "Streamline quality documentation, manage compliance records, and automate production workflows with intelligent document management built for manufacturers.",
     metaDescription: "Streamline quality documentation, manage compliance records and automate manufacturing workflows with intelligent document management.",
     tagline: "Quality records · ISO certification · Audit readiness",
-    image: {
-      src: "/maplerecord/industry-manufacturing.webp",
-      width: 1024,
-      height: 1375,
-      alt: "Illustration of a purchase request moving through approval and payment steps",
-    },
+    image: mrScreens.workflowsRuns,
     challenges: {
       heading: "Manufacturing industry challenges",
       intro:
-        "Manufacturers face pressure to maintain quality documentation, ensure regulatory compliance, manage supply chain records, and drive operational efficiency across production facilities.",
+        "Manufacturers face pressure to maintain quality documentation, meet regulatory requirements, manage supply chain records, and drive operational efficiency across production facilities.",
       items: [
         {
           title: "Quality documentation",
@@ -589,7 +576,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for manufacturers",
+      heading: "Potential impact for manufacturers",
       items: [
         { value: "50%", label: "Faster documentation", body: "Reduction in quality document processing time." },
         { value: "60%", label: "Reduced admin work", body: "Across manual compliance tasks." },
@@ -606,7 +593,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "ISO certification",
-          body: "Maintain ISO 9001, ISO 14001, and industry-specific certifications with automated document control, version management, and audit trails.",
+          body: "Keep the documentation behind ISO 9001, ISO 14001, and industry-specific certifications under document control, with version management and audit trails.",
         },
         {
           title: "Engineering documentation",
@@ -629,10 +616,10 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for manufacturing security",
       intro:
-        "MapleRecord meets the strict security and compliance requirements of manufacturers, from aerospace and automotive to pharmaceuticals and electronics.",
+        "MapleRecord is designed to support the security and compliance requirements of manufacturers, from aerospace and automotive to pharmaceuticals and electronics.",
       items: [
         "Enterprise-grade security and data protection",
-        "Built for regulatory compliance and audit readiness",
+        "Supports regulatory requirements and audit readiness",
         "Scales across multi-site manufacturing operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -650,15 +637,10 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/state-local/",
     title: "MapleRecord for state & local government",
     description:
-      "Modernize public records management with secure document handling, automated FOIA processing, and compliant workflows built for state agencies, counties, municipalities, and public institutions.",
-    metaDescription: "Secure document handling, automated FOIA processing and compliant workflows for municipal governments, state agencies, counties and public institutions.",
+      "Modernize public records management with secure document handling, automated FOIA processing, and workflows that support public records laws, built for state agencies, counties, municipalities, and public institutions.",
+    metaDescription: "Secure document handling, automated FOIA processing and workflows that support public records laws, for state agencies, counties and municipalities.",
     tagline: "FOIA requests · Public records · Retention schedules",
-    image: {
-      src: "/maplerecord/industry-government.webp",
-      width: 997,
-      height: 1091,
-      alt: "Illustration of a FOIA request with a redacted document ready to deliver",
-    },
+    image: mrScreens.requestsRedaction,
     challenges: {
       heading: "Government sector challenges",
       intro:
@@ -684,7 +666,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-records",
           title: "Intelligent records management",
-          body: "A central repository for public records, administrative documents, permits, licenses, and historical files, with automated retention schedules and compliant security.",
+          body: "A central repository for public records, administrative documents, permits, licenses, and historical files, with automated retention schedules and access controls.",
           bullets: [
             "Unified storage for public and administrative records",
             "AI-powered document classification and indexing",
@@ -695,7 +677,7 @@ export const mrSolutions: MrSolution[] = [
         {
           module: "mr-requests",
           title: "Request intake and management",
-          body: "Respond faster to FOIA requests, public records inquiries, subpoenas, and information requests with intelligent search and compliant retrieval.",
+          body: "Respond faster to FOIA requests, public records inquiries, subpoenas, and information requests with intelligent search and controlled retrieval.",
           bullets: [
             "Fast response to FOIA and public records requests",
             "Automated redaction and exemption handling",
@@ -717,7 +699,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for government agencies",
+      heading: "Potential impact for government agencies",
       items: [
         { value: "70%", label: "Faster FOIA response", body: "Reduction in public records request fulfillment time." },
         { value: "55%", label: "Reduced admin costs", body: "Decrease in manual processing and administrative overhead." },
@@ -730,7 +712,7 @@ export const mrSolutions: MrSolution[] = [
       items: [
         {
           title: "FOIA request processing",
-          body: "Automate FOIA request intake, search, review, redaction, approval, and delivery with complete compliance and audit trails.",
+          body: "Automate FOIA request intake, search, review, redaction, approval, and delivery, with complete audit trails.",
         },
         {
           title: "Public records management",
@@ -757,10 +739,10 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for government security",
       intro:
-        "MapleRecord meets the strict security and compliance requirements of state agencies, municipal governments, county offices, and public institutions.",
+        "MapleRecord is designed to support the security and compliance requirements of state agencies, municipal governments, county offices, and public institutions.",
       items: [
-        "Government-grade security and data protection",
-        "Built for public records laws and FOIA compliance",
+        "Enterprise-grade security and data protection",
+        "Supports public records law and FOIA requirements",
         "Scales across multi-agency government operations",
         "One connected platform for records, requests, and workflows",
         "Designed for transparency and public accountability",
@@ -781,16 +763,11 @@ export const mrSolutions: MrSolution[] = [
       "Streamline financial document management, automate accounting workflows, and support regulatory compliance with intelligent solutions designed for finance and accounting departments.",
     metaDescription: "Streamline financial document management, automate accounting workflows and support regulatory compliance for finance and accounting departments.",
     tagline: "Accounts payable · Financial close · Audit readiness",
-    image: {
-      src: "/maplerecord/dept-finance.webp",
-      width: 1024,
-      height: 1023,
-      alt: "Example finance records screen with approval, retention and audit tags on each document",
-    },
+    image: mrScreens.recordsAudit,
     challenges: {
       heading: "Finance & accounting challenges",
       intro:
-        "Finance and accounting teams manage vast amounts of financial documents while keeping audits compliant, versions controlled, and regulatory deadlines met.",
+        "Finance and accounting teams manage vast amounts of financial documents while staying audit-ready, keeping versions controlled, and meeting regulatory deadlines.",
       items: [
         {
           title: "Manual document processing",
@@ -822,13 +799,13 @@ export const mrSolutions: MrSolution[] = [
           body: "Approval workflows route documents through finance managers, compliance teams, and leadership based on predefined rules.",
         },
         {
-          title: "A compliant outcome is delivered",
+          title: "An audit-ready outcome is delivered",
           body: "Requests are completed on time with secure delivery, full traceability, and audit-ready documentation.",
         },
       ],
     },
     impact: {
-      heading: "Measurable results for finance teams",
+      heading: "Potential impact for finance teams",
       items: [
         { value: "75%", label: "Faster month-end close", body: "Reduction in time spent on financial close processes." },
         { value: "60%", label: "Reduced processing time", body: "Decrease in invoice and expense report processing time." },
@@ -867,12 +844,12 @@ export const mrSolutions: MrSolution[] = [
     },
     security: {
       heading: "Built for financial security",
-      intro: "MapleRecord meets the strict security and compliance requirements of finance and accounting departments across all industries.",
+      intro: "MapleRecord is designed to support the security and compliance requirements of finance and accounting departments across industries.",
       items: [
-        "SOX compliance with complete audit trails",
-        "Bank-level encryption and data protection",
+        "Complete audit trails that support SOX requirements",
+        "Encryption and data protection",
         "Role-based access controls and segregation of duties",
-        "Automated retention policies for tax and regulatory compliance",
+        "Automated retention policies for tax and regulatory requirements",
         "Integration with ERP systems (SAP, Oracle, NetSuite, QuickBooks)",
       ],
     },
@@ -890,12 +867,7 @@ export const mrSolutions: MrSolution[] = [
     description:
       "Centralize legal document management, automate compliance workflows, and reduce risk with intelligent solutions designed for legal and compliance departments.",
     tagline: "Legal hold · eDiscovery · Retention and disposal",
-    image: {
-      src: "/maplerecord/dept-legal.webp",
-      width: 1024,
-      height: 1024,
-      alt: "Example legal requests screen listing FOI, eDiscovery and client file requests with their status",
-    },
+    image: mrScreens.recordsLifecycle,
     challenges: {
       heading: "Legal & compliance challenges",
       intro:
@@ -931,17 +903,17 @@ export const mrSolutions: MrSolution[] = [
           body: "Documents route through legal counsel, compliance officers, and stakeholders for review, redaction, and approval based on matter type.",
         },
         {
-          title: "A compliant production is delivered",
+          title: "A documented production is delivered",
           body: "Responsive documents are produced in the required formats with proper redactions, privilege logs, and complete chain-of-custody documentation.",
         },
       ],
     },
     impact: {
-      heading: "Measurable results for legal teams",
+      heading: "Potential impact for legal teams",
       items: [
         { value: "80%", label: "Faster response times", body: "Reduction in time to respond to discovery and legal requests." },
         { value: "70%", label: "Lower legal costs", body: "Decrease in external legal and eDiscovery expenses." },
-        { value: "100%", label: "Compliance coverage", body: "Complete audit trails and regulatory documentation." },
+        { value: "100%", label: "Audit trail coverage", body: "Complete audit trails and regulatory documentation." },
         { value: "90%", label: "Risk reduction", body: "Improvement in compliance adherence and policy enforcement." },
       ],
     },
@@ -949,8 +921,8 @@ export const mrSolutions: MrSolution[] = [
       heading: "Legal & compliance use cases",
       items: [
         {
-          title: "Contract lifecycle management",
-          body: "Centralize contract creation, negotiation, approval, execution, and renewal tracking, with automated alerts for key dates and obligations.",
+          title: "Contracts and agreements",
+          body: "Centralize contracts and agreements, route them for review and approval, and track renewals with automated alerts for key dates and obligations.",
         },
         {
           title: "Legal hold & eDiscovery",
@@ -966,7 +938,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Legal matter management",
-          body: "Organize documents by matter, track case timelines, manage outside counsel relationships, and control legal spend with central visibility.",
+          body: "Organize documents by matter and track case timelines and deadlines, with central visibility across every open matter.",
         },
         {
           title: "Records retention & disposal",
@@ -977,9 +949,9 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for legal security",
       intro:
-        "MapleRecord meets the rigorous security and compliance requirements of legal and compliance departments handling sensitive and privileged information.",
+        "MapleRecord is designed to support the security and compliance requirements of legal and compliance departments handling sensitive and privileged information.",
       items: [
-        "Attorney-client privilege protection and ethical walls",
+        "Restricted access to privileged documents and ethical walls",
         "Legal hold management with defensible preservation",
         "Role-based access controls and need-to-know restrictions",
         "Automated retention and defensible deletion policies",
@@ -1001,12 +973,7 @@ export const mrSolutions: MrSolution[] = [
       "Streamline employee records management, automate HR workflows, and support compliance with comprehensive document management built for modern HR departments.",
     metaDescription: "Streamline employee records management, automate HR workflows and support compliance with document management built for HR departments.",
     tagline: "Employee records · Verification requests · Onboarding",
-    image: {
-      src: "/maplerecord/dept-hr.webp",
-      width: 1018,
-      height: 1004,
-      alt: "Example HR workspace with onboarding, leave request and performance review forms and their status",
-    },
+    image: mrScreens.formsSubmissions,
     challenges: {
       heading: "Human resources challenges",
       intro:
@@ -1048,7 +1015,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for HR teams",
+      heading: "Potential impact for HR teams",
       items: [
         { value: "30–45%", label: "Faster request processing", body: "For employee requests." },
         { value: "60%", label: "Reduction in manual work", body: "Across HR administrative tasks." },
@@ -1087,7 +1054,7 @@ export const mrSolutions: MrSolution[] = [
     },
     security: {
       heading: "Built for HR security",
-      intro: "MapleRecord meets the stringent security and privacy requirements of HR departments managing sensitive employee personal information.",
+      intro: "MapleRecord is designed to support the security and privacy requirements of HR departments managing sensitive employee personal information.",
       items: [
         "PII and PHI protection with encryption at rest and in transit",
         "Role-based access controls for employee confidentiality",
@@ -1111,12 +1078,7 @@ export const mrSolutions: MrSolution[] = [
       "Optimize operational workflows, centralize process documentation, and support supply chain compliance with intelligent document management built for operations teams.",
     metaDescription: "Optimize operational workflows, centralize process documentation and support supply chain compliance with document management for operations teams.",
     tagline: "Vendor onboarding · SOPs · Quality records",
-    image: {
-      src: "/maplerecord/dept-operations.webp",
-      width: 1024,
-      height: 1023,
-      alt: "Example operations workflow with document submission, manager approval and final processing steps",
-    },
+    image: mrScreens.workflowsList,
     challenges: {
       heading: "Operations challenges",
       intro:
@@ -1132,7 +1094,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Compliance & quality risks",
-          body: "Tracking certifications, maintaining audit trails, staying ISO compliant, and demonstrating quality control for regulatory inspections is difficult.",
+          body: "Tracking certifications, maintaining audit trails, supporting ISO quality requirements, and demonstrating quality control for regulatory inspections is difficult.",
         },
       ],
     },
@@ -1158,7 +1120,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for operations teams",
+      heading: "Potential impact for operations teams",
       items: [
         { value: "70%", label: "Faster vendor onboarding", body: "Reduction in time to onboard and verify vendor documentation." },
         { value: "65%", label: "Process efficiency gains", body: "Decrease in time spent searching for operational documents." },
@@ -1187,7 +1149,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Equipment & asset management",
-          body: "Organize maintenance records, calibration certificates, equipment manuals, and asset documentation with automated maintenance schedules.",
+          body: "Organize maintenance records, calibration certificates, equipment manuals, and asset documentation in one searchable, version-controlled repository.",
         },
         {
           title: "Safety & compliance",
@@ -1198,7 +1160,7 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for operational excellence",
       intro:
-        "MapleRecord meets the rigorous requirements of operations teams managing critical process documentation, vendor compliance, and quality control records.",
+        "MapleRecord is designed for operations teams managing critical process documentation, vendor compliance, and quality control records.",
       items: [
         "ISO 9001, AS9100, and quality management system support",
         "Version control and change management for SOPs and procedures",
@@ -1222,12 +1184,7 @@ export const mrSolutions: MrSolution[] = [
       "Accelerate innovation cycles, protect intellectual property, streamline regulatory submissions, and support research compliance with intelligent document management built for R&D teams.",
     metaDescription: "Protect intellectual property, streamline regulatory submissions and support research compliance with intelligent document management for R&D teams.",
     tagline: "Lab records · IP protection · Regulatory submissions",
-    image: {
-      src: "/maplerecord/dept-rnd.webp",
-      width: 952,
-      height: 1001,
-      alt: "Example research workspace with confidential, IP-protected and version-tracked files",
-    },
+    image: mrScreens.recordsFiles,
     challenges: {
       heading: "R&D challenges",
       intro:
@@ -1269,20 +1226,20 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for R&D teams",
+      heading: "Potential impact for R&D teams",
       items: [
         { value: "60%", label: "Faster innovation cycles", body: "Reduction in time from research to regulatory submission." },
         { value: "75%", label: "Research efficiency gains", body: "Decrease in time spent searching for experimental data." },
         { value: "100%", label: "IP protection & traceability", body: "Complete audit trails for patents and regulatory compliance." },
-        { value: "85%", label: "Regulatory submission speed", body: "Improvement in assembling compliant submission packages." },
+        { value: "85%", label: "Regulatory submission speed", body: "Improvement in assembling submission packages." },
       ],
     },
     useCases: {
       heading: "Research & development use cases",
       items: [
         {
-          title: "Electronic lab notebooks",
-          body: "Digitize and organize research notebooks, experimental protocols, raw data, and observations with timestamped entries and secure access controls.",
+          title: "Lab notebook records",
+          body: "Digitize and organize lab notebooks, experimental protocols, raw data, and observations as governed records, with timestamps and secure access controls.",
         },
         {
           title: "Intellectual property management",
@@ -1309,7 +1266,7 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for research excellence",
       intro:
-        "MapleRecord meets the rigorous requirements of research teams managing sensitive experimental data, intellectual property, and regulatory submissions.",
+        "MapleRecord is designed for research teams managing sensitive experimental data, intellectual property, and regulatory submissions.",
       items: [
         "IP protection with encryption and access controls",
         "Complete audit trails for regulatory inspections and patent defense",
@@ -1332,12 +1289,7 @@ export const mrSolutions: MrSolution[] = [
       "Deliver exceptional customer experiences, resolve cases faster, centralize customer documentation, and support service compliance with intelligent document management built for customer service teams.",
     metaDescription: "Streamline case resolution, centralize customer documentation and support service compliance with document management for customer service teams.",
     tagline: "Case resolution · Contracts and warranties · SLA tracking",
-    image: {
-      src: "/maplerecord/dept-customer-service.webp",
-      width: 985,
-      height: 977,
-      alt: "Example requests dashboard listing support tickets and their status",
-    },
+    image: mrScreens.requestsDashboard,
     challenges: {
       heading: "Customer service challenges",
       intro:
@@ -1365,7 +1317,7 @@ export const mrSolutions: MrSolution[] = [
           body: "Customer requests are captured, categorized, and tracked with defined response timelines.",
         },
         {
-          title: "Relevant customer records are accessed instantly",
+          title: "Relevant customer records are accessed quickly",
           body: "Account details, previous interactions, and supporting documents are retrieved securely from a centralized repository.",
         },
         {
@@ -1379,7 +1331,7 @@ export const mrSolutions: MrSolution[] = [
       ],
     },
     impact: {
-      heading: "Measurable results for service teams",
+      heading: "Potential impact for service teams",
       items: [
         { value: "50%", label: "Faster case resolution", body: "Reduction in average handling time for customer inquiries." },
         { value: "70%", label: "Faster document retrieval", body: "Decrease in time spent searching for customer records." },
@@ -1392,11 +1344,11 @@ export const mrSolutions: MrSolution[] = [
       items: [
         {
           title: "Customer record management",
-          body: "Centralize customer profiles, purchase history, communication logs, and support tickets for a 360-degree view during service interactions.",
+          body: "Centralize customer files, contracts, communication records, and case documents, so agents see the full history during service interactions.",
         },
         {
           title: "Contract & warranty access",
-          body: "Retrieve service contracts, warranty information, terms and conditions, and entitlements instantly while assisting customers.",
+          body: "Retrieve service contracts, warranty information, terms and conditions, and entitlements quickly while assisting customers.",
         },
         {
           title: "Knowledge base management",
@@ -1419,9 +1371,9 @@ export const mrSolutions: MrSolution[] = [
     security: {
       heading: "Built for customer service excellence",
       intro:
-        "MapleRecord meets the rigorous requirements of customer service teams managing sensitive customer information, service agreements, and regulatory obligations.",
+        "MapleRecord is designed for customer service teams managing sensitive customer information, service agreements, and regulatory obligations.",
       items: [
-        "GDPR, CCPA, and customer data privacy compliance",
+        "Supports GDPR, CCPA, and customer data privacy requirements",
         "Role-based access controls for sensitive customer information",
         "Complete audit trails for customer interactions and case handling",
         "SLA monitoring and automated alerts for compliance tracking",
@@ -1438,9 +1390,9 @@ export const mrSolutions: MrSolution[] = [
 /** One-line summaries for the solutions directory cards (condensed from each page's description). */
 export const mrSolutionSummaries: Record<string, string> = {
   "financial-services": "Loan files, KYC workflows and audit-ready records for banks, credit unions and investment firms.",
-  insurance: "Faster claims, simpler policy administration and compliant records for carriers, brokers and MGAs.",
-  healthcare: "Patient record requests, administrative records and HIPAA compliance for hospitals, clinics and health systems.",
-  education: "Transcript requests, student records and FERPA compliance for K–12 schools, colleges and universities.",
+  insurance: "Faster claims, simpler policy administration and audit-ready records for carriers, brokers and MGAs.",
+  healthcare: "Patient record requests and administrative records, with controls that support HIPAA requirements, for hospitals and clinics.",
+  education: "Transcript requests and student records, with controls that support FERPA requirements, for K–12 schools and colleges.",
   manufacturing: "Quality documentation, ISO certification records and audit readiness across production sites.",
   "state-local-government": "FOIA processing, public records and retention schedules for agencies, counties and municipalities.",
   "finance-accounting": "Invoices, expenses and the month-end close, with audit trails ready for every review.",
@@ -1449,4 +1401,55 @@ export const mrSolutionSummaries: Record<string, string> = {
   operations: "Vendor onboarding, SOPs and quality records with version control and certification tracking.",
   "research-development": "Lab records, intellectual property and regulatory submissions, versioned and access-controlled.",
   "customer-service": "Customer records, contracts and case history at hand for faster, traceable resolutions.",
+};
+
+/*
+ * Presentation data for the solution pages (product screens and flow labels). These only choose which
+ * recreated screen or module illustrates a point the page's sourced copy already makes; no new claims.
+ */
+
+/** Industry pages: the screen each module card shows (one per module, none repeating the hero screen). */
+export const mrSolutionModuleScreens: Record<string, Partial<Record<MrModuleSlug, MrScreenKey>>> = {
+  "financial-services": { "mr-records": "recordsAudit", "mr-requests": "requestsKanban", "mr-workflows": "workflowsRuns" },
+  insurance: { "mr-records": "recordsLifecycle", "mr-requests": "requestsTriage", "mr-workflows": "workflowsList" },
+  healthcare: { "mr-records": "recordsAudit", "mr-requests": "requestsRedaction", "mr-workflows": "workflowsRuns" },
+  education: { "mr-records": "recordsSearch", "mr-requests": "requestsKanban", "mr-workflows": "workflowsList" },
+  manufacturing: { "mr-records": "recordsFiles", "mr-requests": "requestsDashboard", "mr-workflows": "workflowsList" },
+  "state-local-government": { "mr-records": "recordsRetention", "mr-requests": "requestsKanban", "mr-workflows": "workflowsCanvas" },
+};
+
+/**
+ * Department pages: the module that carries each workflow step (intake, records, approvals, delivery) and
+ * a short node label for the flow diagram, condensed from that step's own title and body.
+ */
+export const mrSolutionFlows: Record<string, { modules: MrModuleSlug[]; nodes: string[] }> = {
+  "finance-accounting": {
+    modules: ["mr-requests", "mr-records", "mr-workflows", "mr-requests"],
+    nodes: ["Audit or vendor request logged", "Invoices and statements retrieved", "Finance and compliance sign-off", "Audit-ready delivery"],
+  },
+  "legal-compliance": {
+    modules: ["mr-requests", "mr-records", "mr-workflows", "mr-requests"],
+    nodes: ["Hold or discovery request logged", "Documents found and preserved", "Counsel review and redaction", "Production with chain of custody"],
+  },
+  "human-resources": {
+    modules: ["mr-forms", "mr-records", "mr-workflows", "mr-requests"],
+    nodes: ["Onboarding or access request", "Personnel file retrieved", "HR, legal and leadership approval", "Secure, traceable delivery"],
+  },
+  operations: {
+    modules: ["mr-requests", "mr-records", "mr-workflows", "mr-requests"],
+    nodes: ["Process change requested", "SOPs and records retrieved", "Tasks routed across teams", "Resolved with real-time tracking"],
+  },
+  "research-development": {
+    modules: ["mr-requests", "mr-records", "mr-workflows", "mr-records"],
+    nodes: ["Experiment approval requested", "Research files retrieved", "Reviewer and lead sign-off", "Versioned, retained record"],
+  },
+  "customer-service": {
+    modules: ["mr-requests", "mr-records", "mr-workflows", "mr-requests"],
+    nodes: ["Customer inquiry received", "Account history retrieved", "Routed by issue and priority", "Traceable response delivered"],
+  },
+};
+
+/** A pointer under the use cases where a sibling page tells the same story in more depth. */
+export const mrSolutionPointers: Record<string, { lead: string; slug: string; label: string }> = {
+  "financial-services": { lead: "Insurance carrier, broker or MGA?", slug: "insurance", label: "See MapleRecord for insurance" },
 };

@@ -1,5 +1,8 @@
 // Generated from maplerecord.com (crawled 2026-11-03). Source of truth: the official MapleRecord website.
 // Light edits only: acronym casing, typos, list punctuation. See docs/MAPLERECORD-SOURCES.md.
+// Claims edits (2026-11-07, messaging guide §4 and §5.5): compliance is described as supported, never guaranteed or
+// "by default"; absolute outcomes are softened; the ROI article's unsourced "20–40%" efficiency figure is removed.
+// Headings, structure and source attribution (officialUrl, published date) are unchanged.
 import type { MrArticle } from "@/lib/content/types";
 
 export const mrArticles: MrArticle[] = [
@@ -43,7 +46,7 @@ export const mrArticles: MrArticle[] = [
           "Centralized records repositories",
           "Clear ownership and traceability",
           "Complete audit trails across the records lifecycle",
-          "Faster access to information without manual searching"
+          "Faster access to information with less manual searching"
         ]
       },
       {
@@ -68,12 +71,12 @@ export const mrArticles: MrArticle[] = [
           "Records are automatically classified and indexed",
           "Sensitive data is protected through access controls",
           "Legal holds and redactions are managed centrally",
-          "Response timelines are significantly reduced"
+          "Response times come down"
         ]
       },
       {
         type: "paragraph",
-        text: "Outcome: Timely responses that meet statutory obligations."
+        text: "Outcome: Timely responses that help meet statutory obligations."
       },
       {
         type: "heading",
@@ -139,7 +142,7 @@ export const mrArticles: MrArticle[] = [
       {
         type: "list",
         items: [
-          "Regulatory compliance by default",
+          "Retention and access policies that support regulatory compliance",
           "Immutable audit logs",
           "Long-term archival with policy enforcement"
         ]
@@ -154,7 +157,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "For government organizations, records management is inseparable from governance and citizen service delivery. MapleRecord provides a secure, scalable, and compliant platform that enables agencies to operate efficiently while maintaining the highest standards of accountability and transparency."
+        text: "For government organizations, records management is inseparable from governance and citizen service delivery. MapleRecord provides a secure, scalable platform that supports compliance and helps agencies operate efficiently with strong accountability and transparency."
       }
     ]
   },
@@ -226,7 +229,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "This approach enables continuous compliance rather than periodic remediation."
+        text: "This approach supports continuous compliance rather than periodic remediation."
       },
       {
         type: "heading",
@@ -259,7 +262,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "For modern CIOs, records management must align with broader goals—security, scalability, automation, and insight. MapleRecord delivers a platform that reduces technical debt, strengthens governance, and enables records to function as part of the enterprise intelligence stack—not a standalone system."
+        text: "For modern CIOs, records management must align with broader goals—security, scalability, automation, and insight. MapleRecord provides a platform that helps reduce technical debt, strengthens governance, and enables records to function as part of the enterprise intelligence stack—not a standalone system."
       }
     ]
   },
@@ -308,7 +311,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "ROI Impact: Automation reduces human intervention and error rates, driving 20–40% operational efficiency gains in records handling and lifecycle management."
+        text: "ROI Impact: Automation reduces human intervention and error rates, improving efficiency in records handling and lifecycle management."
       },
       {
         type: "heading",
@@ -345,7 +348,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "Enterprise-grade RMS platforms embed compliance through:"
+        text: "Enterprise-grade RMS platforms support compliance through:"
       },
       {
         type: "list",
@@ -358,7 +361,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "ROI Impact: Reduced audit effort, lower compliance risk, and significant avoidance of regulatory penalties."
+        text: "ROI Impact: Reduced audit effort, lower compliance risk, and less exposure to regulatory penalties."
       },
       {
         type: "heading",
@@ -405,7 +408,7 @@ export const mrArticles: MrArticle[] = [
       {
         type: "list",
         items: [
-          "Classify records accurately without manual tagging",
+          "Classify records with less manual tagging",
           "Apply consistent metadata across large record volumes",
           "Reduce misclassification and human error"
         ]
@@ -428,7 +431,7 @@ export const mrArticles: MrArticle[] = [
         items: [
           "Apply the correct retention schedules",
           "Trigger alerts for upcoming disposition or legal holds",
-          "Ensure records are retained or disposed of in line with regulatory requirements"
+          "Help keep records retained or disposed of in line with regulatory requirements"
         ]
       },
       {
@@ -490,13 +493,13 @@ export const mrArticles: MrArticle[] = [
         type: "list",
         items: [
           "Supports high-volume ingestion across structured and unstructured data",
-          "Adapts to evolving regulations and business rules",
-          "Integrates seamlessly with enterprise systems via APIs"
+          "Lets retention and business rules change as regulations evolve",
+          "Integrates with enterprise systems via APIs"
         ]
       },
       {
         type: "paragraph",
-        text: "ROI Impact: Future-proof records infrastructure that avoids costly re-platforming initiatives."
+        text: "ROI Impact: Records infrastructure that can grow with the organization, reducing the need for costly re-platforming."
       },
       {
         type: "heading",
@@ -532,7 +535,7 @@ export const mrArticles: MrArticle[] = [
         type: "list",
         items: [
           "Reduced enterprise risk",
-          "Compliance assurance at scale",
+          "Compliance support at scale",
           "Operational resilience",
           "IT simplification",
           "Long-term architectural alignment"
@@ -548,7 +551,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "For CIOs and IT leaders, MapleRecord is not simply a records repository—it is a strategic information governance platform that delivers sustained ROI, reduces risk, and supports long-term digital transformation."
+        text: "For CIOs and IT leaders, MapleRecord is not simply a records repository—it is a strategic information governance platform built to deliver sustained ROI, reduce risk, and support long-term digital transformation."
       }
     ]
   }

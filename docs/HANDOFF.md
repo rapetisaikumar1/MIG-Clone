@@ -69,3 +69,16 @@ All use cases and the homepage scenario are labeled "Illustrative use case" on t
 - ESLint is pinned to 9.39.5 because the plugins `eslint-config-next` 16.4 uses don't yet declare ESLint 10 support. ESLint 9 is now marked end-of-life on npm. Upgrade when they do.
 - The system Node on the build machine was 20.18 (end-of-life). Verification ran on Node 24.22.2.
 - Lighthouse mobile LCP is simulated at 2.7–2.9 s, while the observed LCP in the same runs was 0.1–0.9 s. The heading is the LCP element, and the simulation charges for the web-font download. Confirm with real-user data after launch.
+
+## Business positioning (2026-11-07)
+
+The site now presents Maverick InnoGarage as a **software development and professional services company**, not a consultancy, in this order: AI Governance, Adobe Services, Data Management, Software Development (new page `/software-development`), and MapleRecord. The wording rules are kept in the positioning tests (`tests/positioning.spec.ts`). These need the owner's confirmation before launch:
+
+1. **Software Development scope.** Do we deliver custom applications and workflow automation for clients beyond MapleRecord, and post-launch support? (Capabilities are `provenance: "proposed"` in `src/content/services/software-development.ts`.)
+2. **AI Governance capabilities.** All are still `proposed`. Can they be presented as delivered services?
+3. **Delivery model.** The site uses four stages (Assess, Design, Implement, Improve); the original site described three (Understand & Strategize, Implement & Integrate, Optimize & Grow).
+4. **Adobe Analytics service title.** Approve "Data strategy and measurement planning" (was the verified "Data strategy and consultation").
+5. **MapleRecord figures** (84%, 10x, 2–4x, 30–50%, 40%; About: 5+ organizations, 10M+ documents, 99.9% uptime, 24/7 support) need substantiation.
+6. **MapleRecord services.** Confirm "configuration, integration with your systems, training and ongoing support".
+7. **One team.** About says one team works across all specializations. Is that accurate?
+8. **Desktop header.** Software Development is not in the desktop header (no room for an eighth item). Adding it needs a "Services" menu.

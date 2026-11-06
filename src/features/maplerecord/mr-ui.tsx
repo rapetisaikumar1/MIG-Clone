@@ -50,22 +50,33 @@ const builtInFrameCrop: Record<string, number> = {
 /** Margin of the enlarged crop box, as a percentage of the window width. */
 const cropPct = (crop: number) => ((crop / (1 - 2 * crop)) * 100).toFixed(3);
 
-/** Scales each length in a `sizes` list by the crop's enlargement, so the browser picks a sharp enough file. */
-function cropSizes(sizes: string, crop: number) {
-  const factor = (1 / (1 - 2 * crop)).toFixed(3);
+/** Scales each length in a `sizes` list by `factor` (a crop's enlargement or a focus zoom), so the browser picks a sharp enough file. */
+function scaleSizes(sizes: string, factor: number) {
+  if (factor <= 1) return sizes;
   return sizes
     .split(",")
     .map((entry) => {
       const m = entry.trim().match(/^(\(.*\)\s+)?(.+)$/);
-      return m ? `${m[1] ?? ""}calc(${m[2]} * ${factor})` : entry;
+      return m ? `${m[1] ?? ""}calc(${m[2]} * ${factor.toFixed(3)})` : entry;
     })
     .join(", ");
 }
 
 /**
+ * A region of a screenshot to zoom into, so small windows show readable UI instead of a whole screen
+ * shrunk to texture. `x`/`y` (0–100) is the point of the image to keep in view, as a percentage of its
+ * width/height (0 0 = top left, 100 0 = top right); `zoom` (≥ 1) enlarges the image around that point.
+ * Example: `{ x: 100, y: 0, zoom: 1.4 }` shows the top-right content area without the sidebar.
+ */
+export type MrFocus = { x: number; y: number; zoom: number };
+
+/**
  * Product screenshot in an app window. `fit="top"` fills the window and shows the top of the UI
  * (MapleRecord's screenshots are tall mock-ups; the top carries the meaning). `fit="contain"` keeps
- * the whole image visible, for diagrams. `sizes` should describe the window's rendered width.
+ * the whole image visible, for diagrams. `focus` zooms into one region (see MrFocus) — use it when the
+ * window renders narrower than about 800px, where a full 1280px-wide screen's text drops below ~9px.
+ * `sizes` should describe the window's rendered width. The image area shows a warm paper placeholder
+ * until the screenshot loads, and keeps its aspect box, so nothing shifts.
  */
 export function MrWindow({
   image,
@@ -77,6 +88,7 @@ export function MrWindow({
   alt = image.alt,
   tone = "light",
   crop: cropProp,
+  focus,
   chrome = "bar",
   className,
 }: {
@@ -95,12 +107,19 @@ export function MrWindow({
    * from each edge (e.g. 0.05). Implies `fit="top"`. Default: no crop.
    */
   crop?: number;
-  /** "bar": a quiet caption row with the screen's name (default). "bezel": no caption, a glass bezel for heroes. */
+  /** Zoom into one region of the screenshot (ignored with `crop` or `fit="contain"`). */
+  focus?: MrFocus;
+  /**
+   * "bar": a quiet caption row with the screen's name above the screen (default). "bezel": a glass
+   * bezel for heroes; a `label` then shows as a small caption under the screen.
+   */
   chrome?: "bar" | "bezel";
   className?: string;
 }) {
   const crop = cropProp ?? builtInFrameCrop[image.src];
   const bezel = chrome === "bezel";
+  const dark = tone === "dark";
+  const zoom = !crop && fit === "top" && focus && focus.zoom > 1 ? focus : undefined;
   return (
     <figure
       className={cn(
@@ -108,13 +127,13 @@ export function MrWindow({
           ? // Hero framing: the product UI floats in a thin glass bezel, with no window chrome.
             cn(
               "rounded-[1.25rem] p-1.5 sm:p-2",
-              tone === "dark"
+              dark
                 ? "bg-white/[0.05] shadow-[0_40px_120px_-32px_rgb(0_0_0/0.85)] ring-1 ring-white/12"
                 : "bg-ink/[0.03] shadow-[0_32px_80px_-36px_rgb(17_17_17/0.4)] ring-1 ring-ink/10",
             )
           : cn(
               "overflow-hidden rounded-2xl bg-surface",
-              tone === "dark"
+              dark
                 ? "shadow-[0_30px_80px_-24px_rgb(0_0_0/0.7)] ring-1 ring-white/10"
                 : "shadow-[0_1px_2px_rgb(17_17_17/0.05),0_24px_56px_-28px_rgb(17_17_17/0.35)] ring-1 ring-ink/10",
             ),
@@ -128,7 +147,15 @@ export function MrWindow({
           <span className="truncate text-[0.75rem] font-medium leading-none tracking-[-0.005em] text-muted">{label}</span>
         </div>
       ) : null}
-      <div className={cn("relative overflow-hidden bg-surface", bezel && "rounded-[0.875rem] ring-1 ring-black/5", aspectClass[aspect])}>
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          // Placeholder while the screenshot loads: a warm paper tone with a faint header band, instead of a blank white panel.
+          fit === "contain" && !crop ? "bg-surface" : "bg-paper-deep bg-[linear-gradient(to_bottom,rgb(255_255_255/0.55)_0_7%,transparent_7%)]",
+          bezel && "rounded-[0.875rem] ring-1 ring-black/5",
+          aspectClass[aspect],
+        )}
+      >
         {crop ? (
           // Enlarged box: every edge extends past the window by the screenshot's own margin, so the margin
           // falls outside; object-cover keeps the window filled (no gaps), anchored at the top.
@@ -136,8 +163,19 @@ export function MrWindow({
             className="absolute"
             style={{ inset: 0, margin: `-${cropPct(crop)}%` }}
           >
-            <Image src={image.src} alt={alt} fill sizes={cropSizes(sizes, crop)} preload={preload} className="object-cover object-top" />
+            <Image src={image.src} alt={alt} fill sizes={scaleSizes(sizes, 1 / (1 - 2 * crop))} preload={preload} className="object-cover object-top" />
           </div>
+        ) : zoom ? (
+          // Focal crop: the image covers the window aligned on the focus point, then scales up around it.
+          <Image
+            src={image.src}
+            alt={alt}
+            fill
+            sizes={scaleSizes(sizes, zoom.zoom)}
+            preload={preload}
+            className="object-cover"
+            style={{ objectPosition: `${zoom.x}% ${zoom.y}%`, transform: `scale(${zoom.zoom})`, transformOrigin: `${zoom.x}% ${zoom.y}%` }}
+          />
         ) : (
           <Image
             src={image.src}
@@ -149,6 +187,13 @@ export function MrWindow({
           />
         )}
       </div>
+      {/* Bezel caption: names the screen under hero shots, so visitors can tell which module they are looking at. */}
+      {bezel && label ? (
+        <div className={cn("flex items-center gap-2 px-2 pb-1 pt-2.5 sm:pb-0.5", dark ? "text-night-muted" : "text-muted")} aria-hidden>
+          <LeafMark className="size-3 shrink-0" />
+          <span className="truncate text-[0.75rem] font-medium leading-none tracking-[-0.005em]">{label}</span>
+        </div>
+      ) : null}
     </figure>
   );
 }
@@ -230,21 +275,32 @@ export function MrFeatureCard({
   );
 }
 
-/** Breadcrumbs for MapleRecord heroes; `tone="dark"` on dark stages. */
+/**
+ * Breadcrumbs for MapleRecord heroes; `tone="dark"` on dark stages. The "/" separators are drawn by
+ * `.mr-crumbs` in globals.css after each item (not as text), so a wrapped trail never starts a line with
+ * a lone slash, and each item's text stays exactly its label. A long current page (an article title)
+ * truncates to one line; the full title is the h1 right below.
+ */
 export function MrCrumbs({ items, tone = "light" }: { items: { label: string; href?: string }[]; tone?: "light" | "dark" }) {
   const dark = tone === "dark";
   return (
     <nav aria-label="Breadcrumb">
-      <ol className={cn("flex flex-wrap items-center gap-x-2 text-sm", dark ? "text-night-muted" : "text-muted")}>
-        {items.map((item, i) => (
-          <li key={item.label} className="flex items-center gap-2">
-            {i > 0 ? <span aria-hidden>/</span> : null}
+      <ol className={cn("mr-crumbs flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm", dark ? "text-night-muted" : "text-muted")}>
+        {items.map((item) => (
+          <li key={item.label} className={cn("flex min-w-0 items-center gap-2", item.href ? "whitespace-nowrap" : "max-w-full")}>
             {item.href ? (
-              <Link href={item.href} className={cn("inline-flex min-h-6 items-center underline-offset-4 hover:underline", dark ? "hover:text-night-text" : "hover:text-ink")}>
+              // The ::after pad extends the hit area to 44px tall (touch target) without changing the trail's layout.
+              <Link
+                href={item.href}
+                className={cn(
+                  "relative inline-flex min-h-6 items-center underline-offset-4 after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-[''] hover:underline",
+                  dark ? "hover:text-night-text" : "hover:text-ink",
+                )}
+              >
                 {item.label}
               </Link>
             ) : (
-              <span aria-current="page" className={dark ? "text-night-text" : "text-ink"}>
+              <span aria-current="page" className={cn("min-w-0 truncate", dark ? "text-night-text" : "text-ink")}>
                 {item.label}
               </span>
             )}
@@ -354,7 +410,7 @@ export function MrLinkCard({
   return (
     <div
       className={cn(
-        "group relative flex h-full flex-col rounded-2xl p-6 transition-[box-shadow,background-color] duration-200 sm:p-7",
+        "card-lift group relative flex h-full flex-col rounded-2xl p-6 transition-[box-shadow,background-color,transform] duration-200 sm:p-7",
         "has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2",
         dark
           ? "bg-night-raised ring-1 ring-night-line hover:bg-[#1e1e20] hover:ring-white/20 has-[a:focus-visible]:outline-night-text"

@@ -1,7 +1,7 @@
 import type { AdobeProductSlug } from "@/lib/content/types";
 
 /**
- * Rewritten from the eight industry pages on the existing site around the three specializations.
+ * Rewritten from the eight industry pages on the existing site around the specializations.
  * These describe typical needs and applications — not claims about specific clients.
  * `id` values are redirect targets for the legacy industry URLs (src/config/redirects.ts); don't rename them.
  * `products` link an application to the matching /adobe-services/<slug> pages; list only the
@@ -121,7 +121,7 @@ export const industries: Industry[] = [
     applications: [
       {
         area: "Data Management",
-        text: "Records programs, retention schedules and role-based access, including MapleRecord, our records management software.",
+        text: "Records programs, retention schedules and role-based access, configured in MapleRecord, our records management platform.",
       },
       {
         area: "AI Governance",

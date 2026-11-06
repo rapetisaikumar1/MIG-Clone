@@ -7,6 +7,19 @@ export function OrganizationJsonLd() {
     "@type": "Organization",
     name: company.name,
     alternateName: company.shortName,
+    description: company.descriptor,
+    // The four specializations and MapleRecord's domain (owner directive 2026-11-07); topics, not credentials.
+    knowsAbout: [
+      "AI governance",
+      "Responsible AI",
+      "AI risk management",
+      "Adobe Experience Cloud",
+      "Data management",
+      "Data governance",
+      "Software development",
+      "Enterprise software",
+      "Records management",
+    ],
     url: siteUrl,
     logo: `${siteUrl}/brand/mig-logo.svg`,
     sameAs: company.social.map((s) => s.href),
@@ -20,12 +33,15 @@ export function OrganizationJsonLd() {
       postalCode: o.postalCode,
       addressCountry: o.country,
     })),
-    contactPoint: company.offices.map((o) => ({
-      "@type": "ContactPoint",
-      telephone: o.phone.e164,
-      contactType: "sales",
-      areaServed: o.country,
-    })),
+    // One entry per number: Delaware and Texas share +19409456180.
+    contactPoint: company.offices
+      .filter((o, i, all) => all.findIndex((x) => x.phone.e164 === o.phone.e164) === i)
+      .map((o) => ({
+        "@type": "ContactPoint",
+        telephone: o.phone.e164,
+        contactType: "sales",
+        areaServed: o.country,
+      })),
   };
   return (
     <script

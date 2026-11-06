@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { MrCta, MrHero, MrSecuritySection, MrStatsSection } from "@/features/maplerecord/mr-sections";
 import {
   SolutionChallenges,
-  SolutionHeroChips,
+  SolutionHeroMeta,
   SolutionModules,
   SolutionRelated,
   SolutionUseCases,
@@ -31,7 +31,8 @@ export default async function SolutionPage({ params }: PageProps<"/maplerecord/s
   const industry = s.kind === "industry";
   const siblings = getMrSolutions(s.kind).filter((x) => x.slug !== s.slug);
   const crumbs = [{ label: "Home", href: "/" }, { label: "MapleRecord", href: "/maplerecord" }, { label: "Solutions", href: "/maplerecord/solutions" }, { label: s.label }];
-  // Industries explain the modules; departments walk through a request end to end.
+  // Industries explain the modules; departments walk through a request end to end. The hero shows a
+  // recreated product screen (16:10, the screen's own shape, so nothing is cropped).
   const howId = s.modules ? "modules" : s.workflow ? "workflow" : null;
 
   return (
@@ -44,10 +45,8 @@ export default async function SolutionPage({ params }: PageProps<"/maplerecord/s
         description={s.description}
         image={s.image}
         imageLabel={s.label}
-        imageFit={industry ? "top" : "contain"}
-        imageAspect="square"
         officialUrl={s.officialUrl}
-        meta={<SolutionHeroChips solution={s} />}
+        meta={<SolutionHeroMeta solution={s} />}
       >
         {howId ? (
           <ButtonLink href={`#${howId}`} variant="outline-night">
@@ -57,10 +56,10 @@ export default async function SolutionPage({ params }: PageProps<"/maplerecord/s
       </MrHero>
 
       <SolutionChallenges {...s.challenges} />
-      {s.modules ? <SolutionModules label={s.label} {...s.modules} /> : null}
-      {s.workflow ? <SolutionWorkflow {...s.workflow} /> : null}
+      {s.modules ? <SolutionModules slug={s.slug} label={s.label} {...s.modules} /> : null}
+      {s.workflow ? <SolutionWorkflow slug={s.slug} {...s.workflow} /> : null}
       <MrStatsSection eyebrow="Business impact" heading={s.impact.heading} items={s.impact.items} />
-      <SolutionUseCases {...s.useCases} />
+      <SolutionUseCases slug={s.slug} {...s.useCases} />
       <MrSecuritySection {...s.security} />
       <SolutionRelated current={s} siblings={siblings} />
       <MrCta title={s.cta.title} body={s.cta.body} />

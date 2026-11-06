@@ -1,7 +1,5 @@
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
-import { ButtonLink } from "@/components/ui/button";
 import { mrPlatformPage } from "@/content/maplerecord/modules";
-import { mrPlatformIntro } from "@/content/maplerecord/overview";
 import { MrCta, MrHero } from "@/features/maplerecord/mr-sections";
 import { MrAdminBand, MrDarkChips, MrModuleGrid, mrModuleIcons, MrPlatformFlow } from "@/features/maplerecord/platform-sections";
 import { getMrModules } from "@/lib/content/maplerecord";
@@ -26,20 +24,17 @@ export default function PlatformPage() {
         crumbs={crumbs}
         eyebrow="Platform"
         title={mrPlatformPage.title}
-        description={mrPlatformIntro.body}
+        description={mrPlatformPage.description}
         image={hero}
         imageLabel={hero.label}
+        imageFocus={mrPlatformPage.heroFocus}
         meta={
           <MrDarkChips
             label="Modules"
             items={modules.map((m) => ({ label: m.name, href: `/maplerecord/platform/${m.slug}`, icon: mrModuleIcons[m.slug] }))}
           />
         }
-      >
-        <ButtonLink href="#modules" variant="outline-night">
-          Compare the modules
-        </ButtonLink>
-      </MrHero>
+      />
       <MrModuleGrid modules={modules.filter((m) => m.slug !== "mr-admin")} />
       {admin ? <MrAdminBand module={admin} /> : null}
       <MrPlatformFlow />

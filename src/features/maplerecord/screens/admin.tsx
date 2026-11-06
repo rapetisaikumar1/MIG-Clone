@@ -88,7 +88,7 @@ function AdminSidebar({ active }: { active: AdminNavKey }) {
             <ul className="space-y-px">
               {s.items.map(({ key, label, icon: IconC }) => (
                 <li key={key}>
-                  <span className={cn("flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px]", key === active ? "bg-[#f0f0f1] font-medium text-[#18181b]" : "text-[#27272a]")}>
+                  <span className={cn("flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px]", key === active ? "bg-[#e9e9eb] font-medium text-[#09090b]" : "text-[#3f3f46]")}>
                     <IconC className="size-[15px] shrink-0" strokeWidth={1.75} />
                     <span className="truncate">{label}</span>
                   </span>
@@ -165,19 +165,19 @@ function SettingsCard({ title, subtitle, children, footer, titleExtra, icon: Ico
 
 function Products() {
   const products: [string, string, string][] = [
-    ["MR Admin", "admin", "Staff directory, products, licensing, and global roles."],
-    ["MR Records", "records", "Record management system."],
-    ["MR Requests", "requests", "Request / FOI product mode (MR FOI)."],
-    ["MR Workflows", "workflows", "Managed workflow automation."],
-    ["MR Forms", "forms", "Forms builder and filing."],
+    ["MR Admin", "admin", "Users, products, licensing and global roles"],
+    ["MR Records", "records", "Records management and retention"],
+    ["MR Requests", "requests", "Information requests and FOI casework"],
+    ["MR Workflows", "workflows", "Workflow automation and approvals"],
+    ["MR Forms", "forms", "Form builder and submissions"],
   ];
-  const cols = "2.3fr 0.9fr 0.8fr 0.7fr 1.5fr";
+  const cols = "2.1fr 0.8fr 0.75fr 0.65fr 1.8fr";
   return (
     <ScreenCanvas id="admin-products">
       <AdminShell active="products" layout="center">
         <Title title="Products" subtitle="Enable or disable Maple products, manage licenses, and control access via global roles." />
-        <div className="mt-6 overflow-hidden rounded-lg border border-[#18181b] bg-white">
-          <div className="grid h-10 items-center border-b border-[#e4e4e7] px-4 text-[12px] font-medium text-[#3f3f46]" style={{ gridTemplateColumns: cols }}>
+        <div className="mt-6 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
+          <div className="grid h-10 items-center border-b border-[#e4e4e7] bg-[#fafafa] px-5 text-[12px] font-medium text-[#52525b]" style={{ gridTemplateColumns: cols }}>
             <span>Product</span>
             <span>Code</span>
             <span>License</span>
@@ -185,23 +185,26 @@ function Products() {
             <span className="text-right">Actions</span>
           </div>
           {products.map(([name, code, desc]) => (
-            <div key={code} className="grid h-[62px] items-center border-b border-[#f0f0f1] px-4 last:border-b-0" style={{ gridTemplateColumns: cols }}>
+            <div key={code} className="grid h-[66px] items-center border-b border-[#f0f0f1] px-5 last:border-b-0" style={{ gridTemplateColumns: cols }}>
               <span className="min-w-0 pr-4 leading-snug">
-                <span className="block text-[13px] font-semibold">{name}</span>
-                <span className="block truncate text-[12px] text-[#71717a]">{desc}</span>
+                <span className="block text-[13.5px] font-semibold text-[#18181b]">{name}</span>
+                <span className="mt-0.5 block truncate text-[12px] text-[#71717a]">{desc}</span>
               </span>
               <span className="font-mono text-[12px] text-[#3f3f46]">{code}</span>
               <span>
-                <span className="inline-flex rounded-full bg-[#18181b] px-2 py-[2px] text-[11px] font-medium text-white">Active</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-2 py-[2px] text-[11px] font-medium text-[#15803d]">
+                  <span className="size-1.5 rounded-full bg-[#22c55e]" />
+                  Active
+                </span>
               </span>
               <span className="flex items-center">
                 <Toggle />
               </span>
-              <span className="flex items-center justify-end gap-3">
+              <span className="flex items-center justify-end gap-3.5">
                 <Btn variant="outline" className="h-7 px-2.5 text-[12px]">
                   Add license
                 </Btn>
-                <span className="text-[12px] font-medium text-[#18181b]">Deactivate lic.</span>
+                <span className="text-[12px] font-medium text-[#3f3f46]">Deactivate license</span>
               </span>
             </div>
           ))}
@@ -215,21 +218,26 @@ function Products() {
 
 function ServiceCard({ name, desc, latency }: { name: string; desc: string; latency: number }) {
   return (
-    <div className="rounded-xl border border-[#a7f3d0] bg-[#f0fdf8] px-3.5 py-3">
-      <div className="flex items-start justify-between gap-2">
-        <span className="flex size-7 items-center justify-center rounded-lg border border-[#d1fae5] bg-white text-[#047857]">
-          <Server className="size-3.5" strokeWidth={1.75} />
+    <div className="rounded-xl border border-[#bbf7d0] bg-[#f3fcf7] px-3.5 py-2.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-[#d1fae5] bg-white text-[#047857]">
+            <Server className="size-3.5" strokeWidth={1.75} />
+          </span>
+          <span className="truncate text-[13px] font-semibold text-[#18181b]">{name}</span>
         </span>
-        <span className="rounded-full border border-[#6ee7b7] bg-white/60 px-2 py-[1px] text-[11px] font-medium text-[#047857]">Up</span>
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[#bbf7d0] bg-white px-2 py-[1px] text-[11px] font-medium text-[#15803d]">
+          <span className="size-1.5 rounded-full bg-[#22c55e]" />
+          Up
+        </span>
       </div>
-      <p className="mt-2 text-[13px] font-semibold text-[#065f46]">{name}</p>
-      <p className="mt-0.5 truncate text-[12px] text-[#047857]">{desc}</p>
-      <p className="mt-2 flex gap-4 text-[11.5px] text-[#3f3f46]">
+      <p className="mt-1.5 truncate text-[12px] text-[#52525b]">{desc}</p>
+      <p className="mt-1.5 flex gap-4 text-[11.5px] text-[#71717a]">
         <span>
-          Latency: <span className="font-medium text-[#18181b]">{latency} ms</span>
+          Latency <span className="font-medium text-[#18181b]">{latency} ms</span>
         </span>
         <span>
-          HTTP: <span className="font-medium text-[#18181b]">200</span>
+          HTTP <span className="font-medium text-[#18181b]">200</span>
         </span>
       </p>
     </div>
@@ -238,24 +246,24 @@ function ServiceCard({ name, desc, latency }: { name: string; desc: string; late
 
 function SystemStatus() {
   const services: [string, string, number][] = [
-    ["Admin service", "Staff directory, products, licensing gateway", 12],
-    ["Auth service", "Login, OTP, JWT minting", 9],
-    ["Records service", "Workspaces, records, requests runtime", 18],
-    ["Forms service", "MR Forms schema and submissions", 14],
-    ["Workflow service", "Published managed workflow graphs", 16],
+    ["Admin service", "Users, products and licensing", 12],
+    ["Auth service", "Sign-in, 2FA and session tokens", 9],
+    ["Records service", "Workspaces, records and retention", 18],
+    ["Forms service", "Form schemas and submissions", 14],
+    ["Workflow service", "Published workflows and runs", 16],
     ["FOI service", "Freedom of information casework", 13],
-    ["Notification service", "Outbound email and in-app delivery", 11],
+    ["Notification service", "Email and in-app notifications", 11],
   ];
   const infra: [string, string, number][] = [
-    ["Redis", "Cache / Celery broker (PING)", 2],
-    ["Blockchain (Ethereum)", "Private Ethereum JSON-RPC for audit + document anchors", 24],
+    ["Redis", "Cache and task queue broker", 2],
+    ["Blockchain (Ethereum)", "Private node for audit anchoring", 24],
   ];
   return (
     <ScreenCanvas id="admin-status">
       <AdminShell active="status" layout="center">
         <Title
           title="System status"
-          subtitle="Backend APIs and the Maple launcher suite host. Product UIs are checked via launcher routes (not separate Vite ports)."
+          subtitle="Health of backend services and the Maple launcher host. Product apps are checked through their launcher routes."
           actions={
             <Btn variant="outline" icon={RefreshCw}>
               Refresh
@@ -263,33 +271,33 @@ function SystemStatus() {
           }
         />
         <div className="mt-4 grid grid-cols-3 gap-3">
-          <div className="flex items-center justify-between rounded-xl border-[1.5px] border-[#18181b] bg-white px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl border border-[#e4e4e7] bg-white px-4 py-3 shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
             <div>
               <p className="text-[12px] text-[#52525b]">Checked</p>
-              <p className="mt-0.5 text-[22px] font-semibold leading-tight">15</p>
+              <p className="mt-0.5 text-[22px] font-semibold leading-tight">9</p>
             </div>
-            <Activity className="size-5 text-[#3f3f46]" strokeWidth={1.75} />
+            <Activity className="size-5 text-[#71717a]" strokeWidth={1.75} />
           </div>
-          <div className="rounded-xl border border-[#a7f3d0] bg-[#f0fdf8] px-4 py-3">
-            <p className="text-[12px] text-[#047857]">Up</p>
-            <p className="mt-0.5 text-[22px] font-semibold leading-tight text-[#065f46]">15</p>
+          <div className="rounded-xl border border-[#bbf7d0] bg-[#f3fcf7] px-4 py-3">
+            <p className="text-[12px] text-[#15803d]">Up</p>
+            <p className="mt-0.5 text-[22px] font-semibold leading-tight text-[#166534]">9</p>
           </div>
-          <div className="rounded-xl border border-[#fecaca]/70 bg-[#fef2f2]/70 px-4 py-3">
-            <p className="text-[12px] text-[#b91c1c]/70">Down</p>
-            <p className="mt-0.5 text-[22px] font-semibold leading-tight text-[#b91c1c]/70">0</p>
+          <div className="rounded-xl border border-[#fde2e2] bg-[#fffafa] px-4 py-3">
+            <p className="text-[12px] text-[#b91c1c]">Down</p>
+            <p className="mt-0.5 text-[22px] font-semibold leading-tight text-[#b91c1c]">0</p>
           </div>
         </div>
-        <p className="mt-2.5 text-[11.5px] text-[#71717a]">Last check: 11/5/2026, 4:37:47 PM</p>
-        <h2 className="mt-4 text-[14px] font-semibold">Services</h2>
-        <p className="text-[12px] text-[#71717a]">Microservice health endpoints.</p>
-        <div className="mt-3 grid grid-cols-3 gap-3">
+        <p className="mt-2 text-[11.5px] text-[#71717a]">Last check: 11/5/2026, 4:37:47 PM</p>
+        <h2 className="mt-3.5 text-[14px] font-semibold">Services</h2>
+        <p className="text-[12px] text-[#71717a]">Health endpoints for each MapleRecord service.</p>
+        <div className="mt-2.5 grid grid-cols-3 gap-2.5">
           {services.map(([n, d, l]) => (
             <ServiceCard key={n} name={n} desc={d} latency={l} />
           ))}
         </div>
-        <h2 className="mt-5 text-[14px] font-semibold">Infrastructure</h2>
-        <p className="text-[12px] text-[#71717a]">Redis broker and private Ethereum node used for blockchain anchoring.</p>
-        <div className="mt-3 grid grid-cols-3 gap-3">
+        <h2 className="mt-4 text-[14px] font-semibold">Infrastructure</h2>
+        <p className="text-[12px] text-[#71717a]">Task queue broker and the private Ethereum node used for blockchain anchoring.</p>
+        <div className="mt-2.5 grid grid-cols-3 gap-2.5">
           {infra.map(([n, d, l]) => (
             <ServiceCard key={n} name={n} desc={d} latency={l} />
           ))}
@@ -324,15 +332,15 @@ function Security() {
         <div className="mt-4 space-y-4">
           <SettingsCard title="User provisioning" subtitle="Choose how new users are created across the application" footer={<SaveFooter status="All changes saved" label="Save mode" />}>
             <div className="space-y-2.5">
-              <RadioOption selected title="Invitation email" desc="Create the user without a password. Send an invite link; they set a password and activate their account from the link." />
+              <RadioOption selected title="Invitation email" desc="Create the user without a password and email an invite link to set one and activate the account." />
               <RadioOption title="Admin sets password" desc="Require a password when creating a user. The account is active immediately; no invitation email is sent." />
             </div>
           </SettingsCard>
           <SettingsCard title="Login 2FA policy" subtitle="Organization-wide policy for email OTP and authenticator apps at password sign-in" footer={<SaveFooter status="All changes saved" label="Save policy" />}>
             <div className="space-y-2.5">
-              <RadioOption title="Per user" desc="Each person can enable email OTP and/or an authenticator app (Account → Security)." />
-              <RadioOption selected title="Required for everyone" desc="All email/password logins must complete 2FA. Authenticator is used when enrolled; otherwise email OTP." />
-              <RadioOption title="Disabled organization-wide" desc="Never require 2FA at login. Useful for local/dev testing." />
+              <RadioOption title="Per user" desc="Each person can enable email OTP or an authenticator app from Account → Security." />
+              <RadioOption selected title="Required for everyone" desc="Every password sign-in must complete 2FA. Uses the authenticator app when enrolled, otherwise email OTP." />
+              <RadioOption title="Disabled organization-wide" desc="Never require 2FA at login. Not recommended for production." />
             </div>
           </SettingsCard>
         </div>
@@ -367,12 +375,12 @@ function Integrations() {
             </span>
           ))}
         </div>
-        <div className="mt-4 flex gap-2.5 rounded-lg border border-[#18181b] bg-white px-3.5 py-3">
-          <Info className="mt-[1px] size-4 shrink-0" strokeWidth={1.75} />
+        <div className="mt-4 flex gap-2.5 rounded-lg border border-[#e4e4e7] bg-[#fafafa] px-3.5 py-3">
+          <Info className="mt-[1px] size-4 shrink-0 text-[#52525b]" strokeWidth={1.75} />
           <div className="text-[12px] leading-relaxed">
             <p className="text-[13px] font-semibold">Object storage</p>
             <p className="text-[#52525b]">
-              Suite source of truth for media uploads (Records documents, profile pictures, and other suite files). Choose a provider below — more options can be added later. Leave access/secret blank when saving to keep the stored values.
+              The suite-wide store for uploaded files, including Records documents and profile pictures. Choose a provider below. Leave the access and secret keys blank when saving to keep the stored values.
             </p>
           </div>
         </div>
@@ -380,14 +388,14 @@ function Integrations() {
           <SettingsCard title="Provider" subtitle="Active backend for suite object storage.">
             <div className="flex items-center gap-3">
               <span className="text-[12px] font-medium">Storage provider</span>
-              <SmallSelect value="s3" width={72} />
+              <SmallSelect value="Amazon S3" width={120} />
             </div>
-            <p className="mt-2 text-[12px] text-[#71717a]">AWS S3 (leave endpoint empty for the default AWS endpoint).</p>
+            <p className="mt-2 text-[12px] text-[#71717a]">Uses the default AWS endpoint unless an endpoint URL is set.</p>
           </SettingsCard>
           <SettingsCard
             title="Amazon S3 credentials"
-            titleExtra={<span className="rounded-md border border-[#bbf7d0] bg-[#ecfdf3] px-1.5 py-[1px] text-[10.5px] font-medium text-[#15803d]">Ready</span>}
-            subtitle="Access key: configured · Secret: configured · Source: API & Integrations"
+            titleExtra={<span className="rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-2 py-[1px] text-[11px] font-medium text-[#15803d]">Ready</span>}
+            subtitle="Access key configured · Secret key configured"
             footer={<SaveFooter status="No changes" label="Save storage settings" />}
           >
             <div className="grid grid-cols-2 gap-x-4 gap-y-3.5">
@@ -433,10 +441,10 @@ function Backup() {
         <div className="mt-4">
           <SettingsCard icon={CalendarDays} title="Automated Backup Configuration" subtitle="Configure scheduled automatic backups for your system">
             <div className="-mt-1">
-              <BackupRow title="Enable Automatic Backups" desc="Daily backups at scheduled time" control={<Toggle />} />
-              <BackupRow title="Backup Frequency" control={<SmallSelect value="daily" />} />
-              <BackupRow title="Backup Time (UTC)" control={<SmallSelect value="2am" />} />
-              <BackupRow title="Retention Period" control={<SmallSelect value="30" />} note="Old backups will be automatically deleted after this period" />
+              <BackupRow title="Enable Automatic Backups" desc="Run a daily backup at the scheduled time" control={<Toggle />} />
+              <BackupRow title="Backup Frequency" control={<SmallSelect value="Daily" width={128} />} />
+              <BackupRow title="Backup Time (UTC)" control={<SmallSelect value="02:00" width={128} />} />
+              <BackupRow title="Retention Period" control={<SmallSelect value="30 days" width={128} />} note="Old backups will be automatically deleted after this period" />
               <BackupRow title="Backup Encryption" desc="Encrypt backups with AES-256" control={<Toggle />} />
             </div>
           </SettingsCard>

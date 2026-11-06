@@ -1,0 +1,56 @@
+/*
+ * Small, CSS-only motion for the Adobe pages. Transform and outline-color only; nothing here changes the
+ * opacity of text. Everything is gated on prefers-reduced-motion: no-preference, and the scroll-driven
+ * connector also on @supports, so without either the page shows its final, static state.
+ */
+
+/* Step connector (assessment "Four steps"): draws left to right as the steps scroll into view. */
+.connector {
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .connector {
+      animation: connector-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 45%;
+    }
+  }
+}
+
+@keyframes connector-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/*
+ * In-page jump targets (assessment chip row → review cards): the destination card gets a signal outline.
+ * With motion allowed it flashes and fades; with reduced motion it stays as a static outline.
+ */
+.target {
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+}
+
+.target:target {
+  outline-color: var(--signal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .target:target {
+    outline-color: transparent;
+    animation: target-flash 2.4s ease-out;
+  }
+}
+
+@keyframes target-flash {
+  0%,
+  45% {
+    outline-color: var(--signal);
+  }
+  100% {
+    outline-color: transparent;
+  }
+}

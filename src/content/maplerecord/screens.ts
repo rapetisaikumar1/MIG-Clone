@@ -47,13 +47,13 @@ export const mrScreens = {
   recordsRequests: s("records-requests", "records", "MR Records · Requests & approvals", "MR Records requests and approvals across workspaces with totals, pending, completed and rejected counts and a table of transfer, retrieval and official record requests"),
   // MR Requests
   requestsDashboard: s("requests-dashboard", "requests", "MR Requests · Operational overview", "MR Requests operational overview with active, due-soon, overdue and closed counts, request and appeal donuts, SLA risk and pipeline stages"),
-  requestsKanban: s("requests-kanban", "requests", "MR Requests · Requests", "MR Requests board of information requests grouped into Pending, Open, In progress, On hold and Resolved columns"),
+  requestsKanban: s("requests-kanban", "requests", "MR Requests · Requests", "MR Requests board of information requests grouped into Pending, Open, In progress, On hold, Resolved and Closed columns"),
   requestsTriage: s("requests-triage", "requests", "MR Requests · Request triage", "An MR Requests request in triage with the validation checklist, fee assessment and payment steps and a due-date countdown"),
   requestsExemptions: s("requests-exemptions", "requests", "MR Requests · Exemption management", "MR Requests exemption management listing exemption codes, names, categories and status"),
   requestsRedaction: s("requests-redaction", "requests", "MR Requests · Document redaction", "MR Requests document redaction history with AI analysis, manual redactions and status changes per document"),
   // MR Workflows
   workflowsDashboard: s("workflows-dashboard", "workflows", "MR Workflows · Dashboard", "MR Workflows dashboard with workflow counts, pending approvals, run outcomes, latest runs and quick links"),
-  workflowsCanvas: s("workflows-canvas", "workflows", "MR Workflows · Workflow designer", "MR Workflows designer canvas for a destruction authorization workflow with trigger, approval, assignment and end nodes"),
+  workflowsCanvas: s("workflows-canvas", "workflows", "MR Workflows · Workflow designer", "MR Workflows designer canvas for a destruction authorization workflow with trigger, approval, gateway, action, email and end nodes"),
   workflowsList: s("workflows-list", "workflows", "MR Workflows · Workflows", "MR Workflows list of published and draft workflows with trigger type, revision and last update"),
   workflowsRuns: s("workflows-runs", "workflows", "MR Workflows · Run history", "MR Workflows run history with total, successful, partial and failed runs and the fetched and filed counts per run"),
   // MR Forms

@@ -16,13 +16,13 @@ export const commerce: AdobeProduct = {
   summary: "Strategy, implementation, migration and ongoing support for B2C and B2B stores on Adobe Commerce.",
   description: "A commerce platform, formerly Magento Commerce, for B2C and B2B online stores, with catalog management and extensibility.",
   meta: {
-    title: "Adobe Commerce Consulting Services",
+    title: "Adobe Commerce Services",
     description:
       "Adobe Commerce services: e-commerce strategy, implementation and customization, migration to Adobe Commerce, and ongoing support for B2C and B2B stores.",
   },
   hero: {
     title: "Run an online store that grows with your catalog and customers.",
-    lead: "We help you choose the right Adobe Commerce setup, build and integrate the store, migrate from your current platform, and keep improving it after launch.",
+    lead: "We plan the right Adobe Commerce setup, build and integrate the store, migrate you from your current platform, and keep improving it after launch.",
   },
   overview: {
     heading: "What Adobe Commerce does",
@@ -66,7 +66,7 @@ export const commerce: AdobeProduct = {
   services: [
     {
       title: "E-commerce strategy",
-      body: "We work with you to define what the store needs to do for your customers and your business, then shape the Adobe Commerce setup around it.",
+      body: "We define with you what the store needs to do for your customers and your business, then shape the Adobe Commerce setup around it.",
       items: [
         "Requirements for consumer and business buyers",
         "Choice of deployment option and storefront approach",
@@ -169,6 +169,6 @@ export const commerce: AdobeProduct = {
   ],
   cta: {
     title: "Plan your next step on Adobe Commerce.",
-    body: "Tell us about your store, the platform you run today and what you want to change.",
+    body: "Tell us about your store, the platform you run today and what you want to change. We'll scope a practical first step with you.",
   },
 };

@@ -1,0 +1,52 @@
+/*
+ * Tab explorers on the MapleRecord overview (overview-sections.tsx).
+ *
+ * Focus: Radix focuses a tab from code on mouse down, which Chromium treats as :focus-visible, so a
+ * mouse click left the red focus ring on top of the active pill. The ring is hidden only while the
+ * last interaction inside the explorer was a pointer; any key press (or focus arriving from outside)
+ * brings it back, so keyboard focus always stays visible.
+ */
+.root[data-input="pointer"] [role="tab"]:focus-visible {
+  outline-color: transparent;
+}
+
+/*
+ * Panel swap: the incoming panel settles 8px into place (transform only, so its text is never faded),
+ * and its product screen, a decorative image, eases in. Only after the visitor has switched tabs
+ * (data-touched), so nothing animates on first paint.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .root[data-touched] .panel[data-state="active"] {
+    animation: panel-in 380ms var(--ease-out-quint);
+  }
+  .root[data-touched] .panel[data-state="active"] [data-shot] {
+    animation: shot-in 520ms var(--ease-out-quint);
+  }
+  .marker {
+    transition: transform 320ms var(--ease-out-quint);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes shot-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(10px);
+  }
+}
+
+/* Phone and tablet chip rows: swipeable, no visible scrollbar, a short fade where more chips follow. */
+@media (width < 64rem) {
+  .scroller {
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent);
+  }
+  .scroller::-webkit-scrollbar {
+    display: none;
+  }
+}

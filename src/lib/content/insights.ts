@@ -1,6 +1,7 @@
 import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import type { MDXComponents } from "mdx/types";
 import { cache } from "react";
 import { insights, type InsightMeta } from "@/content/insights";
 
@@ -8,8 +9,10 @@ export type Insight = InsightMeta & { readingMinutes: number };
 
 const contentDir = path.join(process.cwd(), "src", "content", "insights");
 
+const readSource = cache((slug: string) => readFile(path.join(contentDir, `${slug}.mdx`), "utf8"));
+
 const readingMinutes = cache(async (slug: string) => {
-  const raw = await readFile(path.join(contentDir, `${slug}.mdx`), "utf8");
+  const raw = await readSource(slug);
   const words = raw.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 230));
 });
@@ -39,6 +42,12 @@ export function getPublishedSlugs() {
 }
 
 export async function loadInsightBody(slug: string) {
-  const mod = (await import(`@/content/insights/${slug}.mdx`)) as { default: React.ComponentType };
+  const mod = (await import(`@/content/insights/${slug}.mdx`)) as { default: React.ComponentType<{ components?: MDXComponents }> };
   return mod.default;
+}
+
+/** Plain text of the article's `## ` headings, in order, for the "In this article" list. */
+export async function getInsightHeadings(slug: string): Promise<string[]> {
+  const raw = await readSource(slug);
+  return [...raw.matchAll(/^## +(.+?)\s*$/gm)].map((m) => m[1]!.replace(/[*_`]/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1"));
 }

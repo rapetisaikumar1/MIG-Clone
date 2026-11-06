@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ComponentType, ReactNode } from "react";
-import { ArrowRight, Check, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { mrOfficial } from "@/content/maplerecord/official";
-import { mrContact, mrSampleDataNote } from "@/content/maplerecord/overview";
+import { mrContact, mrFiguresNote, mrOwnership, mrSampleDataNote } from "@/content/maplerecord/overview";
 import { contactHref } from "@/features/contact/links";
-import { MrBadge, MrCrumbs, MrIconTile, MrLinkCard, MrWindow, mrHalfSizes } from "@/features/maplerecord/mr-ui";
+import { MrBadge, MrCrumbs, MrIconTile, MrLinkCard, MrWindow, mrHalfSizes, type MrFocus } from "@/features/maplerecord/mr-ui";
 import type { MrImage } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
@@ -118,7 +118,13 @@ export function MrFigure({
 
 /**
  * Product hero on the dark stage: breadcrumbs, product badge, headline, CTAs, and the product shown
- * in an app window (or a photo). `children` are extra buttons — use `variant="outline-night"`.
+ * in a glass bezel (or a photo). `children` are extra buttons — use `variant="outline-night"`.
+ *
+ * One template for every subpage: the text and the visual are top-aligned (the visual's top edge meets
+ * the headline's first line), so the badge and h1 sit at the same height on sibling pages whatever the
+ * headline's length. With a visual the h1 uses a slightly smaller step, so long product titles stay at
+ * 3–4 lines in the half-width column. Product screens get a small caption naming the screen. Without a
+ * visual the hero is compact (narrower measure, less bottom padding) rather than half empty.
  */
 export function MrHero({
   crumbs,
@@ -129,6 +135,7 @@ export function MrHero({
   imageLabel,
   imageFit = "top",
   imageAspect = "wide",
+  imageFocus,
   meta,
   officialUrl,
   photo,
@@ -139,24 +146,36 @@ export function MrHero({
   title: string;
   description: string;
   image?: MrImage;
-  /** App-window title, e.g. "MR Records · Organization". Defaults to the eyebrow. */
+  /** Caption for a product screen when the image carries no `label` of its own. Defaults to the eyebrow. */
   imageLabel?: string;
   imageFit?: "top" | "contain";
   imageAspect?: "wide" | "video" | "square" | "tall";
+  /** Zoom into one region of a product screen (see MrFocus in mr-ui). */
+  imageFocus?: MrFocus;
   /** Extra content under the description (chips, highlights). Rendered on the dark stage. */
   meta?: ReactNode;
   officialUrl?: string;
   photo?: boolean;
   children?: ReactNode;
 }) {
+  /*
+   * Recreated product screens (16:10 captures) are shown whole in a 16:10 bezel, so every subpage hero has
+   * the same frame (a square or "contain" frame crops a screen mid-word or letterboxes it in white) —
+   * unless the page asks for a focal crop. They are captioned with the screen's own name ("MR Records ·
+   * Audit trail"); photos and illustrations are not captioned.
+   */
+  const screen = image && !photo && image.src.startsWith("/maplerecord/screens/") ? image : undefined;
+  const screenCaption = screen ? ("label" in screen && typeof screen.label === "string" ? screen.label : (imageLabel ?? eyebrow)) : undefined;
+  const windowAspect = screen && !imageFocus ? "wide" : imageAspect;
+  const windowFit = screen ? "top" : imageFit;
   return (
     <section className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text">
-      <Container className="relative pb-16 pt-8 sm:pb-20 lg:pb-24 lg:pt-10">
+      <Container className={cn("relative pt-8 lg:pt-10", image ? "pb-16 sm:pb-20 lg:pb-24" : "pb-14 sm:pb-16 lg:pb-20")}>
         <MrCrumbs items={crumbs} tone="dark" />
-        <div className={cn("mt-10 grid items-center gap-12 lg:mt-14", image && "lg:grid-cols-12 lg:gap-14")}>
-          <div className={image ? "lg:col-span-6" : "max-w-4xl"}>
+        <div className={cn("mt-10 grid gap-12 lg:mt-14", image && "lg:grid-cols-12 lg:items-start lg:gap-14")}>
+          <div className={image ? "lg:col-span-6" : "max-w-3xl"}>
             <MrBadge tone="dark">{eyebrow}</MrBadge>
-            <h1 className="mt-6 text-h1">{title}</h1>
+            <h1 className={cn("mt-6 text-balance", image ? "text-[clamp(2.25rem,1.6rem+1.9vw,3.25rem)] leading-[1.06] tracking-[-0.032em]" : "text-h1")}>{title}</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-night-muted">{description}</p>
             {meta ? <div className="mt-7">{meta}</div> : null}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -176,13 +195,14 @@ export function MrHero({
             ) : null}
           </div>
           {image ? (
-            <div className="lg:col-span-6">
+            // Top edge level with the h1's first line (badge height + its margin), not centred on the column.
+            <div className="lg:col-span-6 lg:mt-[3.75rem]">
               {photo ? (
                 <div className="rounded-[1.25rem] bg-white/[0.05] p-1.5 shadow-[0_40px_120px_-32px_rgb(0_0_0/0.85)] ring-1 ring-white/12 sm:p-2">
                   <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={mrHalfSizes} preload className="h-auto w-full rounded-[0.875rem]" />
                 </div>
               ) : (
-                <MrWindow image={image} label={imageLabel ?? eyebrow} fit={imageFit} aspect={imageAspect} sizes={mrHalfSizes} preload tone="dark" chrome="bezel" />
+                <MrWindow image={image} label={screenCaption} fit={windowFit} aspect={windowAspect} focus={imageFocus} sizes={mrHalfSizes} preload tone="dark" chrome="bezel" />
               )}
             </div>
           ) : null}
@@ -203,49 +223,87 @@ type IconType = ComponentType<{ className?: string }>;
 type DarkTone = "light" | "night" | "dark";
 const nn = (i: number) => String(i + 1).padStart(2, "0");
 
+const isFigure = (s: Stat) => Boolean(s.value) && s.value !== "✓";
+
 /**
- * Stat cells divided by hairlines. A missing value or "✓" renders a check badge. Five items lay out
- * 2 + 2 + 1 on tablets and 3 + 2 from lg, so no row ends in an empty cell and ranges like "60–75%" fit.
+ * Published figures in cells divided by hairlines. Two or four figures sit two-up from phones (a 2 × 2
+ * block, with tighter cells and a smaller figure below sm, instead of one tall stack); five lay out
+ * 2 + 2 + 1 on tablets and 3 + 2 from lg, so no row ends in an empty cell and ranges like "60–75%" fit. Qualitative items (no value,
+ * or "✓") are not dressed up as figures: they follow the grid as a lighter row of check-marked notes,
+ * so the band never reads as more figures than it holds. If every item is qualitative, they fill the grid.
  */
 export function MrStats({ items, tone = "light" }: { items: Stat[]; tone?: DarkTone }) {
   const night = tone !== "light";
-  const five = items.length === 5;
+  const figures = items.filter(isFigure);
+  const notes = figures.length ? items.filter((s) => !isFigure(s)) : [];
+  const cells = figures.length ? figures : items;
+  const n = cells.length;
+  const five = n === 5;
+  /** Two-up from phones: an even count of cells (2 or 4) fills a 2-column grid with no empty cell. */
+  const pairs = n % 2 === 0;
+  const muted = night ? "text-night-muted" : "text-muted";
   return (
-    <ul
-      className={cn(
-        "grid gap-px overflow-hidden rounded-2xl border",
-        items.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2",
-        items.length === 4 && "lg:grid-cols-4",
-        five && "lg:grid-cols-6",
-        night ? "border-night-line bg-night-line" : "border-line bg-line",
-      )}
-    >
-      {items.map((s, i) => (
-        <li
-          key={s.label}
-          className={cn(
-            "flex flex-col p-6 sm:p-8",
-            night ? "bg-night-raised" : "bg-surface",
-            five && (i < 3 ? "lg:col-span-2" : "lg:col-span-3"),
-            items.length % 2 === 1 && items.length > 3 && i === items.length - 1 && "sm:col-span-2",
-          )}
-        >
-          <span aria-hidden className={cn("mb-6 block h-0.5 w-8 rounded-full", night ? "bg-logo-red" : "bg-signal")} />
-          <p className="flex min-h-12 items-end whitespace-nowrap text-[clamp(2.25rem,1.8rem+1.1vw,3rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums">
-            {s.value === "✓" || !s.value ? (
-              <span className={cn("inline-flex size-12 items-center justify-center rounded-full ring-1", night ? "bg-white/[0.06] text-night-text ring-white/15" : "bg-signal/[0.07] text-signal ring-signal/20")}>
-                <Check aria-hidden className="size-6" strokeWidth={2.5} />
-                <span className="sr-only">Included</span>
-              </span>
-            ) : (
-              s.value
+    <div>
+      <ul
+        className={cn(
+          "reveal grid gap-px overflow-clip rounded-2xl border",
+          n === 3 ? "sm:grid-cols-3" : pairs ? "grid-cols-2" : "sm:grid-cols-2",
+          n === 4 && "lg:grid-cols-4",
+          five && "lg:grid-cols-6",
+          night ? "border-night-line bg-night-line" : "border-line bg-line",
+        )}
+      >
+        {cells.map((s, i) => (
+          <li
+            key={s.label}
+            className={cn(
+              "flex min-w-0 flex-col sm:p-8",
+              pairs ? "p-5" : "p-6",
+              night ? "bg-night-raised" : "bg-surface",
+              five && (i < 3 ? "lg:col-span-2" : "lg:col-span-3"),
+              n % 2 === 1 && n > 3 && i === n - 1 && "sm:col-span-2",
             )}
-          </p>
-          <p className="mt-5 font-semibold leading-snug tracking-tight">{s.label}</p>
-          <p className={cn("mt-2 text-[0.9375rem] leading-relaxed", night ? "text-night-muted" : "text-muted")}>{s.body}</p>
-        </li>
-      ))}
-    </ul>
+          >
+            <span aria-hidden className={cn("mr-rule block h-0.5 w-8 rounded-full sm:mb-6", pairs ? "mb-4" : "mb-6", night ? "bg-logo-red" : "bg-signal")} />
+            <p
+              className={cn(
+                "flex items-end whitespace-nowrap font-semibold leading-none tracking-[-0.04em] tabular-nums sm:min-h-12 sm:text-[clamp(2.25rem,1.8rem+1.1vw,3rem)]",
+                pairs ? "min-h-10 text-[clamp(1.5rem,7.6vw,1.875rem)]" : "min-h-12 text-[2.25rem]",
+              )}
+            >
+              {isFigure(s) ? (
+                s.value
+              ) : (
+                <span className={cn("inline-flex size-10 items-center justify-center rounded-full ring-1", night ? "bg-white/[0.06] text-night-text ring-white/15" : "bg-signal/[0.07] text-signal ring-signal/20")}>
+                  <Check aria-hidden className="size-5" strokeWidth={2.5} />
+                  <span className="sr-only">Included</span>
+                </span>
+              )}
+            </p>
+            <p className={cn("font-semibold leading-snug tracking-tight sm:mt-5", pairs ? "mt-4 text-[0.9375rem] sm:text-base" : "mt-5")}>{s.label}</p>
+            <p className={cn("mt-2 leading-relaxed sm:text-[0.9375rem]", pairs ? "text-sm" : "text-[0.9375rem]", muted)}>{s.body}</p>
+          </li>
+        ))}
+      </ul>
+      {notes.length ? (
+        // A single note runs the full width (half a column wraps a one-line note onto two lines).
+        <ul className={cn("mt-8 grid gap-x-10 gap-y-4", notes.length > 1 && "sm:grid-cols-2")}>
+          {notes.map((s) => (
+            <li key={s.label} className="flex gap-3">
+              <span aria-hidden className="flex h-[1lh] shrink-0 items-center">
+                <span className={cn("flex size-5 items-center justify-center rounded-full ring-1", night ? "bg-white/[0.08] text-night-text ring-white/15" : "bg-signal/[0.07] text-signal ring-signal/20")}>
+                  <Check className="size-3" strokeWidth={3} />
+                </span>
+              </span>
+              <p className="leading-relaxed">
+                <span className="font-semibold tracking-tight">{s.label}</span>
+                <span className={muted}> — {s.body}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
@@ -257,7 +315,7 @@ export function MrStatsSection({ heading, items, eyebrow = "Measurable impact" }
         <div className="mt-12">
           <MrStats items={items} tone="night" />
         </div>
-        <p className="mt-6 text-sm text-night-muted">Figures as published by MapleRecord.</p>
+        <p className="mt-8 text-sm text-night-muted">{mrFiguresNote}</p>
       </Container>
     </Section>
   );
@@ -292,19 +350,19 @@ export function MrProblemSection({
     <Section tone={tone} aria-labelledby={id}>
       <Container>
         <SectionHeading id={id} eyebrow={eyebrow} title={heading} intro={intro} />
-        <ul className={cn("mt-12 grid gap-5 lg:gap-6", pairs ? "md:grid-cols-2" : "lg:grid-cols-3")}>
+        <ul className={cn("reveal mt-12 grid gap-5 lg:gap-6", pairs ? "md:grid-cols-2" : "lg:grid-cols-3")}>
           {items.map((p, i) => {
             const Icon = icons?.[i];
             return (
               <li
                 key={p.title}
                 className={cn(
-                  "relative flex flex-col overflow-hidden rounded-2xl p-7 ring-1 ring-line shadow-[0_1px_2px_rgb(17_17_17/0.04)] sm:p-8",
+                  "relative flex flex-col overflow-clip rounded-2xl p-7 ring-1 ring-line shadow-[0_1px_2px_rgb(17_17_17/0.04)] sm:p-8",
                   tone === "surface" ? "bg-paper" : "bg-surface",
                   !pairs && "md:flex-row md:gap-7 lg:flex-col lg:gap-0",
                 )}
               >
-                <span aria-hidden className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-signal via-signal/30 to-transparent" />
+                <span aria-hidden className="mr-rule absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-signal via-signal/30 to-transparent" />
                 {Icon ? (
                   <MrIconTile icon={Icon} className="text-signal" />
                 ) : (
@@ -329,6 +387,11 @@ export function MrProblemSection({
  * Connected step flow. `layout="vertical"` (default): numbered nodes joined by a rail, text beside them;
  * fits a half-width column. `layout="horizontal"`: nodes in a row joined left to right from lg (falls
  * back to vertical below lg); use it full width with 3–5 steps.
+ *
+ * Every node has the same neutral style (no step is singled out as "current"). In the vertical layout,
+ * where scroll-driven animations are supported and motion is allowed, each node fills with signal red
+ * and the rail below it draws down as that step passes the middle of the viewport (`.mr-steps` in
+ * globals.css: transform-only fills on a CSS view timeline, no JS). Otherwise the list stays static.
  */
 export function MrSteps({
   steps,
@@ -346,15 +409,14 @@ export function MrSteps({
     <span
       aria-hidden
       className={cn(
-        "relative z-[1] inline-flex size-10 shrink-0 items-center justify-center rounded-full font-mono text-sm font-medium",
-        i === 0
-          ? "bg-signal text-white shadow-[0_0_0_4px_rgb(208_0_0/0.12)]"
-          : dark
-            ? "bg-night-raised text-night-text ring-1 ring-white/20"
-            : "bg-surface text-ink ring-1 ring-line-strong shadow-[0_1px_2px_rgb(17_17_17/0.06)]",
+        "mr-step-node relative z-[1] inline-flex size-10 shrink-0 items-center justify-center rounded-full font-mono text-sm font-medium",
+        dark
+          ? "bg-night-raised text-night-text ring-1 ring-white/20"
+          : "bg-surface text-ink ring-1 ring-line-strong shadow-[0_1px_2px_rgb(17_17_17/0.06)]",
       )}
     >
-      {nn(i)}
+      <span className="mr-step-fill absolute inset-0 rounded-full bg-signal" />
+      <span className="mr-step-num relative">{nn(i)}</span>
     </span>
   );
   const rail = dark ? "bg-night-line" : "bg-line-strong/70";
@@ -384,10 +446,14 @@ export function MrSteps({
   }
 
   return (
-    <ol className={className}>
+    <ol className={cn("mr-steps", className)}>
       {steps.map((s, i) => (
         <li key={s.title} className="relative flex gap-5 pb-9 last:pb-0 sm:gap-6">
-          {i < steps.length - 1 ? <span aria-hidden className={cn("absolute bottom-0 left-5 top-10 w-px -translate-x-1/2", rail)} /> : null}
+          {i < steps.length - 1 ? (
+            <span aria-hidden className={cn("absolute bottom-0 left-5 top-10 w-px -translate-x-1/2", rail)}>
+              <span className="mr-step-rail absolute inset-0 bg-signal" />
+            </span>
+          ) : null}
           {node(i)}
           <div className="pt-1.5">
             <h3 className="text-lg font-semibold leading-snug tracking-tight">{s.title}</h3>
@@ -417,7 +483,7 @@ export function MrCardGrid({
 }) {
   const dark = tone === "dark";
   return (
-    <ul className={cn("grid gap-5 sm:grid-cols-2 lg:gap-6", columns === 3 && "lg:grid-cols-3")}>
+    <ul className={cn("reveal grid gap-5 sm:grid-cols-2 lg:gap-6", columns === 3 && "lg:grid-cols-3")}>
       {items.map((u, i) => {
         const Icon = icons?.[i];
         if (u.href) {
@@ -439,7 +505,7 @@ export function MrCardGrid({
               <MrIconTile icon={Icon} tone={dark ? "dark" : "light"} className="mb-5" />
             ) : (
               <p aria-hidden className={cn("mb-4 flex items-center gap-2.5 font-mono text-label", dark ? "text-night-muted" : "text-muted")}>
-                <span className={cn("h-px w-5", dark ? "bg-logo-red" : "bg-signal")} />
+                <span className={cn("mr-rule h-px w-5", dark ? "bg-logo-red" : "bg-signal")} />
                 {nn(i)}
               </p>
             )}
@@ -516,52 +582,75 @@ export function MrChecklist({
   );
 }
 
-/** Security & compliance: heading on the left, a compliance panel (shield header, two-column checklist) on the right. */
+/**
+ * Security & compliance: heading on the left; on the right a panel listing the items as hairline rows
+ * (one column, so odd counts never leave an empty cell and long items don't wrap awkwardly). The panel
+ * carries no title of its own unless `panelTitle` says something the eyebrow doesn't, so the section
+ * label isn't repeated, and the items are shown as written (no added "built-in" framing).
+ */
 export function MrSecuritySection({
   heading,
   intro,
   items,
   eyebrow = "Security & compliance",
-  panelTitle = "Security & compliance",
+  panelTitle,
   tone = "deep",
 }: {
   heading: string;
   intro: string;
   items: string[];
   eyebrow?: string;
-  /** Label in the panel's header. */
+  /** Optional label in the panel's header; omitted when it would repeat the eyebrow. */
   panelTitle?: string;
   tone?: "paper" | "surface" | "deep";
 }) {
+  const title = panelTitle && panelTitle.toLowerCase() !== eyebrow.toLowerCase() ? panelTitle : undefined;
   return (
     <Section tone={tone} aria-labelledby="security-title">
       <Container className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-14">
         <div className="lg:col-span-5">
           <SectionHeading id="security-title" eyebrow={eyebrow} title={heading} intro={intro} />
         </div>
-        <div className="overflow-hidden rounded-3xl bg-surface ring-1 ring-line shadow-[0_1px_2px_rgb(17_17_17/0.04),0_28px_56px_-36px_rgb(17_17_17/0.3)] lg:col-span-7">
-          <div className="flex items-center gap-4 border-b border-line bg-linear-to-b from-paper/70 to-surface px-6 py-5 sm:px-9">
-            <span aria-hidden className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-ink text-paper shadow-[0_6px_16px_-8px_rgb(17_17_17/0.6)]">
-              <ShieldCheck className="size-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="font-semibold leading-snug tracking-tight">{panelTitle}</p>
-              <p className="text-sm text-muted">Built into the MapleRecord platform</p>
+        <div className="relative overflow-hidden rounded-3xl bg-surface ring-1 ring-line shadow-[0_1px_2px_rgb(17_17_17/0.04),0_28px_56px_-36px_rgb(17_17_17/0.3)] lg:col-span-7">
+          {title ? (
+            <div className="flex items-center gap-4 border-b border-line px-6 py-5 sm:px-8">
+              <span aria-hidden className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-ink text-paper">
+                <ShieldCheck className="size-5" />
+              </span>
+              <p className="font-semibold leading-snug tracking-tight">{title}</p>
             </div>
-          </div>
-          <div className="px-6 py-7 text-[0.9375rem] text-ink-soft sm:px-9 sm:py-8">
-            <MrChecklist items={items} columns={2} className="gap-y-4" />
-          </div>
+          ) : null}
+          <ul className="reveal divide-y divide-line text-ink-soft">
+            {items.map((item) => (
+              <li key={item} className="flex items-center gap-4 px-6 py-4 sm:px-8 sm:py-[1.125rem]">
+                <span aria-hidden className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-signal/[0.07] text-signal ring-1 ring-signal/20">
+                  <Check className="size-3.5" strokeWidth={3} />
+                </span>
+                <span className="min-w-0">{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
     </Section>
   );
 }
 
-/** Closing call to action used on every MapleRecord page. */
-export function MrCta({ title, body }: { title: string; body: string }) {
+/**
+ * Closing call to action used on every MapleRecord page. The section ends on a hairline, and its grid
+ * fades out toward the bottom, so it reads as its own band above the dark site footer. The contact card
+ * states once that MapleRecord is designed and built by Maverick InnoGarage (messaging guide §5.5), and
+ * links to Maverick InnoGarage for implementation; pass `source` to add the
+ * "also published on maplerecord.com" link there (true for the site's home page, or a specific URL),
+ * e.g. on the overview, instead of a separate disclosure strip.
+ */
+export function MrCta({ title, body, source }: { title: string; body: string; source?: boolean | string }) {
+  const sourceUrl = source === true ? mrOfficial.site : source || undefined;
   return (
-    <section className="on-night mr-stage-dark relative overflow-hidden py-20 text-night-text sm:py-24 lg:py-28" aria-labelledby="mr-cta-title">
+    <section
+      className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line pb-16 pt-20 text-night-text sm:pb-20 sm:pt-24 lg:py-28"
+      aria-labelledby="mr-cta-title"
+    >
       <Container className="relative grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-14">
         <div className="lg:col-span-7">
           <Image src="/maplerecord/maplerecord-logo-white.svg" alt="MapleRecord" width={457} height={68} className="h-7 w-auto" />
@@ -574,12 +663,12 @@ export function MrCta({ title, body }: { title: string; body: string }) {
               Request a demo
             </ExternalLink>
             <ButtonLink href="/maplerecord/contact" variant="outline-night">
-              Contact MapleRecord
+              Contact sales
             </ButtonLink>
           </div>
         </div>
-        <div className="rounded-2xl bg-white/[0.04] p-6 text-[0.9375rem] ring-1 ring-white/10 backdrop-blur-sm sm:p-7 lg:col-span-5">
-          <p className="mb-3 font-mono text-label uppercase text-night-muted">Contact MapleRecord</p>
+        <div className="rounded-2xl bg-night-raised/80 p-6 text-[0.9375rem] ring-1 ring-white/10 sm:p-7 lg:col-span-5">
+          <p className="mb-3 font-mono text-label uppercase text-night-muted">Talk to the MapleRecord team</p>
           <a href={`mailto:${mrContact.email}`} className="flex min-h-11 items-center gap-3 hover:underline hover:underline-offset-4">
             <Mail aria-hidden className="size-4 text-night-muted" />
             {mrContact.email}
@@ -589,10 +678,29 @@ export function MrCta({ title, body }: { title: string; body: string }) {
             {mrContact.phone.display}
           </a>
           <div className="mt-2 border-t border-white/10 pt-4">
-            <p className="text-sm text-night-muted">MapleRecord is a Maverick InnoGarage product.</p>
+            <p className="text-sm text-night-muted">
+              {mrOwnership}
+              {sourceUrl ? (
+                <>
+                  {" "}
+                  Product details are also published on{" "}
+                  <a
+                    href={sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-6 items-center gap-0.5 text-night-text underline decoration-night-line underline-offset-4 hover:decoration-night-text"
+                  >
+                    maplerecord.com
+                    <ArrowUpRight aria-hidden className="size-3.5" />
+                    <span className="sr-only"> (opens maplerecord.com in a new tab)</span>
+                  </a>
+                  .
+                </>
+              ) : null}
+            </p>
             <Link href={contactHref("data-management")} className="mt-1 flex min-h-11 items-center gap-3 text-night-text hover:underline hover:underline-offset-4">
               <ArrowRight aria-hidden className="size-4 shrink-0 text-night-muted" />
-              Records programs and data governance with Maverick InnoGarage
+              Implement MapleRecord with Maverick InnoGarage
             </Link>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ComponentType } from "react";
+import type { ComponentType, CSSProperties } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -32,11 +32,16 @@ import { MrBadge, MrCrumbs, MrFeatureCard, MrIconTile, MrStage, MrWindow } from 
 import { MrSampleNote } from "@/features/maplerecord/mr-sections";
 import { getMrModules } from "@/lib/content/maplerecord";
 import { cn } from "@/lib/utils";
+import styles from "./mr-company.module.css";
 
 /*
  * Page sections for the MapleRecord company pages (/maplerecord/about and /maplerecord/contact).
- * They build on the shared MapleRecord design system in mr-ui.tsx and mr-sections.tsx.
+ * They build on the shared MapleRecord design system in mr-ui.tsx and mr-sections.tsx. Card grids rise in
+ * with the site's `reveal` (staggered per row); clickable cards share the `card-lift` hover (globals.css).
  */
+
+/** Stagger index for a grid item's reveal (see .stagger in mr-company.module.css). */
+const staggerStyle = (i: number, perRow: number) => ({ "--i": i % perRow }) as CSSProperties;
 
 type Icon = ComponentType<{ className?: string }>;
 
@@ -55,9 +60,15 @@ const industryIcons: Record<MrAboutIndustryIcon, Icon> = {
  * About
  * ---------------------------------------------------------------------------------------------- */
 
-/** The story window: half the container from lg (3.5rem gap), inside MrStage's padding (1.25 / 2 / 2.5rem). */
+/** The story window: 7 of 12 columns from lg (3.5rem gaps), inside MrStage's padding (1.25 / 2 / 2.5rem). */
 const storySizes =
-  "(min-width: 1248px) 29.25rem, (min-width: 1024px) calc(50vw - 9.75rem), (min-width: 640px) calc(100vw - 8rem), calc(100vw - 5rem)";
+  "(min-width: 1248px) 35.5rem, (min-width: 1024px) calc(58.3vw - 10rem), (min-width: 640px) calc(100vw - 8rem), calc(100vw - 5rem)";
+
+/**
+ * Zoom on the story screen's KPI cards and the Requests / Appeals donuts (left edge just past the sidebar,
+ * right edge at the Appeals card), so its figures are legible at this size instead of reading as texture.
+ */
+const storyFocus = { x: 40, y: 10, zoom: 1.9 };
 
 /** Mission and vision as two large statements: the lead clause in ink, the rest in muted ink. */
 export function MrPurposeSection() {
@@ -69,9 +80,9 @@ export function MrPurposeSection() {
     <Section aria-labelledby="purpose-title">
       <Container>
         <SectionHeading id="purpose-title" eyebrow={mrAbout.purpose.eyebrow} title={mrAbout.purpose.title} />
-        <div className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line lg:mt-14 md:grid-cols-2">
+        <div className="reveal mt-12 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line md:grid-cols-2 lg:mt-14">
           {statements.map((s, i) => (
-            <article key={s.label} className="flex flex-col bg-surface p-7 sm:p-10 lg:p-14">
+            <article key={s.label} className="flex flex-col bg-surface p-7 sm:p-10 lg:p-12">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <MrIconTile icon={s.icon} />
@@ -81,7 +92,7 @@ export function MrPurposeSection() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
-              <p className="mt-8 text-[clamp(1.375rem,1.15rem+0.8vw,1.875rem)] font-medium leading-[1.28] tracking-[-0.022em] lg:mt-10">
+              <p className="mt-8 max-w-[34ch] text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] font-medium leading-[1.35] tracking-[-0.018em]">
                 <span className="text-ink">{s.lead}</span> <span className="text-muted">{s.rest}</span>
               </p>
             </article>
@@ -92,41 +103,46 @@ export function MrPurposeSection() {
   );
 }
 
-/** Company story beside the platform it describes, with links to the five modules. */
+/**
+ * Company story: the heading across the top, then the story (5 columns) beside the platform it describes
+ * (7 columns): a product screen zoomed to its figures, with links to the five modules under it.
+ */
 export function MrStorySection() {
   const modules = getMrModules();
   return (
     <Section tone="surface" aria-labelledby="story-title">
-      <Container className="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-6">
-          <SectionHeading id="story-title" eyebrow="Our story" title={mrAbout.storyTitle} />
-          <div className="mt-8 space-y-5 text-[1.0625rem] leading-relaxed text-ink-soft">
+      <Container>
+        <SectionHeading id="story-title" eyebrow="Our story" title={mrAbout.storyTitle} />
+        <div className="mt-10 grid gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-14">
+          <div className="space-y-5 text-[1.0625rem] leading-relaxed text-ink-soft lg:col-span-5">
             {mrAbout.story.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
           </div>
-          <div className="mt-10 border-t border-line pt-8">
-            <h3 className="font-mono text-label uppercase text-muted">{mrAbout.modulesTitle}</h3>
-            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
-              {modules.map((m, i) => (
-                <li key={m.slug} className={cn(modules.length % 2 === 1 && i === modules.length - 1 && "sm:col-span-2")}>
-                  <Link
-                    href={`/maplerecord/platform/${m.slug}`}
-                    className="group flex min-h-12 items-center justify-between gap-3 rounded-xl bg-paper px-4 text-[0.9375rem] font-medium ring-1 ring-line transition-shadow hover:ring-ink"
-                  >
-                    {m.name}
-                    <ArrowRight aria-hidden className="size-4 text-muted transition-[color,transform] group-hover:translate-x-0.5 group-hover:text-signal" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="min-w-0 lg:col-span-7">
+            <div className="reveal">
+              <MrStage>
+                <MrWindow image={mrAbout.images.platform} label={mrAbout.images.platform.label} fit="top" aspect="wide" focus={storyFocus} sizes={storySizes} />
+              </MrStage>
+            </div>
+            <MrSampleNote className="mt-4" />
+            <div className="mt-10 border-t border-line pt-8">
+              <h3 className="font-mono text-label uppercase text-muted">{mrAbout.modulesTitle}</h3>
+              <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                {modules.map((m, i) => (
+                  <li key={m.slug} className={cn(modules.length % 2 === 1 && i === modules.length - 1 && "sm:col-span-2")}>
+                    <Link
+                      href={`/maplerecord/platform/${m.slug}`}
+                      className="card-lift group flex min-h-12 items-center justify-between gap-3 rounded-xl border border-line bg-paper px-4 text-[0.9375rem] font-medium hover:border-ink"
+                    >
+                      {m.name}
+                      <ArrowRight aria-hidden className="size-4 text-muted transition-[color,transform] group-hover:translate-x-0.5 group-hover:text-signal" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-        <div className="lg:sticky lg:top-40 lg:col-span-6">
-          <MrStage>
-            <MrWindow image={mrAbout.images.platform} label={mrAbout.images.platform.label} fit="top" aspect="wide" sizes={storySizes} />
-          </MrStage>
-          <MrSampleNote className="mt-4" />
         </div>
       </Container>
     </Section>
@@ -137,10 +153,10 @@ export function MrValuesSection() {
   return (
     <Section aria-labelledby="values-title">
       <Container>
-        <SectionHeading id="values-title" eyebrow="Our values" title={mrAbout.valuesTitle} intro={mrAbout.valuesIntro} />
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
-          {mrAbout.values.map((v) => (
-            <li key={v.title}>
+        <SectionHeading id="values-title" eyebrow="Our values" title={mrAbout.valuesTitle} />
+        <ul className={cn(styles.stagger, "mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4")}>
+          {mrAbout.values.map((v, i) => (
+            <li key={v.title} className="reveal" style={staggerStyle(i, 4)}>
               <MrFeatureCard icon={valueIcons[v.icon]} title={v.title} body={v.body} />
             </li>
           ))}
@@ -159,11 +175,13 @@ export function MrIndustriesSection() {
           <SectionHeading id="industries-title" eyebrow="Industries we serve" title={mrAbout.industriesTitle} />
           <ArrowLink href="/maplerecord/solutions">All solutions</ArrowLink>
         </div>
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
-          {mrAbout.industries.map((industry) => (
+        {/* Three columns only from xl: at 1024px a third of the row leaves the description ~12 characters wide. */}
+        <ul className={cn(styles.stagger, "mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 xl:grid-cols-3")}>
+          {mrAbout.industries.map((industry, i) => (
             <li
               key={industry.solution}
-              className="group relative flex h-full gap-5 rounded-2xl bg-surface p-6 ring-1 ring-line transition-shadow hover:ring-ink has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-signal sm:p-7"
+              style={staggerStyle(i, 3)}
+              className="reveal card-lift group relative flex h-full gap-5 rounded-2xl border border-line bg-surface p-6 hover:border-ink has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-signal sm:p-7"
             >
               <MrIconTile icon={industryIcons[industry.icon]} />
               <div className="min-w-0 flex-1">
@@ -225,7 +243,7 @@ function ContactRow({ href, icon, label, value }: { href: string; icon: Icon; la
   return (
     <a
       href={href}
-      className="group flex min-h-16 items-center gap-4 rounded-2xl bg-paper px-4 py-3 ring-1 ring-line transition-shadow hover:ring-ink"
+      className="card-lift group flex min-h-16 items-center gap-4 rounded-2xl border border-line bg-paper px-4 py-3 hover:border-ink"
     >
       <MrIconTile icon={icon} className="bg-surface" />
       <span className="min-w-0">
@@ -249,16 +267,18 @@ export function MrContactHub() {
           <MrIconTile icon={CalendarCheck} className="bg-signal text-white ring-0" />
           <h3 className="mt-6 text-h3">{demo.title}</h3>
           <p className="mt-3 max-w-[56ch] text-muted">{demo.body}</p>
-          <ul className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+          {/* Two columns at every width, so the six short fields take three rows on phones too. */}
+          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm sm:gap-x-6 sm:text-[0.9375rem]">
             {demo.fields.map((field) => (
-              <li key={field} className="flex items-center gap-2.5 text-[0.9375rem] sm:gap-3">
+              <li key={field} className="flex items-center gap-2">
                 <Check aria-hidden className="size-4 shrink-0 text-signal" />
                 {field}
               </li>
             ))}
           </ul>
-          <div className="mt-auto flex flex-col gap-3 pt-9 sm:flex-row sm:items-center sm:gap-5">
-            <ExternalLink href={mrOfficial.demo} variant="primary">
+          <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:items-center sm:gap-5">
+            {/* Never wraps: at lg the 7-column card is narrow enough that the label would break onto two lines. */}
+            <ExternalLink href={mrOfficial.demo} variant="primary" className="shrink-0 whitespace-nowrap">
               {demo.action}
             </ExternalLink>
             <p className="text-sm text-muted">{demo.note}</p>
@@ -277,7 +297,7 @@ export function MrContactHub() {
               <MapPin aria-hidden className="mt-0.5 size-4 shrink-0" />
               <span>
                 Offices in {mrContact.offices.map((o) => o.city).join(" and ")}.{" "}
-                <a href="#offices-title" className="inline-flex min-h-6 items-center font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-signal">
+                <a href="#offices" className="inline-flex min-h-6 items-center font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-signal">
                   See addresses
                 </a>
               </span>
@@ -289,16 +309,19 @@ export function MrContactHub() {
   );
 }
 
+/** A maps search for a published address (no coordinates or place ids are assumed). */
+const directionsHref = (lines: string[]) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lines.join(", "))}`;
+
 /** Office addresses, the Maverick InnoGarage route, and MapleRecord's legal pages. */
 export function MrContactOffices() {
   const { partner } = mrContact;
   return (
-    <Section tone="surface" spacing="compact" aria-labelledby="offices-title">
+    <Section id="offices" tone="surface" spacing="compact" aria-labelledby="offices-title">
       <Container>
         <SectionHeading id="offices-title" eyebrow="Offices" title="Where to find MapleRecord" />
-        <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-          {mrContact.offices.map((office) => (
-            <li key={office.label} className="flex flex-col rounded-2xl bg-paper p-6 ring-1 ring-line sm:p-7">
+        <ul className={cn(styles.stagger, "mt-10 grid gap-5 md:grid-cols-2 lg:mt-12 lg:grid-cols-3")}>
+          {mrContact.offices.map((office, i) => (
+            <li key={office.label} style={staggerStyle(i, 3)} className="reveal flex flex-col rounded-2xl bg-paper p-6 ring-1 ring-line sm:p-7">
               <MrIconTile icon={MapPin} className="bg-surface" />
               <p className="mt-5 font-mono text-label uppercase text-muted">{office.label}</p>
               <h3 className="mt-1.5 text-lg font-semibold tracking-tight">{office.city}</h3>
@@ -309,9 +332,14 @@ export function MrContactOffices() {
                   </span>
                 ))}
               </address>
+              <div className="mt-auto pt-5">
+                <ExternalLink href={directionsHref(office.lines)} newTabLabel="opens Google Maps in a new tab" className="text-[0.9375rem]">
+                  Get directions
+                </ExternalLink>
+              </div>
             </li>
           ))}
-          <li className="flex flex-col rounded-2xl bg-paper-deep p-6 ring-1 ring-line sm:p-7 md:col-span-2 lg:col-span-1">
+          <li style={staggerStyle(2, 3)} className="reveal flex flex-col rounded-2xl bg-paper-deep p-6 ring-1 ring-line sm:p-7 md:col-span-2 lg:col-span-1">
             <MrIconTile icon={Handshake} className="bg-surface" />
             <h3 className="mt-5 text-lg font-semibold tracking-tight">{partner.title}</h3>
             <p className="mt-2 text-[0.9375rem] text-muted">{partner.body}</p>
@@ -320,8 +348,9 @@ export function MrContactOffices() {
             </div>
           </li>
         </ul>
-        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
-          <p className="text-sm text-muted">MapleRecord’s legal terms are published on maplerecord.com:</p>
+        <p className="mt-6 text-sm text-muted">{mrContact.officesNote}</p>
+        <div className="mt-10 flex flex-col gap-2 border-t border-line pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
+          <p className="text-sm text-muted">MapleRecord’s Terms of Service and Privacy Policy live on maplerecord.com:</p>
           <ul className="flex flex-wrap gap-x-6">
             <li>
               <ExternalLink href={mrOfficial.terms} className="text-sm">

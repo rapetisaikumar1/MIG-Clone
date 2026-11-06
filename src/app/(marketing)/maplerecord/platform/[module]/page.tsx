@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { ButtonLink } from "@/components/ui/button";
-import { MrCta, MrHero, MrStatsSection } from "@/features/maplerecord/mr-sections";
+import { MrCta, MrHero, MrSampleNote, MrStatsSection } from "@/features/maplerecord/mr-sections";
 import {
   MrDarkChips,
   MrModuleAudience,
@@ -43,7 +43,13 @@ export default async function ModulePage({ params }: PageProps<"/maplerecord/pla
         image={m.hero.image}
         imageLabel={m.hero.image.label}
         officialUrl={m.officialUrl}
-        meta={<MrDarkChips label="Highlights" items={m.hero.trust.map((t) => ({ label: t }))} />}
+        meta={
+          <>
+            <MrDarkChips label="Highlights" items={m.highlights.map((h) => ({ label: h }))} />
+            {/* The sample-data note sits by the first product screen, as on the solution pages (once per page). */}
+            <MrSampleNote tone="dark" className="mt-4" />
+          </>
+        }
       >
         <ButtonLink href="#capabilities" variant="outline-night">
           Explore capabilities

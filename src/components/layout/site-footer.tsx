@@ -5,7 +5,8 @@ import { Container } from "@/components/ui/layout";
 import { CookieSettingsButton } from "@/features/consent/cookie-settings-button";
 import { Logo } from "./logo";
 
-const legalLinkClass = "inline-flex min-h-8 items-center hover:text-night-text hover:underline hover:underline-offset-4";
+const legalLinkClass =
+  "inline-flex min-h-11 items-center underline-offset-4 transition-colors hover:text-night-text hover:underline sm:min-h-8";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -13,21 +14,22 @@ export function SiteFooter() {
   // In the two-column (phone) layout the longest list spans two rows, so the short lists stack beside it.
   const longest = Math.max(...footerNav.map((g) => g.items.length));
   return (
-    <footer className="on-night bg-night text-night-text">
+    // The hairline top edge separates the footer from a night-toned section (e.g. a CTA band) right above it.
+    <footer className="on-night border-t border-night-line bg-night text-night-text">
       <Container className="py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-4 xl:col-span-3">
-            <Logo variant="white" width={132} />
-            <p className="mt-6 max-w-sm text-pretty text-[0.9375rem] leading-relaxed text-night-muted">{company.positioning}</p>
+            <Logo variant="white" width={132} loading="eager" />
+            <p className="mt-6 max-w-sm text-pretty text-[0.9375rem] leading-relaxed text-night-muted">{company.blurb}</p>
             {/* Two even columns where the column is narrow, so no pill is left alone on a second row. */}
-            <ul className="mt-8 grid max-w-xs grid-cols-2 gap-2 sm:flex sm:max-w-none sm:flex-wrap lg:grid lg:max-w-xs" aria-label="Social media">
+            <ul className="mt-8 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:grid lg:max-w-xs" aria-label="Social media">
               {company.social.map((s) => (
                 <li key={s.href}>
                   <a
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-night-line px-4 text-sm text-night-text transition-colors hover:border-night-muted"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-night-line px-4 text-sm text-night-text transition-colors hover:border-night-muted hover:bg-white/[0.04]"
                   >
                     {s.label}
                     <span className="sr-only"> (opens in a new tab)</span>
@@ -44,7 +46,7 @@ export function SiteFooter() {
                 <ul className="mt-4 space-y-1">
                   {group.items.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href} className="inline-flex min-h-10 items-center text-[0.9375rem] leading-snug hover:text-white hover:underline hover:underline-offset-4">
+                      <Link href={item.href} className="inline-flex min-h-10 items-center text-[0.9375rem] leading-snug underline-offset-4 transition-colors hover:text-white hover:underline">
                         <span>
                           {item.srPrefix ? <span className="sr-only">{item.srPrefix}</span> : null}
                           {item.label}
@@ -69,7 +71,7 @@ export function SiteFooter() {
                         {line}
                       </span>
                     ))}
-                    <a href={`tel:${office.phone.e164}`} className="inline-flex min-h-8 items-center text-night-text hover:underline hover:underline-offset-4">
+                    <a href={`tel:${office.phone.e164}`} className="inline-flex min-h-11 items-center text-night-text underline-offset-4 hover:underline sm:min-h-8">
                       {office.phone.display}
                     </a>
                   </address>

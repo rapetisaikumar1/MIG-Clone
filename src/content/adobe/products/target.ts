@@ -21,7 +21,7 @@ export const target: AdobeProduct = {
   },
   hero: {
     title: "Turn testing and personalization into a steady program.",
-    lead: "We implement Adobe Target, decide with you where personalization is worth the effort, design and analyze A/B and multivariate tests, and help keep the program running after launch.",
+    lead: "We implement Adobe Target, decide with you where personalization is worth the effort, design and analyze A/B and multivariate tests, and support the program after launch.",
   },
   overview: {
     heading: "What Adobe Target does",
@@ -76,7 +76,7 @@ export const target: AdobeProduct = {
     },
     {
       title: "Personalization strategy",
-      body: "We work out where personalization can make a difference, which audiences matter, and what content each one needs, before anything is built.",
+      body: "We identify with you where personalization can make a difference, which audiences matter and what content each one needs, before anything is built.",
       items: [
         "Audiences drawn from analytics, CRM and Real-Time CDP data",
         "A personalization roadmap prioritized against business goals",
@@ -92,13 +92,13 @@ export const target: AdobeProduct = {
         "Hypotheses and a backlog scored by impact, effort and traffic",
         "Sample size and test duration planning",
         "Builds in the Visual or Form-Based Experience Composer",
-        "Results analysis and a recommendation on what to do next",
+        "Results analysis and a documented next step for each test",
       ],
       provenance: "verified",
     },
     {
       title: "Ongoing support and management",
-      body: "We help run the program after launch so that tests keep shipping, results get used, and the implementation stays healthy.",
+      body: "We run the program with your team after launch, so tests keep shipping, results get used and the implementation stays healthy.",
       items: [
         "Activity QA, launch and monitoring",
         "Regular results reviews and backlog updates",
@@ -155,7 +155,7 @@ export const target: AdobeProduct = {
     {
       question: "Which AI-driven activities need Target Premium?",
       answer:
-        "Auto-Target, Automated Personalization and Recommendations require Target Premium. Auto-Allocate, which moves traffic toward the better-performing experience during an A/B test, doesn't. We'll help you work out what your current license supports and whether an upgrade would pay off for your traffic and content.",
+        "Auto-Target, Automated Personalization and Recommendations require Target Premium. Auto-Allocate, which moves traffic toward the better-performing experience during an A/B test, doesn't. We check what your current license supports and whether an upgrade would pay off for your traffic and content.",
     },
     {
       question: "Can Target personalize apps and server-side experiences?",
@@ -170,6 +170,6 @@ export const target: AdobeProduct = {
   ],
   cta: {
     title: "Get more from Adobe Target.",
-    body: "Tell us how you use Target today and what you want to improve, from a first test to a full program.",
+    body: "Tell us how you use Target today and what you want to improve, from a first test to a full program. We'll scope a practical first step with you.",
   },
 };

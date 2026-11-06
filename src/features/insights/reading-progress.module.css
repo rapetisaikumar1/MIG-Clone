@@ -1,0 +1,32 @@
+/*
+ * Reading progress for long articles: a 2px rule across the top of the viewport that grows with page scroll.
+ * Pure CSS (scroll-driven animation, transform only). Hidden where scroll timelines are unsupported and under
+ * reduced motion, so it never shows as a static, meaningless bar.
+ */
+.bar {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bar {
+      display: block;
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 45; /* above the sticky header (z-40), below menus and sheets (z-50) */
+      height: 2px;
+      background: var(--signal);
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      pointer-events: none;
+      animation: grow linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes grow {
+  to {
+    transform: scaleX(1);
+  }
+}

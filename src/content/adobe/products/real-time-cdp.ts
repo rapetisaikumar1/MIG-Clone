@@ -91,7 +91,7 @@ export const realTimeCdp: AdobeProduct = {
     },
     {
       title: "Personalization and campaign optimization",
-      body: "We help you turn audiences into targeted experiences and campaigns, then refine them based on what the results show.",
+      body: "We turn audiences into targeted experiences and campaigns with your marketing teams, then refine them based on what the results show.",
       items: [
         "Audience design for campaigns and personalization",
         "Activation to Adobe Target, email and advertising destinations",
@@ -159,12 +159,12 @@ export const realTimeCdp: AdobeProduct = {
     {
       question: "How is consent enforced when audiences are activated?",
       answer:
-        "At activation, Experience Platform checks the data usage labels on the audience's data, the marketing action set on the destination, and your policies, and it blocks an activation that would violate them. With Adobe Healthcare Shield or Privacy & Security Shield, consent policies also exclude profiles that lack the required consent. We help translate your own consent and data use rules into that configuration. It supports compliance but doesn't replace your legal or privacy review.",
+        "At activation, Experience Platform checks the data usage labels on the audience's data, the marketing action set on the destination, and your policies, and it blocks an activation that would violate them. With Adobe Healthcare Shield or Privacy & Security Shield, consent policies also exclude profiles that lack the required consent. We translate your own consent and data use rules into that configuration with your privacy team. It supports compliance but doesn't replace your legal or privacy review.",
     },
     {
       question: "Can you improve an existing Real-Time CDP setup?",
       answer:
-        "Yes. We often start with an assessment of your current sources, identity settings, audiences and destinations, then fix what's holding the setup back and extend it to new use cases.",
+        "Yes. We start with an assessment of your current sources, identity settings, audiences and destinations, then fix what's holding the setup back and extend it to new use cases.",
     },
     {
       question: "Which Real-Time CDP edition do we need?",
@@ -184,6 +184,6 @@ export const realTimeCdp: AdobeProduct = {
   ],
   cta: {
     title: "Put your customer profiles to work.",
-    body: "Tell us how you use Real-Time CDP today and which audiences matter most. We'll recommend where to start.",
+    body: "Tell us how you use Real-Time CDP today and which audiences matter most. We'll scope a practical first step with you.",
   },
 };

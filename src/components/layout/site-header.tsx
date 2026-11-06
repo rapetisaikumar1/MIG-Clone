@@ -1,4 +1,4 @@
-import { contactCta, getAdobeNav, getMapleRecordNav, primaryNav } from "@/config/navigation";
+import { contactCta, getAdobeNav, getMapleRecordNav, mobileNav, primaryNav } from "@/config/navigation";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/layout";
 import { AdobePartnerBadge } from "./adobe-partner-badge";
@@ -6,15 +6,21 @@ import { Logo } from "./logo";
 import { NavLinks } from "./nav-links";
 import { MobileNav } from "./mobile-nav";
 
+/**
+ * Sticky site header. The bar is near-opaque paper (a light blur only softens what scrolls beneath),
+ * so it keeps its paper tone over the night sections instead of turning a muddy grey; `site-header`
+ * adds a soft shadow under it once the page has scrolled (CSS scroll timeline, see globals.css).
+ */
 export function SiteHeader() {
   // Built here (server) so only labels and hrefs, not product content, reach the client menus.
   const adobe = getAdobeNav();
   const mapleRecord = getMapleRecordNav();
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md supports-[backdrop-filter]:bg-paper/75">
+    <header className="site-header sticky top-0 z-40 border-b border-line/80 bg-paper/[0.97] backdrop-blur-md">
       <Container className="flex h-[4.75rem] items-center justify-between gap-4 xl:gap-3">
-        <div className="flex shrink-0 items-center gap-2 min-[360px]:gap-3 sm:gap-5 xl:gap-3.5">
-          <Logo preload width={112} />
+        <div className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-5 xl:gap-3.5">
+          {/* A little smaller on phones, so the partner badge beside it can be drawn large enough to read "Bronze". */}
+          <Logo preload width={112} imageClassName="w-24 sm:w-28" />
           <AdobePartnerBadge />
         </div>
         <nav aria-label="Primary" className="hidden xl:block">
@@ -24,18 +30,23 @@ export function SiteHeader() {
           <ButtonLink href={contactCta.href} size="sm" className="hidden whitespace-nowrap sm:inline-flex xl:px-4">
             {contactCta.label}
           </ButtonLink>
-          <MobileNav items={primaryNav} cta={contactCta} adobe={adobe} mapleRecord={mapleRecord} />
+          {/* The sheet lists all four specializations; the desktop bar keeps seven items so it fits on one row. */}
+          <MobileNav items={mobileNav} cta={contactCta} adobe={adobe} mapleRecord={mapleRecord} />
         </div>
       </Container>
     </header>
   );
 }
 
+/**
+ * Visually hidden until focused (`not-focus:sr-only`, so focusing it never goes through the padding-less
+ * `not-sr-only` reset), then slid down into view with its full padding, above the header.
+ */
 export function SkipLink() {
   return (
     <a
       href="#main"
-      className="sr-only z-50 rounded-full bg-ink px-5 py-3 text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      className="fixed left-4 top-3 z-[70] inline-flex not-focus:sr-only min-h-11 -translate-y-[calc(100%+1rem)] items-center rounded-full bg-ink px-5 text-sm font-medium text-paper focus:translate-y-0 focus:shadow-[0_8px_24px_-8px_rgb(17_17_17/0.45)] focus-visible:outline-offset-2 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out-quint"
     >
       Skip to content
     </a>

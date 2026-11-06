@@ -1,19 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ComponentType, ReactNode } from "react";
+import type { ComponentType, CSSProperties, ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, CalendarDays, ChevronDown, Clock, MonitorPlay, Newspaper, Presentation, Tag } from "lucide-react";
 import { Container } from "@/components/ui/layout";
 import type { MrResourceHub } from "@/content/maplerecord/resources";
 import { formatDate } from "@/features/insights/format";
 import { MrBadge, MrCrumbs, MrIconTile } from "@/features/maplerecord/mr-ui";
+import { MrTocNav } from "@/features/maplerecord/resource-toc";
 import { getMrArticleExcerpt } from "@/lib/content/maplerecord";
 import type { MrArticle, MrArticleBlock } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
+import styles from "./mr-company.module.css";
 
 /*
  * MapleRecord resources: blog index cards, the editorial article layout (hero, body, table of
  * contents, source note) and the cards that link out to maplerecord.com's resource hubs.
- * Builds on the MapleRecord design system in mr-ui.tsx / mr-sections.tsx.
+ * Builds on the MapleRecord design system in mr-ui.tsx / mr-sections.tsx. Clickable cards use the site's
+ * shared `card-lift` hover and rise in with `reveal` (both motion-safe, globals.css).
  */
 
 type Crumb = { label: string; href?: string };
@@ -66,10 +69,21 @@ function tableOfContents(blocks: MrArticleBlock[]) {
 /* ---------- Shared bits ---------- */
 
 /** Category, date and reading time. Icons instead of "·" separators, so wrapped lines never start or end with one. */
-function ArticleMeta({ article, tone = "light", className }: { article: MrArticle; tone?: "light" | "dark"; className?: string }) {
+function ArticleMeta({
+  article,
+  tone = "light",
+  stacked,
+  className,
+}: {
+  article: MrArticle;
+  tone?: "light" | "dark";
+  /** Category on its own line, date and reading time together below it (for narrow text panels). */
+  stacked?: boolean;
+  className?: string;
+}) {
   return (
-    <p className={cn("flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-label uppercase", tone === "dark" ? "text-night-muted" : "text-muted", className)}>
-      <span className={cn("inline-flex items-center gap-1.5", tone === "dark" ? "text-night-text" : "text-signal")}>
+    <p className={cn("flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-label uppercase", stacked && "gap-y-2.5", tone === "dark" ? "text-night-muted" : "text-muted", className)}>
+      <span className={cn("inline-flex items-center gap-1.5", stacked && "basis-full", tone === "dark" ? "text-night-text" : "text-signal")}>
         <Tag aria-hidden className="size-3.5" />
         {article.category}
         <span className="sr-only">,</span>
@@ -97,8 +111,15 @@ function ReadCue({ children = "Read article" }: { children?: ReactNode }) {
   );
 }
 
+/**
+ * Clickable card: the shared `card-lift` hover/focus lift. A border (not a ring) draws the edge, because
+ * card-lift's shadow would replace a ring's box-shadow; keyboard focus shows as an outline.
+ */
 const cardSurface =
-  "group relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface ring-1 ring-line transition-[box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_1px_2px_rgb(17_17_17/0.05),0_20px_44px_-24px_rgb(17_17_17/0.3)] hover:ring-line-strong has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-signal";
+  "card-lift group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface hover:border-line-strong has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-signal";
+
+/** Stagger index for a grid item's reveal (see .stagger in mr-company.module.css). */
+const staggerStyle = (i: number, perRow: number) => ({ "--i": i % perRow }) as CSSProperties;
 
 /* ---------- Blog index ---------- */
 
@@ -120,7 +141,7 @@ export function MrFeaturedArticle({ article }: { article: MrArticle }) {
         </span>
       </div>
       <div className="flex flex-col p-6 sm:p-9 lg:col-span-5 lg:p-10 xl:p-12">
-        <ArticleMeta article={article} />
+        <ArticleMeta article={article} stacked />
         <h3 className="mt-5 text-[clamp(1.5rem,1.25rem+0.8vw,1.875rem)] font-semibold leading-[1.15] tracking-tight">
           <Link href={articleHref(article)} className="after:absolute after:inset-0 focus-visible:outline-none group-hover:underline group-hover:decoration-2 group-hover:underline-offset-[6px]">
             {article.title}
@@ -164,9 +185,9 @@ export function MrArticleCard({ article, headingLevel = "h3" }: { article: MrArt
 /** Grid of article cards: two columns for two articles, three from three. */
 export function MrArticleGrid({ articles, headingLevel }: { articles: MrArticle[]; headingLevel?: "h3" | "h4" }) {
   return (
-    <ul className={cn("grid gap-6 lg:gap-8", articles.length >= 2 && "md:grid-cols-2", articles.length >= 3 && "lg:grid-cols-3")}>
-      {articles.map((a) => (
-        <li key={a.slug}>
+    <ul className={cn(styles.stagger, "grid gap-6 lg:gap-8", articles.length >= 2 && "md:grid-cols-2", articles.length >= 3 && "lg:grid-cols-3")}>
+      {articles.map((a, i) => (
+        <li key={a.slug} className="reveal" style={staggerStyle(i, 3)}>
           <MrArticleCard article={a} headingLevel={headingLevel} />
         </li>
       ))}
@@ -181,26 +202,42 @@ const hubIcons: Record<MrResourceHub["kind"], ComponentType<{ className?: string
   media: Newspaper,
 };
 
-/** Card linking to a resource hub on maplerecord.com; says it opens the other site in a new tab. */
+/**
+ * Card linking to a resource hub on maplerecord.com; says it opens the other site in a new tab. A compact
+ * row (icon beside the text) on phones, a tile from sm.
+ */
 export function MrHubCard({ hub, className }: { hub: MrResourceHub; className?: string }) {
   const host = new URL(hub.href).hostname.replace(/^www\./, "");
   return (
-    <article className={cn(cardSurface, "p-6 sm:p-7", className)}>
-      <div className="flex items-start justify-between gap-4">
-        <MrIconTile icon={hubIcons[hub.kind]} />
-        <ArrowUpRight aria-hidden className="size-5 text-muted transition-[color,transform] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-signal" />
+    <article className={cn(cardSurface, "flex-row items-start gap-4 p-5 sm:flex-col sm:gap-0 sm:p-7", className)}>
+      <MrIconTile icon={hubIcons[hub.kind]} className="shrink-0" />
+      <ArrowUpRight
+        aria-hidden
+        className="absolute right-5 top-5 size-5 text-muted transition-[color,transform] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-signal sm:right-7 sm:top-7"
+      />
+      <div className="min-w-0 flex-1 sm:mt-6">
+        <h3 className="pr-8 text-lg font-semibold leading-snug tracking-tight sm:pr-0">
+          <a href={hub.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-6 items-center after:absolute after:inset-0 focus-visible:outline-none group-hover:underline group-hover:underline-offset-4">
+            {hub.title}
+            <span className="sr-only"> on {host} (opens in a new tab)</span>
+          </a>
+        </h3>
+        <p className="mt-1 text-[0.9375rem] text-muted sm:mt-2">{hub.body}</p>
       </div>
-      <h3 className="mt-6 text-lg font-semibold leading-snug tracking-tight">
-        <a href={hub.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-6 items-center after:absolute after:inset-0 focus-visible:outline-none group-hover:underline group-hover:underline-offset-4">
-          {hub.title}
-          <span className="sr-only"> on {host} (opens in a new tab)</span>
-        </a>
-      </h3>
-      <p className="mt-2 flex-1 text-[0.9375rem] text-muted">{hub.body}</p>
-      <p aria-hidden className="mt-6 border-t border-line pt-4 font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-muted">
-        {host}
-      </p>
     </article>
+  );
+}
+
+/** The four resource hubs, rising in one after another. */
+export function MrHubGrid({ hubs }: { hubs: MrResourceHub[] }) {
+  return (
+    <ul className={cn(styles.stagger, "grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6")}>
+      {hubs.map((h, i) => (
+        <li key={h.kind} className="reveal" style={staggerStyle(i, 4)}>
+          <MrHubCard hub={h} className="bg-paper" />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -222,19 +259,29 @@ export function MrArticleHero({ article, crumbs }: { article: MrArticle; crumbs:
   );
 }
 
-/** Featured image, pulled up over the hero's bottom edge. */
+/** Where to anchor each article photo's crop (object-position), so the subject stays in frame. */
+const imageFocus: Record<string, string> = {
+  "roi-of-modern-records-management": "50% 75%",
+};
+
+/**
+ * Featured image, pulled up over the hero's bottom edge. From lg it spans the reading column (8 of 12
+ * columns) rather than the full container: the source photos are 1080px wide, so this keeps them close to
+ * their own resolution instead of upscaling them to ~1150px.
+ */
 export function MrArticleImage({ article }: { article: MrArticle }) {
   return (
-    <Container className="relative -mt-20 sm:-mt-28 lg:-mt-36">
-      <figure className="overflow-hidden rounded-2xl bg-paper-deep shadow-[0_30px_80px_-32px_rgb(0_0_0/0.55)] ring-1 ring-black/10 sm:rounded-3xl">
+    <Container className="relative -mt-20 grid sm:-mt-28 lg:-mt-36 lg:grid-cols-12 lg:gap-14">
+      <figure className="overflow-hidden rounded-2xl bg-paper-deep shadow-[0_30px_80px_-32px_rgb(0_0_0/0.55)] ring-1 ring-black/10 sm:rounded-3xl lg:col-span-8">
         <Image
           src={article.image.src}
           alt={article.image.alt}
           width={article.image.width}
           height={article.image.height}
           preload
-          sizes="(min-width: 1248px) 72rem, (min-width: 1024px) calc(100vw - 6rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
-          className="aspect-[16/10] h-auto w-full object-cover sm:aspect-[2/1] lg:aspect-[21/9]"
+          sizes="(min-width: 1248px) 47rem, (min-width: 1024px) calc(66.7vw - 5.5rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
+          className="aspect-[16/10] h-auto w-full object-cover sm:aspect-[16/9]"
+          style={{ objectPosition: imageFocus[article.slug] ?? "50% 50%" }}
         />
       </figure>
     </Container>
@@ -302,19 +349,29 @@ function ArticleBody({ blocks, ids }: { blocks: MrArticleBlock[]; ids: Map<numbe
   );
 }
 
-function TocList({ toc }: { toc: TocEntry[] }) {
+/** The section being read (set by MrTocNav) reads in ink. */
+const currentLink = "aria-[current=location]:text-ink";
+
+/** `touch`: 44px rows for the phone disclosure; the desktop rail is denser. */
+function TocList({ toc, touch }: { toc: TocEntry[]; touch?: boolean }) {
   return (
-    <ol className="space-y-1 text-[0.9375rem]">
+    <ol className={cn("text-[0.9375rem]", !touch && "space-y-1")}>
       {toc.map((e) => (
         <li key={e.id}>
-          <a href={`#${e.id}`} className="flex min-h-8 items-center rounded-md py-1 leading-snug text-ink-soft underline-offset-4 hover:text-ink hover:underline">
+          <a
+            href={`#${e.id}`}
+            className={cn("flex items-center rounded-md py-1 leading-snug text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline", touch ? "min-h-11" : "min-h-8", currentLink)}
+          >
             {e.text}
           </a>
           {e.children.length ? (
-            <ol className="mb-2 ml-3 space-y-0.5 border-l border-line pl-3 text-sm">
+            <ol className={cn("ml-3 border-l border-line pl-3 text-sm", touch ? "mb-1" : "mb-2 space-y-0.5")}>
               {e.children.map((c) => (
                 <li key={c.id}>
-                  <a href={`#${c.id}`} className="flex min-h-7 items-center py-1 leading-snug text-muted underline-offset-4 hover:text-ink hover:underline">
+                  <a
+                    href={`#${c.id}`}
+                    className={cn("flex items-center py-1 leading-snug text-muted underline-offset-4 transition-colors hover:text-ink hover:underline", touch ? "min-h-11" : "min-h-7", currentLink)}
+                  >
                     {c.text}
                   </a>
                 </li>
@@ -329,7 +386,9 @@ function TocList({ toc }: { toc: TocEntry[] }) {
 
 /**
  * Article body in a ~68ch reading column, with an "On this page" table of contents: a disclosure
- * above the body on small screens, a sticky column beside it from lg. Ends with the source note.
+ * above the body on small screens, a sticky column beside it from lg. The sticky list is capped to the
+ * viewport and scrolls on its own; with JavaScript it marks the section being read (MrTocNav). A thin
+ * reading-progress rule tracks the body (CSS only). Ends with the source note.
  */
 export function MrArticleLayout({ article }: { article: MrArticle }) {
   const { toc, ids } = tableOfContents(article.blocks);
@@ -340,25 +399,33 @@ export function MrArticleLayout({ article }: { article: MrArticle }) {
         <details className="group/toc rounded-2xl bg-surface ring-1 ring-line lg:hidden">
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-5 font-mono text-label uppercase text-ink-soft [&::-webkit-details-marker]:hidden">
             On this page
-            <ChevronDown aria-hidden className="size-4 transition-transform duration-200 group-open/toc:rotate-180" />
+            <ChevronDown aria-hidden className="size-4 transition-transform duration-200 group-open/toc:rotate-180 motion-reduce:transition-none" />
           </summary>
-          <nav aria-label="On this page" className="border-t border-line px-5 pb-4 pt-3">
-            <TocList toc={toc} />
-          </nav>
+          <MrTocNav className="border-t border-line px-5 pb-3 pt-2">
+            <TocList toc={toc} touch />
+          </MrTocNav>
         </details>
       ) : null}
-      <div className="min-w-0 lg:col-span-8">
+      <div className={cn(styles.article, "min-w-0 lg:col-span-8")}>
+        <span aria-hidden className={styles.progress} />
         <ArticleBody blocks={article.blocks} ids={ids} />
         <SourceNote article={article} />
       </div>
       {hasToc ? (
         <div className="hidden lg:col-span-4 lg:block xl:col-span-3 xl:col-start-10">
-          <nav aria-label="On this page" className="sticky top-40 border-l border-line pl-6">
+          <MrTocNav className="sticky top-28">
             <p className="font-mono text-label uppercase text-muted">On this page</p>
-            <div className="mt-4">
-              <TocList toc={toc} />
+            <div data-toc-scroll className={cn(styles.tocScroll, "mt-4 max-h-[calc(100dvh-11rem)] overflow-y-auto overscroll-contain pb-10")}>
+              <div className="relative border-l border-line pl-6">
+                <span
+                  data-toc-marker
+                  aria-hidden
+                  className="absolute -left-px top-0 h-px w-0.5 origin-top bg-signal opacity-0 transition-[transform,opacity] duration-200 ease-out motion-reduce:transition-none"
+                />
+                <TocList toc={toc} />
+              </div>
             </div>
-          </nav>
+          </MrTocNav>
         </div>
       ) : null}
     </Container>
@@ -371,9 +438,9 @@ function SourceNote({ article }: { article: MrArticle }) {
       <div className="flex items-start gap-4">
         <Image aria-hidden src="/maplerecord/maplerecord-leaf.svg" alt="" width={76} height={68} className="mt-1 h-auto w-7 shrink-0" />
         <div>
-          <p className="font-semibold tracking-tight">Published by MapleRecord</p>
+          <p className="font-semibold tracking-tight">From the MapleRecord team</p>
           <p className="mt-1 text-[0.9375rem] text-ink-soft">
-            Originally published on the official MapleRecord blog on <time dateTime={article.published}>{formatDate(article.published)}</time>.
+            First published on maplerecord.com, MapleRecord’s product site, on <time dateTime={article.published}>{formatDate(article.published)}</time>.
           </p>
         </div>
       </div>

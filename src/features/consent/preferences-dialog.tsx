@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { Dialog, Switch } from "radix-ui";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Lock, X } from "lucide-react";
 import { consentCategories, type CategoryInfo, type ConsentChoices, type OptionalCategory } from "./config";
 import { cn } from "@/lib/utils";
 
 const outlineButton = cn(
   "inline-flex min-h-11 items-center justify-center rounded-full border border-ink/25 px-4 text-center text-sm font-medium leading-tight text-ink",
-  "transition-[background-color,border-color,transform] duration-200 ease-out hover:border-ink hover:bg-ink/[0.03] active:translate-y-px",
+  "transition-[background-color,border-color,translate] duration-200 ease-out hover:border-ink hover:bg-ink/[0.03] active:translate-y-px",
 );
 
 type PreferencesDialogProps = {
@@ -57,7 +57,7 @@ export function PreferencesDialog({
             </div>
             <Dialog.Close
               aria-label="Close"
-              className="-mt-1 -mr-1 inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:border-ink/40"
+              className="-mt-1 -mr-1 inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:border-ink/40 hover:bg-ink/[0.03]"
             >
               <X aria-hidden className="size-5" />
             </Dialog.Close>
@@ -101,7 +101,7 @@ export function PreferencesDialog({
             <button
               type="button"
               onClick={onSave}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-[background-color,transform] duration-200 ease-out hover:bg-ink-soft active:translate-y-px sm:ml-auto"
+              className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-[background-color,translate] duration-200 ease-out hover:bg-ink-soft active:translate-y-px sm:ml-auto"
             >
               Save preferences
             </button>
@@ -148,10 +148,13 @@ function CategoryRow({
             "group relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200",
             "bg-line-field data-[state=checked]:bg-signal",
             "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal",
-            "disabled:cursor-not-allowed disabled:opacity-55",
+            // The required category is locked on: a solid neutral fill with a lock, not a faded red that reads as an error.
+            "disabled:cursor-not-allowed disabled:data-[state=checked]:bg-ink-soft",
           )}
         >
-          <Switch.Thumb className="block size-6 rounded-full bg-white shadow-[0_1px_3px_rgb(17_17_17/0.3)] transition-transform duration-200 ease-out data-[state=checked]:translate-x-5" />
+          <Switch.Thumb className="flex size-6 items-center justify-center rounded-full bg-white text-ink-soft shadow-[0_1px_3px_rgb(17_17_17/0.3)] transition-transform duration-200 ease-out data-[state=checked]:translate-x-5">
+            {category.required ? <Lock aria-hidden className="size-3" strokeWidth={2.25} /> : null}
+          </Switch.Thumb>
         </Switch.Root>
       </div>
       <p id={descriptionId} className="mt-1 max-w-[52ch] text-sm leading-relaxed text-ink-soft">

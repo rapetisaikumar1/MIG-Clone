@@ -1,0 +1,255 @@
+/*
+ * Home hero background. Everything here is decorative (aria-hidden) and static unless motion is allowed.
+ * Moving parts animate transform/opacity only; no blur filters. The grid is centred on the page so its
+ * vertical lines sit symmetrically around the content, and it fades out towards the edges.
+ */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Dark stage (as on the MapleRecord banner): a soft warm light behind the diagram, a red aurora and a warm
+   glow that drift slowly. Gradients only, no blur filters. */
+.light {
+  position: absolute;
+  width: 62rem;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgb(241 239 233 / 0.07) 0%, rgb(241 239 233 / 0.03) 45%, transparent 100%);
+  left: 50%;
+  bottom: -26rem;
+  translate: -50% 0;
+}
+
+.ember {
+  position: absolute;
+  width: 46rem;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgb(208 0 0 / 0.3) 0%, rgb(208 0 0 / 0.11) 50%, transparent 100%);
+  left: 50%;
+  bottom: -24rem;
+  translate: -50% 0;
+}
+
+.glow {
+  position: absolute;
+  width: 40rem;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgb(241 239 233 / 0.07) 0%, rgb(241 239 233 / 0.025) 55%, transparent 100%);
+  left: 8%;
+  top: -14rem;
+  translate: -50% 0;
+}
+
+@media (min-width: 64rem) {
+  .light {
+    left: 73%;
+    top: 50%;
+    bottom: auto;
+    translate: -50% -50%;
+  }
+  .ember {
+    left: 80%;
+    top: 26%;
+    bottom: auto;
+    translate: -50% -50%;
+  }
+}
+
+/* Data-city canvas (HeroDataField). Kept calmer behind the headline column so text stays easy to read. */
+.field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0.55) 45%, #000 75%);
+}
+@media (min-width: 64rem) {
+  .field {
+    opacity: 1;
+    mask-image: linear-gradient(to right, rgb(0 0 0 / 0.5) 0%, rgb(0 0 0 / 0.5) 36%, #000 60%);
+  }
+}
+
+/* Fine grid that fades out towards the edges (mask on the wrapper, so moving children stay masked). */
+.gridMask {
+  position: absolute;
+  inset: 0;
+  mask-image: radial-gradient(85% 80% at 62% 42%, #000 35%, transparent 100%);
+}
+
+.grid,
+.spotGrid {
+  background-image:
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.grid {
+  --grid-line: rgb(241 239 233 / 0.05);
+  position: absolute;
+  inset: 0;
+  /* Vertical lines at 50% ± n·56px, horizontal lines at n·56px from the top. */
+  background-position: calc(50% + 28px) 0;
+}
+
+/*
+ * Travelling highlights: a short red comet running along a grid line now and then.
+ * Each pulse is a 1px track as wide (or tall) as the hero, moved with transform only.
+ */
+.pulseX,
+.pulseY {
+  position: absolute;
+  display: none;
+}
+.pulseX {
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgb(255 40 30 / 0) 4%, rgb(255 40 30 / 0.85) 13%, transparent 13.4%);
+}
+.pulseY {
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, rgb(255 40 30 / 0) 4%, rgb(255 40 30 / 0.8) 13%, transparent 13.4%);
+}
+
+/* Pointer light (fine pointers only, enabled from JS): a brighter patch of grid that follows the cursor. */
+.spot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36rem;
+  height: 36rem;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+  background: radial-gradient(closest-side, rgb(241 239 233 / 0.06), transparent);
+  will-change: transform;
+}
+.spot[data-active="true"] {
+  opacity: 1;
+}
+.spotGrid {
+  --grid-line: rgb(241 239 233 / 0.13);
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  mask-image: radial-gradient(closest-side, #000 0%, transparent 100%);
+}
+
+/* Soft hand-off into the section border, so the grid never ends in a hard cut. */
+.foot {
+  position: absolute;
+  inset: auto 0 0;
+  height: 7rem;
+  background: linear-gradient(to bottom, transparent, var(--night));
+}
+
+/* Signal nodes: small red points on grid intersections near the diagram that glow in turn (lg up). */
+.node {
+  position: absolute;
+  display: none;
+  width: 5px;
+  height: 5px;
+  margin: -2px 0 0 -2px;
+  border-radius: 9999px;
+  background: rgb(255 40 30);
+  box-shadow: 0 0 0 4px rgb(255 40 30 / 0.12);
+  opacity: 0.35;
+}
+@media (min-width: 64rem) {
+  .node {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ember {
+    animation: ember-drift 28s ease-in-out infinite alternate;
+  }
+  .glow {
+    animation: glow-drift 34s ease-in-out infinite alternate;
+  }
+  .node {
+    animation: node-glow 7s ease-in-out var(--node-delay, 0s) infinite;
+  }
+
+  .pulseX,
+  .pulseY {
+    display: block;
+    animation: pulse-x var(--pulse-duration, 16s) linear var(--pulse-delay, 0s) infinite both;
+  }
+  .pulseY {
+    animation-name: pulse-y;
+  }
+}
+
+/* The highlight rows and columns are placed for the two-column hero. In the stacked layout they would
+   run behind the headline, lead and figure caption, so they only appear from lg up. */
+@media (max-width: 63.999rem) {
+  .pulseX,
+  .pulseY {
+    display: none;
+  }
+}
+
+@keyframes glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(12%, 10%, 0) scale(1.12);
+  }
+}
+
+@keyframes node-glow {
+  0%,
+  70%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes ember-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-7%, 6%, 0) scale(1.08);
+  }
+}
+
+/* Travel across in the first ~40% of the cycle, then rest off-screen. */
+@keyframes pulse-x {
+  0% {
+    transform: translate3d(-14%, 0, 0);
+  }
+  40%,
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes pulse-y {
+  0% {
+    transform: translate3d(0, -14%, 0);
+  }
+  40%,
+  100% {
+    transform: translate3d(0, 100%, 0);
+  }
+}

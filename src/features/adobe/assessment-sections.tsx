@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { company } from "@/config/site";
 import type { AdobeAssessmentContent } from "@/content/adobe/assessment";
 import { AdobePartnerPanel } from "@/features/adobe/partner-panel";
 import { contactHref } from "@/features/contact/links";
@@ -9,6 +7,7 @@ import { Breadcrumbs } from "@/features/services/sections";
 import { adobeProductPath, adobeServicesPath } from "@/lib/content/adobe";
 import type { AdobeProduct } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
+import motion from "./motion.module.css";
 
 type Content = AdobeAssessmentContent;
 
@@ -26,7 +25,11 @@ export function AssessmentHero({ content, breadcrumbs }: { content: Content; bre
         <Breadcrumbs items={breadcrumbs} />
         <div className="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <Eyebrow>{content.hero.eyebrow}</Eyebrow>
+            {/* A multi-term eyebrow can wrap on phones: as on the service heroes, keep the dot on the first line and
+                each separator with the term before it, so a wrapped line never starts with "·". */}
+            <Eyebrow className="items-start [&>span:first-child]:mt-[0.2rem]">
+              <span>{content.hero.eyebrow.replaceAll(" · ", "\u00a0· ")}</span>
+            </Eyebrow>
             <h1 id="assessment-title" className="mt-6 text-h1">
               {content.hero.title}
             </h1>
@@ -45,9 +48,11 @@ export function AssessmentHero({ content, breadcrumbs }: { content: Content; bre
               <Dot />
               {content.summary.title}
             </h2>
+            {/* Label beside value, except in the narrow lg column (1024–1279), where a 7rem label column would
+                squeeze each value to two or three words a line. */}
             <dl className="mt-6 divide-y divide-line border-y border-line">
               {content.summary.items.map((item) => (
-                <div key={item.label} className="grid gap-1 py-4 sm:grid-cols-[7rem_1fr] sm:gap-4">
+                <div key={item.label} className="grid gap-1 py-4 sm:grid-cols-[7rem_1fr] sm:gap-4 lg:max-xl:grid-cols-1 lg:max-xl:gap-1">
                   <dt className="pt-0.5 font-mono text-label uppercase text-muted">{item.label}</dt>
                   <dd className="font-medium leading-snug">{item.value}</dd>
                 </div>
@@ -67,17 +72,19 @@ export function SituationsSection({ content }: { content: Content }) {
     <Section tone="surface" aria-labelledby="situations-title">
       <Container>
         <SectionHeading id="situations-title" eyebrow={s.eyebrow} title={s.title} intro={s.intro} />
-        <ul className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="reveal mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {s.items.map((item) => (
             <li key={item.title} className="border-t border-line-strong pt-6">
-              <Dot />
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{item.title}</h3>
+              <h3 className="flex items-baseline gap-3 text-lg font-semibold tracking-tight">
+                <Dot className="-translate-y-0.5" />
+                {item.title}
+              </h3>
               <p className="mt-2 text-muted">{item.body}</p>
             </li>
           ))}
           <li className="border-t border-ink pt-6">
             <p className="font-mono text-label uppercase text-muted">Something else?</p>
-            <p className="mt-5 text-lg font-semibold tracking-tight">Tell us what you&apos;re trying to solve.</p>
+            <p className="mt-2 text-lg font-semibold tracking-tight">Tell us what you&apos;re trying to solve.</p>
             <ArrowLink href={contactHref("adobe-services")} className="mt-3">
               Describe your setup
             </ArrowLink>
@@ -88,41 +95,48 @@ export function SituationsSection({ content }: { content: Content }) {
   );
 }
 
+/** Card chrome for the review grid; from sm, subgrid rows keep titles, lists and links aligned across a row. */
+const reviewCard = "flex flex-col rounded-2xl p-6 sm:row-span-4 sm:mb-5 sm:grid sm:grid-rows-subgrid sm:gap-y-0 sm:p-7";
+
+/**
+ * Per-application review areas, then the cross-cutting areas at full width. The seven application cards plus
+ * the "another application" card fill even rows: 2×4 from sm, and 3 + 3 + (1 + the wide "another" card) from lg.
+ * The partner statement closes the section and covers the Adobe trademark notice.
+ */
 export function ReviewSection({ content, products }: { content: Content; products: AdobeProduct[] }) {
   const r = content.review;
+  const chip =
+    "inline-flex min-h-11 items-center gap-2.5 rounded-full border border-line-strong px-4 text-sm font-medium text-ink transition-colors hover:border-ink hover:bg-surface";
   return (
     <Section id="what-we-review" aria-labelledby="review-title">
       <Container>
         <SectionHeading id="review-title" eyebrow={r.eyebrow} title={r.title} intro={r.intro} />
 
+        {/* Plain anchors, not next/link: a real hash navigation is what makes the destination card match :target. */}
         <nav aria-label="Jump to an Adobe application" className="mt-10">
           <ul className="flex flex-wrap gap-2">
             {products.map((p) => (
               <li key={p.slug}>
-                <Link
-                  href={`#review-${p.slug}`}
-                  className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-4 text-sm font-medium text-ink transition-colors hover:border-ink"
-                >
+                <a href={`#review-${p.slug}`} className={chip}>
                   {p.shortName}
-                </Link>
+                </a>
               </li>
             ))}
             <li>
-              <Link
-                href="#review-cross-cutting"
-                className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
-              >
+              {/* Same outline as its siblings (these are links, not a selected filter); the dot marks the shared area. */}
+              <a href="#review-cross-cutting" className={chip}>
+                <Dot />
                 {r.crossCutting.title}
-              </Link>
+              </a>
             </li>
           </ul>
         </nav>
 
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="reveal mt-12 grid gap-5 sm:-mb-5 sm:grid-cols-2 sm:gap-y-0 lg:grid-cols-3">
           {products.map((p) => {
             const areas = r.byProduct[p.slug];
             return (
-              <li key={p.slug} id={`review-${p.slug}`} className="flex flex-col rounded-2xl border border-line bg-surface p-6 sm:p-7">
+              <li key={p.slug} id={`review-${p.slug}`} className={cn(reviewCard, motion.target, "border border-line bg-surface")}>
                 <p className="font-mono text-label uppercase text-muted">{p.area}</p>
                 <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">{p.name}</h3>
                 <ul className="mt-5 space-y-2 text-[0.9375rem] text-ink-soft">
@@ -141,8 +155,7 @@ export function ReviewSection({ content, products }: { content: Content; product
               </li>
             );
           })}
-          {/* Fills the slot beside the seventh card in the two-column layout; from lg the cross-cutting card does. */}
-          <li className="flex flex-col rounded-2xl border border-dashed border-line-strong p-6 sm:p-7 lg:hidden">
+          <li className={cn(reviewCard, "border border-dashed border-line-strong lg:col-span-2")}>
             <p className="font-mono text-label uppercase text-muted">Other applications</p>
             <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">{r.other.title}</h3>
             <p className="mt-2 text-[0.9375rem] text-muted">{r.other.body}</p>
@@ -154,29 +167,31 @@ export function ReviewSection({ content, products }: { content: Content; product
           </li>
           <li
             id="review-cross-cutting"
-            className="on-night rounded-2xl bg-night p-6 text-night-text sm:col-span-2 sm:p-7"
+            className={cn(motion.target, "on-night col-span-full rounded-2xl bg-night p-6 text-night-text sm:mb-5 sm:p-8 lg:p-10")}
           >
-            <p className="font-mono text-label uppercase text-night-muted">Cross-cutting</p>
-            <h3 id="cross-cutting-title" className="mt-3 text-lg font-semibold leading-snug tracking-tight">
-              {r.crossCutting.title}
-            </h3>
-            <p className="mt-2 max-w-[60ch] text-[0.9375rem] text-night-muted">{r.crossCutting.intro}</p>
-            <ul className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-              {r.crossCutting.items.map((item) => (
-                <li key={item.title} className="flex gap-3">
-                  <Rule night />
-                  <span>
-                    <span className="block font-medium">{item.title}</span>
-                    <span className="mt-1 block text-[0.9375rem] text-night-muted">{item.body}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-4">
+                <p className="font-mono text-label uppercase text-night-muted">Cross-cutting</p>
+                <h3 id="cross-cutting-title" className="mt-3 text-h3">
+                  {r.crossCutting.title}
+                </h3>
+                <p className="mt-3 max-w-[60ch] text-[0.9375rem] text-night-muted">{r.crossCutting.intro}</p>
+              </div>
+              <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:col-span-8">
+                {r.crossCutting.items.map((item) => (
+                  <li key={item.title} className="flex gap-3">
+                    <Rule night />
+                    <span>
+                      <span className="block font-medium">{item.title}</span>
+                      <span className="mt-1 block text-[0.9375rem] text-night-muted">{item.body}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </li>
         </ul>
-        <p className="mt-8 max-w-3xl text-sm text-muted">
-          Adobe and the Adobe product names above are trademarks of Adobe Inc. {company.name} is an independent consultancy.
-        </p>
+        <AdobePartnerPanel className="mt-16" />
       </Container>
     </Section>
   );
@@ -188,8 +203,10 @@ export function StepsSection({ content }: { content: Content }) {
     <Section tone="night" aria-labelledby="steps-title">
       <Container>
         <SectionHeading tone="night" id="steps-title" eyebrow={s.eyebrow} title={s.title} intro={s.intro} />
-        <ol className="relative mt-14 grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-4">
+        <ol className="reveal relative mt-14 grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-4">
+          {/* Hairline track, with a lighter line drawn over it as the steps scroll into view (motion.module.css). */}
           <span aria-hidden className="absolute left-0 right-0 top-[1.375rem] hidden h-px bg-night-line xl:block" />
+          <span aria-hidden className={cn(motion.connector, "absolute left-0 right-0 top-[1.375rem] hidden h-px bg-night-muted/70 xl:block")} />
           {s.items.map((step, i) => (
             <li key={step.title} className="relative flex flex-col">
               <span
@@ -228,13 +245,9 @@ export function AssessmentDeliverables({ content }: { content: Content }) {
           <div className="lg:col-span-4">
             <SectionHeading id="deliverables-title" eyebrow={d.eyebrow} title={d.title} intro={d.intro} />
           </div>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+          <ul className="reveal grid gap-4 sm:grid-cols-2 lg:col-span-8">
             {d.items.map((item) => (
-              <li key={item.title} className="relative rounded-2xl border border-line bg-surface p-6 pr-12">
-                <svg aria-hidden viewBox="0 0 20 24" className="absolute right-5 top-6 h-6 w-5 text-line-strong">
-                  <path d="M1 1 H13 L19 7 V23 H1 Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M13 1 V7 H19" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                </svg>
+              <li key={item.title} className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
                 <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
                 <p className="mt-2 text-[0.9375rem] text-muted">{item.body}</p>
               </li>
@@ -255,30 +268,16 @@ export function RequirementsSection({ content }: { content: Content }) {
           <div className="lg:col-span-5">
             <SectionHeading id="requirements-title" eyebrow={r.eyebrow} title={r.title} intro={r.intro} />
           </div>
-          <ol className="border-t border-ink lg:col-span-7">
-            {r.items.map((item, i) => (
-              <li key={item.title} className="grid gap-2 border-b border-line py-6 sm:grid-cols-[3rem_11rem_1fr] sm:gap-6">
-                <span aria-hidden className="font-mono text-label text-muted sm:pt-1">
-                  {pad(i + 1)}
-                </span>
+          {/* Not a sequence, so no step numbers. */}
+          <ul className="border-t border-ink lg:col-span-7">
+            {r.items.map((item) => (
+              <li key={item.title} className="grid gap-2 border-b border-line py-6 sm:grid-cols-[11rem_1fr] sm:gap-6">
                 <h3 className="text-lg font-semibold leading-snug tracking-tight">{item.title}</h3>
                 <p className="text-muted">{item.body}</p>
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
-      </Container>
-    </Section>
-  );
-}
-
-/** Renders nothing when the partner statement is switched off (company.adobePartner.verified). */
-export function AssessmentPartnerSection() {
-  if (!company.adobePartner.verified) return null;
-  return (
-    <Section tone="deep" spacing="compact" aria-label="Adobe partnership">
-      <Container>
-        <AdobePartnerPanel />
       </Container>
     </Section>
   );

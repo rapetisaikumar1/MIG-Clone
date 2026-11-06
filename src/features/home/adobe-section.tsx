@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
+import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { AdobePartnerPanel } from "@/features/adobe/partner-panel";
 import { adobeAssessmentPath, adobeProductPath, adobeServicesPath, getAdobeProducts } from "@/lib/content/adobe";
@@ -17,65 +17,69 @@ function groupByArea(products: AdobeProduct[]) {
   return groups;
 }
 
-/** Home page showcase of the Adobe practice: applications by area, the partner statement and the assessment entry point. */
+/**
+ * Home page showcase of the Adobe Services section: an application map by capability area, the assessment entry
+ * point and the partner statement. Product descriptions are left to /adobe-services and the header menu,
+ * so the home page shows names and areas only.
+ */
 export function AdobeSection() {
   const groups = groupByArea(getAdobeProducts());
 
   return (
-    <Section id="adobe" tone="deep" aria-labelledby="adobe-title">
+    <Section id="adobe" aria-labelledby="adobe-title">
       <Container>
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <SectionHeading
-                id="adobe-title"
-                eyebrow="Adobe Services"
-                title="Adobe Experience Cloud, implemented and connected"
-                intro="We implement, integrate and optimize the Adobe applications below, and connect them to each other and to your enterprise systems so profiles, content and measurement work from the same data."
-              />
-              <p className="mt-8 max-w-[48ch] text-[0.9375rem] text-muted">
-                Not sure where to start? An Adobe platform assessment reviews how your applications are configured and used,
-                and ends with prioritized opportunities.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <ButtonLink href={adobeAssessmentPath} arrow className="py-3 text-center leading-snug">
-                  Request an assessment
-                </ButtonLink>
-                <ButtonLink href={adobeServicesPath} variant="outline">
-                  Explore Adobe Services
-                </ButtonLink>
-              </div>
-            </div>
-          </div>
+        <SectionHeading
+          id="adobe-title"
+          eyebrow="Adobe Services"
+          title="The Adobe Experience Cloud applications we implement"
+          intro="We implement, integrate and optimize these applications, and connect them to each other and to your enterprise systems so profiles, content and measurement work from the same data."
+          className="reveal"
+        />
 
-          <ul className="border-t border-ink lg:col-span-7">
-            {groups.map((group) => (
-              <li key={group.area} className="grid gap-1 border-b border-line py-4 sm:grid-cols-[11rem_1fr] sm:gap-8 sm:py-5">
-                <h3 className="pt-2 font-mono text-label uppercase text-muted sm:pt-3">{group.area}</h3>
-                <ul>
-                  {group.products.map((product) => (
-                    <li key={product.slug}>
-                      <Link
-                        href={adobeProductPath(product.slug)}
-                        className="group flex min-h-12 items-start justify-between gap-6 py-2"
-                      >
-                        <span>
-                          <span className="block font-semibold tracking-tight group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
-                            {product.name}
-                          </span>
-                          <span className="mt-1 block text-[0.9375rem] text-muted">{product.summary}</span>
-                        </span>
-                        <ArrowRight
-                          aria-hidden
-                          className="mt-1 size-4 shrink-0 text-muted transition-[color,transform] group-hover:translate-x-0.5 group-hover:text-signal"
-                        />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+        {/* Application map: one cell per capability area, hairline grid like the expertise columns. */}
+        <ul className="mt-14 grid border-t border-ink sm:grid-cols-2 lg:grid-cols-3">
+          {groups.map((group) => (
+            <li
+              key={group.area}
+              className="reveal flex flex-col border-b border-line py-6 sm:px-6 sm:py-7 sm:max-lg:odd:pl-0 sm:max-lg:even:border-l lg:[&:not(:nth-child(3n+1))]:border-l lg:[&:nth-child(3n+1)]:pl-0"
+            >
+              <h3 className="font-mono text-label uppercase text-muted">{group.area}</h3>
+              <ul className="mt-3">
+                {group.products.map((product) => (
+                  <li key={product.slug}>
+                    <Link href={adobeProductPath(product.slug)} className="group flex min-h-11 items-center justify-between gap-4 py-1.5">
+                      <span className="text-lg font-semibold leading-snug tracking-tight decoration-1 underline-offset-4 group-hover:underline">
+                        {product.name}
+                      </span>
+                      <ArrowRight
+                        aria-hidden
+                        className="size-4 shrink-0 text-muted transition-colors duration-200 group-hover:text-signal motion-safe:transition-[color,transform] motion-safe:group-hover:translate-x-0.5"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+
+        {/* Assessment entry point: the two actions sit side by side from sm up. */}
+        <div className="reveal mt-12 flex flex-col gap-6 rounded-2xl border border-line bg-surface p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="max-w-[60ch]">
+            <p className="text-lg font-semibold tracking-tight">Not sure where to start?</p>
+            <p className="mt-2 text-[0.9375rem] text-muted">
+              An Adobe platform assessment reviews how your applications are configured and used, and ends with prioritized
+              opportunities. We then implement the priorities with you.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-col gap-x-8 gap-y-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <ButtonLink href={adobeAssessmentPath} arrow className="py-3 text-center leading-snug">
+              Request an assessment
+            </ButtonLink>
+            <ArrowLink href={adobeServicesPath} className="self-start sm:self-auto">
+              Explore Adobe Services
+            </ArrowLink>
+          </div>
         </div>
 
         <AdobePartnerPanel className="mt-14 lg:mt-16" />

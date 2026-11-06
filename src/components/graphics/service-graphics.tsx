@@ -73,6 +73,12 @@ export function AiGovernanceGraphic({ className }: GraphicProps) {
         <path d="M40 366 H22 V82 H36" />
       </g>
       <path d="M30 78 L37 82 L30 86" fill="none" className="stroke-line-strong" strokeWidth="1.5" />
+      {/* A signal travels the re-assessment loop, back from monitoring to intake (hidden for reduced motion). */}
+      <g className="motion-reduce:hidden">
+        <circle r="5" className="fill-logo-red">
+          <animateMotion dur="8s" repeatCount="indefinite" path="M40 366 H22 V82 H36" />
+        </circle>
+      </g>
     </svg>
   );
 }
@@ -155,7 +161,7 @@ export function DataGraphic({ className }: GraphicProps) {
     <svg viewBox="0 0 520 430" role="img" aria-labelledby="data-title data-desc" className={cn("h-auto w-full", className)}>
       <title id="data-title">Governed data lifecycle</title>
       <desc id="data-desc">
-        A lifecycle ring: data is created, integrated, validated, used, retained and finally disposed of. At the centre,
+        A lifecycle ring: data is created, integrated, validated, used, retained and finally disposed of. At the center,
         named owners and stewards are accountable for each stage.
       </desc>
       <circle cx={cx} cy={cy} r={r} fill="none" className="stroke-ink" strokeWidth="1.5" />
@@ -193,77 +199,95 @@ export function DataGraphic({ className }: GraphicProps) {
   );
 }
 
-/** MapleRecord: record series governed by retention schedules and role-based access. */
-export function MapleRecordGraphic({ className, tone = "light" }: GraphicProps & { tone?: "light" | "night" }) {
-  const night = tone === "night";
-  const series = ["Permits", "Minutes", "Contracts"];
+/**
+ * Software Development: design → build → release with an improvement loop, producing an application made of
+ * modules (with access control and an audit trail) that integrates with the systems already in place.
+ * Abstract only: no technologies, products or logos.
+ */
+export function SoftwareGraphic({ className }: GraphicProps) {
+  const loop = "M416 48 V30 H104 V44";
+  const modules = [
+    { label: "Forms", x: 60 },
+    { label: "Workflows", x: 196 },
+    { label: "Records", x: 332 },
+  ];
+  const systems = [
+    { label: "Databases", x: 28 },
+    { label: "Cloud", x: 188 },
+    { label: "On-premises", x: 348 },
+  ];
   return (
-    <svg viewBox="0 0 520 380" role="img" aria-labelledby="mr-title mr-desc" className={cn("h-auto w-full", className)}>
-      <title id="mr-title">Records governed by retention schedules and role-based access</title>
-      <desc id="mr-desc">
-        Example record series such as permits, minutes and contracts are assigned retention schedules that move them
-        from active to inactive to disposition, while role-based permissions control who can access them.
+    <svg viewBox="0 0 520 420" role="img" aria-labelledby="sd-title sd-desc" className={cn("h-auto w-full", className)}>
+      <title id="sd-title">Enterprise software designed, built and integrated</title>
+      <desc id="sd-desc">
+        A delivery flow runs from design to build to release, and a loop feeds improvements back into design. The build
+        produces an application made of modules for forms, workflows and records, with role-based access and an audit
+        trail. Integrations connect it to databases, cloud services and on-premises systems.
       </desc>
-      {series.map((label, i) => {
-        const x = 40 + i * 160;
-        return (
-          <g key={label}>
-            <rect x={x + 10} y={30} width="120" height="84" rx="6" className={night ? "fill-night-line" : "fill-paper-deep"} />
-            <rect x={x + 5} y={36} width="120" height="84" rx="6" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-line-strong"} strokeWidth="1.25" />
-            <rect x={x} y={42} width="120" height="84" rx="6" className={night ? "fill-night-raised stroke-night-muted" : "fill-surface stroke-ink"} strokeWidth="1.5" />
-            <path d={`M${x + 12} ${62} H${x + 72} M${x + 12} ${74} H${x + 96} M${x + 12} ${86} H${x + 84}`} className={night ? "stroke-night-line" : "stroke-line"} strokeWidth="3" strokeLinecap="round" />
-            <NodeLabel fluid x={x + 12} y={114} anchor="start" className={night ? "fill-night-text" : undefined}>
-              {label}
-            </NodeLabel>
-            <path d={`M${x + 60} 130 V176`} className={night ? "stroke-night-muted" : "stroke-ink"} strokeWidth="1.25" strokeDasharray="3 4" />
-          </g>
-        );
-      })}
-      {/* retention schedule */}
-      <rect x="40" y="184" width="440" height="40" rx="20" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-ink"} strokeWidth="1.5" />
-      <rect x="40" y="184" width="200" height="40" rx="20" className={night ? "fill-night-text" : "fill-ink"} />
-      <path d="M340 184 V224" className={night ? "stroke-night-line" : "stroke-line-strong"} strokeWidth="1.5" />
-      <text x="140" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night" : "fill-night-text")}>
-        Active
+      {/* Improvement loop: from release back to design */}
+      <g fill="none" className="stroke-line-strong" strokeWidth="1.5">
+        <path d={loop} strokeDasharray="4 5" />
+        <path d="M100 37 L104 44 L108 37" strokeLinejoin="round" />
+      </g>
+      <text x="260" y="19" textAnchor="middle" className={cn("fill-muted font-mono", svgSmallLabelSize)}>
+        IMPROVE
       </text>
-      <text x="294" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night-text" : "fill-ink-soft")}>
-        Inactive
-      </text>
-      <text x="410" y="209" textAnchor="middle" className={cn("font-mono uppercase", svgSmallLabelSize, night ? "fill-night-text" : "fill-ink-soft")}>
-        Disposition
-      </text>
-      <circle cx="240" cy="204" r="7" className="fill-logo-red" />
-      <NodeLabel fluid x={40} y={252} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
-        Retention schedule
+      <g className="motion-reduce:hidden">
+        <circle r="5" className="fill-logo-red">
+          <animateMotion dur="7s" repeatCount="indefinite" path={loop} />
+        </circle>
+      </g>
+      <Box x={40} y={48} lines={["Design"]} />
+      <Arrow d="M168 74 H192" head={[192, 74, "right"]} />
+      <Box x={196} y={48} lines={["Build"]} dark />
+      <Arrow d="M324 74 H348" head={[348, 74, "right"]} />
+      <Box x={352} y={48} lines={["Release"]} />
+      <Arrow d="M260 100 V140" head={[260, 140, "down"]} />
+      {/* The application: modules on a shared access and audit layer */}
+      <Plane x={40} y={144} w={440} h={150} />
+      {modules.map((m) => (
+        <g key={m.label}>
+          <rect x={m.x} y={166} width="128" height="52" rx="8" className="fill-paper stroke-line-strong" strokeWidth="1.25" />
+          <NodeLabel fluid x={m.x + 64} y={197}>
+            {m.label}
+          </NodeLabel>
+        </g>
+      ))}
+      <rect x="60" y="234" width="400" height="40" rx="8" className="fill-ink" />
+      <circle cx="444" cy="248" r="4" className="fill-logo-red" />
+      <NodeLabel fluid x={260} y={260} className="fill-night-text">
+        Access · audit trail
       </NodeLabel>
-      {/* role-based access */}
-      {["Clerk", "Manager", "Auditor"].map((role, i) => {
-        const x = 40 + i * 150;
-        return (
-          <g key={role}>
-            <rect x={x} y={286} width="140" height="48" rx="24" className={night ? "fill-night-raised stroke-night-line" : "fill-surface stroke-ink"} strokeWidth="1.5" />
-            <rect x={x + 18} y={306} width="14" height="11" rx="2" className={night ? "fill-night-text" : "fill-ink"} />
-            <path d={`M${x + 20.5} 306 V302 a4.5 4.5 0 0 1 9 0 V306`} fill="none" className={night ? "stroke-night-text" : "stroke-ink"} strokeWidth="1.5" />
-            <NodeLabel fluid x={x + 42} y={315} anchor="start" className={night ? "fill-night-text" : undefined}>
-              {role}
-            </NodeLabel>
-          </g>
-        );
-      })}
-      <NodeLabel fluid x={40} y={360} anchor="start" className={night ? "fill-night-muted" : "fill-muted"}>
-        Role-based access
-      </NodeLabel>
+      {/* Integrations to the systems already in place */}
+      <g className="stroke-ink" strokeWidth="1.5">
+        {systems.map((sys) => (
+          <path key={sys.label} d={`M${sys.x + 72} 302 V346`} strokeDasharray="3 4" />
+        ))}
+      </g>
+      {systems.map((sys) => (
+        <g key={sys.label}>
+          <circle cx={sys.x + 72} cy={302} r="4" className="fill-surface stroke-ink" strokeWidth="1.5" />
+          <Box x={sys.x} y={350} w={144} lines={[sys.label]} />
+        </g>
+      ))}
     </svg>
   );
 }
 
 /* Small glyphs for the homepage expertise summary — same line weight, scaled down. */
+
+/**
+ * The glyph's red dot grows slightly while an ancestor marked `group/glyph` is hovered or holds focus
+ * (transform only, scaled around its own centre, motion-safe).
+ */
+const glyphDot =
+  "fill-logo-red origin-center [transform-box:fill-box] motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-safe:group-hover/glyph:scale-[1.4] motion-safe:group-focus-within/glyph:scale-[1.4]";
 export function GovernanceGlyph({ className }: GraphicProps) {
   return (
     <svg viewBox="0 0 96 64" aria-hidden className={cn("h-16 w-24", className)}>
       <path d="M8 32 H34 M62 32 H88 M48 46 V60" className="stroke-ink" strokeWidth="1.5" />
       <rect x="37" y="21" width="22" height="22" rx="3" transform="rotate(45 48 32)" className="fill-ink" />
-      <circle cx="48" cy="32" r="4" className="fill-logo-red" />
+      <circle cx="48" cy="32" r="4" className={glyphDot} />
       <circle cx="8" cy="32" r="4" className="fill-surface stroke-ink" strokeWidth="1.5" />
       <circle cx="88" cy="32" r="4" className="fill-surface stroke-ink" strokeWidth="1.5" />
     </svg>
@@ -281,7 +305,7 @@ export function JourneyGlyph({ className }: GraphicProps) {
       ].map(([x, y]) => (
         <circle key={x} cx={x} cy={y} r="4.5" className="fill-surface stroke-ink" strokeWidth="1.5" />
       ))}
-      <circle cx="90" cy="22" r="5" className="fill-logo-red" />
+      <circle cx="90" cy="22" r="5" className={glyphDot} />
     </svg>
   );
 }
@@ -289,13 +313,27 @@ export function JourneyGlyph({ className }: GraphicProps) {
 export function LifecycleGlyph({ className }: GraphicProps) {
   return (
     <svg viewBox="0 0 96 64" aria-hidden className={cn("h-16 w-24", className)}>
-      <circle cx="48" cy="32" r="24" fill="none" className="stroke-ink" strokeWidth="1.5" />
+      {/* Centred at x=32 so the leftmost node starts at x≈4, the same left edge as the other glyphs. */}
+      <circle cx="32" cy="32" r="24" fill="none" className="stroke-ink" strokeWidth="1.5" />
       {[0, 60, 120, 180, 240, 300].map((a) => {
         const rad = (a * Math.PI) / 180;
-        return <circle key={a} cx={48 + 24 * Math.cos(rad)} cy={32 + 24 * Math.sin(rad)} r="4" className="fill-surface stroke-ink" strokeWidth="1.5" />;
+        return <circle key={a} cx={32 + 24 * Math.cos(rad)} cy={32 + 24 * Math.sin(rad)} r="4" className="fill-surface stroke-ink" strokeWidth="1.5" />;
       })}
-      <circle cx="48" cy="32" r="9" className="fill-ink" />
-      <circle cx="48" cy="32" r="3.5" className="fill-logo-red" />
+      <circle cx="32" cy="32" r="9" className="fill-ink" />
+      <circle cx="32" cy="32" r="3.5" className={glyphDot} />
+    </svg>
+  );
+}
+
+/** Software Development: separate modules connected into one built system. */
+export function BuildGlyph({ className }: GraphicProps) {
+  return (
+    <svg viewBox="0 0 96 64" aria-hidden className={cn("h-16 w-24", className)}>
+      <path d="M28 20 H38 V44 H28 M38 32 H52" fill="none" className="stroke-ink" strokeWidth="1.5" />
+      <rect x="4" y="12" width="24" height="16" rx="3" className="fill-surface stroke-ink" strokeWidth="1.5" />
+      <rect x="4" y="36" width="24" height="16" rx="3" className="fill-surface stroke-ink" strokeWidth="1.5" />
+      <rect x="52" y="18" width="30" height="28" rx="4" className="fill-ink" />
+      <circle cx="67" cy="32" r="4" className={glyphDot} />
     </svg>
   );
 }

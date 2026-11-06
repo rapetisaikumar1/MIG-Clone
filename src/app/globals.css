@@ -74,7 +74,11 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    scroll-padding-top: 6rem;
+    /*
+     * The one #fragment offset: the 77px sticky header plus a little air. (Don't add a scroll-margin to
+     * [id] as well; the two stack and targets land ~190px down the page.)
+     */
+    scroll-padding-top: 5.5rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -125,10 +129,6 @@
     outline-color: var(--night-text);
   }
 
-  [id] {
-    scroll-margin-top: 6rem;
-  }
-
   /*
    * Reduced motion: collapse CSS transitions and animations site-wide (hover shifts, disclosure icons,
    * sheet slide-ins). SMIL <animateMotion> in the diagrams is removed separately with motion-reduce:hidden.
@@ -147,18 +147,45 @@
 
 @layer components {
   /*
-   * MapleRecord product stages. Dark stage: hero and showcase bands (night ink, fine grid fading out,
-   * a low warm glow behind the product). Light stage: in-page product shots on paper.
+   * MapleRecord product stages. Dark stage: hero and showcase bands — night ink, a fine grid that fades
+   * out toward the bottom (so a stage never ends on a hard grid edge, e.g. a CTA above the dark footer),
+   * and a low warm glow behind the product that drifts very slowly. Light stage: in-page product shots
+   * on paper. The grid (::before) and the glow (::after) are their own layers behind the content: the
+   * glow is a soft radial gradient (no blur filter) moved with transform only, and it holds still under
+   * prefers-reduced-motion.
    */
   .mr-stage-dark {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
     background-color: var(--night);
+    background-image: radial-gradient(45% 40% at 10% 0%, rgb(241 239 233 / 0.06) 0%, transparent 70%);
+  }
+  .mr-stage-dark::before,
+  .mr-stage-dark::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .mr-stage-dark::before {
+    inset: 0;
     background-image:
-      radial-gradient(60% 55% at 78% 40%, rgb(208 0 0 / 0.16) 0%, transparent 70%),
-      radial-gradient(45% 40% at 10% 0%, rgb(241 239 233 / 0.06) 0%, transparent 70%),
       linear-gradient(rgb(241 239 233 / 0.045) 1px, transparent 1px),
       linear-gradient(90deg, rgb(241 239 233 / 0.045) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 56px 56px, 56px 56px;
-    background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+    mask-image: linear-gradient(to bottom, #000 40%, rgb(0 0 0 / 0.15) 100%);
+  }
+  /* 20% larger than the stage on every side, so the drift never reveals the glow's edge. */
+  .mr-stage-dark::after {
+    inset: -10%;
+    background-image: radial-gradient(50% 46% at 73% 42%, rgb(208 0 0 / 0.16) 0%, transparent 70%);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .mr-stage-dark::after {
+      animation: mr-glow-drift 26s ease-in-out infinite alternate;
+    }
   }
   .mr-stage-light {
     background-color: #ece8df;
@@ -191,6 +218,58 @@
     background-size: 18px 18px, 100% 100%;
   }
 
+  /*
+   * MrCrumbs: the "/" separator follows each item (alt text "" keeps screen readers from reading it), so
+   * a wrapped trail ends a line with a slash instead of starting the next line with one.
+   */
+  .mr-crumbs > li:not(:last-child)::after {
+    content: "/";
+    content: "/" / "";
+    opacity: 0.8;
+  }
+
+  /*
+   * MrSteps (vertical): neutral numbered nodes by default. Where CSS scroll-driven animations exist and
+   * motion is allowed, each node fills red and the rail below it draws down as the step crosses a line
+   * just above the middle of the viewport (a view timeline inset to a 1% band at 54–55%). Fills are
+   * transform-only; the number turns white with its fill. Nothing here runs without support.
+   */
+  .mr-step-fill {
+    transform: scale(0);
+  }
+  .mr-step-rail {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  /* Decorative signal rules (stat cells, challenge cards, card indices): drawn in from the left on scroll. */
+  .mr-rule {
+    transform-origin: left;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* The fill runs over the same short range as the number's colour change, so a node is rarely left half filled (a red dot behind its digits). */
+      .mr-steps .mr-step-fill {
+        animation: mr-scale-in ease-out both;
+        animation-timeline: view(block 54% 45%);
+        animation-range: cover 40% cover 60%;
+      }
+      .mr-steps .mr-step-num {
+        animation: mr-step-num linear both;
+        animation-timeline: view(block 54% 45%);
+        animation-range: cover 40% cover 60%;
+      }
+      .mr-steps .mr-step-rail {
+        animation: mr-scale-y-in linear both;
+        animation-timeline: view(block 54% 45%);
+      }
+      .mr-rule {
+        animation: mr-scale-x-in linear both;
+        animation-timeline: view();
+        animation-range: entry 60% cover 30%;
+      }
+    }
+  }
+
   /* Long-form article typography for MDX insights */
   .prose-mig {
     max-width: 68ch;
@@ -215,6 +294,10 @@
   .prose-mig h2 + *,
   .prose-mig h3 + * {
     margin-top: 0.6em;
+  }
+  /* A sub-heading straight after its section heading still needs its own break, or the two read as one block. */
+  .prose-mig h2 + h3 {
+    margin-top: 1.1em;
   }
   .prose-mig h4 {
     margin-top: 1.6em;
@@ -316,12 +399,161 @@
   }
 }
 
+/*
+ * Shared motion utilities (unlayered on purpose, so a component's own transition-* utilities can't
+ * strip their transitions).
+ *
+ * .reveal: the element rises ~16px into place as it scrolls into view. CSS scroll-driven only, and
+ * transform-only (the individual `translate` property), so text is never faded and nothing shifts
+ * layout. Without support, without CSS animations or with reduced motion it simply sits in place.
+ * Once in place the animation lets go (fill: backwards), so a revealed element keeps no stacking context.
+ * It animates `translate` while .card-lift moves `transform`, so the two can share an element.
+ *
+ * .card-lift: clickable cards lift 2px with a soft shadow on hover (pointer devices) and when focus is
+ * inside them. Motion-safe only; colour changes stay with the component.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      /* backwards, not both: past the range the animation lets go, so the element keeps no translate. */
+      animation: reveal-rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 220px;
+    }
+    /* A jump target (or the .reveal block around it) skips the rise. Otherwise the browser scrolls to
+       its still-lowered position and the block then rises 16px under the sticky header. */
+    .reveal:target,
+    .reveal:has(:target) {
+      animation: none;
+    }
+    /* Client-side hash links (next/link) scroll without updating :target, so they still measure the
+       lowered position: an id inside a reveal gets the same 16px back as scroll margin. In the base
+       layer, so a component's own scroll-mt-* utility still wins. */
+    @layer base {
+      :where(.reveal[id], .reveal [id]):not(:target) {
+        scroll-margin-top: 1rem;
+      }
+    }
+  }
+}
+
+/* The lift shadow keeps any Tailwind ring (ring-1 ring-line…) in the stack, so a card's hairline border
+   doesn't vanish on hover or focus. */
+.card-lift {
+  --card-lift-shadow:
+    var(--tw-inset-shadow, 0 0 #0000), var(--tw-inset-ring-shadow, 0 0 #0000), var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), 0 1px 2px rgb(17 17 17 / 0.05), 0 14px 28px -16px rgb(17 17 17 / 0.28);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card-lift {
+    transition-property: transform, box-shadow, color, background-color, border-color, outline-color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: var(--ease-out-quint);
+  }
+  .card-lift:focus-within {
+    transform: translateY(-2px);
+    box-shadow: var(--card-lift-shadow);
+  }
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-lift-shadow);
+    }
+  }
+  .card-lift:active {
+    transform: translateY(0);
+    transition-duration: 80ms;
+  }
+}
+
+/*
+ * Sticky header depth: a soft shadow fades in under the bar over the first 64px of scrolling (a scroll
+ * timeline on a decorative layer, so nothing is scripted). Without support the border alone separates it.
+ */
+.site-header::after {
+  content: "";
+  position: absolute;
+  /* Behind the header's own children, so an open dropdown panel isn't greyed by it. */
+  z-index: -1;
+  inset-inline: 0;
+  top: 100%;
+  height: 14px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(17 17 17 / 0.07), transparent);
+  opacity: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .site-header::after {
+    animation: header-shadow linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 64px;
+  }
+}
+
+@keyframes header-shadow {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    translate: 0 16px;
+  }
+  to {
+    translate: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .sheet-overlay[data-state="open"] {
     animation: fade-in 200ms ease-out;
   }
   .sheet-panel[data-state="open"] {
     animation: sheet-in 320ms var(--ease-out-quint);
+  }
+}
+
+@keyframes mr-glow-drift {
+  from {
+    transform: translate3d(2%, -1.5%, 0);
+  }
+  to {
+    transform: translate3d(-4%, 3%, 0);
+  }
+}
+
+@keyframes mr-scale-in {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes mr-scale-y-in {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes mr-scale-x-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes mr-step-num {
+  to {
+    color: #fff;
   }
 }
 

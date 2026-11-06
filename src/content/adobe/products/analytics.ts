@@ -87,8 +87,8 @@ export const analytics: AdobeProduct = {
       provenance: "verified",
     },
     {
-      title: "Data strategy and consultation",
-      body: "We help you decide what to measure and why, and how Adobe Analytics fits with the rest of your data and Adobe applications.",
+      title: "Data strategy and measurement planning",
+      body: "We define with you what to measure and why, and plan how Adobe Analytics fits with the rest of your data and Adobe applications.",
       items: [
         "KPI framework mapped to business questions",
         "Report suite, virtual report suite and variable architecture",
@@ -99,7 +99,7 @@ export const analytics: AdobeProduct = {
     },
     {
       title: "Ongoing support and optimization",
-      body: "We keep the implementation accurate as your sites, apps and campaigns change, and help your teams get more out of the tool.",
+      body: "We keep the implementation accurate as your sites, apps and campaigns change, and train your teams to get more out of it.",
       items: [
         "Regular checks of key variables, pages and conversion events",
         "Tracking updates for new features, pages and campaigns",
@@ -146,9 +146,9 @@ export const analytics: AdobeProduct = {
   insights: ["the-importance-of-data-governance-in-the-digital-age"],
   faqs: [
     {
-      question: "What does an Adobe Analytics audit cover?",
+      question: "What does an Adobe Analytics assessment cover?",
       answer:
-        "We compare what's collected with what the business needs to know, review report suite and variable settings, processing rules, marketing channels and shared segments, and check which projects people actually use. You get a prioritized list of fixes.",
+        "The assessment compares what's collected with what the business needs to know, reviews report suite and variable settings, processing rules, marketing channels and shared segments, and checks which projects people actually use. You get a prioritized list of fixes, and we then implement them with you.",
     },
     {
       question: "Will we lose historical data if we re-implement?",
@@ -158,7 +158,7 @@ export const analytics: AdobeProduct = {
     {
       question: "Do we need to move to Web SDK?",
       answer:
-        "Adobe recommends Web SDK for new implementations, but an existing AppMeasurement setup can keep working. We'll help you weigh the effort against what it enables, such as collecting data once for several Adobe applications.",
+        "Adobe recommends Web SDK for new implementations, but an existing AppMeasurement setup can keep working. We weigh the effort with you against what it enables, such as collecting data once for several Adobe applications, and implement Web SDK when the move is worth it.",
     },
     {
       question: "What's the difference between Adobe Analytics and Customer Journey Analytics?",
@@ -173,6 +173,6 @@ export const analytics: AdobeProduct = {
   ],
   cta: {
     title: "Get reporting your teams agree on.",
-    body: "Tell us how you use Adobe Analytics today and where the numbers fall short. We'll suggest a sensible first step.",
+    body: "Tell us how you use Adobe Analytics today and where the numbers fall short. We'll scope a practical first step with you.",
   },
 };

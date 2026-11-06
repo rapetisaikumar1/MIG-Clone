@@ -6,6 +6,24 @@ export const contactTopics = {
     interest: "adobe-services",
     message: "We'd like to request an Adobe platform assessment.\n\nApplications and goals: ",
   },
+  /** The Adobe hub's "Start where you are" cards, one per way to work with us. */
+  implementation: {
+    interest: "adobe-services",
+    message: "We'd like to discuss Adobe implementation and integration.\n\nApplications and goals: ",
+  },
+  optimization: {
+    interest: "adobe-services",
+    message: "We'd like to discuss optimizing an Adobe setup we already run.\n\nApplications and goals: ",
+  },
+  training: {
+    interest: "adobe-services",
+    message: "We'd like to discuss Adobe training and enablement for our team.\n\nApplications and goals: ",
+  },
+  /** From the About page's "Interested in joining us?" card, so job seekers don't land on a sales inquiry. */
+  careers: {
+    interest: "general",
+    message: "I'm interested in working with Maverick InnoGarage.\n\n",
+  },
 } as const satisfies Record<string, { interest: ContactInterest; message: string }>;
 
 export type ContactTopic = keyof typeof contactTopics;

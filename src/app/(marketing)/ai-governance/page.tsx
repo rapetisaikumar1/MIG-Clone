@@ -8,5 +8,6 @@ const content = getService("ai-governance");
 export const metadata = pageMetadata({ ...content.meta, path: "/ai-governance" });
 
 export default function AiGovernancePage() {
-  return <ServicePage content={content} graphic={<AiGovernanceGraphic />} />;
+  // The benefits strip restated the hero lead and capabilities, so this page leaves it out.
+  return <ServicePage content={content} graphic={<AiGovernanceGraphic />} showBenefits={false} />;
 }

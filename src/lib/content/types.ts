@@ -7,7 +7,7 @@ import type { ContactInterest } from "@/features/contact/schema";
  */
 export type Provenance = "verified" | "proposed";
 
-export type ServiceSlug = "ai-governance" | "adobe-services" | "data-management";
+export type ServiceSlug = "ai-governance" | "adobe-services" | "data-management" | "software-development";
 
 export type Capability = {
   id: string;
@@ -40,6 +40,8 @@ export type ServiceContent = {
   slug: ServiceSlug;
   interest: ContactInterest;
   name: string;
+  /** The insights theme for this page's "Further reading" list, when it differs from `name` (e.g. "Adobe"). */
+  insightTheme?: string;
   meta: { title: string; description: string };
   hero: { eyebrow: string; title: string; lead: string };
   problem: { title: string; body: string[]; signals: string[] };
@@ -154,7 +156,7 @@ export type AdobeProduct = {
   hero: { title: string; lead: string };
   /** What the application does: neutral facts about Adobe's product, never claims about MiG. */
   overview: { heading: string; intro: string; features: { title: string; body: string }[] };
-  /** Situations that typically prompt an engagement (4–6). */
+  /** Situations that typically prompt a project (4–6). */
   signals: string[];
   /**
    * How we help. Titles MUST be the verified service types for this product from the old site

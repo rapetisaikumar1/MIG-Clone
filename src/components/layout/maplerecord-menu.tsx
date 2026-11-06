@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { MapleRecordNav, NavItem } from "@/config/navigation";
 import { mrModuleIcons } from "@/features/maplerecord/mr-ui";
 import { cn } from "@/lib/utils";
@@ -11,8 +11,8 @@ import { isActivePath } from "./nav-links";
 import { NavMenu } from "./nav-menu";
 
 /**
- * Desktop "MapleRecord" entry: the shared NavMenu disclosure with the product's pages, its five
- * modules and the demo request. Replaces a separate MapleRecord sub-navigation bar, so the whole
+ * Desktop "MapleRecord" entry: the shared NavMenu disclosure with the product's pages (overview first),
+ * its five modules and the demo request. Replaces a separate MapleRecord sub-navigation bar, so the whole
  * site keeps one header.
  */
 export function MapleRecordMenu({
@@ -29,8 +29,8 @@ export function MapleRecordMenu({
   const pathname = usePathname();
   const isCurrent = (href: string) => (href === menu.overview.href ? pathname === href : isActivePath(pathname, href));
   return (
-    <NavMenu item={item} active={active} linkClassName={linkClassName} panelClassName="max-w-[64rem]">
-      <div className="grid grid-cols-[1fr_1fr_15rem] gap-8 p-7">
+    <NavMenu item={item} active={active} linkClassName={linkClassName} >
+      <div className="grid grid-cols-[1fr_1fr_17rem] gap-10 p-7">
         <div>
           <p className="px-3 font-mono text-label uppercase text-muted">MapleRecord</p>
           <ul className="mt-3 grid gap-y-1">
@@ -78,34 +78,24 @@ export function MapleRecordMenu({
           </ul>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div>
           <div className="flex flex-col rounded-xl border border-line bg-paper p-5">
             <p className="flex items-center gap-2 font-mono text-label uppercase text-signal">
               <Image aria-hidden src="/maplerecord/maplerecord-leaf.svg" alt="" width={76} height={68} className="h-3 w-auto" />
               See it in action
             </p>
             <p className="mt-3 font-medium leading-snug text-ink">A guided walkthrough of MapleRecord</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted">Records, requests, workflows and forms on one platform.</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted">Records, requests, workflows, forms and administration on one platform.</p>
             <a
               href={menu.demo.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex min-h-11 items-center gap-2 self-start text-[0.9375rem] font-medium text-signal underline-offset-4 hover:text-signal-hover hover:underline"
+              className="group mt-2 inline-flex min-h-11 items-center gap-2 self-start text-[0.9375rem] font-medium text-signal underline-offset-4 hover:text-signal-hover hover:underline"
             >
               {menu.demo.label}
-              <ArrowUpRight aria-hidden className="size-4" />
+              <ArrowUpRight aria-hidden className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               <span className="sr-only"> (opens maplerecord.com in a new tab)</span>
             </a>
-          </div>
-          <div className="mt-auto border-t border-line pt-2">
-            <Link
-              href={menu.overview.href}
-              aria-current={pathname === menu.overview.href ? "page" : undefined}
-              className="inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-medium text-ink underline-offset-4 hover:underline"
-            >
-              {menu.overview.label}
-              <ArrowRight aria-hidden className="size-4" />
-            </Link>
           </div>
         </div>
       </div>

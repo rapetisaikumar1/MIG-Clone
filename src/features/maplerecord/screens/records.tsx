@@ -177,7 +177,7 @@ function ActivityChart() {
   const W = 626;
   const H = 224;
   const left = 30;
-  const right = 8;
+  const right = 16;
   const top = 8;
   const bottom = 24;
   const max = 120;
@@ -272,7 +272,7 @@ function RecordsDashboard() {
             <Card title="Alerts & Notifications" className="flex-1">
               <div className="space-y-3 px-4 pb-3.5">
                 <ListRow icon={TriangleAlert} tone="amber" title="14 records eligible for disposition" sub="Contracts – Expiry + 6 · review by 30-Nov" />
-                <ListRow icon={Gavel} tone="red" title="Legal hold applied" sub="Harbourfront Park Landscaping Contract" />
+                <ListRow icon={Gavel} tone="red" title="Legal hold applied" sub="Park Landscaping · Vendor Contracts" />
               </div>
             </Card>
           </div>
@@ -286,7 +286,7 @@ function RecordsDashboard() {
               <ListRow icon={FileText} tone="gray" title="Transferred" sub="Council Minutes – Regular Meeting 21-Oct-2026 · Priya Shah" meta="5 hours ago" badge="Document" />
             </div>
             <div className="py-2.5">
-              <ListRow icon={FileText} tone="gray" title="Declared Official" sub="Waste Collection Services Agreement 2026–2031 · Arjun Mehta" meta="Yesterday" badge="Document" />
+              <ListRow icon={FileText} tone="gray" title="Declared Official" sub="Waste Collection 2026 · Arjun Mehta" meta="Yesterday" badge="Document" />
             </div>
             <div className="py-2.5">
               <ListRow icon={FileCheck2} tone="green" title="In Progress" sub="Retrieval Request – In Progress (RR-2026-0093) · Daniel Okafor" meta="Yesterday" badge="Request" />
@@ -306,27 +306,27 @@ function StepList({ steps }: { steps: Step[] }) {
   return (
     <div>
       {steps.map((s, i) => (
-        <div key={s.title} className="flex gap-2.5">
+        <div key={s.title} className="flex gap-2">
           <div className="flex flex-col items-center">
             <span
               className={cn(
                 "flex size-[18px] shrink-0 items-center justify-center rounded-full",
                 s.state === "done" && "border border-[#a1a1aa] bg-[#e4e4e7] text-[#3f3f46]",
                 s.state === "now" && "bg-[#18181b]",
-                s.state === "todo" && "bg-[#f0f0f1]",
+                s.state === "todo" && "border border-[#e4e4e7] bg-[#f4f4f5]",
               )}
             >
               {s.state === "done" ? <Check className="size-2.5" strokeWidth={2} /> : null}
               {s.state === "now" ? <span className="size-1.5 rounded-full bg-white" /> : null}
             </span>
-            {i < steps.length - 1 ? <span className="my-0.5 w-px flex-1 bg-[#d4d4d8]" /> : null}
+            {i < steps.length - 1 ? <span className="my-0.5 w-px flex-1 bg-[#e4e4e7]" /> : null}
           </div>
-          <div className={cn("pb-2.5 leading-tight", s.state === "todo" && "text-[#a1a1aa]")}>
-            <p className="text-[12.5px] font-medium">
+          <div className="min-w-0 pb-2.5 leading-tight">
+            <p className={cn("text-[12.5px] font-medium", s.state === "todo" ? "text-[#3f3f46]" : "text-[#18181b]")}>
               {s.title}
-              {s.state === "now" ? <span className="ml-1.5 text-[9.5px] font-semibold">NOW</span> : null}
+              {s.state === "now" ? <span className="ml-1.5 text-[9.5px] font-semibold tracking-[0.04em]">NOW</span> : null}
             </p>
-            <p className={cn("mt-0.5 whitespace-nowrap text-[10.5px]", s.state === "todo" ? "text-[#a1a1aa]" : "text-[#71717a]")}>{s.sub}</p>
+            <p className="mt-0.5 text-[10.5px] leading-[1.35] text-[#71717a]">{s.sub}</p>
           </div>
         </div>
       ))}
@@ -336,7 +336,7 @@ function StepList({ steps }: { steps: Step[] }) {
 
 function LifecyclePanel() {
   return (
-    <div className="flex w-[262px] shrink-0 flex-col border-l border-[#e4e4e7] bg-white">
+    <div className="flex w-[218px] shrink-0 flex-col border-l border-[#e4e4e7] bg-white">
       <div className="flex h-11 items-center justify-between border-b border-[#e4e4e7] px-4">
         <span className="text-[13.5px] font-semibold">Lifecycle</span>
         <X className="size-4 text-[#52525b]" strokeWidth={1.75} />
@@ -358,7 +358,7 @@ function LifecyclePanel() {
         <StepList
           steps={[
             { title: "Awaiting trigger", sub: "Trigger 30-Sep-2026", state: "done" },
-            { title: "Active", sub: "Clock running · Contracts – Expiry + 6", state: "now" },
+            { title: "Active", sub: "Clock running · Contracts\u00a0–\u00a0Expiry\u00a0+\u00a06", state: "now" },
             { title: "Inactive", sub: "Inactive band — Reactive can restart Active", state: "todo" },
             { title: "Eligible", sub: "Ready for destroy or archive", state: "todo" },
             { title: "Destroy or Archive", sub: "Disposition completed", state: "todo" },
@@ -379,9 +379,9 @@ function LifecyclePanel() {
 
 function PanelStrip({ icons, active }: { icons: Icon[]; active: number }) {
   return (
-    <div className="flex w-[42px] shrink-0 flex-col border-l border-[#e4e4e7] bg-white">
+    <div className="flex w-9 shrink-0 flex-col border-l border-[#e4e4e7] bg-white">
       {icons.map((IconC, i) => (
-        <span key={i} className={cn("flex h-[42px] items-center justify-center border-b border-[#f0f0f1] text-[#52525b]", i === active && "bg-[#f4f4f5] text-[#18181b]")}>
+        <span key={i} className={cn("flex h-10 items-center justify-center border-b border-[#f0f0f1] text-[#52525b]", i === active && "bg-[#f4f4f5] text-[#18181b]")}>
           <IconC className="size-4" strokeWidth={1.6} />
         </span>
       ))}
@@ -391,25 +391,25 @@ function PanelStrip({ icons, active }: { icons: Icon[]; active: number }) {
 
 function SeriesTree() {
   const series = [
-    "Accounts Payable Invoices",
+    "Accounts Payable",
     "Building Permits",
-    "Bylaws & Resolutions",
+    "Bylaws",
     "Council Minutes",
-    "Development Applications",
+    "Dev. Applications",
     "Election Records",
-    "Emergency Management Plans",
-    "Fleet Vehicle Maintenance",
-    "FOI / MFIPPA Requests",
-    "Land Title & Property",
+    "Emergency Plans",
+    "Fleet Records",
+    "FOI Requests",
+    "Land & Property",
     "Leave Records",
-    "Licensing & Permits",
+    "Licences",
     "Payroll Registers",
     "Personnel Files",
     "Planning Studies",
-    "Road Maintenance Logs",
+    "Road Logs",
   ];
   return (
-    <div className="w-[168px] shrink-0 border-r border-[#e4e4e7] pl-4 pr-2 pt-4">
+    <div className="w-[164px] shrink-0 border-r border-[#e4e4e7] pl-3 pr-1.5 pt-4">
       <p className="text-[10.5px] font-medium uppercase tracking-[0.06em] text-[#52525b]">Record series</p>
       <ul className="mt-3 space-y-[3px] text-[12.5px] text-[#27272a]">
         <li className="flex h-6 items-center gap-1.5">
@@ -417,9 +417,9 @@ function SeriesTree() {
           <Folder className="size-3.5 shrink-0" strokeWidth={1.6} />
           <span className="truncate">Vendor Contracts</span>
         </li>
-        <li className="ml-[9px] space-y-[3px] border-l border-[#e4e4e7] pl-2.5">
+        <li className="ml-[9px] space-y-[3px] border-l border-[#e4e4e7] pl-2">
           {["Non records", "Working records", "Active Records", "Destroy"].map((f) => (
-            <span key={f} className={cn("flex h-6 items-center gap-1.5 rounded-md px-1.5", f === "Active Records" && "bg-[#f0f0f1] font-medium")}>
+            <span key={f} className={cn("flex h-6 items-center gap-1.5 rounded-md px-1", f === "Active Records" && "bg-[#f0f0f1] font-medium text-[#18181b]")}>
               <Folder className="size-3.5 shrink-0 text-[#52525b]" strokeWidth={1.6} />
               <span className="truncate">{f}</span>
             </span>
@@ -439,23 +439,23 @@ function SeriesTree() {
 
 function RecordsLifecycle() {
   const rows: [string, string, string, string][] = [
-    ["Winter Maintenance Contract", "2.4 MB", "02-Nov-2026", "Priya Shah"],
-    ["Waste Collection Agreement", "3.8 MB", "02-Nov-2026", "Arjun Mehta"],
-    ["IT Managed Services Renewal", "1.1 MB", "30-Oct-2026", "Mei Lin"],
-    ["Library Renovation Contract", "6.2 MB", "30-Oct-2026", "Daniel Okafor"],
-    ["LED Street Lighting Retrofit", "2.9 MB", "30-Oct-2026", "Grace Thompson"],
-    ["Fleet Fuel Supply Agreement", "0.8 MB", "29-Oct-2026", "Arjun Mehta"],
-    ["Harbourfront Landscaping", "1.7 MB", "29-Oct-2026", "Sarah Novak"],
+    ["Winter Maintenance", "2.4 MB", "02-Nov-2026", "Priya Shah"],
+    ["Waste Collection 2026", "3.8 MB", "02-Nov-2026", "Arjun Mehta"],
+    ["IT Services Renewal", "1.1 MB", "30-Oct-2026", "Mei Lin"],
+    ["Library Renovation", "6.2 MB", "30-Oct-2026", "Ben Carter"],
+    ["Streetlight Retrofit", "2.9 MB", "30-Oct-2026", "Grace Liu"],
+    ["Fleet Fuel Supply", "0.8 MB", "29-Oct-2026", "Arjun Mehta"],
+    ["Park Landscaping", "1.7 MB", "29-Oct-2026", "Sarah Novak"],
     ["Transit Shelter Licence", "0.9 MB", "28-Oct-2026", "Mei Lin"],
-    ["Community Centre Janitorial", "1.2 MB", "27-Oct-2026", "Grace Thompson"],
-    ["Legal Services Retainer 2026", "0.4 MB", "27-Oct-2026", "Sarah Novak"],
+    ["Janitorial Services", "1.2 MB", "27-Oct-2026", "Grace Liu"],
+    ["Legal Retainer 2026", "0.4 MB", "27-Oct-2026", "Sarah Novak"],
   ];
   return (
     <ScreenCanvas id="records-lifecycle">
       <OrgShell active="records" adminOpen={false}>
         <div className="absolute inset-0 top-10 flex">
           <SeriesTree />
-          <div className="min-w-0 flex-1 px-5 pt-4">
+          <div className="min-w-0 flex-1 pl-4 pr-3 pt-4">
             <h1 className="text-[22px] font-semibold leading-tight tracking-[-0.01em]">Organization Records</h1>
             <div className="mt-4 flex items-center justify-between">
               <SearchInput placeholder="Search…" width={250} />
@@ -463,29 +463,29 @@ function RecordsLifecycle() {
             </div>
             <DataTable
               className="mt-3"
-              rowHeight={42}
+              rowHeight={40}
               columns={[
-                { label: "Name", sort: true, width: 268 },
-                { label: "Classification", sort: true, width: 106 },
-                { label: "Size", sort: true, width: 62 },
-                { label: "Modified", sort: true, width: 96 },
-                { label: "Created By", sort: true, width: 120 },
+                { label: "Name", sort: true, width: 212 },
+                { label: "Classification", sort: true, width: 92 },
+                { label: "Size", sort: true, width: 56 },
+                { label: "Modified", sort: true, width: 94 },
+                { label: "Created By", sort: true, width: 86 },
               ]}
               rows={rows.map(([name, size, modified, by]) => [
-                <span key="n" className="flex min-w-0 items-center gap-2">
+                <span key="n" className="flex min-w-0 items-center gap-1.5">
                   <Star className="size-3.5 shrink-0 text-[#a1a1aa]" strokeWidth={1.75} />
                   <TypeChip type="OF" />
                   <FileText className="size-3.5 shrink-0 text-[#52525b]" strokeWidth={1.75} />
                   <span className="truncate">{name}</span>
                 </span>,
-                <Badge key="c" tone="green" className="text-[9.5px] tracking-[0.04em]">CLASSIFIED</Badge>,
+                <Badge key="c" tone="green" className="text-[9.5px] font-semibold tracking-[0.04em]">CLASSIFIED</Badge>,
                 size,
                 modified,
                 by,
               ])}
               footer={
                 <>
-                  <HScroll width="58%" />
+                  <HScroll width="64%" />
                   <TableFooter summary="0 of 15 row(s) selected." page="Page 1 of 2" />
                 </>
               }
@@ -540,7 +540,7 @@ function RecordsFiles() {
           ],
         },
         { name: "Destroy", count: 3, closed: true },
-        { name: "By-law Enforcement Cases", count: 14, closed: true },
+        { name: "By-law Enforcement", count: 14, closed: true },
         { name: "Council Agendas 2026", count: 18, closed: true },
         { name: "Elections 2026", count: 7, closed: true },
         { name: "FOI Requests 2026", count: 23, closed: true },
@@ -553,18 +553,18 @@ function RecordsFiles() {
     },
   ];
   const rows: [string, string, string, string, string, string][] = [
-    ["Winter Maintenance Contract", "Active", "2.41 MB", "2 days ago", "Priya Shah", "3 weeks ago"],
-    ["Waste Collection Agreement 2026–2031", "Active", "3.84 MB", "2 days ago", "Arjun Mehta", "3 weeks ago"],
-    ["IT Managed Services Renewal", "Active", "1.12 MB", "1 week ago", "Mei Lin", "1 month ago"],
-    ["Library Renovation Contract", "Active", "6.20 MB", "1 week ago", "Daniel Okafor", "1 month ago"],
-    ["Street Lighting LED Retrofit Contract", "Active", "2.93 MB", "1 week ago", "Grace Thompson", "1 month ago"],
-    ["Harbourfront Park Landscaping", "On Hold", "1.68 MB", "1 week ago", "Sarah Novak", "1 month ago"],
-    ["Fleet Fuel Supply Agreement", "Active", "842 KB", "1 week ago", "Arjun Mehta", "2 months ago"],
-    ["Transit Shelter Advertising Licence", "Active", "961 KB", "2 weeks ago", "Mei Lin", "2 months ago"],
-    ["Community Centre Janitorial Services", "Active", "1.24 MB", "2 weeks ago", "Grace Thompson", "2 months ago"],
-    ["Legal Services Retainer — 2026", "Active", "456 KB", "2 weeks ago", "Sarah Novak", "3 months ago"],
-    ["Water Meter Supply Agreement", "Active", "2.07 MB", "3 weeks ago", "Daniel Okafor", "3 months ago"],
-    ["Road Resurfacing Contract 2026-14", "Active", "4.55 MB", "3 weeks ago", "Priya Shah", "4 months ago"],
+    ["Winter Maintenance", "Active", "2.41 MB", "2 days ago", "Priya Shah", "3 weeks ago"],
+    ["Waste Collection 2026", "Active", "3.84 MB", "2 days ago", "Arjun Mehta", "3 weeks ago"],
+    ["IT Services Renewal", "Active", "1.12 MB", "1 week ago", "Mei Lin", "1 month ago"],
+    ["Library Renovation", "Active", "6.20 MB", "1 week ago", "Ben Carter", "1 month ago"],
+    ["Streetlight Retrofit", "Active", "2.93 MB", "1 week ago", "Grace Liu", "1 month ago"],
+    ["Fleet Fuel Supply", "Active", "842 KB", "1 week ago", "Arjun Mehta", "2 months ago"],
+    ["Park Landscaping", "On Hold", "1.68 MB", "1 week ago", "Sarah Novak", "1 month ago"],
+    ["Transit Shelter Licence", "Active", "961 KB", "2 weeks ago", "Mei Lin", "2 months ago"],
+    ["Janitorial Services", "Active", "1.24 MB", "2 weeks ago", "Grace Liu", "2 months ago"],
+    ["Legal Retainer 2026", "Active", "456 KB", "2 weeks ago", "Sarah Novak", "3 months ago"],
+    ["Water Meter Supply", "Active", "2.07 MB", "3 weeks ago", "Ben Carter", "3 months ago"],
+    ["Road Resurfacing", "Active", "4.55 MB", "3 weeks ago", "Priya Shah", "4 months ago"],
   ];
   return (
     <ScreenCanvas id="records-files">
@@ -613,14 +613,14 @@ function RecordsFiles() {
               rowHeight={38}
               columns={[
                 { label: "", width: 22 },
-                { label: "", width: 44 },
-                { label: "Name", width: 276 },
-                { label: "Classification", width: 98 },
-                { label: "Retention Status", width: 112 },
-                { label: "Size", width: 68 },
-                { label: "Modified", width: 86 },
-                { label: "Created By", width: 108 },
-                { label: "Created", width: 92 },
+                { label: "", width: 40 },
+                { label: "Name", width: 216 },
+                { label: "Classification", width: 100 },
+                { label: "Retention Status", width: 116 },
+                { label: "Size", width: 72 },
+                { label: "Modified", width: 92 },
+                { label: "Created By", width: 104 },
+                { label: "Created", width: 120 },
                 { label: "Tags", width: 48 },
                 { label: "Record Series", width: 160 },
                 { label: "Template", width: 200 },
@@ -665,10 +665,10 @@ function RecordSeries() {
     ["Animal Licensing", "BLS", "By-law & Licensing", "Internal", "Regulatory", "Licences – Expiry + 2", "Licence Expiry", "Numerical", "BLS Department"],
     ["Audit Working Papers", "FIN", "Finance & Taxation", "Restricted", "Financial", "Financial Records – 10 Year", "Fiscal Year End", "Alphabetical", "FIN Department"],
     ["Bank Reconciliations", "FIN", "Finance & Taxation", "Confidential", "Financial", "Financial Records – 7 Year", "Record Creation", "Chronological", "FIN Department"],
-    ["Benefits Enrollment Files", "HR", "Human Resources", "Highly Restricted", "Personnel", "Personnel Files – Separation + 7", "Employee Separation", "Alphabetical", "HR Department"],
-    ["Building Permits", "PLN", "Planning & Building", "Public", "Regulatory", "Building Permits – Completion + 25", "Project Completion", "Numerical", "PLN Department"],
+    ["Benefits Enrollment Files", "HR", "Human Resources", "Highly Restricted", "Personnel", "Personnel Files – Separation + 7", "Separation", "Alphabetical", "HR Department"],
+    ["Building Permits", "PLN", "Planning & Building", "Public", "Regulatory", "Building Permits – Completion + 25", "Completion", "Numerical", "PLN Department"],
     ["Bylaws & Resolutions", "GOV", "Council & Governance", "Public", "Vital", "Bylaws & Resolutions – Permanent", "Record Creation", "Numerical", "CLK Department"],
-    ["Capital Project Files", "ENG", "Engineering & Public Works", "Internal", "Operational", "Capital Projects – Close + 10", "Project Closure", "Numerical", "ENG Department"],
+    ["Capital Project Files", "ENG", "Engineering & Works", "Internal", "Operational", "Capital Projects – Close + 10", "Project Closure", "Numerical", "ENG Department"],
     ["Council Minutes", "GOV", "Council & Governance", "Public", "Vital", "Council Minutes – Permanent", "Record Creation", "Chronological", "CLK Department"],
   ];
   return (
@@ -693,13 +693,13 @@ function RecordSeries() {
           className="mt-3"
           rowHeight={42}
           columns={[
-            { label: "Name", sort: true, width: 186 },
-            { label: "Code", sort: true, width: 58 },
-            { label: "DIR", sort: true, width: 166 },
+            { label: "Name", sort: true, width: 188 },
+            { label: "Code", sort: true, width: 62 },
+            { label: "DIR", sort: true, width: 150 },
             { label: "Confidentiality", sort: true, width: 124 },
-            { label: "Class", sort: true, width: 86 },
-            { label: "Retention Schedule", width: 226 },
-            { label: "Trigger Event", width: 132 },
+            { label: "Class", sort: true, width: 90 },
+            { label: "Retention Schedule", width: 216 },
+            { label: "Trigger Event", width: 120 },
             { label: "Arrangement", width: 104 },
             { label: "Sub Arrangement", width: 120 },
             { label: "Originator", width: 130 },
@@ -733,7 +733,7 @@ function RecordSeries() {
 function Capacity({ used, total }: { used: number; total: number }) {
   const pct = Math.round((used / total) * 100);
   return (
-    <span className="flex items-center gap-3">
+    <span className="flex items-center gap-3 pr-5">
       <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#f0f0f1]">
         <span className={cn("block h-full rounded-full", pct >= 100 ? "bg-[#d97706]" : "bg-[#18181b]")} style={{ width: `${pct}%` }} />
       </span>
@@ -754,9 +754,9 @@ function RecordsBoxes() {
     ["BOX-CLERK-D-2025-2031-0009", "Standard Records Box", 250, 250],
     ["BOX-CLERK-D-2025-2031-0008", "Standard Records Box", 236, 250],
     ["BOX-CLERK-D-2025-2031-0007", "Legal Size Box", 2000, 2000],
-    ["BOX-CLERK-D-2024-2030-0006", "Standard Records Box", 250, 250],
+    ["BOX-CLERK-D-2024-2030-0006", "Standard Records Box", 221, 250],
     ["BOX-CLERK-D-2024-2030-0005", "Legal Size Box", 1184, 2000],
-    ["BOX-CLERK-D-2024-2030-0004", "Standard Records Box", 250, 250],
+    ["BOX-CLERK-D-2024-2030-0004", "Standard Records Box", 184, 250],
     ["BOX-CLERK-D-2023-2029-0003", "Standard Records Box", 117, 250],
   ];
   return (
@@ -813,8 +813,8 @@ function RecordsSearch() {
   const rows: [string, string, string, string, string, string, string][] = [
     ["Harbourfront Park Landscaping", "Official Record", "Contracts & Agreements", "Active", "14-Oct-2026", "City Clerk Records", "Sarah Novak"],
     ["Harbourfront Revitalization Plan", "Official Record", "Council Minutes", "Active", "21-Oct-2026", "City Clerk Records", "Priya Shah"],
-    ["By-law 2026-118 Zoning Amendment", "Official Record", "Bylaws & Resolutions", "Active", "29-Sep-2026", "City Clerk Records", "Mei Lin"],
-    ["Harbourfront Seawall Inspection", "Official Record", "Capital Project Files", "Active", "08-Oct-2026", "Engineering & Public Works", "Arjun Mehta"],
+    ["Zoning By-law 2026-118", "Official Record", "Bylaws & Resolutions", "Active", "29-Sep-2026", "City Clerk Records", "Mei Lin"],
+    ["Harbourfront Seawall Inspection", "Official Record", "Capital Project Files", "Active", "08-Oct-2026", "Engineering & Works", "Arjun Mehta"],
     ["Harbourfront Marina Operator Lease", "Official Record", "Contracts & Agreements", "Active", "03-Sep-2026", "Legal Services", "Sarah Novak"],
     ["Harbourfront Festival Event Permit", "Official Record", "Licensing & Permits", "Inactive", "12-Aug-2026", "By-law & Licensing", "Grace Thompson"],
     ["Harbourfront Parking Study v3", "Working Record", "Planning Studies", "Active", "30-Oct-2026", "Planning & Development", "Daniel Okafor"],

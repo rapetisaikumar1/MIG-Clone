@@ -5,7 +5,10 @@ import { company } from "@/config/site";
  * Home page title (≤ 60 characters so search results show it in full). Pages without a `title`
  * use it as an absolute title, so it never depends on the root layout's default.
  */
-export const siteTitle = `${company.name} — AI Governance, Adobe & Data Management`;
+export const siteTitle = `${company.name} — AI Governance, Adobe, Data & Software`;
+
+/** Alt text for the shared Open Graph image (also exported by app/opengraph-image.tsx). */
+export const ogImageAlt = `${company.name} — software development and professional services: AI Governance, Adobe Services, Data Management and Software Development`;
 
 /** X/Twitter handle derived from the verified social profile URL in config/site.ts. */
 const xHandle = (() => {
@@ -30,7 +33,7 @@ export function pageMetadata({
 }): Metadata {
   const fullTitle = title ? `${title} · ${company.name}` : siteTitle;
   // Page-level openGraph replaces the inherited object, so the shared image is referenced explicitly.
-  const images = [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${company.name} — AI Governance, Adobe Services and Data Management` }];
+  const images = [{ url: "/opengraph-image", width: 1200, height: 630, alt: ogImageAlt }];
   return {
     title: title ?? { absolute: siteTitle },
     description,

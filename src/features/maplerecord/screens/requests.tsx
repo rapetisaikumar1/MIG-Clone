@@ -23,7 +23,6 @@ import {
   ListChecks,
   Mail,
   MessageSquare,
-  Minus,
   MoreHorizontal,
   Plus,
   RefreshCw,
@@ -170,12 +169,13 @@ function Kpi({ label, value, icon: IconC, tone, valueClass, caption }: { label: 
   );
 }
 
-function CardTitle({ icon: IconC, tone, children, right }: { icon?: Icon; tone?: string; children: ReactNode; right?: ReactNode }) {
+/** Card title: neutral icon chip + 13px semibold title (color is kept for the data, not the chrome). */
+function CardTitle({ icon: IconC, children, right }: { icon?: Icon; children: ReactNode; right?: ReactNode }) {
   return (
     <div className="flex items-center justify-between">
       <h3 className="flex items-center gap-2 text-[13px] font-semibold">
         {IconC ? (
-          <span className={cn("flex size-6 items-center justify-center rounded-md", tone ? tint[tone] : "text-[#3f3f46]")}>
+          <span className="flex size-6 items-center justify-center rounded-md bg-[#f4f4f5] text-[#3f3f46]">
             <IconC className="size-3.5" strokeWidth={1.9} />
           </span>
         ) : null}
@@ -186,12 +186,14 @@ function CardTitle({ icon: IconC, tone, children, right }: { icon?: Icon; tone?:
   );
 }
 
-function DonutCard({ icon, tone, title, total, segments }: { icon: Icon; tone: string; title: string; total: number; segments: [string, number, string][] }) {
+const DONUT = { size: 88, thickness: 10 } as const;
+
+function DonutCard({ icon, title, total, segments, right }: { icon: Icon; title: string; total: number; segments: [string, ReactNode, string, number][]; right?: ReactNode }) {
   return (
     <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-      <CardTitle icon={icon} tone={tone}>{title}</CardTitle>
+      <CardTitle icon={icon} right={right}>{title}</CardTitle>
       <div className="mt-2.5 flex items-center gap-5">
-        <Donut size={88} thickness={10} segments={segments.map(([, v, c]) => [v, c])} label={total} sub="Total" />
+        <Donut {...DONUT} segments={segments.map(([, , c, v]) => [v, c])} label={total} sub="Total" />
         <div className="flex-1 space-y-1.5">
           {segments.map(([l, v, c]) => (
             <LegendRow key={l} color={c} label={l} value={v} />
@@ -202,6 +204,8 @@ function DonutCard({ icon, tone, title, total, segments }: { icon: Icon; tone: s
   );
 }
 
+const seg = (label: string, value: number, color: string): [string, ReactNode, string, number] => [label, value, color, value];
+
 /* ---------- 1. Dashboard ---------- */
 
 function Dashboard() {
@@ -209,9 +213,9 @@ function Dashboard() {
     ["FOI-2026-09-22-0031", "Water main replacement tender evaluations — Ward 4", "Third-party notice issued"],
     ["FOI-2026-10-02-0038", "Bylaw enforcement complaints — Cedar Lane area", "Awaiting clarification"],
     ["FOI-2026-10-07-0041", "Harbourview arena roof repair consultant reports", "Fee deposit outstanding"],
-    ["FOI-2026-10-14-0047", "Short-term rental licensing correspondence 2025", "Awaiting clarification"],
-    ["FOI-2026-10-21-0055", "Parks department overtime records Q3 2026", "Fee deposit outstanding"],
-    ["FOI-2026-10-29-0059", "Police services board closed-session minutes", "Consultation with board"],
+    ["FOI-2026-10-14-0047", "Short-term rental licensing emails", "Awaiting clarification"],
+    ["FOI-2026-10-21-0055", "Parks department overtime records, Q3", "Fee deposit outstanding"],
+    ["FOI-2026-10-24-0059", "Police services board closed-session minutes", "Consultation with board"],
   ];
   const volume: [string, number, number][] = [
     ["Jun", 14, 12],
@@ -221,87 +225,93 @@ function Dashboard() {
     ["Oct", 19, 20],
     ["Nov", 9, 12],
   ];
+  const pct = (v: number, t: number) => (
+    <>
+      {v}
+      <span className="ml-1.5 inline-block w-[30px] text-right text-[11px] font-normal text-[#71717a]">{Math.round((v / t) * 100)}%</span>
+    </>
+  );
   return (
     <ScreenCanvas id="requests-dashboard">
       <RequestsShell active="dashboard">
-        <PageHeader title="Operational Overview" subtitle="05/11/2026 · Showing all active files" />
+        <PageHeader title="Operational Overview" subtitle="Nov 5, 2026 · Showing all active files" />
         <div className="mt-3 h-px bg-[#e4e4e7]" />
 
         <div className="mt-3 grid grid-cols-4 gap-3">
           <Kpi label="Active Requests" value="46" icon={Inbox} tone="blue" caption={<><TrendingDown className="size-3 text-[#16a34a]" /><span className="text-[#16a34a]">vs 51 last month</span></>} />
-          <Kpi label="Due Soon" value="4" icon={Clock} tone="amber" valueClass="text-[#d97706]" caption={<><Minus className="size-3" />within 5 days</>} />
-          <Kpi label="Overdue" value="3" icon={TriangleAlert} tone="red" valueClass="text-[#dc2626]" caption={<><TrendingDown className="size-3 text-[#dc2626]" /><span className="text-[#dc2626]">requires escalation</span></>} />
+          <Kpi label="Due Soon" value="4" icon={Clock} tone="amber" valueClass="text-[#d97706]" caption={<><Clock className="size-3" />within 5 days</>} />
+          <Kpi label="Overdue" value="3" icon={TriangleAlert} tone="red" valueClass="text-[#dc2626]" caption={<><TriangleAlert className="size-3 text-[#dc2626]" /><span className="text-[#dc2626]">requires escalation</span></>} />
           <Kpi label="Closed (MTD)" value="12" icon={CircleCheck} tone="green" valueClass="text-[#16a34a]" caption={<><TrendingUp className="size-3 text-[#16a34a]" /><span className="text-[#16a34a]">vs 9 last month</span></>} />
         </div>
 
         <div className="mt-3 grid grid-cols-3 gap-3">
-          <DonutCard icon={Inbox} tone="blue" title="Requests Overview" total={73} segments={[["Active", 46, C.blue], ["Due Soon", 4, C.amber], ["Overdue", 3, C.red], ["Closed", 20, C.gray]]} />
-          <DonutCard icon={Scale} tone="violet" title="Appeals Overview" total={63} segments={[["Active", 41, C.blue], ["Oversight", 12, C.violet], ["Mediation", 8, C.amber], ["Overdue", 2, C.red]]} />
-          <DonutCard icon={FileText} tone="orange" title="Intake Overview" total={5} segments={[["New Requests", 3, C.orange], ["New Appeals", 1, "#fdba74"], ["Pending Assign", 1, "#fed7aa"]]} />
+          <DonutCard icon={Inbox} title="Requests Overview" total={73} segments={[seg("Active", 46, C.blue), seg("Due Soon", 4, C.amber), seg("Overdue", 3, C.red), seg("Closed", 20, C.gray)]} />
+          <DonutCard icon={Scale} title="Appeals Overview" total={63} segments={[seg("Active", 41, C.blue), seg("Oversight", 12, C.violet), seg("Mediation", 8, C.amber), seg("Overdue", 2, C.red)]} />
+          <DonutCard icon={FileText} title="Intake Overview" total={5} segments={[seg("New Requests", 3, C.blue), seg("New Appeals", 1, C.violet), seg("Pending Assign", 1, C.amber)]} />
         </div>
 
-        <div className="mt-3 grid grid-cols-[1fr_248px] gap-3">
-          <div className="min-w-0">
-            <div className="grid grid-cols-[1fr_1.2fr] gap-3">
-              {/* SLA & deadline risk */}
-              <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-                <CardTitle icon={TriangleAlert} tone="amber">SLA &amp; Deadline Risk</CardTitle>
-                <div className="mt-2.5 flex items-center gap-4">
-                  <div className="flex-1 space-y-1.5">
-                    {(
-                      [
-                        ["High Risk", "Past statutory deadline", 3, TriangleAlert, "red"],
-                        ["Medium Risk", "Due within 5 days", 4, Clock, "amber"],
-                        ["Low Risk", "On track", 46, CircleCheck, "green"],
-                      ] as const
-                    ).map(([l, s, v, IconC, t]) => (
-                      <div key={l} className="flex items-center gap-2.5 rounded-lg border border-[#f0f0f1] px-2 py-1">
-                        <span className={cn("flex size-6 items-center justify-center rounded-full", tint[t])}>
-                          <IconC className="size-3" strokeWidth={2} />
-                        </span>
-                        <span className="flex-1 leading-tight">
-                          <span className="block text-[11.5px] font-medium">{l}</span>
-                          <span className="block text-[10px] text-[#71717a]">{s}</span>
-                        </span>
-                        <span className={cn("text-[14px] font-semibold", t === "red" && "text-[#dc2626]", t === "amber" && "text-[#d97706]", t === "green" && "text-[#16a34a]")}>{v}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <Donut size={80} thickness={9} segments={[[3, C.red], [4, C.amber], [46, "#bbf7d0"]]} label={7} sub="at risk" />
+        {/* Same 3-column grid as the row above: SLA | Pipeline | (Appeal Stages + Monthly Volume), On Hold under the first two. */}
+        <div className="mt-3 grid grid-cols-3 items-start gap-3">
+          <div className="col-span-2 grid grid-cols-2 gap-3">
+            {/* SLA & deadline risk */}
+            <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
+              <CardTitle icon={TriangleAlert}>SLA &amp; Deadline Risk</CardTitle>
+              <div className="mt-2.5 flex items-center gap-4">
+                <div className="flex-1 space-y-1">
+                  {(
+                    [
+                      ["High Risk", "Past statutory deadline", 3, TriangleAlert, "red"],
+                      ["Medium Risk", "Due within 5 days", 4, Clock, "amber"],
+                      ["Low Risk", "On track", 46, CircleCheck, "green"],
+                    ] as const
+                  ).map(([l, s, v, IconC, t]) => (
+                    <div key={l} className="flex items-center gap-2.5 rounded-lg border border-[#f0f0f1] px-2 py-1">
+                      <span className={cn("flex size-6 items-center justify-center rounded-full", tint[t])}>
+                        <IconC className="size-3" strokeWidth={2} />
+                      </span>
+                      <span className="flex-1 leading-tight">
+                        <span className="block text-[11.5px] font-medium">{l}</span>
+                        <span className="block text-[10px] text-[#71717a]">{s}</span>
+                      </span>
+                      <span className={cn("text-[14px] font-semibold", t === "red" && "text-[#dc2626]", t === "amber" && "text-[#d97706]", t === "green" && "text-[#16a34a]")}>{v}</span>
+                    </div>
+                  ))}
+                </div>
+                <Donut {...DONUT} segments={[[3, C.red], [4, C.amber], [46, "#ececee"]]} label={7} sub="at risk" />
+              </div>
+            </div>
+            {/* Pipeline */}
+            <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
+              <CardTitle icon={Activity}>Pipeline Overview</CardTitle>
+              <div className="mt-2.5 flex items-center gap-4">
+                <Donut {...DONUT} segments={[[11, C.blue], [17, C.violet], [12, C.amber], [6, C.green]]} label={46} sub="Total" />
+                <div className="flex-1 space-y-1.5">
+                  {(
+                    [
+                      ["Triage", 11, C.blue],
+                      ["Redaction", 17, C.violet],
+                      ["Disclosure Review", 12, C.amber],
+                      ["Delivery", 6, C.green],
+                    ] as const
+                  ).map(([l, v, c]) => (
+                    <LegendRow key={l} color={c} label={l} value={pct(v, 46)} />
+                  ))}
                 </div>
               </div>
-              {/* Pipeline */}
-              <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-                <CardTitle icon={Activity} tone="blue">Pipeline Overview</CardTitle>
-                <div className="mt-2.5 flex items-center gap-5">
-                  <Donut size={92} thickness={10} segments={[[11, C.blue], [17, C.violet], [12, C.amber], [6, C.green]]} label={46} sub="Total" />
-                  <div className="flex-1 space-y-2">
-                    {(
-                      [
-                        ["Triage", "11 (24%)", C.blue],
-                        ["Redaction", "17 (37%)", C.violet],
-                        ["Disclosure Review", "12 (26%)", C.amber],
-                        ["Delivery", "6 (13%)", C.green],
-                      ] as const
-                    ).map(([l, v, c]) => (
-                      <LegendRow key={l} color={c} label={l} value={v} />
-                    ))}
-                  </div>
-                </div>
-                <p className="mt-2 flex items-center gap-1 text-[11.5px] font-medium text-[#2563eb]">
-                  View full pipeline <ArrowRight className="size-3" />
-                </p>
-              </div>
+              <p className="mt-2 flex items-center gap-1 text-[11.5px] font-medium text-[#2563eb]">
+                View full pipeline <ArrowRight className="size-3" />
+              </p>
             </div>
 
             {/* On hold */}
-            <div className="mt-3 rounded-xl border border-[#e4e4e7] bg-white">
-              <div className="flex items-center justify-between px-4 pb-2 pt-3">
-                <CardTitle icon={Clock} tone="orange">On Hold Requests</CardTitle>
-                <span className="rounded-full bg-[#f4f4f5] px-2 py-0.5 text-[11px] font-medium text-[#3f3f46]">6 Items</span>
+            <div className="col-span-2 rounded-xl border border-[#e4e4e7] bg-white">
+              <div className="px-4 pb-2 pt-2.5">
+                <CardTitle icon={Clock} right={<span className="rounded-full bg-[#f4f4f5] px-2 py-0.5 text-[11px] font-medium text-[#3f3f46]">6 Items</span>}>
+                  On Hold Requests
+                </CardTitle>
               </div>
               {onHold.map(([id, title, reason]) => (
-                <div key={id} className="flex items-center gap-3 border-t border-[#f0f0f1] px-4 py-2">
+                <div key={id} className="flex items-center gap-3 border-t border-[#f0f0f1] px-4 py-[7px]">
                   <span className="min-w-0 flex-1 leading-tight">
                     <span className="block truncate text-[12.5px] font-medium">{title}</span>
                     <span className="mt-0.5 block text-[11px] text-[#71717a]">
@@ -316,53 +326,45 @@ function Dashboard() {
           </div>
 
           <div className="space-y-3">
-            {/* Appeal stages */}
-            <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-              <div className="flex items-center justify-between">
-                <p className="text-[10.5px] font-medium uppercase tracking-[0.05em] text-[#71717a]">Appeal Stages</p>
-                <span className="text-[11.5px] font-medium text-[#2563eb]">View all</span>
-              </div>
-              <div className="mt-1.5 flex justify-center">
-                <Donut size={86} thickness={10} segments={[[4, C.blue], [7, C.violet], [5, C.amber], [3, C.gray]]} label={19} sub="Total" />
-              </div>
-              <div className="mt-2 space-y-1">
-                {(
-                  [
-                    ["Intake", 4, "21%", C.blue],
-                    ["Oversight", 7, "37%", C.violet],
-                    ["Mediation", 5, "26%", C.amber],
-                    ["Closed", 3, "16%", C.gray],
-                  ] as const
-                ).map(([l, v, p, c]) => (
-                  <div key={l} className="flex items-center gap-2 text-[12px]">
-                    <span className="size-2 rounded-full" style={{ background: c }} />
-                    <span className="flex-1 text-[#3f3f46]">{l}</span>
-                    <span className="font-medium">{v}</span>
-                    <span className="w-8 text-right text-[11px] text-[#71717a]">{p}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Appeal stages (all 63 appeals) */}
+            <DonutCard
+              icon={Gavel}
+              title="Appeal Stages"
+              total={63}
+              right={<span className="text-[11.5px] font-medium text-[#2563eb]">View all</span>}
+              segments={(
+                [
+                  ["Intake", 15, C.blue],
+                  ["Oversight", 12, C.violet],
+                  ["Mediation", 8, C.amber],
+                  ["Closed", 28, C.gray],
+                ] as const
+              ).map(([l, v, c]) => [l, pct(v, 63), c, v])}
+            />
             {/* Monthly volume */}
             <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-              <div className="flex items-center justify-between">
-              <p className="text-[10.5px] font-medium uppercase tracking-[0.05em] text-[#71717a]">Monthly Volume</p>
-              <div className="flex items-center gap-2.5 text-[10px] text-[#71717a]">
-                <span className="flex items-center gap-1"><span className="size-2 rounded-sm bg-[#d4d4d8]" />Filed</span>
-                <span className="flex items-center gap-1"><span className="size-2 rounded-sm bg-[#22c55e]" />Closed</span>
-              </div>
-              </div>
-              <div className="mt-2 flex h-[76px] items-end justify-between border-b border-[#e4e4e7] px-1">
+              <CardTitle
+                icon={BarChart3}
+                right={
+                  <span className="flex items-center gap-2.5 text-[10.5px] text-[#71717a]">
+                    <span className="flex items-center gap-1"><span className="size-2 rounded-sm bg-[#d4d4d8]" />Filed</span>
+                    <span className="flex items-center gap-1"><span className="size-2 rounded-sm bg-[#22c55e]" />Closed</span>
+                  </span>
+                }
+              >
+                Monthly Volume
+              </CardTitle>
+              <div className="mt-3 flex h-[100px] items-end justify-between border-b border-[#e4e4e7] px-2">
                 {volume.map(([m, f, c]) => (
-                  <div key={m} className="flex items-end gap-[3px]">
-                    <span className="w-2.5 rounded-t-[3px] bg-[#d4d4d8]" style={{ height: f * 3.3 }} />
-                    <span className="w-2.5 rounded-t-[3px] bg-[#22c55e]" style={{ height: c * 3.3 }} />
+                  <div key={m} className="flex w-[30px] items-end justify-center gap-[3px]">
+                    <span className="w-2.5 rounded-t-[3px] bg-[#d4d4d8]" style={{ height: f * 4.4 }} />
+                    <span className="w-2.5 rounded-t-[3px] bg-[#22c55e]" style={{ height: c * 4.4 }} />
                   </div>
                 ))}
               </div>
-              <div className="mt-1 flex justify-between px-1 text-[10px] text-[#71717a]">
+              <div className="mt-1 flex justify-between px-2 text-[10.5px] text-[#71717a]">
                 {volume.map(([m]) => (
-                  <span key={m} className="w-[23px] text-center">{m}</span>
+                  <span key={m} className="w-[30px] text-center">{m}</span>
                 ))}
               </div>
             </div>
@@ -377,25 +379,26 @@ function Dashboard() {
 
 type Priority = "Critical" | "High" | "Medium" | "Low";
 const priorityTone: Record<Priority, Tone> = { Critical: "red", High: "orange", Medium: "blue", Low: "gray" };
-const priorityBorder: Partial<Record<Priority, string>> = { Critical: "border-l-[#ef4444]", High: "border-l-[#f97316]" };
+/* Priority accent drawn as an inset bar so the card content keeps the same left edge as un-flagged cards. */
+const priorityAccent: Partial<Record<Priority, string>> = { Critical: "shadow-[inset_3px_0_0_#ef4444,0_1px_2px_rgb(0_0_0/0.04)]", High: "shadow-[inset_3px_0_0_#f97316,0_1px_2px_rgb(0_0_0/0.04)]" };
 type KCard = [id: string, title: string, requester: string, date: string, assignee: string, priority?: Priority];
 
 function KanbanCard({ card }: { card: KCard }) {
   const [id, title, requester, date, assignee, priority] = card;
   return (
-    <div className={cn("rounded-lg border border-[#e4e4e7] bg-white px-2 py-2 shadow-[0_1px_2px_rgb(0_0_0/0.04)]", priority && priorityBorder[priority] && cn("border-l-[3px]", priorityBorder[priority]))}>
-      <div className="flex items-center justify-between gap-1">
-        <span className="min-w-0 truncate font-mono text-[9px] tracking-[-0.02em] text-[#71717a]">{id}</span>
-        {priority ? <Badge tone={priorityTone[priority]} className="shrink-0 px-1 py-0 text-[9.5px]">{priority}</Badge> : null}
+    <div className={cn("rounded-lg border border-[#e4e4e7] bg-white px-2 py-2 shadow-[0_1px_2px_rgb(0_0_0/0.04)]", priority && priorityAccent[priority])}>
+      <div className="flex h-[17px] items-center justify-between gap-1">
+        <span className="min-w-0 truncate font-mono text-[9.5px] tracking-[-0.03em] text-[#71717a]">{id}</span>
+        {priority ? <Badge tone={priorityTone[priority]} className="shrink-0 px-[3px] py-0 text-[9.5px]">{priority}</Badge> : null}
       </div>
-      <p className="mt-1 line-clamp-2 text-[11.5px] font-semibold leading-[1.35]">{title}</p>
+      <p className="mt-1 line-clamp-2 min-h-[31px] text-[11.5px] font-semibold leading-[1.35]">{title}</p>
       <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-[#52525b]">
         <span className="flex size-4 items-center justify-center rounded-full bg-[#f4f4f5] text-[8.5px] font-semibold text-[#3f3f46]">{requester[0]}</span>
         <span className="truncate">{requester}</span>
       </p>
       <div className="mt-1.5 flex items-center justify-between border-t border-[#f4f4f5] pt-1.5 text-[10.5px] text-[#71717a]">
         <span className="shrink-0 whitespace-nowrap">{date}</span>
-        <span className="ml-2 flex min-w-0 items-center gap-0.5">
+        <span className={cn("ml-2 flex min-w-0 items-center gap-1", assignee === "Unassigned" ? "text-[#a1a1aa]" : "text-[#52525b]")}>
           <ArrowRight className="size-2.5 shrink-0" />
           <span className="truncate">{assignee}</span>
         </span>
@@ -410,72 +413,72 @@ function RequestsKanban() {
       label: "Pending",
       count: 13,
       dot: C.violet,
-      head: "bg-[#f5f3ff] text-[#6d28d9]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-11-04-0073", "Harbourview transit fare review briefing notes", "Lena Fischer", "Nov 4, 2026", "Unassigned"],
-        ["FOI-2026-11-03-0071", "Snow-clearing contractor invoices 2025/26", "Tom Reyes", "Nov 3, 2026", "Unassigned", "Medium"],
-        ["FOI-2026-11-02-0070", "Library branch hours consultation results", "Ana Costa", "Nov 2, 2026", "Unassigned", "Low"],
-        ["FOI-2026-11-01-0068", "Noise exemption permits — waterfront festival", "Marcus Bell", "Nov 1, 2026", "Unassigned"],
+        ["FOI-2026-11-04-0073", "Harbourview transit fare review briefing notes", "Lena Fischer", "Nov 4", "Unassigned"],
+        ["FOI-2026-11-03-0071", "Snow-clearing contractor invoices 2025/26", "Tom Reyes", "Nov 3", "Unassigned", "Medium"],
+        ["FOI-2026-11-02-0070", "Library branch hours consultation results", "Ana Costa", "Nov 2", "Unassigned", "Low"],
+        ["FOI-2026-11-01-0068", "Noise exemption permits — waterfront festival", "Marcus Bell", "Nov 1", "Unassigned"],
       ],
     },
     {
       label: "Open",
       count: 13,
       dot: C.blue,
-      head: "bg-[#eff6ff] text-[#1d4ed8]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-10-30-0066", "Council meeting audio recordings, March 2026", "Helen Park", "Oct 30, 2026", "Mei Lin", "Medium"],
-        ["FOI-2026-10-29-0064", "Winter road maintenance schedules 2026/27", "Omar Haddad", "Oct 29, 2026", "Daniel Okafor"],
-        ["FOI-2026-10-28-0063", "Tree removal permits — Elm Street corridor", "Julia Moreau", "Oct 28, 2026", "Grace Thompson", "Low"],
-        ["FOI-2026-10-27-0061", "Recreation centre accessibility audit 2025", "Sam Whitfield", "Oct 27, 2026", "Mei Lin"],
+        ["FOI-2026-10-30-0066", "Council meeting audio recordings, March 2026", "Helen Park", "Oct 30", "Mei Lin", "Medium"],
+        ["FOI-2026-10-29-0064", "Winter road maintenance schedules 2026/27", "Omar Haddad", "Oct 29", "Daniel Okafor"],
+        ["FOI-2026-10-28-0063", "Tree removal permits — Elm Street corridor", "Julia Moreau", "Oct 28", "Grace Thompson", "Low"],
+        ["FOI-2026-10-27-0061", "Recreation centre accessibility audit 2025", "Sam Whitfield", "Oct 27", "Mei Lin"],
       ],
     },
     {
       label: "In Progress",
       count: 21,
       dot: C.amber,
-      head: "bg-[#fffbeb] text-[#b45309]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-10-18-0062", "Drinking-water sample results — Harbourview system", "Rachel Kim", "Oct 18, 2026", "Priya Shah", "High"],
-        ["FOI-2026-10-18-0053", "Building permit inspections — downtown", "David Laurent", "Oct 18, 2026", "Arjun Mehta", "Medium"],
-        ["FOI-2026-10-16-0051", "Fire services staffing plan Q1–Q2 2026", "Nadia Petrov", "Oct 16, 2026", "Sarah Novak", "Critical"],
-        ["FOI-2026-10-15-0049", "Waterfront redevelopment contracts", "Ben Carter", "Oct 15, 2026", "Daniel Okafor"],
+        ["FOI-2026-10-18-0053", "Building permit inspections — downtown", "David Laurent", "Oct 18", "Arjun Mehta", "Medium"],
+        ["FOI-2026-10-18-0052", "Drinking-water quality sample results 2026", "Rachel Kim", "Oct 18", "Priya Shah", "High"],
+        ["FOI-2026-10-16-0051", "Fire services staffing plan Q1–Q2 2026", "Nadia Petrov", "Oct 16", "Sarah Novak", "Critical"],
+        ["FOI-2026-10-15-0049", "Waterfront redevelopment contracts", "Ben Carter", "Oct 15", "Daniel Okafor"],
       ],
     },
     {
       label: "On Hold",
       count: 6,
       dot: C.orange,
-      head: "bg-[#fff7ed] text-[#c2410c]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-10-29-0059", "Police services board closed-session minutes", "Chris Doyle", "Oct 29, 2026", "Sarah Novak", "High"],
-        ["FOI-2026-10-21-0055", "Parks department overtime records Q3 2026", "Irene Walsh", "Oct 21, 2026", "Arjun Mehta"],
-        ["FOI-2026-10-14-0047", "Short-term rental licensing emails", "Victor Lam", "Oct 14, 2026", "Mei Lin", "Low"],
-        ["FOI-2026-10-07-0041", "Harbourview arena roof repair consultant reports", "Paula Grant", "Oct 7, 2026", "Grace Thompson"],
+        ["FOI-2026-10-24-0059", "Police services board closed-session minutes", "Chris Doyle", "Oct 24", "Sarah Novak", "High"],
+        ["FOI-2026-10-21-0055", "Parks department overtime records, Q3", "Irene Walsh", "Oct 21", "Arjun Mehta"],
+        ["FOI-2026-10-14-0047", "Short-term rental licensing emails", "Victor Lam", "Oct 14", "Mei Lin", "Low"],
+        ["FOI-2026-10-07-0041", "Harbourview arena roof repair consultant reports", "Paula Grant", "Oct 7", "Grace Thompson"],
       ],
     },
     {
       label: "Resolved",
       count: 10,
       dot: C.green,
-      head: "bg-[#f0fdf4] text-[#15803d]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-10-02-0037", "Sidewalk repair complaints — Ward 2", "Kevin Shaw", "Oct 2, 2026", "Daniel Okafor"],
-        ["FOI-2026-09-29-0035", "Council expense reports — Q2 2026", "Laura Chen", "Sep 29, 2026", "Priya Shah", "Medium"],
-        ["FOI-2026-09-24-0032", "Stormwater pond inspection reports 2025", "Diego Santos", "Sep 24, 2026", "Arjun Mehta"],
-        ["FOI-2026-09-19-0029", "Parking enforcement ticket volumes by street", "Fiona Hale", "Sep 19, 2026", "Mei Lin", "Low"],
+        ["FOI-2026-10-02-0037", "Sidewalk repair complaints — Ward 2", "Kevin Shaw", "Oct 2", "Daniel Okafor"],
+        ["FOI-2026-09-29-0035", "Council expense reports — Q2 2026", "Laura Chen", "Sep 29", "Priya Shah", "Medium"],
+        ["FOI-2026-09-24-0032", "Stormwater pond inspection reports 2025", "Diego Santos", "Sep 24", "Arjun Mehta"],
+        ["FOI-2026-09-19-0029", "Parking enforcement ticket volumes by street", "Fiona Hale", "Sep 19", "Mei Lin", "Low"],
       ],
     },
     {
       label: "Closed",
       count: 10,
       dot: "#71717a",
-      head: "bg-[#f4f4f5] text-[#3f3f46]",
+      head: "bg-white text-[#27272a]",
       cards: [
-        ["FOI-2026-09-12-0024", "Animal control service call logs 2025", "Peter Nolan", "Sep 12, 2026", "Grace Thompson"],
-        ["FOI-2026-09-08-0021", "Transit shelter advertising agreement", "Ruth Adler", "Sep 8, 2026", "Sarah Novak"],
-        ["FOI-2026-09-03-0018", "Community grant recipients 2026", "Hugo Martin", "Sep 3, 2026", "Priya Shah"],
-        ["FOI-2026-08-28-0015", "Pool water quality testing logs", "Ivy Brooks", "Aug 28, 2026", "Mei Lin"],
+        ["FOI-2026-09-12-0024", "Animal control service call logs 2025", "Peter Nolan", "Sep 12", "Grace Thompson"],
+        ["FOI-2026-09-08-0021", "Transit shelter advertising agreement", "Ruth Adler", "Sep 8", "Sarah Novak"],
+        ["FOI-2026-09-03-0018", "Community grant recipients 2026", "Hugo Martin", "Sep 3", "Priya Shah"],
+        ["FOI-2026-08-28-0015", "Pool water quality testing logs", "Ivy Brooks", "Aug 28", "Mei Lin"],
       ],
     },
   ];
@@ -521,13 +524,14 @@ function RequestsKanban() {
             </div>
           </div>
         </div>
-        <div className="-mr-6 mt-3 flex gap-2">
+        {/* Horizontally scrolling board: five columns in view, the sixth (Closed) peeks in from the right edge. */}
+        <div className="-mr-6 mt-3 flex gap-1.5">
           {columns.map((col) => (
-            <div key={col.label} className="w-[188px] shrink-0 rounded-xl border border-[#e4e4e7] bg-[#fafafa]">
+            <div key={col.label} className="w-[182px] shrink-0 rounded-xl border border-[#e4e4e7] bg-[#fafafa]">
               <div className={cn("flex items-center gap-1.5 rounded-t-xl border-b border-[#e4e4e7] px-2.5 py-2", col.head)}>
                 <span className="size-2 rounded-full" style={{ background: col.dot }} />
                 <span className="text-[10.5px] font-semibold uppercase tracking-[0.05em]">{col.label}</span>
-                <span className="ml-auto rounded-full bg-white/80 px-1.5 text-[10.5px] font-medium ring-1 ring-inset ring-black/5">{col.count}</span>
+                <span className="ml-auto rounded-full bg-[#f4f4f5] px-1.5 text-[10.5px] font-medium text-[#52525b]">{col.count}</span>
               </div>
               <div className="space-y-2 p-1.5">
                 {col.cards.map((c) => (
@@ -566,10 +570,10 @@ function RequestTriage() {
             </span>
             <div>
               <h1 className="text-[20px] font-semibold leading-tight tracking-[-0.01em]">
-                <span className="text-[#71717a]">Request</span> <span className="text-[#a1a1aa]">/</span> <span className="font-mono text-[18px]">FOI-2026-10-18-0062</span>
+                <span className="text-[#71717a]">Request</span> <span className="text-[#a1a1aa]">/</span> <span className="font-mono text-[18px]">FOI-2026-10-18-0052</span>
               </h1>
               <p className="mt-1 flex items-center gap-2 text-[12.5px] text-[#52525b]">
-                Drinking-water sample results — Harbourview system
+                Drinking-water quality sample results 2026
                 <Badge tone="amber">In Progress</Badge>
                 <Badge tone="amber">Due in 4 days</Badge>
               </p>
@@ -686,11 +690,11 @@ function RequestTriage() {
 
 function Exemptions() {
   const rows: [string, string, string, string, string][] = [
-    ["ADV-01", "Advice or recommendations", "Advice or recommendations of an officer, employee or consultant of the institution.", "Advice & Deliberation", "Oct 14, 2026"],
-    ["CAB-01", "Draft by-laws and closed meetings", "Records revealing draft by-laws or the substance of closed-meeting deliberations.", "Council Confidences", "Oct 14, 2026"],
-    ["CC-01", "Council in-camera reports", "Reports prepared for an in-camera council or committee session.", "Council Confidences", "Sep 30, 2026"],
-    ["IG-01", "Relations with other governments", "Information received in confidence from another level of government or its agencies.", "Intergovernmental", "Sep 30, 2026"],
-    ["LE-01", "Law enforcement", "Disclosure could interfere with an investigation or law enforcement matter.", "Law Enforcement", "Sep 22, 2026"],
+    ["MFIPPA s.6(1)(a)", "Draft by-laws", "Records that would reveal a draft by-law or a draft private bill.", "Council Confidences", "Oct 14, 2026"],
+    ["MFIPPA s.6(1)(b)", "Closed meetings", "Deliberations of a council or committee meeting held in camera.", "Council Confidences", "Oct 14, 2026"],
+    ["MFIPPA s.7", "Advice or recommendations", "Advice or recommendations of an officer, employee or consultant.", "Advice & Deliberation", "Sep 30, 2026"],
+    ["MFIPPA s.8", "Law enforcement", "Disclosure could interfere with an investigation or law enforcement matter.", "Law Enforcement", "Sep 30, 2026"],
+    ["MFIPPA s.9", "Relations with other governments", "Information received in confidence from another government or agency.", "Intergovernmental", "Sep 22, 2026"],
     ["MFIPPA s.10", "Third-party information", "Commercial, financial or technical information supplied in confidence.", "Third Party", "Sep 22, 2026"],
     ["MFIPPA s.11", "Economic and other interests", "Disclosure could prejudice the municipality's economic interests.", "Economic Interests", "Sep 18, 2026"],
     ["MFIPPA s.12", "Solicitor-client privilege", "Records subject to solicitor-client or litigation privilege.", "Legal Privilege", "Sep 18, 2026"],
@@ -727,7 +731,7 @@ function Exemptions() {
           <div className="flex items-center gap-2">
             <SearchInput placeholder="Search exemption types…" className="flex-1" width={undefined} />
             <Select value="All Categories" width={170} />
-            <Select value="All" width={110} />
+            <Select value="All Statuses" width={140} />
           </div>
           <div className="mt-2.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-[12px] text-[#52525b]">
@@ -741,21 +745,21 @@ function Exemptions() {
           className="mt-3"
           rowHeight={40}
           columns={[
-            { label: "Code", sort: true, width: "108px" },
+            { label: "Code", sort: true, width: "132px" },
             { label: "Name", sort: true, width: "2.6fr" },
             { label: "Category", sort: true, width: "1.15fr" },
-            { label: "Status", width: "72px" },
+            { label: "Status", width: "76px" },
             { label: "Last Modified", sort: true, width: "102px" },
             { label: "", width: "28px", align: "right" },
           ]}
           rows={rows.map(([code, name, desc, cat, date]) => [
-            <span key="c" className="font-mono text-[11.5px]">{code}</span>,
+            <span key="c" className="font-mono text-[11px] tracking-[-0.02em] text-[#27272a]">{code}</span>,
             <span key="n" className="block min-w-0 leading-[1.25]">
               <span className="block truncate font-semibold">{name}</span>
               <span className="block truncate text-[11px] text-[#71717a]">{desc}</span>
             </span>,
             <span key="k" className="rounded-md border border-[#e4e4e7] px-1.5 py-[1px] text-[11px] font-medium text-[#3f3f46]">{cat}</span>,
-            <span key="s" className="rounded-full bg-[#18181b] px-2 py-[2px] text-[10.5px] font-medium text-white">Active</span>,
+            <Badge key="s" tone="green" dot>Active</Badge>,
             <span key="d" className="text-[#52525b]">{date}</span>,
             <EllipsisVertical key="a" className="ml-auto size-4 text-[#71717a]" />,
           ])}
@@ -768,21 +772,21 @@ function Exemptions() {
 
 /* ---------- 5. Redaction ---------- */
 
-const actionTone: Record<string, Tone> = { "Status Change": "orange", Edit: "amber", Create: "green", Upload: "blue" };
+const actionTone: Record<string, Tone> = { "Status Change": "violet", Edit: "amber", Create: "green", Upload: "blue" };
 
 function Redaction() {
-  const doc = "Harbourview_Water_Sampling_2026.pdf";
+  const doc = "Water_Sampling_2026.pdf";
   const rows: [string, string, string, string, string, string][] = [
-    ["11:38 AM", "Status changed", "ACT-00483", "Status Change", "Priya Shah", "In Review → Ready for Review"],
-    ["11:36 AM", "Exemption index generated", "ACT-00482", "Create", "Priya Shah", "Index of exemptions · 79 redactions · MFIPPA s.14"],
-    ["11:35 AM", "Redacted copy generated", "ACT-00481", "Create", "Priya Shah", "Redacted PDF v2 · 18 pages · burn-in applied"],
-    ["11:21 AM", "Exemption applied", "ACT-00480", "Edit", "Priya Shah", "MFIPPA s.14 applied to 79 redactions"],
-    ["11:09 AM", "Manual redaction added", "ACT-00479", "Edit", "Priya Shah", "Page 12 · resident name and civic address"],
-    ["10:58 AM", "AI suggestions accepted", "ACT-00478", "Edit", "Priya Shah", "78 of 78 suggestions accepted"],
-    ["10:47 AM", "AI analysis completed", "ACT-00477", "Status Change", "System", "78 suggestions across 4 pages"],
-    ["10:44 AM", "AI analysis started", "ACT-00476", "Status Change", "Daniel Okafor", "Personal information and third-party models"],
-    ["10:41 AM", "Imported from request", "ACT-00475", "Upload", "Daniel Okafor", "Imported from FOI-2026-10-18-0062 · 18 pages"],
-    ["10:40 AM", "Redaction created", "ACT-00474", "Create", "Daniel Okafor", "Redaction RED-052 created for FOI-2026-10-18-0062"],
+    ["11:38 AM", "Status changed", "ACT-00483", "Status Change", "Priya Shah", "In Review → Approved"],
+    ["11:36 AM", "Exemption index generated", "ACT-00482", "Create", "Priya Shah", "79 entries · MFIPPA s.14"],
+    ["11:35 AM", "Redacted copy generated", "ACT-00481", "Create", "Priya Shah", "PDF v2 · 18 pages"],
+    ["11:21 AM", "Exemption applied", "ACT-00480", "Edit", "Priya Shah", "s.14 on 79 redactions"],
+    ["11:09 AM", "Manual redaction added", "ACT-00479", "Edit", "Priya Shah", "Page 12 · home address"],
+    ["10:58 AM", "AI suggestions accepted", "ACT-00478", "Edit", "Priya Shah", "78 of 78 accepted"],
+    ["10:47 AM", "AI analysis completed", "ACT-00477", "Status Change", "System", "78 suggestions, 4 pages"],
+    ["10:44 AM", "AI analysis started", "ACT-00476", "Status Change", "Daniel Okafor", "PII detection model"],
+    ["10:41 AM", "Imported from request", "ACT-00475", "Upload", "Daniel Okafor", "FOI-2026-10-18-0052"],
+    ["10:40 AM", "Redaction created", "ACT-00474", "Create", "Daniel Okafor", "RED-052 opened"],
   ];
   return (
     <ScreenCanvas id="requests-redaction">
@@ -803,8 +807,8 @@ function Redaction() {
         <div className="mt-3 rounded-xl border border-[#e4e4e7] bg-white p-3">
           <div className="flex items-center gap-2">
             <SearchInput placeholder="Search activities…" className="flex-1" width={undefined} />
-            <Select value="all" width={130} />
-            <Select value="All" width={130} />
+            <Select value="All Types" width={130} />
+            <Select value="All Users" width={130} />
           </div>
           <div className="mt-2.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-[12px] text-[#52525b]">
@@ -818,13 +822,13 @@ function Redaction() {
           className="mt-3"
           rowHeight={47}
           columns={[
-            { label: "Timestamp", sort: true, width: "156px" },
-            { label: "Action", width: "1.45fr" },
-            { label: "Type", width: "110px" },
-            { label: "Document", width: "1.1fr" },
-            { label: "User", width: "108px" },
-            { label: "Details", width: "1.15fr" },
-            { label: "", width: "24px", align: "right" },
+            { label: "Timestamp", sort: true, width: "158px" },
+            { label: "Action", width: "186px" },
+            { label: "Type", width: "106px" },
+            { label: "Document", width: "1.2fr" },
+            { label: "User", width: "116px" },
+            { label: "Details", width: "1fr" },
+            { label: "", width: "28px", align: "right" },
           ]}
           rows={rows.map(([time, action, id, type, user, details]) => [
             <span key="t" className="flex items-center gap-1.5 text-[11.5px] text-[#3f3f46]">

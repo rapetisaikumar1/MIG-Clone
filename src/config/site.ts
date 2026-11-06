@@ -54,8 +54,17 @@ const offices: [Office, ...Office[]] = [
 export const company = {
   name: "Maverick InnoGarage",
   shortName: "MiG",
+  // Positioning per the owner directive of 2026-11-07: a software development and professional services
+  // company. Four specializations in priority order (AI Governance, Adobe Services, Data Management,
+  // Software Development), plus MapleRecord, MiG's own product. Use these strings verbatim for self-description.
+  /** Canonical sentence: About lead, Organization JSON-LD `description`, README and long-form intros. */
+  descriptor:
+    "Maverick InnoGarage is a software development and professional services company specializing in AI governance, Adobe enterprise solutions, data management and enterprise software, and the maker of MapleRecord, our records management platform.",
+  /** Short variant (≤ 160 characters): default and home meta description, OG and Twitter descriptions. */
   positioning:
-    "Maverick InnoGarage helps organizations govern AI responsibly, implement Adobe solutions effectively, and build trusted enterprise data foundations.",
+    "Software development and professional services for AI governance, Adobe solutions, data management and enterprise software, from the makers of MapleRecord.",
+  /** One-line footer blurb. */
+  blurb: "Software development and professional services for responsible AI, Adobe solutions, enterprise data and records management.",
   thesis: "Trusted data supports responsible AI and effective digital experiences.",
   // No email address is published on the current site. Leave null until confirmed.
   email: null as string | null,

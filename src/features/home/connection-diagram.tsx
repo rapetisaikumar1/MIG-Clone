@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { IllustrativeLabel } from "@/components/ui/layout";
 import { connectionScenario } from "@/content/home";
-import { cn } from "@/lib/utils";
 
 /**
  * HTML/CSS diagram (not SVG) so labels reflow and stay readable at every width:
  * horizontal flow on large screens, vertical flow on small ones, with a feedback loop.
  * It walks one illustrative scenario through the three layers shown in the hero visual,
  * so the connection is shown concretely rather than restated in the abstract.
+ *
+ * The three cards get equal treatment (no step numbers, no fixed "selected" card); the card under the
+ * pointer or holding focus lifts slightly and fills its marker with the logo red.
  */
 export function ConnectionDiagram() {
   const { title, steps, feedback } = connectionScenario;
@@ -21,32 +23,23 @@ export function ConnectionDiagram() {
       </div>
       <ol className="relative mt-8 grid gap-4 lg:grid-cols-3 lg:gap-12">
         {steps.map((s, i) => (
-          <li key={s.layer} className="relative flex flex-col">
-            <div
-              className={cn(
-                "group relative flex-1 rounded-2xl border p-7 transition-colors sm:p-8 lg:p-7 xl:p-8",
-                i === 1
-                  ? "border-night-text/40 bg-night-text text-night"
-                  : "border-night-line bg-night-raised has-[a:hover]:border-night-muted",
-              )}
-            >
-              <span className={cn("font-mono text-label uppercase", i === 1 ? "text-night/70" : "text-night-muted")}>
-                {String(i + 1).padStart(2, "0")} · {s.layer}
-              </span>
+          <li key={s.layer} className="reveal relative flex flex-col">
+            <div className="card-lift group relative flex-1 rounded-2xl border border-night-line bg-night-raised p-7 transition-colors duration-200 hover:border-night-muted focus-within:border-night-muted sm:p-8 lg:p-7 xl:p-8">
+              <span className="font-mono text-label uppercase text-night-muted">{s.layer}</span>
               <span className="mt-6 flex items-center gap-3">
-                <span aria-hidden className={cn("size-3 shrink-0 rounded-full", i === 1 ? "bg-logo-red" : "border border-night-muted")} />
+                <span
+                  aria-hidden
+                  className="size-3 shrink-0 rounded-full border border-night-muted transition-colors duration-200 group-focus-within:border-logo-red group-focus-within:bg-logo-red group-hover:border-logo-red group-hover:bg-logo-red"
+                />
                 {/* Stretched link: the whole card is clickable, but its accessible name stays short. */}
                 <Link
                   href={s.href}
-                  className={cn(
-                    "text-h3 font-semibold after:absolute after:inset-0 after:rounded-2xl group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4",
-                    i === 1 && "focus-visible:outline-night",
-                  )}
+                  className="text-h3 font-semibold decoration-1 underline-offset-4 after:absolute after:inset-0 after:rounded-2xl group-hover:underline"
                 >
                   {s.area}
                 </Link>
               </span>
-              <p className={cn("mt-3 text-[0.9375rem] leading-relaxed", i === 1 ? "text-night/80" : "text-night-muted")}>{s.body}</p>
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-night-muted">{s.body}</p>
             </div>
             {i < steps.length - 1 ? (
               // Equal-width cards: on large screens the arrow sits in the grid gap instead of taking column width.
@@ -62,7 +55,12 @@ export function ConnectionDiagram() {
           </li>
         ))}
       </ol>
-      <div aria-hidden className="mx-6 mt-4 hidden h-10 rounded-b-2xl border-x border-b border-dashed border-night-line lg:mr-6 lg:block" />
+      {/* Feedback loop: from the last card back up into the first, with an arrowhead at its end. */}
+      <div aria-hidden className="relative mx-6 mt-4 hidden h-10 rounded-b-2xl border-x border-b border-dashed border-night-muted/60 lg:block">
+        <svg viewBox="0 0 12 8" className="absolute -left-[6.5px] -top-[7px] h-2 w-3 text-night-muted">
+          <path d="M1 7 L6 1 L11 7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        </svg>
+      </div>
       <figcaption className="mt-6 flex items-start gap-3 text-[0.9375rem] text-night-muted lg:mt-3 lg:justify-center">
         <span aria-hidden className="mt-2 hidden h-px w-6 border-t border-dashed border-night-muted lg:block" />
         {feedback}

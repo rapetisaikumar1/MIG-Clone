@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { AdobePlatform, ServiceContent } from "@/lib/content/types";
 import { breadcrumbJsonLd, faqJsonLd, JsonLd, serviceJsonLd } from "@/components/seo/json-ld";
+import { insights } from "@/content/insights";
 import { CtaBand } from "@/features/contact/cta-band";
 import {
   ApproachSection,
@@ -17,17 +18,19 @@ import {
 } from "./sections";
 
 /**
- * Shared composition for the three specialization pages. Optional slots let a page add its own
+ * Shared composition for the specialization pages (AI Governance, Adobe Services, Data Management, Software Development). Optional slots let a page add its own
  * sections (e.g. the MapleRecord callout, the Adobe hub sections) without forking the template:
  *
  * hero → afterHero → problem → capabilities → afterCapabilities → platforms → afterPlatforms →
- * approach → deliverables → use cases → benefits → beforeFaq → FAQ → related → CTA
+ * approach → deliverables → use cases → (benefits) → beforeFaq → FAQ → related (+ further reading) → CTA
  */
 export function ServicePage({
   content,
   graphic,
   heroSecondaryCta,
   platformHref,
+  capabilityLinks,
+  showBenefits = true,
   afterHero,
   afterCapabilities,
   afterPlatforms,
@@ -39,6 +42,10 @@ export function ServicePage({
   heroSecondaryCta?: HeroCta;
   /** Links each platform-matrix row to its own page. */
   platformHref?: (platform: AdobePlatform) => string | undefined;
+  /** Terms in capability bullets to link, e.g. { MapleRecord: "/maplerecord" }. */
+  capabilityLinks?: Record<string, string>;
+  /** The benefits strip; pages whose hero, problem section and FAQ already carry those points can drop it. */
+  showBenefits?: boolean;
   afterHero?: ReactNode;
   afterCapabilities?: ReactNode;
   afterPlatforms?: ReactNode;
@@ -46,6 +53,11 @@ export function ServicePage({
 }) {
   const path = `/${content.slug}`;
   const crumbs = [{ label: "Home", href: "/" }, { label: content.name }];
+  // Published articles on this page's theme (`insightTheme`, else the page name); none → no reading list.
+  const theme = content.insightTheme ?? content.name;
+  const reading = insights
+    .filter((i) => i.status === "published" && i.theme === theme)
+    .map((i) => ({ title: i.title, href: `/insights/${i.slug}` }));
   return (
     <>
       <JsonLd
@@ -58,17 +70,17 @@ export function ServicePage({
       <ServiceHero content={content} graphic={graphic} secondaryCta={heroSecondaryCta} />
       {afterHero}
       <ProblemSection content={content} />
-      <CapabilitiesSection content={content} />
+      <CapabilitiesSection content={content} termLinks={capabilityLinks} />
       {afterCapabilities}
       {content.platforms ? <PlatformMatrix platforms={content.platforms} platformHref={platformHref} /> : null}
       {afterPlatforms}
       <ApproachSection content={content} />
       <DeliverablesSection content={content} />
       <UseCasesSection content={content} />
-      <BenefitsSection content={content} />
+      {showBenefits ? <BenefitsSection content={content} /> : null}
       {beforeFaq}
       <FaqSection faqs={content.faqs} />
-      <RelatedServices current={content.slug} />
+      <RelatedServices current={content.slug} reading={reading} />
       <CtaBand title={content.cta.title} body={content.cta.body} interest={content.interest} />
     </>
   );

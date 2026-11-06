@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleCheck,
+  Command,
   CircleX,
   Clock,
   Columns3,
@@ -21,8 +22,8 @@ import {
   Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge, Btn, Checkbox, ColumnsButton, DataTable, PageHeader, ScreenCanvas, SearchInput, Segmented, Select, TableFooter, type Icon, type Tone } from "./kit";
-import { OrgShell } from "./records-shell";
+import { AppFrame, Badge, Btn, Checkbox, ColumnsButton, DataTable, PageHeader, ScreenCanvas, SearchInput, Segmented, Select, Sidebar, SidebarHeader, TableFooter, TopBar, type Icon, type NavSection, type Tone } from "./kit";
+import { OrgShell, orgSections } from "./records-shell";
 
 /*
  * MR Records screens, second set: Destruction Register, Audit Trail, Templates & Metadata,
@@ -42,9 +43,40 @@ function SoftBtn({ children, icon: IconC }: { children: ReactNode; icon?: Icon }
   );
 }
 
+/** Filled, fully rounded, borderless chip as in the product (Physical / Digital, ✓ Connected, counts). */
+const pillBadge = "rounded-full px-2 ring-0";
+
 /** Small outlined pill (field types, required flags). */
 function Pill({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn("inline-flex items-center whitespace-nowrap rounded-md border border-[#e4e4e7] bg-white px-1.5 py-[1px] text-[11px] font-medium text-[#18181b]", className)}>{children}</span>;
+  return <span className={cn("inline-flex items-center whitespace-nowrap rounded-full border border-[#e4e4e7] bg-white px-2 py-[1px] text-[11px] font-medium text-[#18181b]", className)}>{children}</span>;
+}
+
+/**
+ * Organization shell for the last three Admin Console pages (Audit Trail, Destruction Register,
+ * Blockchain Verification). Same navigation as OrgShell, but the "General" subgroup is shown collapsed
+ * (as the real app allows) so the active item at the bottom of the tree stays above the Help & Support
+ * footer on the 1280×800 canvas. Items and their order are unchanged.
+ */
+function collapseGeneral(sections: NavSection[]): NavSection[] {
+  return sections.map((section) => ({
+    ...section,
+    items: section.items.map((item) =>
+      item.label === "Admin Console" && item.children
+        ? { ...item, children: item.children.map((c) => (c.label === "General" ? { label: c.label, chevron: "right" as const } : c)) }
+        : item,
+    ),
+  }));
+}
+
+function AdminTailShell({ active, children }: { active: "audit" | "destruction" | "blockchain"; children: ReactNode }) {
+  return (
+    <AppFrame
+      topBar={<TopBar product="MR Records" />}
+      sidebar={<Sidebar width={232} header={<SidebarHeader name="City of Harbourview" sub="Organization" icon={Command} />} sections={collapseGeneral(orgSections(active))} />}
+    >
+      {children}
+    </AppFrame>
+  );
 }
 
 /* ---------- Destruction Register ---------- */
@@ -54,8 +86,8 @@ function DestructionRegister() {
   const rows: Row[] = [
     { cert: "MR-BOX-FIN-0042-05Nov2026-D338", executed: "Nov 5, 2026, 10:42 AM", title: "AP Invoices 2017", medium: "Physical", series: "Accounts Payable", method: "Shred", approved: "Grace Thompson", executedBy: "Daniel Okafor", cert3: true },
     { cert: "MR-BOX-FIN-0041-05Nov2026-D337", executed: "Nov 5, 2026, 10:38 AM", title: "AP Invoices 2016", medium: "Physical", series: "Accounts Payable", method: "Shred", approved: "Grace Thompson", executedBy: "Daniel Okafor", cert3: true },
-    { cert: "MR-NR-04Nov2026-D336", executed: "Nov 4, 2026, 03:15 PM", title: "Clerk II Shortlist", medium: "Digital", series: "Recruitment", method: "Purge", approved: "Sarah Novak", executedBy: "Mei Lin" },
-    { cert: "MR-NR-04Nov2026-D335", executed: "Nov 4, 2026, 03:12 PM", title: "By-law Shortlist", medium: "Digital", series: "Recruitment", method: "Purge", approved: "Sarah Novak", executedBy: "Mei Lin" },
+    { cert: "MR-NR-04Nov2026-D336", executed: "Nov 4, 2026, 03:15 PM", title: "Clerk Hiring 2023", medium: "Digital", series: "Recruitment", method: "Purge", approved: "Sarah Novak", executedBy: "Mei Lin" },
+    { cert: "MR-NR-04Nov2026-D335", executed: "Nov 4, 2026, 03:12 PM", title: "Officer Hiring 2023", medium: "Digital", series: "Recruitment", method: "Purge", approved: "Sarah Novak", executedBy: "Mei Lin" },
     { cert: "MR-BOX-HR-0007-30Oct2026-D334", executed: "Oct 30, 2026, 11:05 AM", title: "Leave Forms 2018", medium: "Physical", series: "Leave Records", method: "Dispose", approved: "Grace Thompson", executedBy: "Arjun Mehta", cert3: true },
     { cert: "MR-NR-29Oct2026-D333", executed: "Oct 29, 2026, 09:47 AM", title: "AR-2023-118 File", medium: "Digital", series: "Access Requests", method: "Purge", approved: "Priya Shah", executedBy: "Mei Lin" },
     { cert: "MR-NR-29Oct2026-D332", executed: "Oct 29, 2026, 09:44 AM", title: "AR-2023-104 File", medium: "Digital", series: "Access Requests", method: "Purge", approved: "Priya Shah", executedBy: "Mei Lin" },
@@ -66,7 +98,7 @@ function DestructionRegister() {
   ];
   return (
     <ScreenCanvas id="records-destruction">
-      <OrgShell active="destruction">
+      <AdminTailShell active="destruction">
         <PageHeader title="Destruction Register" subtitle="Authorised destructions of digital and physical records. Exportable evidence for ISO 15489 disposition." />
         <div className="mt-5 flex items-center gap-2">
           <span className="flex h-8 w-[300px] items-center rounded-md bg-[#f4f4f5] px-2.5 text-[12px] text-[#71717a]">Search certificate, title, accession, series…</span>
@@ -83,28 +115,28 @@ function DestructionRegister() {
           rowHeight={40}
           columns={[
             { label: "Certificate", width: 222 },
-            { label: "Executed", width: 138 },
+            { label: "Executed", width: 144 },
             { label: "Title", width: "1fr" },
-            { label: "Medium", width: 68 },
-            { label: "Series", width: 108 },
-            { label: "Method", width: 60 },
-            { label: "Approved by", width: 104 },
-            { label: "Executed by", width: 92 },
+            { label: "Medium", width: 71 },
+            { label: "Series", width: 106 },
+            { label: "Method", width: 56 },
+            { label: "Approved by", width: 101 },
+            { label: "Executed by", width: 86 },
             { label: "", width: 70 },
           ]}
           rows={rows.map((r) => [
-            <span key="c" className="text-[11px] font-medium">{r.cert}</span>,
-            <span key="e" className="text-[11px] text-[#3f3f46]">{r.executed}</span>,
+            <span key="c" className="text-[11.5px] font-medium">{r.cert}</span>,
+            <span key="e" className="text-[11.5px] text-[#3f3f46]">{r.executed}</span>,
             <span key="t" className="text-[11.5px]">{r.title}</span>,
-            <Badge key="m">{r.medium}</Badge>,
+            <Badge key="m" className={pillBadge}>{r.medium}</Badge>,
             <span key="s" className="text-[11.5px] text-[#3f3f46]">{r.series}</span>,
             <span key="me" className="text-[11.5px] text-[#3f3f46]">{r.method}</span>,
             <span key="a" className="text-[11.5px] text-[#3f3f46]">{r.approved}</span>,
             <span key="x" className="text-[11.5px] text-[#3f3f46]">{r.executedBy}</span>,
-            <span key="i" className="flex items-center gap-2.5 text-[#27272a]">
-              <Download className="size-3.5 shrink-0" strokeWidth={1.9} />
-              <Upload className="size-3.5 shrink-0" strokeWidth={1.9} />
-              {r.cert3 ? <FileText className="size-3.5 shrink-0" strokeWidth={1.9} /> : null}
+            <span key="i" className="grid grid-cols-[14px_14px_14px] items-center gap-2 text-[#27272a]">
+              <Download className="size-3.5" strokeWidth={1.9} />
+              <Upload className="size-3.5" strokeWidth={1.9} />
+              {r.cert3 ? <FileText className="size-3.5" strokeWidth={1.9} /> : <span />}
             </span>,
           ])}
         />
@@ -116,27 +148,36 @@ function DestructionRegister() {
             <span className="rounded-md bg-[#f4f4f5] px-2.5 py-1.5 text-[#a1a1aa]">Next</span>
           </span>
         </div>
-      </OrgShell>
+      </AdminTailShell>
     </ScreenCanvas>
   );
 }
 
 /* ---------- Audit Trail ---------- */
 
+/** Masked personal data (IP address, email): a flat placeholder bar, as the product redacts these cells. */
+function Redacted() {
+  return (
+    <span className="pr-4">
+      <span className="block h-4 rounded-[4px] bg-[#ededee]" />
+    </span>
+  );
+}
+
 function AuditTrail() {
   const cols: { label: string; w: number }[] = [
-    { label: "Timestamp (UTC)", w: 128 },
-    { label: "Session ID", w: 72 },
-    { label: "IP Address", w: 80 },
-    { label: "Device", w: 94 },
-    { label: "OS", w: 80 },
+    { label: "Timestamp (UTC)", w: 138 },
+    { label: "Session ID", w: 84 },
+    { label: "IP Address", w: 86 },
+    { label: "Device", w: 100 },
+    { label: "OS", w: 78 },
     { label: "Browser", w: 86 },
-    { label: "User", w: 94 },
-    { label: "User Email", w: 80 },
+    { label: "User", w: 86 },
+    { label: "User Email", w: 86 },
     { label: "Action ID", w: 80 },
-    { label: "Action Type", w: 100 },
-    { label: "Action Source", w: 96 },
-    { label: "Source Name", w: 130 },
+    { label: "Action Type", w: 108 },
+    { label: "Action Source", w: 104 },
+    { label: "Source Name", w: 136 },
   ];
   // [time, session, ip, device, os, browser, user, actionId, type, source, sourceName]
   const rows: string[][] = [
@@ -154,7 +195,7 @@ function AuditTrail() {
   const template = `36px 30px ${cols.map((c) => `${c.w}px`).join(" ")}`;
   return (
     <ScreenCanvas id="records-audit">
-      <OrgShell active="audit">
+      <AdminTailShell active="audit">
         <PageHeader title="Audit Trail" subtitle="Comprehensive logging of all system activities" />
         <Segmented className="mt-3" items={["Active Logs", "Archived Logs"]} />
         <div className="mt-4 flex items-center gap-3">
@@ -173,9 +214,9 @@ function AuditTrail() {
               <Checkbox />
               <span />
               {cols.map((c) => (
-                <span key={c.label} className="flex items-center gap-1 whitespace-nowrap pr-3">
+                <span key={c.label} className="flex min-w-0 items-center gap-1 whitespace-nowrap pr-3">
                   {c.label}
-                  <ChevronDown className="size-3 text-[#a1a1aa]" />
+                  <ChevronDown className="size-3 shrink-0 text-[#a1a1aa]" />
                 </span>
               ))}
             </div>
@@ -184,19 +225,17 @@ function AuditTrail() {
                 <Checkbox />
                 <ChevronRight className="size-3.5 text-[#71717a]" />
                 <span className="whitespace-nowrap pr-3">{r[0]}</span>
-                <span className="font-mono text-[11px] text-[#52525b]">{r[1]}</span>
-                <span className="text-[11.5px] text-[#52525b]">{r[2]}</span>
-                <span className="whitespace-nowrap">{r[3]}</span>
-                <span className="whitespace-nowrap">{r[4]}</span>
-                <span className="whitespace-nowrap">{r[5]}</span>
-                <span className="whitespace-nowrap">{r[6]}</span>
-                <span className="pr-3">
-                  <span className="block h-[22px] rounded-sm bg-[linear-gradient(90deg,#ececee,#f6f6f7,#ececee)] blur-[0.6px]" />
-                </span>
-                <span>{r[7]}</span>
-                <span className="whitespace-nowrap">{r[8]}</span>
-                <span>{r[9]}</span>
-                <span className="whitespace-nowrap">{r[10]}</span>
+                <span className="whitespace-nowrap pr-3 text-[#52525b]">{r[1]}</span>
+                <Redacted />
+                <span className="whitespace-nowrap pr-3">{r[3]}</span>
+                <span className="whitespace-nowrap pr-3">{r[4]}</span>
+                <span className="whitespace-nowrap pr-3">{r[5]}</span>
+                <span className="whitespace-nowrap pr-3">{r[6]}</span>
+                <Redacted />
+                <span className="whitespace-nowrap pr-3">{r[7]}</span>
+                <span className="whitespace-nowrap pr-3">{r[8]}</span>
+                <span className="whitespace-nowrap pr-3 text-[#52525b]">{r[9]}</span>
+                <span className="whitespace-nowrap pr-3">{r[10]}</span>
               </div>
             ))}
           </div>
@@ -205,7 +244,7 @@ function AuditTrail() {
           </div>
           <TableFooter summary="0 of 296 row(s) selected." page="Page 1 of 30" />
         </div>
-      </OrgShell>
+      </AdminTailShell>
     </ScreenCanvas>
   );
 }
@@ -223,10 +262,10 @@ function TemplatesMetadata() {
     ["Council Minutes Metadata", 12],
     ["By-law & Resolution Metadata", 11],
     ["Contract Execution Metadata", 13],
-    ["Accounts Payable Invoice Pack", 14],
+    ["AP Invoice Pack", 14],
     ["Building Permit Metadata", 12],
     ["Personnel File Metadata", 12],
-    ["Access Request Case Metadata", 13],
+    ["Access Request Metadata", 13],
     ["Communications Metadata", 11],
     ["Work Order Metadata", 10],
   ];
@@ -239,13 +278,13 @@ function TemplatesMetadata() {
     ["Keywords", "Multi Select", false, "Drawn from the controlled vocabulary."],
     ["Notes", "Text", false, "N/A"],
     ["Source System", "Single Select", false, "System of origin for imported records."],
-    ["Retention Review Required", "Boolean", false, "Set true when a retention officer must review before disposition."],
+    ["Retention Review Required", "Boolean", false, "Retention officer reviews before disposition."],
     ["Page Count Estimate", "Number", false, "N/A"],
   ];
   const listRow = ([name, n]: [string, number], active = false) => (
-    <div key={name} className={cn("flex h-[26px] items-center justify-between rounded-md px-2 text-[12.5px]", active ? "bg-[#f0f0f1] font-medium text-[#18181b]" : "text-[#52525b]")}>
+    <div key={name} className={cn("flex h-[26px] items-center justify-between gap-2 rounded-md px-2 text-[12.5px]", active ? "bg-[#f0f0f1] font-medium text-[#18181b]" : "text-[#52525b]")}>
       <span className="truncate">{name}</span>
-      <span className="rounded-md border border-[#e4e4e7] bg-white px-1 text-[10px] text-[#3f3f46]">{n}</span>
+      <span className="min-w-[22px] shrink-0 rounded-full bg-[#ececee] px-1.5 text-center text-[10.5px] font-medium leading-[17px] text-[#3f3f46]">{n}</span>
     </div>
   );
   return (
@@ -285,7 +324,7 @@ function TemplatesMetadata() {
             </div>
             <div className="mt-3 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white">
               {(() => {
-                const t = "34px 24px 1.45fr 96px 84px 2fr 52px";
+                const t = "34px 24px 1.4fr 108px 88px 2fr 52px";
                 return (
                   <>
                     <div className="grid h-9 items-center border-b border-[#e4e4e7] px-3 text-[12px] font-medium text-[#3f3f46]" style={{ gridTemplateColumns: t }}>
@@ -303,7 +342,7 @@ function TemplatesMetadata() {
                         <GripVertical className="size-3.5 text-[#71717a]" />
                         <span className="truncate pr-3 font-medium">{name}</span>
                         <span><Pill>{type}</Pill></span>
-                        <span><Pill className={req ? undefined : "text-[#52525b]"}>{req ? "Required" : "Optional"}</Pill></span>
+                        <span><Pill className={req ? "border-transparent bg-[#f0f0f1]" : "text-[#52525b]"}>{req ? "Required" : "Optional"}</Pill></span>
                         <span className={cn("truncate pr-3 text-[11.5px]", help === "N/A" ? "text-[#52525b]" : "text-[#3f3f46]")}>{help}</span>
                         <MoreVertical className="ml-auto size-3.5 text-[#3f3f46]" />
                       </div>
@@ -334,7 +373,7 @@ function StatLine({ label, value, className }: { label: string; value: ReactNode
 function BlockchainVerification() {
   return (
     <ScreenCanvas id="records-blockchain">
-      <OrgShell active="blockchain">
+      <AdminTailShell active="blockchain">
         <PageHeader title="Blockchain Verification" subtitle="Verify audit trail integrity using blockchain technology" />
         <Segmented className="mt-4" items={["Network Status", "Verify Audit", "Chain Integrity", "Verification Report"]} />
         <div className="mt-5 flex items-center justify-between">
@@ -345,7 +384,7 @@ function BlockchainVerification() {
           <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3.5 shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
             <div className="flex items-center justify-between">
               <h3 className="text-[13px] font-semibold">Connection Status</h3>
-              <Badge tone="green">✓ Connected</Badge>
+              <Badge tone="green" className={cn(pillBadge, "bg-[#dcfce7]")}>✓ Connected</Badge>
             </div>
             <div className="mt-3 space-y-2">
               <StatLine label="Network:" value="ethereum" />
@@ -369,7 +408,7 @@ function BlockchainVerification() {
             </div>
           </div>
         </div>
-      </OrgShell>
+      </AdminTailShell>
     </ScreenCanvas>
   );
 }
@@ -456,7 +495,7 @@ function RequestsApprovals() {
                 <span className="block text-[10.5px] text-[#71717a]">{ws}</span>
               </span>,
               <span key="d" className="text-[#3f3f46]">{date}</span>,
-              <Badge key="s" tone={reqStatusTone[status] ?? "gray"}>{status}</Badge>,
+              <Badge key="s" tone={reqStatusTone[status] ?? "gray"} className="rounded-full px-2">{status}</Badge>,
               `${files} ${files === 1 ? "file" : "files"}`,
               `${boxes} ${boxes === 1 ? "box" : "boxes"}`,
               <MoreVertical key="a" className="ml-auto size-3.5 text-[#3f3f46]" />,

@@ -6,6 +6,9 @@ import type { ServiceContent } from "@/lib/content/types";
  * /adobe-analytics, /adobe-target, /adobe-marketo-services, /adobe-commerce). Product names and
  * descriptions follow Adobe's current documentation naming as of November 2026.
  * Partner status is displayed in the header from company.adobePartner in config/site.ts.
+ * Positioning (messaging guide §5.2): Adobe Experience Cloud applications implemented, integrated with your
+ * enterprise systems, customized where standard features stop, and supported over time, by an Adobe Solution
+ * Partner. The platform assessment is presented as the first phase of delivery, not as a standalone report.
  *
  * The hub deliberately has no `platforms` matrix: the applications section in
  * src/features/adobe/hub-sections.tsx lists each product once (what it does + verified service types)
@@ -15,15 +18,20 @@ export const adobeServices: ServiceContent = {
   slug: "adobe-services",
   interest: "adobe-services",
   name: "Adobe Services",
+  // Adobe articles are published under the insights theme "Adobe" (register GL-14).
+  insightTheme: "Adobe",
   meta: {
     title: "Adobe Services",
     description:
       "Implementation, integration and optimization for Adobe Experience Platform, Real-Time CDP, Experience Manager, Analytics, Target, Marketo Engage and Commerce.",
   },
   hero: {
-    eyebrow: "Adobe Services",
+    // The delivery verbs this page covers, as on the AI Governance and Data Management heroes (not the nav label
+    // again). Basis: verified old-site titles "Implementation and integration", "Implementation and customization",
+    // "Customization and optimization" and "Ongoing support and optimization".
+    eyebrow: "Implement · Integrate · Customize · Support",
     title: "Make your Adobe platforms work as one customer experience system.",
-    lead: "We implement, integrate and optimize Adobe Experience Cloud applications, from Experience Platform and Real-Time CDP to Experience Manager and Commerce, and connect them to the CRM, commerce and data systems they depend on.",
+    lead: "We implement Adobe Experience Cloud applications, from Experience Platform and Real-Time CDP to Experience Manager and Commerce, integrate them with the CRM, commerce and data systems they depend on, customize them where standard features stop, and support them over time.",
   },
   problem: {
     title: "Licensed capability isn't the same as delivered value.",
@@ -46,7 +54,12 @@ export const adobeServices: ServiceContent = {
     { role: "E-commerce leaders", need: "A commerce platform that scales and connects to the wider experience." },
   ],
   capabilitiesIntro:
-    "We organize Adobe work around what you're trying to achieve, then bring in the applications that serve it.",
+    "We organize our Adobe delivery around what you're trying to achieve, then implement, integrate and customize the applications that serve it.",
+  // Provenance is per capability. Three items inside "verified" capabilities are proposed extensions
+  // (docs/HANDOFF.md), pending owner confirmation: "Profile data governance and quality" (customer-data),
+  // "Integration testing" and "Documentation and handover" (integration).
+  // "Data strategy and measurement planning" renames a verified old-site title (messaging guide §5.2,
+  // register AH-01/AP-02; owner sign-off requested). Keep it identical to analytics.ts.
   capabilities: [
     {
       id: "customer-data",
@@ -68,7 +81,7 @@ export const adobeServices: ServiceContent = {
       id: "measurement",
       title: "Analytics and measurement",
       summary: "Numbers teams trust, from tracking design to the dashboards people use to make decisions.",
-      items: ["Measurement plans and tracking implementation", "Custom dashboards and reporting", "Data strategy and consultation", "Ongoing optimization"],
+      items: ["Measurement plans and tracking implementation", "Custom dashboards and reporting", "Data strategy and measurement planning", "Ongoing optimization"],
       platforms: ["Adobe Analytics"],
       provenance: "verified",
     },
@@ -170,7 +183,7 @@ export const adobeServices: ServiceContent = {
     {
       question: "Can you improve an existing implementation?",
       answer:
-        "Yes. Many engagements start with a setup that's already live: we review how it's configured and used, then fix, integrate or optimize what's holding it back.",
+        "Yes. We can start from a setup that's already live: we review how it's configured and used, then fix, integrate or optimize what's holding it back.",
     },
     {
       question: "Do you provide training?",
@@ -180,12 +193,12 @@ export const adobeServices: ServiceContent = {
     {
       question: "How do you handle customer data and consent in Adobe applications?",
       answer:
-        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow. This is where our Adobe work connects with our Data Management practice.",
+        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow. This is where our Adobe work connects with our Data Management services.",
     },
     {
       question: "Where should we start?",
       answer:
-        "If you're not sure, start with a platform assessment: a review of how your Adobe applications are configured, integrated and used, with prioritized next steps. If you already know what you need, we can start directly with implementation, optimization or training.",
+        "If you're not sure, start with a platform assessment, the first phase of delivery: we review how your Adobe applications are configured, integrated and used, then implement the priorities with you. If you already know what you need, we start directly with implementation, customization, optimization or training.",
     },
     {
       question: "What do you need from us to get started?",
@@ -195,20 +208,21 @@ export const adobeServices: ServiceContent = {
   ],
   cta: {
     title: "Get more from your Adobe investment.",
-    body: "Tell us which Adobe applications you use and where you want to improve. We'll recommend where to start.",
+    body: "Tell us which Adobe applications you use and where you want to improve. We'll scope a practical first step with you.",
   },
 };
 
 /**
  * Hub-only sections on /adobe-services (rendered by src/features/adobe/hub-sections.tsx).
- * The applications section lists each product once, using the product's neutral description and its
- * verified service types from src/content/adobe/products. Entry points are the verified service types
- * (assessment, implementation and integration, optimization and support, training) — no prices,
+ * The applications section lists each product once (area, name and the product's one-line `summary`
+ * from src/content/adobe/products); the per-product service lists stay on the product pages. "Ways to work
+ * with us" lists the verified service types (assessment, implementation and integration, optimization and
+ * support, training; offered as distinct entry points is proposed, docs/HANDOFF.md) — no prices,
  * durations or offers. The governance block expands the FAQ answer above and the "Profile data
  * governance and quality" / "Documentation and handover" capability items (both marked proposed in
  * docs/HANDOFF.md).
  */
-export type AdobeEngagement = {
+export type AdobeWayToWork = {
   id: string;
   title: string;
   description: string;
@@ -222,24 +236,25 @@ export const adobeHub = {
   applications: {
     eyebrow: "Adobe applications",
     title: "The applications we implement and support",
-    intro: "What each application does and the services we provide for it. Each has its own page with more detail.",
-    servicesLabel: "Our services",
+    intro: "Each application has its own page covering what it does and the services we provide for it.",
     startTile: {
       eyebrow: "Platform assessment",
       title: "Not sure which application to start with?",
-      body: "An assessment reviews how your Adobe applications are configured, connected and used, and recommends where to start.",
+      body: "An assessment maps how your Adobe applications are configured, connected and used, and sets the priorities for implementation.",
       label: "About the assessment",
     },
   },
-  engagements: {
-    eyebrow: "Ways to engage",
+  waysToWork: {
+    eyebrow: "Ways to work with us",
     title: "Start where you are",
-    intro: "Whether you're adopting a new application or improving one you already run, there's a sensible first step.",
+    intro: "Whether you're adopting a new application or improving one you already run, pick the starting point that fits. Each one leads into work our team delivers with yours.",
+    /** Label on the assessment card, the suggested first step when a visitor is unsure (as the FAQ says). */
+    recommendedLabel: "Not sure? Start here",
     items: [
       {
         id: "assessment",
         title: "Platform assessment",
-        description: "A review of how your Adobe applications are configured, integrated and used, ending in prioritized opportunities.",
+        description: "The first phase of delivery: a review of how your Adobe applications are configured, integrated and used, ending in prioritized opportunities we can implement with you.",
         goodWhen: "you're unsure where the gaps are, or an implementation stalled after go-live.",
         action: "assessment",
         actionLabel: "About the assessment",
@@ -247,7 +262,7 @@ export const adobeHub = {
       {
         id: "implementation",
         title: "Implementation and integration",
-        description: "Setting up Adobe applications and connecting them to each other and to your CRM, commerce and data platforms.",
+        description: "We implement Adobe applications, connect them to each other and to your CRM, commerce and data platforms, and customize them where standard features stop.",
         goodWhen: "you're adopting a new Adobe application or connecting one to the rest of your stack.",
         action: "contact",
         actionLabel: "Discuss implementation",
@@ -255,7 +270,7 @@ export const adobeHub = {
       {
         id: "optimization",
         title: "Optimization and ongoing support",
-        description: "Refining what's already live: tracking, audiences, tests, content workflows and site performance.",
+        description: "We refine and support what's already live: tracking, audiences, tests, content workflows and site performance.",
         goodWhen: "the platform is live but isn't delivering what you expected.",
         action: "contact",
         actionLabel: "Discuss optimization",
@@ -263,18 +278,18 @@ export const adobeHub = {
       {
         id: "training",
         title: "Training and enablement",
-        description: "Training, documentation and runbooks so your teams can operate and extend what's in place.",
+        description: "We train your teams and hand over documentation and runbooks, so they can operate and extend what's in place.",
         goodWhen: "your teams aren't yet using features you already license.",
         action: "contact",
         actionLabel: "Discuss training",
       },
-    ] satisfies AdobeEngagement[],
+    ] satisfies AdobeWayToWork[],
   },
   governance: {
     eyebrow: "Governance built in",
     title: "Data governance inside your Adobe stack",
     intro:
-      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into Adobe work from the start, drawing on our Data Management practice.",
+      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into Adobe work from the start, drawing on our Data Management services.",
     items: [
       {
         title: "Consent-aware profiles",

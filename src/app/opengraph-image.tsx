@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { company } from "@/config/site";
+import { ogImageAlt } from "@/lib/metadata";
 
-export const alt = `${company.name} — AI Governance, Adobe Services and Data Management`;
+export const alt = ogImageAlt;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default async function OpengraphImage() {
         <img src={logoSrc} width={225} height={100} alt="" />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", gap: 16, fontSize: 22, letterSpacing: 2, color: "#5d5a54", textTransform: "uppercase" }}>
-            AI Governance · Adobe Services · Data Management
+            AI Governance · Adobe Services · Data Management · Software Development
           </div>
           <div style={{ marginTop: 24, fontSize: 68, lineHeight: 1.05, letterSpacing: -2, color: "#111111", fontWeight: 600, maxWidth: 980 }}>
             Responsible AI. Trusted data. Better digital experiences.
@@ -24,7 +24,7 @@ export default async function OpengraphImage() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ width: 16, height: 16, borderRadius: 999, background: "#ff0000" }} />
-          <div style={{ fontSize: 22, color: "#111111" }}>{company.thesis}</div>
+          <div style={{ fontSize: 22, color: "#111111" }}>Software development and professional services</div>
         </div>
       </div>
     ),

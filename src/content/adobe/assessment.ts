@@ -8,6 +8,8 @@ import type { AdobeProductSlug } from "@/lib/content/types";
  * the "Platform assessment" deliverable, and the FAQ "Can you improve an existing implementation?".
  * Everything else is new copy (proposed) — it describes the scope of the work only. It deliberately names
  * no durations, prices, clients, metrics or certifications.
+ * Framing (messaging guide §4.1, §5.2): the assessment is the first phase of delivery — start with an
+ * assessment, then we implement the priorities with you — not a standalone report.
  */
 
 type TitledText = { title: string; body: string };
@@ -41,12 +43,13 @@ export const adobeAssessment: AdobeAssessmentContent = {
   meta: {
     title: "Adobe Platform Assessment",
     description:
-      "A scoped review of your Adobe setup, data flows, use cases and team practices, ending with a prioritized list of opportunities and a roadmap.",
+      "The first phase of Adobe delivery: a scoped review of your setup, data flows and use cases that ends in prioritized opportunities and a roadmap to implement.",
   },
   hero: {
-    eyebrow: "Adobe Services",
+    // The four steps below, as on the AI Governance and Data Management heroes; the breadcrumb already names the page.
+    eyebrow: "Scope · Review · Prioritize · Roadmap",
     title: "Find out what's holding your Adobe platforms back.",
-    lead: "A scoped review of your current Adobe setup — configuration, data flows, use cases and team practices — that ends with prioritized opportunities. It's a practical first step, whether you act on the findings yourselves or with us.",
+    lead: "A scoped review of your current Adobe setup — configuration, data flows, use cases and team practices — that ends with prioritized opportunities and a roadmap. It's the first step of delivery: we implement the priorities with you, or your team acts on the roadmap directly.",
   },
   summary: {
     title: "At a glance",
@@ -54,14 +57,14 @@ export const adobeAssessment: AdobeAssessmentContent = {
       { label: "Scope", value: "One Adobe application or several, and the connections between them" },
       { label: "Approach", value: "Team interviews and a review of configuration and data flows" },
       { label: "You receive", value: "Report, current-state map and prioritized roadmap, plus a readout" },
-      { label: "Afterwards", value: "Act on the roadmap yourselves, or with our help" },
+      { label: "Afterwards", value: "We implement the priorities with you, or your team acts on the roadmap" },
     ],
     note: "The applications in scope, the depth of review and the timeline are agreed with you before work starts.",
   },
   situations: {
     eyebrow: "When it helps",
     title: "Who an assessment is for",
-    intro: "Teams usually ask for an assessment when they need a clear, shared picture of their Adobe setup before deciding what to do next.",
+    intro: "An assessment helps when you need a clear, shared picture of your Adobe setup before deciding what to implement next.",
     items: [
       {
         title: "Progress stalled after go-live",
@@ -88,7 +91,7 @@ export const adobeAssessment: AdobeAssessmentContent = {
   review: {
     eyebrow: "What we review",
     title: "Application by application, and the connections between them",
-    intro: "An assessment can cover one Adobe application or several. These are the areas we typically look at for each, adjusted to the scope we agree with you.",
+    intro: "An assessment can cover one Adobe application or several. These are the areas it covers for each, adjusted to the scope we agree with you.",
     byProduct: {
       "experience-platform": [
         "XDM schemas and identity namespaces",
@@ -164,7 +167,7 @@ export const adobeAssessment: AdobeAssessmentContent = {
   steps: {
     eyebrow: "How it works",
     title: "Four steps from scope to roadmap",
-    intro: "Each step has a defined output, so you can see what's been found before the final readout.",
+    intro: "Each step has a defined output, so you can see what's been found before the final readout. The roadmap then sets the order of implementation.",
     items: [
       {
         title: "Scope and access",
@@ -183,7 +186,7 @@ export const adobeAssessment: AdobeAssessmentContent = {
       },
       {
         title: "Readout and roadmap",
-        activities: "We walk your stakeholders through the findings and agree a recommended sequence of next steps.",
+        activities: "We walk your stakeholders through the findings and agree the sequence in which the priorities are implemented.",
         output: "Assessment report and roadmap",
       },
     ],
@@ -256,11 +259,11 @@ export const adobeAssessment: AdobeAssessmentContent = {
     {
       question: "What happens after the assessment?",
       answer:
-        "The roadmap is written so your team can act on it directly. If you'd like our help, we can take on the recommended work, whether that's implementation and integration, optimization and ongoing support, or training.",
+        "The assessment is the first phase of delivery, so the roadmap becomes the plan for what follows. Our team then delivers the priorities with yours, whether that's implementation and integration, optimization and ongoing support, or training. The roadmap is also written so your team can act on it directly.",
     },
   ],
   cta: {
     title: "Start with a clear picture of your Adobe setup.",
-    body: "Tell us which Adobe applications you use and what you'd like to understand. We'll get back to you to discuss scope.",
+    body: "Tell us which Adobe applications you use and what you'd like to understand. We'll scope the assessment with you as the first step of delivery.",
   },
 };

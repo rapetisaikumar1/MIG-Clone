@@ -9,5 +9,14 @@ const content = getService("data-management");
 export const metadata = pageMetadata({ ...content.meta, path: "/data-management" });
 
 export default function DataManagementPage() {
-  return <ServicePage content={content} graphic={<DataGraphic />} afterCapabilities={<MapleRecordCallout />} />;
+  // The benefits strip restated the hero lead and capabilities, so this page leaves it out.
+  return (
+    <ServicePage
+      content={content}
+      graphic={<DataGraphic />}
+      capabilityLinks={{ MapleRecord: "/maplerecord" }}
+      showBenefits={false}
+      afterCapabilities={<MapleRecordCallout />}
+    />
+  );
 }

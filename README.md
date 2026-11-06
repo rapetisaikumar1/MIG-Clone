@@ -1,6 +1,6 @@
 # Maverick InnoGarage — website
 
-Corporate website for Maverick InnoGarage, focused on **AI Governance**, **Adobe Services** and **Data Management**.
+Corporate website for Maverick InnoGarage, a software development and professional services company: **AI Governance**, **Adobe Services**, **Data Management**, **Software Development** and **MapleRecord**.
 It's a single Next.js App Router application: marketing pages are pre-rendered, and the contact endpoint runs on the server in the same deployment.
 
 | | |
@@ -43,7 +43,7 @@ src/
     layout.tsx                 Root: fonts, metadataBase, robots policy
     (marketing)/               Public routes sharing header/footer
       page.tsx                 Home
-      ai-governance/ adobe-services/ data-management/   Specialization pages
+      ai-governance/ adobe-services/ data-management/ software-development/   Specialization pages
       adobe-services/[product]/  Adobe application pages (experience-platform, real-time-cdp, experience-manager,
                                analytics, target, marketo-engage, commerce), statically generated
       adobe-services/assessment/ Adobe platform assessment landing page
@@ -144,6 +144,8 @@ Set production and preview values separately in the host. Previews can omit emai
 
 ## Content workflow
 
+- **Company description:** `company.descriptor` (canonical sentence: About, Organization JSON-LD), `company.positioning` (default meta and social description, ≤ 160 characters) and `company.blurb` (footer) in `src/config/site.ts`. Reuse them rather than writing new self-descriptions.
+- **Navigation:** `src/config/navigation.ts`. The desktop header (`primaryNav`) holds exactly seven items so it fits on one row; `servicesNav` lists all four specializations (AI Governance, Adobe Services, Data Management, Software Development) for the mobile menu, footer and 404 page.
 - **Service, home and industry copy:** edit the typed objects in `src/content/`. TypeScript catches missing fields.
 - **Adobe application pages:** each page is one typed `AdobeProduct` object in `src/content/adobe/products/<slug>.ts`. The order in `src/content/adobe/products/index.ts` drives the header dropdown, hub grid, home section, footer and sitemap. Keep each service `title` exactly as verified (`provenance: "verified"`); mark new copy `provenance: "proposed"`. `related` takes other product slugs and `insights` takes slugs of **published** articles. Adding a product means a new slug in `AdobeProductSlug` (`src/lib/content/types.ts`), a file here, an entry in `adobeApplications` in `src/features/contact/schema.ts` (TypeScript enforces the match), and, if it replaces an old URL, its `legacyPaths` plus a matching literal entry in `src/config/redirects.ts` (that file can't import content because `next.config.ts` loads it). Assessment page copy lives in `src/content/adobe/assessment.ts`.
 - **Articles:** add `src/content/insights/<slug>.mdx` and an entry in `src/content/insights/index.ts`. Use `status: "draft"` until approved. Drafts are excluded from listings, the sitemap and static generation, return 404 publicly, and render with `noindex` in Draft Mode.

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { AlertCircle, Check, CheckCircle2, Info, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowDown, Check, CheckCircle2, Loader2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -16,6 +16,7 @@ import {
   type ContactInterest,
   type FieldErrors,
 } from "./schema";
+import { PhoneLinks } from "./office-list";
 
 type Status = "idle" | "pending" | "success" | "error";
 type ServerError = "invalid" | "rate_limited" | "not_configured" | "provider_error" | "bad_request" | "spam" | "network";
@@ -33,7 +34,8 @@ const errorCopy: Record<ServerError, string> = {
 const fieldOrder: ContactField[] = ["fullName", "email", "company", "phone", "interest", "adobeApplications", "message"];
 
 const inputClass =
-  "mt-2 block w-full rounded-xl border bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 transition-colors focus:outline-none focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-ink/15 disabled:opacity-60";
+  "mt-2 block w-full rounded-xl border bg-surface px-4 py-3 text-base text-ink placeholder:text-muted transition-[border-color,box-shadow] duration-150 hover:border-ink/70 focus:outline-none focus-visible:border-ink focus-visible:ring-4 focus-visible:ring-ink/10 disabled:cursor-not-allowed disabled:opacity-60";
+const inputErrorClass = "border-signal hover:border-signal focus-visible:border-signal focus-visible:ring-signal/15";
 
 export function ContactForm({
   defaultInterest,
@@ -169,7 +171,7 @@ export function ContactForm({
     "aria-describedby": errors[name] ? `${id}-${name}-error` : undefined,
     onChange: revalidate,
     disabled: pending,
-    className: cn(inputClass, errors[name] ? "border-signal" : "border-line-field"),
+    className: cn(inputClass, errors[name] ? inputErrorClass : "border-line-field"),
   });
 
   const label = (name: ContactField, text: string, optional = false) => (
@@ -197,17 +199,30 @@ export function ContactForm({
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate aria-busy={pending} aria-describedby={`${id}-required-note`}>
       {!deliveryConfigured ? (
-        <div className="mb-8 flex gap-3 rounded-xl border border-line-strong bg-paper-deep p-4 text-sm" data-testid="delivery-not-configured">
-          <Info aria-hidden className="mt-0.5 size-5 shrink-0 text-ink" />
-          <p>
-            <strong className="font-semibold">Online messages are temporarily unavailable.</strong> Please call one of our
-            offices below and we&apos;ll be glad to help.
-          </p>
+        // While the form can't deliver, calling is the main path, so the numbers live in the notice itself.
+        <div className="mb-5 rounded-2xl border border-ink bg-paper-deep p-5 sm:p-6" data-testid="delivery-not-configured">
+          <div className="flex gap-3">
+            <span aria-hidden className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-ink text-paper">
+              <Phone className="size-4" />
+            </span>
+            <p className="text-[0.9375rem]">
+              <strong className="font-semibold">Online messages are temporarily unavailable.</strong> Please call one of our
+              offices below and we&apos;ll be glad to help.
+            </p>
+          </div>
+          <PhoneLinks className="mt-4 sm:grid-cols-2" />
+          <a
+            href="#offices"
+            className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:decoration-signal"
+          >
+            Office addresses
+            <ArrowDown aria-hidden className="size-3.5 text-signal" />
+          </a>
         </div>
       ) : null}
 
       {(serverError || (attempted && errorCount > 0)) && (
-        <div ref={summaryRef} tabIndex={-1} role="alert" className="mb-8 flex gap-3 rounded-xl border border-signal bg-surface p-4 text-sm outline-none">
+        <div ref={summaryRef} tabIndex={-1} role="alert" className="mb-5 flex gap-3 rounded-xl border border-signal bg-surface p-4 text-sm outline-none">
           <AlertCircle aria-hidden className="mt-0.5 size-5 shrink-0 text-signal" />
           <p>{serverError ? errorCopy[serverError] : `Please correct ${errorCount === 1 ? "1 field" : `${errorCount} fields`} below.`}</p>
         </div>
@@ -262,7 +277,8 @@ export function ContactForm({
         </div>
         {interest === "adobe-services" ? (
           <fieldset
-            className="sm:col-span-2"
+            // Rises into place when Adobe Services is chosen (transform only; @starting-style, so no keyframes).
+            className="sm:col-span-2 motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:starting:translate-y-2"
             disabled={pending}
             aria-describedby={errors.adobeApplications ? `${id}-adobeApplications-error` : undefined}
           >
@@ -274,7 +290,7 @@ export function ContactForm({
                 <label
                   key={application.value}
                   className={cn(
-                    "flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-2 text-[0.9375rem] transition-colors hover:border-ink has-checked:border-ink has-disabled:cursor-default has-disabled:opacity-60",
+                    "flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-2 text-[0.9375rem] transition-[border-color,background-color] hover:border-ink has-checked:border-ink has-checked:bg-paper has-disabled:cursor-default has-disabled:opacity-60",
                     errors.adobeApplications ? "border-signal" : "border-line-field",
                   )}
                 >
@@ -286,7 +302,7 @@ export function ContactForm({
                       checked={selectedApplications.includes(application.value)}
                       onChange={(event) => toggleApplication(application.value, event.target.checked)}
                       aria-invalid={errors.adobeApplications ? true : undefined}
-                      className="peer size-5 cursor-pointer appearance-none rounded-md border border-line-field bg-surface checked:border-ink checked:bg-ink disabled:cursor-default"
+                      className="peer size-5 cursor-pointer appearance-none rounded-md border border-line-field bg-surface transition-colors checked:border-ink checked:bg-ink disabled:cursor-default"
                     />
                     <Check
                       aria-hidden
@@ -314,7 +330,7 @@ export function ContactForm({
         <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-8 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-[44ch] text-sm text-muted">
           We use these details only to respond to your inquiry. See our{" "}
           <Link href="/privacy" className="text-ink underline underline-offset-4">

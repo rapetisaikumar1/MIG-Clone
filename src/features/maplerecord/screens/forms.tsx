@@ -50,6 +50,8 @@ import {
   Workflow,
   X,
   FileCheck,
+  Globe,
+  Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge, Btn, Card, Checkbox, PageHeader, ScreenCanvas, SearchInput, Segmented, Select, StatTile, Toggle, TopBar, type Icon, type Tone } from "./kit";
@@ -110,12 +112,11 @@ function FormsSidebar({ active }: { active: FormsNav }) {
 
 function EngineFooter() {
   return (
-    <div className="flex h-8 shrink-0 items-center gap-1.5 border-t border-[#e4e4e7] bg-white px-6 text-[11px] text-[#71717a]">
+    <div className="flex h-8 shrink-0 items-center gap-1.5 border-t border-[#f0f0f1] bg-white px-6 text-[11px] text-[#a1a1aa]">
       {/* eslint-disable-next-line @next/next/no-img-element -- static render canvas */}
-      <img src="/maplerecord/maplerecord-leaf.svg" alt="" className="h-3 w-auto" />
-      <span>
-        One shared form engine · two modes · forms saved as versioned JSON schemas · <i>What&apos;s Best for Canada Is Built in Canada</i>
-      </span>
+      <img src="/maplerecord/maplerecord-leaf.svg" alt="" className="h-3 w-auto opacity-80" />
+      <span>MR Forms engine · Forms are saved as versioned schemas</span>
+      <span className="ml-auto">Built in Canada</span>
     </div>
   );
 }
@@ -158,9 +159,11 @@ function EditorHeader({ tab }: { tab: number }) {
         <span className="text-[12px] text-[#71717a]">
           MR Forms › Forms › <span className="font-semibold text-[#18181b]">Public Records Request</span>
         </span>
-        <span className="ml-0.5 rounded-full bg-[#18181b] px-1.5 py-[1px] text-[10px] font-medium text-white">FOI · Public</span>
-        <span className="rounded-full border border-[#d4d4d8] px-1.5 text-[10px] font-medium text-[#3f3f46]">v3 live</span>
-        <span className="text-[11px] text-[#71717a]">✓ Up to date</span>
+        <span className="ml-0.5 rounded-full bg-[#f4f4f5] px-1.5 py-[1px] text-[10px] font-medium text-[#3f3f46] ring-1 ring-inset ring-[#e4e4e7]">FOI · Public</span>
+        <span className="flex items-center gap-1 rounded-full px-1.5 py-[1px] text-[10px] font-medium text-[#15803d] ring-1 ring-inset ring-[#bbf7d0]">
+          <span className="size-1.5 rounded-full bg-[#16a34a]" />v3 live
+        </span>
+        <span className="text-[11px] text-[#a1a1aa]">✓ Up to date</span>
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <IconBtn icon={Undo2} />
@@ -225,12 +228,12 @@ const palette: { group: string; items: [string, Icon][] }[] = [
 ];
 
 function Chip({ children }: { children: ReactNode }) {
-  return <span className="rounded border border-[#e4e4e7] bg-[#fafafa] px-1.5 py-[0px] font-mono text-[10px] font-normal text-[#52525b]">{children}</span>;
+  return <span className="rounded border border-[#ececee] bg-[#fafafa] px-1.5 font-mono text-[10.5px] font-normal leading-[17px] text-[#71717a]">{children}</span>;
 }
 
 function FieldLabel({ label, chip, required = true }: { label: string; chip?: ReactNode; required?: boolean }) {
   return (
-    <div className="mb-1.5 flex items-center gap-1.5 text-[12.5px] font-semibold">
+    <div className="mb-1.5 flex items-center gap-2 text-[13.5px] font-semibold">
       <span>
         {label}
         {required ? <span className="ml-0.5 text-[#dc2626]">*</span> : null}
@@ -241,7 +244,7 @@ function FieldLabel({ label, chip, required = true }: { label: string; chip?: Re
 }
 
 function InputBox({ placeholder, className }: { placeholder?: string; className?: string }) {
-  return <div className={cn("flex h-9 items-center rounded-md border border-[#e4e4e7] bg-[#f9f9fa] px-3 text-[12px] text-[#a1a1aa]", className)}>{placeholder}</div>;
+  return <div className={cn("flex h-9 items-center rounded-md border border-[#e4e4e7] bg-[#fafafa] px-3 text-[12.5px] text-[#a1a1aa]", className)}>{placeholder}</div>;
 }
 
 function Field({ label, map, rules, children, className, required }: { label: string; map?: string; rules?: string; children: ReactNode; className?: string; required?: boolean }) {
@@ -254,7 +257,10 @@ function Field({ label, map, rules, children, className, required }: { label: st
           <>
             {map ? <Chip>→ {map}</Chip> : null}
             {rules ? (
-              <span className="rounded border border-[#ddd6fe] bg-[#f5f3ff] px-1.5 text-[10px] font-medium text-[#6d28d9]">{rules}</span>
+              <span className="flex items-center gap-1 rounded border border-[#e4e4e7] bg-white px-1.5 text-[10.5px] font-medium leading-[17px] text-[#52525b]">
+                <Workflow className="size-3" strokeWidth={1.9} />
+                {rules}
+              </span>
             ) : null}
           </>
         }
@@ -277,13 +283,13 @@ function FormsBuilder() {
               Search fields…
             </span>
             {palette.map((g) => (
-              <div key={g.group} className="mt-2.5">
-                <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[#a1a1aa]">{g.group}</p>
+              <div key={g.group} className="mt-2">
+                <p className="px-1.5 pb-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-[#a1a1aa]">{g.group}</p>
                 {g.items.map(([label, IconC]) => (
-                  <div key={label} className="flex h-[25px] items-center gap-2 rounded-md px-1.5 text-[12.5px] text-[#27272a]">
+                  <div key={label} className="flex h-[24px] items-center gap-2 rounded-md px-1.5 text-[12.5px] text-[#27272a]">
                     <IconC className="size-[14px] text-[#52525b]" strokeWidth={1.75} />
                     {label}
-                    <Plus className="ml-auto size-3.5 text-[#a1a1aa]" strokeWidth={1.75} />
+                    <Plus className="ml-auto size-3.5 text-[#c4c4c9]" strokeWidth={1.75} />
                   </div>
                 ))}
               </div>
@@ -292,26 +298,26 @@ function FormsBuilder() {
 
           {/* Canvas */}
           <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex items-center gap-0.5 whitespace-nowrap">
-              <span className="rounded-full bg-[#18181b] px-3 py-1 text-[12px] font-medium text-white">1. About you</span>
+            <div className="flex h-8 items-center gap-0.5 whitespace-nowrap">
+              <span className="rounded-full bg-white px-3 py-1 text-[12px] font-semibold text-[#18181b] shadow-[0_1px_2px_rgb(0_0_0/0.06)] ring-1 ring-inset ring-[#d4d4d8]">1. About you</span>
               <span className="rounded-full px-3 py-1 text-[12px] text-[#52525b]">2. Your request</span>
               <span className="rounded-full px-3 py-1 text-[12px] text-[#52525b]">3. Review &amp; declarations</span>
               <span className="flex items-center gap-1 rounded-full px-2 py-1 text-[12px] text-[#71717a]">
                 <Plus className="size-3.5" /> Add page
               </span>
-              <span className="ml-auto flex items-center gap-1.5">
-                <span className="flex h-7 w-[96px] items-center rounded-md border border-[#e4e4e7] px-2 text-[12px]">About you</span>
-                <span className="flex size-7 items-center justify-center rounded-md text-[#dc2626]">
+              <span className="ml-auto flex items-center gap-1 border-l border-[#e4e4e7] pl-2.5">
+                <span className="flex h-7 w-[92px] items-center rounded-md border border-[#e4e4e7] px-2 text-[12px]">About you</span>
+                <span className="flex size-7 items-center justify-center rounded-md text-[#a1a1aa]">
                   <Trash2 className="size-3.5" strokeWidth={1.75} />
                 </span>
               </span>
             </div>
-            <div className="mt-2.5 min-h-0 flex-1 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white px-5 pt-5">
-              <h2 className="text-[19px] font-semibold tracking-[-0.01em]">Public Records Request</h2>
-              <p className="mt-1 max-w-[460px] text-[12.5px] text-[#71717a]">
+            <div className="mt-2.5 min-h-0 flex-1 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white px-6 pt-5">
+              <h2 className="text-[21px] font-semibold tracking-[-0.015em]">Public Records Request</h2>
+              <p className="mt-1.5 max-w-[470px] text-[13px] leading-[1.5] text-[#71717a]">
                 Ask the City for copies of public records. You will get a tracking number and the legal response clock starts immediately.
               </p>
-              <div className="-mx-2 mt-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
+              <div className="-mx-2 mt-3 grid grid-cols-2 gap-x-3 gap-y-1">
                 <Field label="First name" map="first_name">
                   <InputBox />
                 </Field>
@@ -325,25 +331,25 @@ function FormsBuilder() {
                   <InputBox />
                 </Field>
                 <Field label="Description" map="description" className="col-span-2">
-                  <InputBox className="h-[68px] items-start pt-2" placeholder="Describe the records you are looking for, including dates and departments if known." />
+                  <InputBox className="h-16 items-start pt-2" placeholder="Describe the records you are looking for, including dates and departments if known." />
                 </Field>
                 <Field label="Subject matter" map="subject_matter">
-                  <div className="flex h-9 items-center justify-between rounded-md border border-[#e4e4e7] bg-[#f9f9fa] px-3 text-[12px] text-[#a1a1aa]">
+                  <div className="flex h-9 items-center justify-between rounded-md border border-[#e4e4e7] bg-[#fafafa] px-3 text-[12.5px] text-[#a1a1aa]">
                     Select a subject
                     <ChevronDown className="size-3.5" />
                   </div>
                 </Field>
                 <Field label="Phone number" rules="1 rule">
                   <div className="flex gap-1.5">
-                    <span className="flex h-9 w-[84px] items-center justify-between rounded-md border border-[#e4e4e7] bg-[#f9f9fa] px-2 text-[12px]">
-                      🇨🇦 +1
+                    <span className="flex h-9 w-[84px] items-center justify-between rounded-md border border-[#e4e4e7] bg-[#fafafa] px-2.5 text-[12.5px]">
+                      CA +1
                       <ChevronDown className="size-3.5 text-[#a1a1aa]" />
                     </span>
                     <InputBox className="flex-1" placeholder="XXX XXX XXXX" />
                   </div>
                 </Field>
                 <Field label="Preferred contact method" rules="1 rule" className="col-span-2">
-                  <div className="flex items-center gap-6 pt-0.5 text-[12.5px]">
+                  <div className="flex items-center gap-6 pt-0.5 text-[13px]">
                     <span className="flex items-center gap-2">
                       <span className="flex size-4 items-center justify-center rounded-full border border-[#18181b]">
                         <span className="size-2 rounded-full bg-[#18181b]" />
@@ -365,8 +371,8 @@ function FormsBuilder() {
 
           {/* Inspector */}
           <div className="w-[210px] shrink-0 rounded-xl border border-[#e4e4e7] bg-white px-4 pt-4">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-[#f4f4f5]">
-              <MousePointerClick className="size-4 text-[#52525b]" strokeWidth={1.75} />
+            <span className="flex size-9 items-center justify-center rounded-lg bg-[#f4f4f5] ring-1 ring-inset ring-[#e4e4e7]">
+              <MousePointerClick className="size-4 text-[#27272a]" strokeWidth={1.75} />
             </span>
             <p className="mt-3 text-[13.5px] font-semibold">No field selected</p>
             <p className="mt-1 text-[12px] leading-[1.5] text-[#71717a]">
@@ -398,40 +404,39 @@ function RuleCard({
 }) {
   return (
     <div className="rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex items-center justify-between gap-6">
         <div className="min-w-0">
-          <p className="text-[10.5px] font-bold uppercase tracking-[0.08em]">Rule {n}</p>
-          <p className="mt-0.5 text-[12px] leading-[1.45] text-[#71717a]">{summary}</p>
+          <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[#71717a]">Rule {n}</p>
+          <p className="mt-0.5 truncate text-[13px] text-[#52525b] [&_b]:font-semibold [&_b]:text-[#18181b]">{summary}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           <Toggle />
-          <Btn variant="outline" icon={Copy} className="ml-1.5 h-7 px-2.5 text-[12px]">Duplicate</Btn>
-          <Btn variant="danger" icon={Trash2} className="h-7 px-2 text-[12px]">Delete</Btn>
+          <Btn variant="outline" icon={Copy} className="ml-2 h-7 px-2.5 text-[12px]">Duplicate</Btn>
+          <Btn variant="ghost" icon={Trash2} className="h-7 px-2 text-[12px] text-[#52525b]">Delete</Btn>
         </div>
       </div>
       <div className="mt-2.5 flex gap-2">
         <Select value={action} width={180} className="h-7" />
         <Select value={target} width={220} className="h-7" />
       </div>
-      <div className="mt-2.5 rounded-lg border border-dashed border-[#d4d4d8] px-3 py-2.5">
+      <div className="mt-2.5 rounded-lg border border-[#ececee] bg-[#fafafa] px-3 py-2">
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold uppercase tracking-[0.06em]">When</span>
+          <span className="w-10 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#52525b]">When</span>
           <Select value={match} width={190} className="h-7" />
-          <span className="text-[12px] text-[#a1a1aa]">(no conditions = always)</span>
         </div>
-        <div className="mt-2 space-y-1.5">
+        <div className="mt-1.5 space-y-1.5">
           {conditions.map(([field, op, value]) => (
             <div key={value} className="flex items-center gap-2">
               <Select value={field} width={200} className="h-7" />
               <Select value={op} width={96} className="h-7" />
-              <span className="flex h-7 flex-1 items-center rounded-md border border-[#e4e4e7] px-2.5 text-[12px]">{value}</span>
-              <span className="flex size-7 items-center justify-center text-[#dc2626]">
+              <span className="flex h-7 flex-1 items-center rounded-md border border-[#e4e4e7] bg-white px-2.5 text-[12px]">{value}</span>
+              <span className="flex size-7 items-center justify-center text-[#a1a1aa]">
                 <X className="size-4" strokeWidth={1.75} />
               </span>
             </div>
           ))}
         </div>
-        <Btn variant="outline" icon={Plus} className="mt-2 h-7 px-2.5 text-[12px]">Add condition</Btn>
+        <Btn variant="ghost" icon={Plus} className="mt-1.5 h-7 px-1 text-[12px] text-[#3f3f46]">Add condition</Btn>
       </div>
     </div>
   );
@@ -442,18 +447,18 @@ function FormsLogic() {
     <ScreenCanvas id="forms-logic">
       <FormsShell active="forms" panelIcon={false} className="px-4">
         <EditorHeader tab={1} />
-        <div className="mx-auto mt-4 w-[770px]">
-          <div className="flex items-start justify-between">
+        <div className="mt-3.5 px-1">
+          <div className="flex items-start justify-between gap-6">
             <div>
-              <h2 className="text-[18px] font-semibold tracking-[-0.01em]">Conditional logic</h2>
-              <p className="mt-1 text-[12.5px] text-[#71717a]">The form changes itself while the person fills it. Rules run top-to-bottom; when rules clash, the later rule wins.</p>
+              <h2 className="text-[19px] font-semibold tracking-[-0.01em]">Conditional logic</h2>
+              <p className="mt-0.5 text-[12.5px] text-[#71717a]">The form adapts as people fill it in. Rules run top to bottom; if two rules conflict, the later one wins.</p>
             </div>
-            <Btn icon={Plus}>Add rule</Btn>
+            <Btn variant="outline" icon={Plus}>Add rule</Btn>
           </div>
-          <div className="mt-3.5 space-y-3">
+          <div className="mt-3 space-y-2.5">
             <RuleCard
               n={1}
-              summary={<>Show a field — Payment WHEN &quot;Request Type&quot; is &quot;General&quot; OR &quot;Request Type&quot; is &quot;Commercial&quot;</>}
+              summary={<>Show <b>Payment</b> when <b>Request Type</b> is <b>General</b> or <b>Commercial</b></>}
               action="Show a field"
               target="Payment (p.2)"
               match="ANY condition matches"
@@ -464,7 +469,7 @@ function FormsLogic() {
             />
             <RuleCard
               n={2}
-              summary={<>Hide a field — Payment WHEN &quot;Request Type&quot; is &quot;Personal information&quot;</>}
+              summary={<>Hide <b>Payment</b> when <b>Request Type</b> is <b>Personal information</b></>}
               action="Hide a field"
               target="Payment (p.2)"
               match="ALL conditions match"
@@ -472,7 +477,7 @@ function FormsLogic() {
             />
             <RuleCard
               n={3}
-              summary={<>Require a field — Phone number WHEN &quot;Preferred contact method&quot; is &quot;Phone&quot;</>}
+              summary={<>Require <b>Phone number</b> when <b>Preferred contact method</b> is <b>Phone</b></>}
               action="Require a field"
               target="Phone number (p.1)"
               match="ALL conditions match"
@@ -491,9 +496,15 @@ const statusTone: Record<string, Tone> = { Received: "gray", "In progress": "amb
 
 function ModePill({ mode }: { mode: "public" | "internal" }) {
   return mode === "public" ? (
-    <span className="rounded-full bg-[#18181b] px-2 py-[1px] text-[11px] font-medium text-white">public</span>
+    <span className="inline-flex h-[18px] items-center gap-1 rounded-full bg-[#f4f4f5] px-2 text-[11px] leading-none font-medium text-[#27272a] ring-1 ring-inset ring-[#e4e4e7]">
+      <Globe className="size-3 text-[#52525b]" strokeWidth={1.9} />
+      public
+    </span>
   ) : (
-    <span className="rounded-full border border-[#d4d4d8] px-2 py-[0px] text-[11px] font-medium text-[#3f3f46]">internal</span>
+    <span className="inline-flex h-[18px] items-center gap-1 rounded-full px-2 text-[11px] leading-none font-medium text-[#52525b] ring-1 ring-inset ring-[#e4e4e7]">
+      <Building2 className="size-3 text-[#71717a]" strokeWidth={1.9} />
+      internal
+    </span>
   );
 }
 
@@ -514,7 +525,7 @@ function FormsSubmissions() {
   return (
     <ScreenCanvas id="forms-submissions">
       <FormsShell active="submissions">
-        <PageHeader title="Submissions" subtitle="Every filled form, FOIA and RMS, in one archive. Never a monthly cap." actions={<Btn variant="outline" icon={Download}>Export CSV</Btn>} />
+        <PageHeader title="Submissions" subtitle="Every submitted form, public and internal, in one archive." actions={<Btn variant="outline" icon={Download}>Export CSV</Btn>} />
         <div className="mt-4 grid grid-cols-4 gap-3">
           <StatTile upper label="Open" value="12" icon={Inbox} />
           <StatTile upper label="Pending approval" value="3" icon={UserCheck} />
@@ -527,13 +538,10 @@ function FormsSubmissions() {
           <Select value="All modes" />
           <Select value="All statuses" />
           <Select value="All forms" />
-          <div className="ml-auto inline-flex overflow-hidden rounded-md border border-[#e4e4e7] text-[12px]">
-            <span className="bg-[#18181b] px-2.5 py-[6px] font-medium text-white">Table</span>
-            <span className="px-2.5 py-[6px] text-[#52525b]">Inbox</span>
-          </div>
+          <Segmented items={["Table", "Inbox"]} className="ml-auto" />
         </div>
         <div className="mt-3 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white">
-          <div className="grid h-10 items-center border-b border-[#e4e4e7] px-3 text-[12px] font-medium text-[#3f3f46]" style={{ gridTemplateColumns: template }}>
+          <div className="grid h-10 items-center border-b border-[#e4e4e7] bg-[#fafafa] px-3 text-[12px] font-medium text-[#52525b]" style={{ gridTemplateColumns: template }}>
             <Checkbox />
             {["Tracking #", "Form", "Mode", "Status", "Submitted", "Routed to", "Deadline"].map((h) => (
               <span key={h} className="pr-3">{h}</span>
@@ -546,19 +554,22 @@ function FormsSubmissions() {
               <span className="truncate pr-3">
                 {form} <span className="text-[#a1a1aa]">{ver}</span>
               </span>
-              <span>
+              <span className="flex items-center">
                 <ModePill mode={mode} />
               </span>
-              <span>
+              <span className="flex items-center">
                 <Badge tone={statusTone[status]}>{status}</Badge>
               </span>
               <span className="truncate pr-3 text-[#52525b]">{at}</span>
               <span className="truncate pr-3">{team}</span>
-              <span className={cn(overdue ? "font-medium text-[#dc2626]" : "text-[#3f3f46]")}>{due}</span>
+              <span className={cn("flex items-center gap-1", overdue ? "font-medium text-[#dc2626]" : "text-[#3f3f46]")}>
+                {overdue ? <AlarmClock className="size-3.5" strokeWidth={1.9} /> : null}
+                {due}
+              </span>
             </div>
           ))}
           <div className="flex h-11 items-center justify-between px-4 text-[12px] text-[#52525b]">
-            <span>54 result(s) · page 1 of 6</span>
+            <span>54 submissions · page 1 of 6</span>
             <span className="flex gap-2">
               <Btn variant="outline" className="h-7 px-2.5 text-[12px] text-[#a1a1aa]">Previous</Btn>
               <Btn variant="outline" className="h-7 px-2.5 text-[12px]">Next</Btn>
@@ -584,7 +595,7 @@ function FormsChooser() {
       icon: Scale,
       title: "FOI",
       desc: "Take in freedom-of-information requests, appeals, and complaints.",
-      bullets: ["Starts with first name, last name, email, title, description, and subject matter", "Those FOI codes stay fixed so the request can be created", "Fields can be moved"],
+      bullets: ["Starts with name, email, title, description and subject matter", "Core fields stay mapped to the request", "Fields can be reordered"],
     },
     {
       icon: Workflow,
@@ -596,23 +607,26 @@ function FormsChooser() {
   return (
     <ScreenCanvas id="forms-chooser">
       <FormsShell active="forms">
-        <div className="mx-auto mt-[90px] w-[900px] text-center">
+        <div className="mx-auto mt-[68px] w-[960px] text-center">
           <h1 className="text-[32px] font-bold tracking-[-0.02em]">What is this form for?</h1>
           <p className="mt-2 text-[14px] text-[#71717a]">Choose the Maple product this form belongs to. Templates and a blank form come next.</p>
         </div>
-        <div className="mx-auto mt-10 grid w-[900px] grid-cols-3 gap-5">
+        <div className="mx-auto mt-9 grid w-[960px] grid-cols-3 gap-5">
           {cards.map(({ icon: IconC, title, desc, bullets }) => (
-            <div key={title} className="flex h-[392px] flex-col rounded-2xl border-2 border-[#18181b] bg-white p-6">
-              <span className="flex size-12 items-center justify-center rounded-xl bg-[#f4f4f5]">
+            <div key={title} className="flex h-[372px] flex-col rounded-2xl border border-[#d4d4d8] bg-white p-6 shadow-[0_1px_3px_rgb(0_0_0/0.05)]">
+              <span className="flex size-12 items-center justify-center rounded-xl bg-[#f4f4f5] ring-1 ring-inset ring-[#e4e4e7]">
                 <IconC className="size-[22px] text-[#27272a]" strokeWidth={1.75} />
               </span>
-              <h2 className="mt-5 text-[19px] font-semibold tracking-[-0.01em]">{title}</h2>
+              <h2 className="mt-5 text-[20px] font-semibold tracking-[-0.01em]">{title}</h2>
               <p className="mt-1.5 text-[13.5px] leading-[1.5] text-[#3f3f46]">{desc}</p>
-              <div className="mt-4 space-y-2">
+              <ul className="mt-4 space-y-2 border-t border-[#f0f0f1] pt-4">
                 {bullets.map((b) => (
-                  <p key={b} className="text-[12.5px] leading-[1.5] text-[#71717a]">{b}</p>
+                  <li key={b} className="flex gap-2.5 text-[12.5px] leading-[1.5] text-[#71717a]">
+                    <span className="mt-[8px] size-1 shrink-0 rounded-full bg-[#a1a1aa]" />
+                    {b}
+                  </li>
                 ))}
-              </div>
+              </ul>
               <span className="mt-auto flex items-center gap-1.5 text-[13.5px] font-semibold">
                 Continue <ArrowRight className="size-4" strokeWidth={2} />
               </span>
@@ -625,21 +639,6 @@ function FormsChooser() {
 }
 
 /* ---------- 5. Dashboard ---------- */
-
-function KpiCard({ label, value, caption, icon: IconC, valueClass }: { label: string; value: string; caption: string; icon: Icon; valueClass?: string }) {
-  return (
-    <div className="flex items-start justify-between rounded-xl border border-[#e4e4e7] bg-white px-4 py-3.5">
-      <div>
-        <p className="text-[10.5px] font-medium uppercase tracking-[0.04em] text-[#71717a]">{label}</p>
-        <p className={cn("mt-1.5 text-[26px] font-semibold leading-none tracking-[-0.02em]", valueClass)}>{value}</p>
-        <p className="mt-2 text-[11.5px] text-[#71717a]">{caption}</p>
-      </div>
-      <span className="flex size-9 items-center justify-center rounded-lg bg-[#f4f4f5] text-[#3f3f46]">
-        <IconC className="size-4" strokeWidth={1.75} />
-      </span>
-    </div>
-  );
-}
 
 function FormsDashboard() {
   const days: [string, number][] = [
@@ -687,15 +686,15 @@ function FormsDashboard() {
           }
         />
         <div className="mt-4 grid grid-cols-4 gap-3">
-          <KpiCard label="Published forms" value="14" caption="21 total, 7 draft" icon={ClipboardList} />
-          <KpiCard label="Open requests" value="12" caption="Received or in progress" icon={Inbox} />
-          <KpiCard label="Pending approval" value="3" caption="Supervisor queue" icon={UserCheck} />
-          <KpiCard label="Overdue" value="1" caption="Past statutory deadline" icon={AlarmClock} valueClass="text-[#dc2626]" />
+          <StatTile upper label="Published forms" value="14" caption="21 total, 7 in draft" icon={ClipboardList} />
+          <StatTile upper label="Open requests" value="12" caption="Received or in progress" icon={Inbox} />
+          <StatTile upper label="Pending approval" value="3" caption="Supervisor queue" icon={UserCheck} />
+          <StatTile upper label="Overdue" value="1" caption="Past statutory deadline" icon={AlarmClock} valueClass="text-[#dc2626]" />
         </div>
         <div className="mt-3 grid grid-cols-[1fr_300px] gap-3">
           <Card className="px-5 pb-4 pt-4">
             <h3 className="text-[13.5px] font-semibold">Submissions — last 14 days</h3>
-            <p className="mt-0.5 text-[12px] text-[#71717a]">54 submission(s).</p>
+            <p className="mt-0.5 text-[12px] text-[#71717a]">54 submissions</p>
             <div className="mt-4 flex gap-2">
               <div className="relative w-4 text-right text-[10.5px] text-[#a1a1aa]" style={{ height: chartH }}>
                 {[8, 6, 4, 2, 0].map((v) => (
@@ -748,8 +747,10 @@ function FormsDashboard() {
             {perf.map(([name, views, subs]) => (
               <div key={name} className="flex h-10 items-center justify-between border-b border-[#f0f0f1] text-[12.5px] last:border-b-0">
                 <span className="font-semibold">{name}</span>
-                <span className="text-[#52525b]">
-                  {views} views · {subs} submissions · {Math.round((subs / views) * 100)}% conversion
+                <span className="flex gap-6 tabular-nums text-[#52525b]">
+                  <span className="w-[72px] text-right">{views} views</span>
+                  <span className="w-[104px] text-right">{subs} submissions</span>
+                  <span className="w-[100px] text-right font-medium text-[#18181b]">{Math.round((subs / views) * 100)}% conversion</span>
                 </span>
               </div>
             ))}

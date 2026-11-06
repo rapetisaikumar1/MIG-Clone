@@ -26,12 +26,27 @@ export function CtaBand({
   showOffices?: boolean;
 }) {
   return (
-    <section className="on-night relative overflow-hidden bg-night py-20 text-night-text sm:py-24 lg:py-32" aria-labelledby="cta-title">
-      <svg aria-hidden viewBox="0 0 600 600" className="pointer-events-none absolute -right-40 -top-40 hidden w-[38rem] opacity-60 lg:block">
+    // The bottom hairline separates the band from the footer, which shares the night background.
+    <section
+      className="on-night relative overflow-hidden border-b border-night-line bg-night pb-16 pt-20 text-night-text sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-32"
+      aria-labelledby="cta-title"
+    >
+      {/*
+       * Thin-stroke rings (no blur), rotated very slowly as the page's closing ambient motion. Transform
+       * only, on the SVG box, so it stays on the compositor; static under reduced motion. The red dot sits
+       * on the middle ring's lower-left, so it is in view at rest and orbits through the visible arc.
+       */}
+      <svg
+        aria-hidden
+        viewBox="0 0 600 600"
+        // Small until xl: at 1024px the large rings put the orbiting dot behind the one-line headline.
+        className="pointer-events-none absolute -right-48 -top-48 hidden w-[28rem] opacity-40 motion-safe:animate-spin md:block lg:opacity-50 xl:-right-40 xl:-top-40 xl:w-[38rem] xl:opacity-60"
+        style={{ animationDuration: "120s" }}
+      >
         <circle cx="300" cy="300" r="299" fill="none" stroke="var(--night-line)" />
         <circle cx="300" cy="300" r="210" fill="none" stroke="var(--night-line)" />
         <circle cx="300" cy="300" r="120" fill="none" stroke="var(--night-line)" />
-        <circle cx="300" cy="90" r="7" fill="var(--logo-red)" />
+        <circle cx="152" cy="448" r="7" fill="var(--logo-red)" />
       </svg>
       <Container className="relative">
         <Eyebrow tone="night">Start a conversation</Eyebrow>

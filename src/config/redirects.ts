@@ -41,7 +41,7 @@ export const legacyRedirects: LegacyRedirect[] = [
   // Data services → Data Management
   { source: "/data-governance", destination: "/data-management#governance", note: "consolidated" },
   { source: "/integrated-data-solutions", destination: "/data-management#integration", note: "consolidated" },
-  // Outside the three specializations; pending a business decision (see docs/HANDOFF.md)
+  // Retired service names; the URLs are kept as legacy redirects (see docs/HANDOFF.md)
   { source: "/microsoft-dynamics-365", destination: "/data-management#integration", note: "retired" },
   { source: "/digital-transformation-consulting", destination: "/about#approach", note: "retired" },
 

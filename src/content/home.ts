@@ -1,9 +1,13 @@
 import type { ApproachStage } from "@/lib/content/types";
 
 export const hero = {
-  eyebrow: ["AI Governance", "Adobe Services", "Data Management"],
+  eyebrow: ["AI Governance", "Adobe Services", "Data Management", "Software Development"],
   title: "Responsible AI. Trusted data. Better digital experiences.",
-  lead: "Maverick InnoGarage is a consultancy that implements and connects Adobe Experience Cloud applications, puts oversight in place for AI, and builds enterprise data your teams can trust.",
+  lead: "Maverick InnoGarage is a software development and professional services company. We put responsible oversight around AI, implement and connect Adobe Experience Cloud applications, build enterprise data your teams can trust, and develop enterprise software, including MapleRecord, our own records management platform.",
+  figure: {
+    label: "How we deliver",
+    caption: "Our specializations around the outcomes you need, designed, built and improved in a continuous loop.",
+  },
 };
 
 export const expertise = [
@@ -27,6 +31,15 @@ export const expertise = [
     summary: "Governed, integrated, high-quality data with clear owners, from creation through retention and records management.",
     services: ["Strategy and governance", "Integration and real-time access", "Quality and metadata", "Lifecycle and retention", "Records management"],
     glyph: "lifecycle",
+  },
+  {
+    // provenance: proposed. Basis: owner-stated 2026-11-07 (software development is a core specialization);
+    // evidenced by MapleRecord; verified old-site titles (AEM custom development, data integration).
+    href: "/software-development",
+    title: "Software Development",
+    summary: "Enterprise software designed, built and integrated around how your teams work, by the team that builds MapleRecord.",
+    services: ["Custom enterprise applications", "Workflow and forms automation", "System and data integration", "Custom development on Adobe platforms", "Support and continued improvement"],
+    glyph: "build",
   },
 ] as const;
 
@@ -63,14 +76,8 @@ export const problems = [
   {
     problem: "AI use is expanding without clear oversight",
     detail: "Teams adopt AI tools and features faster than policies, owners and review processes can keep up.",
-    href: "/ai-governance",
+    href: "/ai-governance#oversight",
     service: "AI Governance",
-  },
-  {
-    problem: "Data is fragmented or unreliable",
-    detail: "Systems disagree, quality issues surface late, and nobody trusts the numbers.",
-    href: "/data-management#quality",
-    service: "Data Management",
   },
   {
     problem: "Adobe and enterprise systems don't talk to each other",
@@ -85,9 +92,9 @@ export const problems = [
     service: "Adobe Services",
   },
   {
-    problem: "Nobody clearly owns the data",
-    detail: "Without named owners and stewards, standards are never agreed and issues are never resolved.",
-    href: "/data-management#stewardship",
+    problem: "Data is fragmented or unreliable",
+    detail: "Systems disagree, quality issues surface late, and nobody trusts the numbers.",
+    href: "/data-management#quality",
     service: "Data Management",
   },
   {
@@ -95,6 +102,12 @@ export const problems = [
     detail: "Retention schedules exist on paper but are applied inconsistently, if at all.",
     href: "/data-management#records",
     service: "Data Management",
+  },
+  {
+    problem: "Critical processes run on spreadsheets and email",
+    detail: "Packaged tools don't fit, so requests, approvals and records are tracked by hand.",
+    href: "/software-development#custom-applications",
+    service: "Software Development",
   },
 ] as const;
 
@@ -111,7 +124,7 @@ export const deliveryApproach: ApproachStage[] = [
   },
   {
     stage: "Implement",
-    activities: "Configure platforms, build integrations, put processes in place, and train the people who will run them.",
+    activities: "Configure platforms, build software and integrations, put processes in place, and train the people who will run them.",
     deliverable: "Working solution, documentation and trained teams",
   },
   {
