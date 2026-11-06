@@ -4,13 +4,40 @@ import { defineConfig, devices } from "@playwright/test";
  * Runs against a production build (`npm run build` first).
  * - "configured": contact delivery points at a local mock provider (tests/mock-email-provider.mjs)
  * - "unconfigured": no delivery credentials, to verify the honest "not configured" path
+ * - "smtp": delivery through SMTP (company mailbox) to a local mock server (tests/mock-smtp-server.mjs)
  */
+/**
+ * Blank values for every real-delivery setting. Values already in the environment (even empty ones)
+ * take precedence over .env files, so test servers never pick up the real mailbox from .env.
+ */
+const noRealMail = {
+  SMTP_HOST: "",
+  SMTP_PORT: "",
+  SMTP_SECURE: "",
+  SMTP_USER: "",
+  SMTP_PASSWORD: "",
+  RESEND_API_KEY: "",
+  CONTACT_TO_EMAIL: "",
+  CONTACT_FROM_EMAIL: "",
+};
+
 const configuredEnv = {
+  ...noRealMail,
   RESEND_API_KEY: "test-key",
   CONTACT_TO_EMAIL: "inbox@example.test",
   CONTACT_FROM_EMAIL: "Website <web@example.test>",
   RESEND_API_URL: "http://127.0.0.1:4010/emails",
   PREVIEW_SECRET: "playwright-preview-secret",
+};
+
+const smtpEnv = {
+  ...noRealMail,
+  SMTP_HOST: "127.0.0.1",
+  SMTP_PORT: "2525",
+  SMTP_USER: "test-user",
+  SMTP_PASSWORD: "test-pass",
+  CONTACT_TO_EMAIL: "inbox@example.test",
+  CONTACT_FROM_EMAIL: "Website <web@example.test>",
 };
 
 /**
@@ -42,7 +69,7 @@ export default defineConfig({
   projects: [
     {
       name: "configured",
-      testIgnore: /unconfigured\.spec\.ts/,
+      testIgnore: /(unconfigured|contact-smtp)\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:3200" },
     },
     {
@@ -50,10 +77,17 @@ export default defineConfig({
       testMatch: /unconfigured\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:3201" },
     },
+    {
+      name: "smtp",
+      testMatch: /contact-smtp\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:3202" },
+    },
   ],
   webServer: [
     { command: "node tests/mock-email-provider.mjs", url: "http://127.0.0.1:4010", reuseExistingServer: false },
     { command: "npx next start -p 3200", url: "http://localhost:3200", env: configuredEnv, reuseExistingServer: false, timeout: 60_000 },
-    { command: "npx next start -p 3201", url: "http://localhost:3201", env: { PREVIEW_SECRET: "" }, reuseExistingServer: false, timeout: 60_000 },
+    { command: "npx next start -p 3201", url: "http://localhost:3201", env: { ...noRealMail, PREVIEW_SECRET: "" }, reuseExistingServer: false, timeout: 60_000 },
+    { command: "node tests/mock-smtp-server.mjs", url: "http://127.0.0.1:4011", reuseExistingServer: false },
+    { command: "npx next start -p 3202", url: "http://localhost:3202", env: smtpEnv, reuseExistingServer: false, timeout: 60_000 },
   ],
 });

@@ -1,12 +1,12 @@
 import "server-only";
-import type { EmailDeliveryConfig } from "@/server/env";
+import type { ResendDeliveryConfig } from "@/server/env";
 
 /** Minimal Resend REST client. Provider-specific code stays in this file. */
 export type OutgoingEmail = { subject: string; html: string; text: string; replyTo: string };
 
 export type SendResult = { ok: true; id: string } | { ok: false; status: number };
 
-export async function sendWithResend(config: EmailDeliveryConfig, email: OutgoingEmail): Promise<SendResult> {
+export async function sendWithResend(config: ResendDeliveryConfig, email: OutgoingEmail): Promise<SendResult> {
   const response = await fetch(config.endpoint, {
     method: "POST",
     headers: { Authorization: `Bearer ${config.apiKey}`, "Content-Type": "application/json" },

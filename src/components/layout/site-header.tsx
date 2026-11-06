@@ -1,4 +1,4 @@
-import { contactCta, getAdobeNav, primaryNav } from "@/config/navigation";
+import { contactCta, getAdobeNav, getMapleRecordNav, primaryNav } from "@/config/navigation";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/layout";
 import { AdobePartnerBadge } from "./adobe-partner-badge";
@@ -9,21 +9,22 @@ import { MobileNav } from "./mobile-nav";
 export function SiteHeader() {
   // Built here (server) so only labels and hrefs, not product content, reach the client menus.
   const adobe = getAdobeNav();
+  const mapleRecord = getMapleRecordNav();
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md supports-[backdrop-filter]:bg-paper/75">
-      <Container className="flex h-[4.75rem] items-center justify-between gap-4 2xl:gap-6">
-        <div className="flex shrink-0 items-center gap-2 min-[360px]:gap-3 sm:gap-5 xl:gap-4 2xl:gap-5">
+      <Container className="flex h-[4.75rem] items-center justify-between gap-4 xl:gap-3">
+        <div className="flex shrink-0 items-center gap-2 min-[360px]:gap-3 sm:gap-5 xl:gap-3.5">
           <Logo preload width={112} />
           <AdobePartnerBadge />
         </div>
         <nav aria-label="Primary" className="hidden xl:block">
-          <NavLinks items={primaryNav} adobe={adobe} />
+          <NavLinks items={primaryNav} adobe={adobe} mapleRecord={mapleRecord} />
         </nav>
         <div className="flex shrink-0 items-center gap-3">
-          <ButtonLink href={contactCta.href} size="sm" className="hidden whitespace-nowrap sm:inline-flex">
+          <ButtonLink href={contactCta.href} size="sm" className="hidden whitespace-nowrap sm:inline-flex xl:px-4">
             {contactCta.label}
           </ButtonLink>
-          <MobileNav items={primaryNav} cta={contactCta} adobe={adobe} />
+          <MobileNav items={primaryNav} cta={contactCta} adobe={adobe} mapleRecord={mapleRecord} />
         </div>
       </Container>
     </header>

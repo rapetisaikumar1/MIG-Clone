@@ -191,7 +191,7 @@ export function MrModuleCard({ module: m, size = "lg", index }: { module: MrModu
 export function MrModuleGrid({ modules }: { modules: MrModule[] }) {
   const { eyebrow, title, intro } = mrPlatformPage.showcase;
   return (
-    <Section id="modules" className="scroll-mt-36" aria-labelledby="modules-title">
+    <Section id="modules" aria-labelledby="modules-title">
       <Container>
         <SectionHeading id="modules-title" eyebrow={eyebrow} title={title} intro={intro} />
         <ul className="mt-12 grid gap-6 md:grid-cols-2">
@@ -214,7 +214,7 @@ const bandSizes = "(min-width: 1248px) 36rem, (min-width: 1024px) calc(50vw - 5r
 export function MrAdminBand({ module: m }: { module: MrModule }) {
   const band = mrPlatformPage.admin;
   return (
-    <Section id="mr-admin" tone="surface" className="scroll-mt-36" aria-labelledby="admin-title">
+    <Section id="mr-admin" tone="surface" aria-labelledby="admin-title">
       <Container className="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
           <SectionHeading id="admin-title" eyebrow={band.eyebrow} title={band.title} intro={band.body} />
@@ -337,7 +337,7 @@ const tourSizes = "(min-width: 1248px) 41rem, (min-width: 1024px) calc(58vw - 5r
 export function MrModuleTour({ module: m }: { module: MrModule }) {
   const stops = m.tour.stops;
   return (
-    <Section id="tour" tone="deep" className="scroll-mt-36" aria-labelledby="tour-title">
+    <Section id="tour" tone="deep" aria-labelledby="tour-title">
       <Container>
         <SectionHeading id="tour-title" eyebrow="Product tour" title={`Inside ${m.name}`} intro={m.tour.intro} />
         <ol className="mt-14 grid gap-16 lg:mt-16 lg:gap-24">
@@ -369,7 +369,7 @@ export function MrModuleTour({ module: m }: { module: MrModule }) {
 export function MrModuleCapabilities({ module: m }: { module: MrModule }) {
   const n = m.capabilities.length;
   return (
-    <Section id="capabilities" className="scroll-mt-36" aria-labelledby="caps-title">
+    <Section id="capabilities" aria-labelledby="caps-title">
       <Container>
         <SectionHeading id="caps-title" eyebrow="Capabilities" title="Key capabilities" />
         <ul className={cn("mt-12 grid gap-5 sm:grid-cols-2", n === 5 ? "lg:grid-cols-6" : n !== 4 && "lg:grid-cols-3")}>

@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Dialog } from "radix-ui";
 import { Menu, X, ArrowRight } from "lucide-react";
-import type { AdobeNav, NavItem } from "@/config/navigation";
+import type { AdobeNav, MapleRecordNav, NavItem } from "@/config/navigation";
 import { company, primaryPhone } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { isActivePath } from "./nav-links";
 
 /** Full-screen sheet built on Radix Dialog: focus trap, Escape to close, scroll lock, labelled. */
-export function MobileNav({ items, cta, adobe }: { items: NavItem[]; cta: NavItem; adobe?: AdobeNav }) {
+export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]; cta: NavItem; adobe?: AdobeNav; mapleRecord?: MapleRecordNav }) {
   const pathname = usePathname();
   // Open only for the path it was opened on, so any navigation (including Back) closes the sheet.
   const [openOn, setOpenOn] = useState<string | null>(null);
@@ -45,7 +45,7 @@ export function MobileNav({ items, cta, adobe }: { items: NavItem[]; cta: NavIte
           </div>
           <nav aria-label="Mobile" className="flex-1 px-5 py-6">
             <ul className="divide-y divide-line border-y border-line">
-              {[...items, { label: "MapleRecord", href: "/maplerecord" }].map((item) => {
+              {items.map((item) => {
                 const active = isActivePath(pathname, item.href);
                 return (
                   <li key={item.href}>
@@ -84,6 +84,29 @@ export function MobileNav({ items, cta, adobe }: { items: NavItem[]; cta: NavIte
                                   <span className="sr-only">Adobe </span>
                                   {sub.label}
                                 </span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
+                    {mapleRecord && item.href === mapleRecord.overview.href ? (
+                      <ul aria-label="MapleRecord pages" className="-mt-1 mb-3 ml-1 border-l border-line pl-4">
+                        {mapleRecord.sections.slice(1).map((sub) => {
+                          const current = isActivePath(pathname, sub.href);
+                          return (
+                            <li key={sub.href}>
+                              <Link
+                                href={sub.href}
+                                onClick={() => setOpen(false)}
+                                aria-current={current ? "page" : undefined}
+                                className={cn(
+                                  "flex min-h-11 items-center gap-2 text-base text-ink-soft hover:text-ink",
+                                  current && "font-medium text-ink",
+                                )}
+                              >
+                                {current ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
+                                {sub.label}
                               </Link>
                             </li>
                           );

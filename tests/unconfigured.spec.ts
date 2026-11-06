@@ -9,7 +9,7 @@ test("without delivery credentials the form says so and never claims success", a
   await page.getByLabel("How can we help?").fill("Checking the not-configured path of the contact form.");
   await page.waitForTimeout(2600);
   await page.getByRole("button", { name: "Send message" }).click();
-  await expect(page.locator("form").getByRole("alert")).toContainText("aren't connected in this environment");
+  await expect(page.locator("form").getByRole("alert")).toContainText("We couldn't send your message just now");
   await expect(page.getByText("Your message has been sent")).toHaveCount(0);
 
   const res = await request.post("/api/contact", {

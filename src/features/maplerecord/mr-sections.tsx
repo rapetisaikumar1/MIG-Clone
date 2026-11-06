@@ -167,7 +167,7 @@ export function MrHero({
             </div>
             {officialUrl ? (
               <p className="mt-7 text-sm text-night-muted">
-                Source:{" "}
+                Also published on{" "}
                 <a href={officialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-6 items-center underline decoration-night-line underline-offset-4 hover:text-night-text">
                   {officialUrl.replace("https://", "").replace(/\/$/, "")}
                   <span className="sr-only"> (opens maplerecord.com in a new tab)</span>
@@ -178,11 +178,11 @@ export function MrHero({
           {image ? (
             <div className="lg:col-span-6">
               {photo ? (
-                <div className="overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_30px_80px_-24px_rgb(0_0_0/0.7)]">
-                  <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={mrHalfSizes} preload className="h-auto w-full" />
+                <div className="rounded-[1.25rem] bg-white/[0.05] p-1.5 shadow-[0_40px_120px_-32px_rgb(0_0_0/0.85)] ring-1 ring-white/12 sm:p-2">
+                  <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={mrHalfSizes} preload className="h-auto w-full rounded-[0.875rem]" />
                 </div>
               ) : (
-                <MrWindow image={image} label={imageLabel ?? eyebrow} fit={imageFit} aspect={imageAspect} sizes={mrHalfSizes} preload tone="dark" />
+                <MrWindow image={image} label={imageLabel ?? eyebrow} fit={imageFit} aspect={imageAspect} sizes={mrHalfSizes} preload tone="dark" chrome="bezel" />
               )}
             </div>
           ) : null}

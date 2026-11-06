@@ -2,6 +2,7 @@ import "server-only";
 import { adobeApplicationLabel, contactInterests, type ContactSubmission } from "@/features/contact/schema";
 import { getEmailDeliveryConfig } from "@/server/env";
 import { sendWithResend } from "@/server/email/resend";
+import { sendWithSmtp } from "@/server/email/smtp";
 import { escapeHtml, singleLine } from "./escape";
 
 export type SubmitOutcome =
@@ -54,7 +55,7 @@ export async function submitInquiry(input: ContactSubmission): Promise<SubmitOut
   // Non-personal context for logs: the interest area and how many Adobe applications were selected.
   const context = { interest: input.interest, adobeApplications: adobeApplicationsFor(input).length };
   try {
-    const result = await sendWithResend(config, buildEmail(input));
+    const result = await (config.provider === "smtp" ? sendWithSmtp(config, buildEmail(input)) : sendWithResend(config, buildEmail(input)));
     if (!result.ok) {
       console.error("[contact] Provider rejected inquiry", { status: result.status, ...context });
       return { status: "provider_error" };

@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Adobe Solution Partner statement. Renders nothing unless company.adobePartner.verified is true,
- * and never names a tier, certification count or specialization (none are confirmed — docs/HANDOFF.md).
+ * The badge carries the Bronze tier from MiG's co-brand file; the copy names no certification counts or
+ * specializations (none are confirmed — docs/HANDOFF.md).
  * `tone="night"` is for dark sections: the badge (dark artwork) sits on a light plate.
  */
 export function AdobePartnerPanel({ className, tone = "light" }: { className?: string; tone?: "light" | "night" }) {
@@ -20,7 +21,7 @@ export function AdobePartnerPanel({ className, tone = "light" }: { className?: s
       )}
     >
       <div className={cn("justify-self-start", night && "rounded-xl bg-surface px-4 py-3")}>
-        <Image src={badge.src} alt="Adobe Solution Partner" width={badge.width} height={badge.height} className="h-12 w-auto sm:h-14" />
+        <Image src={badge.src} alt={badge.alt} width={badge.width} height={badge.height} className="h-12 w-auto sm:h-14" />
       </div>
       <div>
         <p className="text-lg font-semibold tracking-tight">{company.name} is an Adobe Solution Partner.</p>

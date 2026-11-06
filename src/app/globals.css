@@ -170,15 +170,11 @@
     background-position: 0 0, -1px -1px, -1px -1px;
   }
   /*
-   * MapleRecord pages stack a 3.5rem sub-navigation under the 4.75rem site header (8.25rem of sticky
-   * bars at every width), so keyboard focus and #fragment targets must clear more than the site-wide
-   * 6rem. One offset for the whole section: scroll-padding clears the bars, and a small scroll-margin
-   * (important, so page-level scroll-mt-* utilities don't stack on top of it) adds breathing room.
+   * MapleRecord pages land #fragment targets just under the sticky header (the site-wide 6rem
+   * scroll-padding plus a small margin) instead of the larger site-wide offset. Important, so
+   * page-level scroll-mt-* utilities don't stack on top of it.
    */
-  html:has([data-mr-subnav]) {
-    scroll-padding-top: 8.75rem;
-  }
-  html:has([data-mr-subnav]) [id] {
+  html:has([data-mr-section]) [id] {
     scroll-margin-top: 0.75rem !important;
   }
   /* Fades a stage's grid toward its edges. */

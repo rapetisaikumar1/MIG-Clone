@@ -138,7 +138,7 @@ export function SolutionDirectory({
   tone: "paper" | "surface";
 }) {
   return (
-    <Section id={id} tone={tone} className="scroll-mt-36" aria-labelledby={`${id}-title`}>
+    <Section id={id} tone={tone} aria-labelledby={`${id}-title`}>
       <Container>
         <SectionHeading id={`${id}-title`} eyebrow={eyebrow} title={title} intro={intro} />
         <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-6">
@@ -220,7 +220,7 @@ export function SolutionChallenges({ heading, intro, items }: MrSolution["challe
 /** Industry pages: one card per module, branded like the platform pages (MR Records, MR Requests, …). */
 export function SolutionModules({ label, heading, items }: { label: string } & NonNullable<MrSolution["modules"]>) {
   return (
-    <Section id="modules" tone="surface" className="scroll-mt-36" aria-labelledby="modules-title">
+    <Section id="modules" tone="surface" aria-labelledby="modules-title">
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -289,7 +289,7 @@ const workflowScreen = mrScreens.workflowsCanvas;
 
 export function SolutionWorkflow({ heading, steps }: NonNullable<MrSolution["workflow"]>) {
   return (
-    <Section id="workflow" tone="surface" className="scroll-mt-36" aria-labelledby="workflow-title">
+    <Section id="workflow" tone="surface" aria-labelledby="workflow-title">
       <Container>
         <SectionHeading id="workflow-title" eyebrow="How it works" title={heading} />
         <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:items-start lg:gap-14">
@@ -333,7 +333,7 @@ export function SolutionWorkflow({ heading, steps }: NonNullable<MrSolution["wor
 /** Use cases as one hairline-divided panel (the same cell language as MrStats). */
 export function SolutionUseCases({ heading, items }: MrSolution["useCases"]) {
   return (
-    <Section id="use-cases" className="scroll-mt-36" aria-labelledby="use-cases-title">
+    <Section id="use-cases" aria-labelledby="use-cases-title">
       <Container>
         <SectionHeading id="use-cases-title" eyebrow="Use cases" title={heading} />
         <ul className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line shadow-[0_1px_2px_rgb(17_17_17/0.04)] sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">

@@ -8,7 +8,7 @@ import type { MrImage, MrModuleSlug } from "@/lib/content/types";
 /*
  * MapleRecord design system. Every MapleRecord page builds on these pieces so the section reads as
  * one product site:
- *   - MrWindow      product screenshot in an app-window frame (title bar + label)
+ *   - MrWindow      product screenshot in a frame: a quiet caption row, or a glass bezel in heroes
  *   - MrStage       light or dark backdrop a window sits on (fine grid, soft glow)
  *   - MrBadge       small product pill (logo mark + label), used in heroes
  *   - MrIconTile    square icon tile for feature cards
@@ -27,9 +27,10 @@ import type { MrImage, MrModuleSlug } from "@/lib/content/types";
  */
 
 type WindowFit = "top" | "contain";
-type WindowAspect = "wide" | "video" | "square" | "tall";
+type WindowAspect = "cinema" | "wide" | "video" | "square" | "tall";
 
 const aspectClass: Record<WindowAspect, string> = {
+  cinema: "aspect-[16/9]",
   wide: "aspect-[16/10]",
   video: "aspect-[4/3]",
   square: "aspect-square",
@@ -76,10 +77,11 @@ export function MrWindow({
   alt = image.alt,
   tone = "light",
   crop: cropProp,
+  chrome = "bar",
   className,
 }: {
   image: MrImage;
-  /** Title-bar label, e.g. "MR Records". */
+  /** Caption, e.g. "MR Records" (not shown with the bezel). */
   label?: string;
   fit?: WindowFit;
   aspect?: WindowAspect;
@@ -93,34 +95,40 @@ export function MrWindow({
    * from each edge (e.g. 0.05). Implies `fit="top"`. Default: no crop.
    */
   crop?: number;
+  /** "bar": a quiet caption row with the screen's name (default). "bezel": no caption, a glass bezel for heroes. */
+  chrome?: "bar" | "bezel";
   className?: string;
 }) {
   const crop = cropProp ?? builtInFrameCrop[image.src];
+  const bezel = chrome === "bezel";
   return (
     <figure
       className={cn(
-        "overflow-hidden rounded-2xl bg-surface",
-        tone === "dark"
-          ? "shadow-[0_30px_80px_-24px_rgb(0_0_0/0.7)] ring-1 ring-white/10"
-          : "shadow-[0_1px_2px_rgb(17_17_17/0.05),0_24px_56px_-28px_rgb(17_17_17/0.35)] ring-1 ring-ink/10",
+        bezel
+          ? // Hero framing: the product UI floats in a thin glass bezel, with no window chrome.
+            cn(
+              "rounded-[1.25rem] p-1.5 sm:p-2",
+              tone === "dark"
+                ? "bg-white/[0.05] shadow-[0_40px_120px_-32px_rgb(0_0_0/0.85)] ring-1 ring-white/12"
+                : "bg-ink/[0.03] shadow-[0_32px_80px_-36px_rgb(17_17_17/0.4)] ring-1 ring-ink/10",
+            )
+          : cn(
+              "overflow-hidden rounded-2xl bg-surface",
+              tone === "dark"
+                ? "shadow-[0_30px_80px_-24px_rgb(0_0_0/0.7)] ring-1 ring-white/10"
+                : "shadow-[0_1px_2px_rgb(17_17_17/0.05),0_24px_56px_-28px_rgb(17_17_17/0.35)] ring-1 ring-ink/10",
+            ),
         className,
       )}
     >
-      {/* Title bar: window controls, then the label centred in an address-style pill. */}
-      <div className="grid h-9 grid-cols-[3.25rem_minmax(0,1fr)_3.25rem] items-center gap-2 border-b border-line/70 bg-linear-to-b from-surface to-paper/90 px-3.5 sm:h-10" aria-hidden>
-        <span className="flex gap-1.5">
-          <span className="size-2.5 rounded-full bg-line-strong/80" />
-          <span className="size-2.5 rounded-full bg-line-strong/80" />
-          <span className="size-2.5 rounded-full bg-line-strong/80" />
-        </span>
-        {label ? (
-          <span className="mx-auto flex max-w-full min-w-0 items-center gap-1.5 rounded-md bg-paper px-2.5 py-1 ring-1 ring-line/80">
-            <LeafMark className="size-3 shrink-0" />
-            <span className="truncate font-mono text-[0.6875rem] uppercase leading-none tracking-[0.08em] text-muted">{label}</span>
-          </span>
-        ) : null}
-      </div>
-      <div className={cn("relative overflow-hidden bg-surface", aspectClass[aspect])}>
+      {/* Caption bar: the product mark and the screen's name, quietly, as an app's own title row. */}
+      {!bezel && label ? (
+        <div className="flex h-9 items-center gap-2 border-b border-line/70 bg-paper/60 px-4 sm:h-10" aria-hidden>
+          <LeafMark className="size-3 shrink-0" />
+          <span className="truncate text-[0.75rem] font-medium leading-none tracking-[-0.005em] text-muted">{label}</span>
+        </div>
+      ) : null}
+      <div className={cn("relative overflow-hidden bg-surface", bezel && "rounded-[0.875rem] ring-1 ring-black/5", aspectClass[aspect])}>
         {crop ? (
           // Enlarged box: every edge extends past the window by the screenshot's own margin, so the margin
           // falls outside; object-cover keeps the window filled (no gaps), anchored at the top.

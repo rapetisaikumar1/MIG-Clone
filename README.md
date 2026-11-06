@@ -11,7 +11,7 @@ It's a single Next.js App Router application: marketing pages are pre-rendered, 
 | UI | Radix UI (via `radix-ui`) for the mobile navigation dialog, `class-variance-authority` for shadcn-style variants, Lucide icons |
 | Content | Typed TypeScript content + trusted MDX articles (`@next/mdx`) |
 | Validation | Zod 4 (shared client/server contact schema) |
-| Email | Resend REST API (server-only module, no SDK) |
+| Email | Company mailbox over SMTP (nodemailer), or the Resend REST API (server-only modules) |
 | Tests | Playwright 1.64 + axe-core |
 | Runtime | **Node.js 24 LTS** (`.nvmrc`), minimum 22.12 · **npm 10** (lockfile: `package-lock.json`) |
 
@@ -70,7 +70,7 @@ src/
                                maplerecord/*.ts (from maplerecord.com — see docs/MAPLERECORD-SOURCES.md)
                                adobe/products/*.ts (one file per Adobe application page), adobe/assessment.ts (assessment page copy)
   lib/content/                 Typed content access (getService, getInsights, getAdobeProducts, adobeProductPath…)
-  server/                      server-only: env validation, Resend client, submission service, rate limit
+  server/                      server-only: env validation, SMTP and Resend senders, submission service, rate limit
   config/                      site.ts (company facts), navigation.ts, redirects.ts
 public/brand/                  Original logo files, unchanged
 public/maplerecord/            MapleRecord logos and images; screens/ holds recreated product screens (see docs/MAPLERECORD-SOURCES.md)
@@ -89,14 +89,26 @@ docs/                          Migration map, content inventory, review handoff
 
 ## Contact form
 
-`ContactForm` (client validation for usability) → `POST /api/contact` → Zod validation → `submitInquiry()` → `sendWithResend()`.
+`ContactForm` (client validation for usability) → `POST /api/contact` → Zod validation → `submitInquiry()` → `sendWithSmtp()` (when `SMTP_HOST` is set) or `sendWithResend()`.
 
 - Checks the exact `application/json` media type, same-origin `Origin` and `Sec-Fetch-Site`, a 16 KB body limit (counted in bytes while streaming), a honeypot field, a minimum fill time (2.5 s, measured on the visitor's own clock as `fillMs` so device clock skew can't block real people; the form waits out any remainder before posting) and a per-IP rate limit (5 per 10 minutes; keys capped and evicted oldest-first).
 - Optional `adobeApplications` (Adobe product slugs) is accepted only for the Adobe Services interest. `?product=<slug>` pre-ticks an application and `?topic=assessment` pre-fills an editable assessment request (`src/features/contact/links.ts`).
 - User content is HTML-escaped in the email body, and header values are stripped of CR/LF, control and bidi-override characters.
 - Logs record outcome, interest area and provider reference, never names, emails or message text.
-- The form shows success **only** when the provider returns 2xx. Otherwise the user sees a specific failure message.
-- If `RESEND_API_KEY`, `CONTACT_TO_EMAIL` or `CONTACT_FROM_EMAIL` is missing, the form shows a visible "not configured" notice and the API returns `503 not_configured`.
+- The form shows success **only** when the mail server accepts the message (SMTP `250`) or Resend returns 2xx. Otherwise the user sees a specific failure message.
+- If delivery isn't configured (no `CONTACT_TO_EMAIL`/`CONTACT_FROM_EMAIL`, or neither `SMTP_HOST` nor `RESEND_API_KEY`), the form shows a polite "online messages are temporarily unavailable, please call" notice and the API returns `503 not_configured`.
+
+### Sending through the company mailbox (SMTP)
+
+Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` in the host's environment (or `.env.local` locally, which is gitignored). Port 465 uses implicit TLS. Any other port uses STARTTLS, and TLS is required except on localhost. Each inquiry is sent **from** `CONTACT_FROM_EMAIL` **to** `CONTACT_TO_EMAIL`, with `Reply-To` set to the visitor, so replying in the mail client answers them directly.
+
+| Provider | Host | Port | Notes |
+|---|---|---|---|
+| Microsoft 365 / Outlook | `smtp.office365.com` | 587 | SMTP AUTH must be enabled for the sending mailbox (Microsoft 365 admin center → user → Mail → Manage email apps). |
+| Google Workspace | `smtp.gmail.com` | 465 | Use an app password (requires 2-Step Verification), not the normal password. |
+| Other host (cPanel, Zoho, GoDaddy…) | from your provider | 465 or 587 | Use the mailbox's full address as the username. |
+
+`CONTACT_FROM_EMAIL` must be an address the SMTP account is allowed to send as, usually the same mailbox (e.g. `"Maverick InnoGarage Website <website@yourdomain>"`).
 
 ### Abuse protection
 
@@ -118,9 +130,13 @@ See `.env.example`. All variables are optional. Missing values degrade gracefull
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | build | Canonical origin. Falls back to Vercel's production/preview URL, then `http://localhost:3000` |
 | `SITE_INDEXABLE` | build | Set `true` on non-Vercel production hosts to allow indexing. On Vercel, only `VERCEL_ENV=production` is indexable |
-| `RESEND_API_KEY` | server | Resend API key |
-| `CONTACT_TO_EMAIL` | server | Inbox for inquiries (**to be confirmed by MiG**: no address is published today) |
-| `CONTACT_FROM_EMAIL` | server | Sender on a domain verified in Resend |
+| `SMTP_HOST` | server | Company mail server. When set, SMTP is used instead of Resend |
+| `SMTP_PORT` | server | `587` (STARTTLS, default) or `465` (implicit TLS) |
+| `SMTP_SECURE` | server | Optional override: `true` forces implicit TLS. Defaults to `true` only on port 465 |
+| `SMTP_USER` / `SMTP_PASSWORD` | server | Mailbox login (an app password for Google Workspace). Set both or neither |
+| `RESEND_API_KEY` | server | Resend API key (alternative to SMTP) |
+| `CONTACT_TO_EMAIL` | server | Inbox that receives inquiries |
+| `CONTACT_FROM_EMAIL` | server | Sender address: a mailbox the SMTP account may send as, or a Resend-verified domain |
 | `PREVIEW_SECRET` | server | ≥16 chars. Enables `/api/draft?secret=…&slug=…` |
 | `RESEND_API_URL` | server | Test-only override used by Playwright's mock provider |
 

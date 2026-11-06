@@ -65,7 +65,7 @@ export const consentCategories: CategoryInfo[] = [
       {
         name: "__prerender_bypass",
         provider: "Maverick InnoGarage",
-        purpose: "Set only for our editors when they preview unpublished articles (Draft Mode). Visitors never receive it.",
+        purpose: "Set only for our editors when they preview unpublished articles. Visitors never receive it.",
         duration: "Session",
       },
     ],

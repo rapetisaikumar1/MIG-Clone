@@ -68,11 +68,12 @@ export const company = {
   ],
   /**
    * Adobe Solution Partner status, shown in the header at Maverick InnoGarage's request (2026-11-03).
-   * The badge omits the partner tier by request. Set `verified: false` to hide it everywhere.
+   * The badge is Adobe's partner lockup with the Bronze tier line, as on MiG's original co-brand file
+   * (shown with the tier at MiG's request, 2026-11-06). Set `verified: false` to hide it everywhere.
    */
   adobePartner: {
     verified: true,
-    badge: { src: "/brand/adobe-solution-partner.svg", width: 294, height: 80 },
+    badge: { src: "/brand/adobe-solution-partner.svg", width: 258, height: 76, alt: "Adobe Solution Partner, Bronze" },
   },
 } as const;
 

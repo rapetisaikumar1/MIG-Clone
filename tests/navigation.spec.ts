@@ -65,13 +65,27 @@ test("every internal link and fragment on core pages resolves", async ({ page, r
 test("primary navigation reaches each section", async ({ page }) => {
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of ["AI Governance", "Adobe Services", "Data Management", "Industries", "Insights", "About"]) {
+  for (const label of ["AI Governance", "Adobe Services", "Data Management", "MapleRecord", "Industries", "Insights", "About"]) {
     await nav.getByRole("link", { name: label, exact: true }).click();
     await expect(page.locator("h1")).toBeVisible();
     await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
   }
   await page.getByRole("banner").getByRole("link", { name: "Talk to an Expert" }).click();
   await expect(page).toHaveURL(/\/contact$/);
+});
+
+test("the header fits on one row at common desktop widths", async ({ page }) => {
+  for (const width of [1280, 1366, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    const banner = page.getByRole("banner");
+    const cta = (await banner.getByRole("link", { name: "Talk to an Expert" }).boundingBox())!;
+    const nav = (await banner.getByRole("navigation", { name: "Primary" }).boundingBox())!;
+    expect(cta.x + cta.width, `CTA inside the viewport at ${width}px`).toBeLessThanOrEqual(width);
+    expect(nav.x + nav.width, `nav clear of the CTA at ${width}px`).toBeLessThan(cta.x);
+    expect(nav.height, `nav on one row at ${width}px`).toBeLessThan(50);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+  }
 });
 
 test("mobile menu is keyboard accessible", async ({ page }) => {

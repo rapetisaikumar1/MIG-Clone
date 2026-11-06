@@ -85,7 +85,8 @@ const solutionIcons: Record<string, Icon> = {
  * of side padding below that) minus the panel and stage padding around each window.
  */
 const sizes = {
-  hero: "(min-width: 1248px) 41rem, (min-width: 1024px) calc(58vw - 5rem), (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)",
+  /* Hero product shot: the full container width, inside the bezel's padding. */
+  hero: "(min-width: 1248px) 71rem, (min-width: 1024px) calc(100vw - 7rem), (min-width: 640px) calc(100vw - 5rem), calc(100vw - 3.25rem)",
   module: "(min-width: 1248px) 37rem, (min-width: 1024px) calc(58vw - 8.5rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 5.5rem)",
   department: "(min-width: 1280px) 20rem, (min-width: 1024px) calc(33vw - 6rem), (min-width: 768px) calc(50vw - 6rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 5.5rem)",
   pillar: "(min-width: 1248px) 29rem, (min-width: 768px) calc(50vw - 7rem), (min-width: 640px) calc(100vw - 9rem), calc(100vw - 6.5rem)",
@@ -106,27 +107,33 @@ export default function MapleRecordPage() {
     <>
       {/* Hero: dark product stage, matching MrHero on the other MapleRecord pages */}
       <section className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text" aria-labelledby="mr-overview-title">
-        <Container className="relative grid items-center gap-12 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-12 lg:gap-14 lg:pb-24 lg:pt-20">
-          <div className="lg:col-span-5">
-            <MrBadge tone="dark">MapleRecord</MrBadge>
-            <h1 id="mr-overview-title" className="mt-6 text-h1">
-              {mrHero.headline}
-            </h1>
-            <p className="mt-6 max-w-[48ch] text-lead text-night-muted">{mrHero.lead}</p>
-            <p className="mt-4 font-medium text-night-text">{mrHero.tagline}</p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <ExternalLink href={mrOfficial.demo} variant="primary">
-                Request a demo
-              </ExternalLink>
-              <ButtonLink href="#platform" variant="outline-night">
-                Explore the platform
-              </ButtonLink>
+        <Container className="relative pb-16 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20">
+          {/* Headline left, supporting copy and actions right; the product shot runs full width beneath. */}
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-14">
+            <div className="lg:col-span-7">
+              <MrBadge tone="dark">MapleRecord</MrBadge>
+              <h1 id="mr-overview-title" className="mt-6 text-h1">
+                {mrHero.headline}
+              </h1>
+            </div>
+            <div className="lg:col-span-5 lg:pb-1.5">
+              <p className="max-w-[48ch] text-lead text-night-muted">{mrHero.lead}</p>
+              <p className="mt-4 font-medium text-night-text">{mrHero.tagline}</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <ExternalLink href={mrOfficial.demo} variant="primary">
+                  Request a demo
+                </ExternalLink>
+                <ButtonLink href="#platform" variant="outline-night">
+                  Explore the platform
+                </ButtonLink>
+              </div>
             </div>
           </div>
-          <div className="lg:col-span-7">
-            <MrWindow image={mrHero.screen} label={mrHero.screen.label} fit="top" aspect="wide" sizes={sizes.hero} preload tone="dark" />
+          <div className="relative mt-12 sm:mt-16">
+            <div aria-hidden className="pointer-events-none absolute inset-x-[12%] -top-8 bottom-1/3 rounded-full bg-signal/15 blur-[90px]" />
+            <MrWindow image={mrHero.screen} fit="top" aspect="cinema" sizes={sizes.hero} preload tone="dark" chrome="bezel" className="relative" />
           </div>
-          <div className="flex flex-col gap-4 border-t border-white/10 pt-7 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 lg:col-span-12">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-6 lg:mt-12">
             <p id="mr-hero-modules" className="font-mono text-label uppercase text-night-muted">
               Five integrated modules
             </p>
@@ -151,7 +158,7 @@ export default function MapleRecordPage() {
       </section>
 
       {/* Modules */}
-      <Section id="platform" className="scroll-mt-36" aria-labelledby="platform-title">
+      <Section id="platform" aria-labelledby="platform-title">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
             <SectionHeading id="platform-title" eyebrow={mrPlatformIntro.eyebrow} title={mrPlatformIntro.title} intro={`${mrPlatformIntro.body} ${mrPlatformIntro.modules}`} />

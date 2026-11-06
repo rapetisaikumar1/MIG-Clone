@@ -203,7 +203,7 @@ export function MrContactHero({ crumbs }: { crumbs: { label: string; href?: stri
           <div className="lg:col-span-5 lg:pb-1">
             <p className="max-w-[48ch] text-lead text-night-muted">{mrContact.body}</p>
             <p className="mt-5 text-sm text-night-muted">
-              Source:{" "}
+              Also published on{" "}
               <a
                 href={mrOfficial.contact}
                 target="_blank"

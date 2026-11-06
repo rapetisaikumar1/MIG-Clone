@@ -5,7 +5,7 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 ## Missing assets and information
 
 1. **Inquiry email address.** None is published. Needed for `CONTACT_TO_EMAIL`, and optionally to display on the site (`company.email` in `src/config/site.ts`).
-2. **Resend account and verified sending domain** (or approval of another provider). The swap would touch only `src/server/email/resend.ts`.
+2. **Company mailbox SMTP details** for the contact form: host, port, mailbox username, password (or app password), and the From address. See "Sending through the company mailbox (SMTP)" in the README. Resend remains supported as an alternative.
 3. **MapleRecord product screenshots** and confirmation of whether to link to `maplerecord.com`.
 4. **Team or leadership information**, if it should appear on About. None is shown now.
 5. **Terms of service**, if required. Only a privacy notice and a cookie policy exist.
@@ -14,7 +14,7 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 
 | Claim | Status on new site |
 |---|---|
-| Adobe Solution Partner | **Shown in the site header** at the owner's request (2026-11-03), without a tier name. It could not be confirmed in Adobe's public partner directory. The tier line was removed from Adobe's lockup, so check this against Adobe's partner badge guidelines. Set `company.adobePartner.verified = false` to remove it |
+| Adobe Solution Partner | **Shown in the site header** at the owner's request (2026-11-03), as Adobe's partner lockup with the **Bronze** tier line (restored at the owner's request, 2026-11-06; the tier comes from MiG's original co-brand file). It could not be confirmed in Adobe's public partner directory. The badge is redrawn as vector artwork (`public/brand/adobe-solution-partner.svg`), so check it against the official badge in Adobe's partner portal and swap in that file if it differs. Set `company.adobePartner.verified = false` to remove it |
 | "Over 7 years" experience, "certified experts" | Omitted |
 | **All AI Governance service content** | **Proposed.** The old site has no AI governance offering. Confirm the scope you can deliver (every item is marked `provenance: "proposed"`) |
 | Data Management → "Data ready for Adobe, analytics, and AI" | Proposed (consent and usage rules before activation, profile quality, AI data approvals) |
@@ -23,7 +23,7 @@ Items that need a decision, an asset, or configuration from Maverick InnoGarage 
 | **Adobe application pages** (`/adobe-services/<product>`, `src/content/adobe/products/*.ts`) | Service **titles** are the verified service types from each old product page and must stay as listed. Explanations, feature overviews, signals, FAQs and illustrative scenarios are **proposed** new copy. Product descriptions were checked against Adobe Experience League (Nov 2026). Confirm the depth of delivery for each application |
 | **Adobe platform assessment** (`/adobe-services/assessment`) | Based on the verified Assess stage (current-state assessment with prioritized opportunities). The scope, process, inputs and outputs are **proposed**. No price, duration or "free" claim is made. Confirm you offer it as a standalone first engagement, and who delivers it |
 | Adobe hub → "Ways to engage" and "Data governance inside Adobe" sections | **Proposed.** Confirm the engagement models you actually offer and the governance work you deliver inside Adobe applications |
-| Adobe Solution Partner panel (hub, product pages, home Adobe section) | Rendered only while `company.adobePartner.verified` is `true` (same switch as the header badge). The partner tier is **deliberately not shown**. Same caveats as the header badge above |
+| Adobe Solution Partner panel (hub, product pages, home Adobe section) | Rendered only while `company.adobePartner.verified` is `true` (same switch as the header badge). The badge shows the Bronze tier; the panel copy doesn't repeat it. Same caveats as the header badge above |
 | Home → "Adobe Experience Cloud, implemented and connected" section | Lists the seven applications from the old site and links to the assessment. Intro copy is proposed |
 | Contact form → "Adobe applications involved" field | New optional field, shown when the interest is Adobe Services and included in the inquiry email. Make sure the owners of the `CONTACT_TO_EMAIL` inbox know it exists and how to route Adobe inquiries |
 | Framework mentions (NIST AI RMF, ISO/IEC 42001, EU AI Act) in the AI Governance FAQ | Worded as "help you map / organize documentation", with no legal advice or certification. EU AI Act timelines were amended in 2026, so no dates are quoted. Have counsel review |

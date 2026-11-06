@@ -287,11 +287,11 @@ function ArticleBody({ blocks, ids }: { blocks: MrArticleBlock[]; ids: Map<numbe
         }
         if (b.type === "heading") {
           return b.level === 3 ? (
-            <h3 key={i} id={ids.get(i)} className="scroll-mt-40 text-[1.1875rem] leading-snug mt-10">
+            <h3 key={i} id={ids.get(i)} className="text-[1.1875rem] leading-snug mt-10">
               <HeadingText text={b.text} />
             </h3>
           ) : (
-            <h2 key={i} id={ids.get(i)} className="scroll-mt-40 border-t border-line pt-10 text-[clamp(1.375rem,1.2rem+0.7vw,1.75rem)] leading-[1.2] mt-14">
+            <h2 key={i} id={ids.get(i)} className="border-t border-line pt-10 text-[clamp(1.375rem,1.2rem+0.7vw,1.75rem)] leading-[1.2] mt-14">
               <HeadingText text={b.text} />
             </h2>
           );

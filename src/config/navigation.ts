@@ -1,4 +1,7 @@
+import { mrOfficial } from "@/content/maplerecord/official";
 import { adobeAssessmentPath, adobeProductPath, adobeServicesPath, getAdobeProducts } from "@/lib/content/adobe";
+import { getMrModules } from "@/lib/content/maplerecord";
+import type { MrModuleSlug } from "@/lib/content/types";
 
 export type NavItem = { label: string; href: string; description?: string };
 
@@ -20,6 +23,17 @@ export type AdobeNav = {
   assessment: NavItem;
 };
 
+/** Everything the header and mobile sheet need to link into the MapleRecord section. */
+export type MapleRecordNav = {
+  overview: NavItem;
+  /** The section's pages, overview first. */
+  sections: NavItem[];
+  modules: (NavItem & { slug: MrModuleSlug })[];
+  demo: NavItem;
+};
+
+export const mapleRecordPath = "/maplerecord";
+
 export const expertiseNav: NavItem[] = [
   { label: "AI Governance", href: "/ai-governance", description: "Oversight, accountability and review for AI use" },
   { label: "Adobe Services", href: adobeServicesPath, description: "Implementation and optimization of Adobe platforms" },
@@ -28,6 +42,7 @@ export const expertiseNav: NavItem[] = [
 
 export const primaryNav: NavItem[] = [
   ...expertiseNav,
+  { label: "MapleRecord", href: mapleRecordPath },
   { label: "Industries", href: "/industries" },
   { label: "Insights", href: "/insights" },
   { label: "About", href: "/about" },
@@ -54,6 +69,23 @@ export function getAdobeNav(): AdobeNav {
       href: adobeAssessmentPath,
       description: "A structured review of how your Adobe applications are set up, connected and used, with prioritized next steps.",
     },
+  };
+}
+
+/** MapleRecord menu model. Server-only, like `getAdobeNav`. */
+export function getMapleRecordNav(): MapleRecordNav {
+  return {
+    overview: { label: "MapleRecord overview", href: mapleRecordPath },
+    sections: [
+      { label: "Overview", href: mapleRecordPath, description: "AI-first hybrid records management" },
+      { label: "Platform", href: `${mapleRecordPath}/platform`, description: "Five integrated modules" },
+      { label: "Solutions", href: `${mapleRecordPath}/solutions`, description: "By industry and department" },
+      { label: "Resources", href: `${mapleRecordPath}/resources`, description: "Articles, videos and events" },
+      { label: "About", href: `${mapleRecordPath}/about`, description: "Story, mission and values" },
+      { label: "Contact", href: `${mapleRecordPath}/contact`, description: "Sales team and offices" },
+    ],
+    modules: getMrModules().map((m) => ({ label: m.name, href: `${mapleRecordPath}/platform/${m.slug}`, slug: m.slug })),
+    demo: { label: "Request a demo", href: mrOfficial.demo },
   };
 }
 

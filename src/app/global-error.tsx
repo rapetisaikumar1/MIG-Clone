@@ -23,7 +23,7 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
           </p>
           <h1 style={{ fontSize: "2.25rem", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "1rem 0 0" }}>This page didn&apos;t load correctly.</h1>
           <p style={{ color: "#5d5a54", fontSize: "1.125rem", marginTop: "1.25rem" }}>
-            It may be a temporary problem, so please try again. If it keeps happening, call us on{" "}
+            It may be a temporary problem, so please try again. If it keeps happening, call us at{" "}
             <a href={`tel:${primaryPhone.e164}`} style={{ color: "#111111" }}>
               {primaryPhone.display}
             </a>

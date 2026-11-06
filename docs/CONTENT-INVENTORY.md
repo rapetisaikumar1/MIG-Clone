@@ -10,7 +10,7 @@ Source: maverickinnogarage.com (WordPress + Elementor, Yoast sitemaps). All 35 s
 | `2024/11/MIG_Logo_white.svg` (72×32, #EEEEEE / #666666 / #FF0000) | Dark backgrounds | `public/brand/mig-logo-white.svg` |
 | `2024/11/logo.svg` (mark only) | Favicon source (centered, unmodified, in `src/app/icon.svg`) | `public/brand/mig-mark.svg` |
 | `2024/12/MIG_Logo_D.svg` | Same lockup as primary at 72×32. Not needed | — |
-| `2025/01/MiGxAdobe.svg` | "Adobe Solution Partner · Bronze" co-brand lockup. The Adobe portion (viewBox cropped, "BRONZE" tier line removed by request) is shown in the header | `public/brand/mig-adobe-solution-partner.svg`, `public/brand/adobe-solution-partner.svg` |
+| `2025/01/MiGxAdobe.svg` | "Adobe Solution Partner · Bronze" co-brand lockup. Its "Adobe Solution Partner" and "BRONZE" lettering, with the classic Adobe "A" mark, form the badge shown site-wide (header and partner panels) | `public/brand/mig-adobe-solution-partner.svg`, `public/brand/adobe-solution-partner.svg` |
 
 ## Contact details (verified)
 

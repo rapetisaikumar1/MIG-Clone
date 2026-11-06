@@ -771,7 +771,7 @@ export const mrModules: MrModule[] = [
         title: "Products and licensing",
         items: [
           "Enable or disable each MapleRecord module",
-          "Module licenses, license and billing",
+          "Module licenses and billing",
           "Organizations and subscription plans"
         ]
       },

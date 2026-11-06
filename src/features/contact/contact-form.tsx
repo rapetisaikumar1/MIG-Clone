@@ -23,7 +23,7 @@ type ServerError = "invalid" | "rate_limited" | "not_configured" | "provider_err
 const errorCopy: Record<ServerError, string> = {
   invalid: "Some details need attention. Please check the highlighted fields.",
   rate_limited: "We've received several messages from your connection in a short time. Please wait a few minutes and try again.",
-  not_configured: "Online inquiries aren't connected in this environment yet, so your message was not sent. Please call one of our offices instead.",
+  not_configured: "We couldn't send your message just now, so it was not delivered. Please call one of our offices and we'll be glad to help.",
   provider_error: "We couldn't send your message just now. Please try again shortly, or call one of our offices.",
   bad_request: "Your message couldn't be processed. Please refresh the page and try again.",
   spam: "Your message couldn't be sent. Please refresh the page and try again, or call one of our offices.",
@@ -200,8 +200,8 @@ export function ContactForm({
         <div className="mb-8 flex gap-3 rounded-xl border border-line-strong bg-paper-deep p-4 text-sm" data-testid="delivery-not-configured">
           <Info aria-hidden className="mt-0.5 size-5 shrink-0 text-ink" />
           <p>
-            <strong className="font-semibold">Preview notice:</strong> email delivery is not configured in this environment, so
-            messages sent from this form will not reach Maverick InnoGarage. Please use the telephone numbers on this page.
+            <strong className="font-semibold">Online messages are temporarily unavailable.</strong> Please call one of our
+            offices below and we&apos;ll be glad to help.
           </p>
         </div>
       ) : null}
