@@ -291,8 +291,9 @@ export default function MapleRecordPage() {
             className="mt-12"
             label="Product screens"
             items={mrTour.stops.map((stop) => {
-              const slug = `mr-${stop.screen.product}` as const;
-              const name = getMrModuleName(slug);
+              const product = stop.screen.product;
+              const href = product === "suite" ? "/maplerecord/platform" : `/maplerecord/platform/mr-${product}`;
+              const name = product === "suite" ? "Maple" : getMrModuleName(`mr-${product}`);
               return {
                 value: stop.screen.id,
                 module: name,
@@ -305,7 +306,7 @@ export default function MapleRecordPage() {
                         <span className="font-semibold text-night-text">{stop.title}.</span> {stop.body}
                       </p>
                       <Link
-                        href={`/maplerecord/platform/${slug}`}
+                        href={href}
                         className="group inline-flex min-h-11 items-center gap-2 self-start font-medium text-night-text underline decoration-night-line underline-offset-[6px] hover:decoration-night-text sm:-mt-2.5"
                       >
                         Explore {name}

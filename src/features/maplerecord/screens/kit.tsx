@@ -47,7 +47,7 @@ export function ScreenCanvas({ id, children, height = SCREEN_HEIGHT }: { id: str
   );
 }
 
-export type ProductName = "MR Records" | "MR Admin" | "MR Requests" | "MR Workflows" | "MR Forms";
+export type ProductName = "Maple" | "MR Records" | "MR Admin" | "MR Requests" | "MR Workflows" | "MR Forms";
 
 export type NavItem = {
   label: string;

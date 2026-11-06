@@ -21,7 +21,7 @@ export const mrHero = {
   headline: "Manage your information ecosystem",
   lead: "An AI-first hybrid records management system for electronic and physical records",
   tagline: "Secure records. Automate requests. Streamline operations.",
-  screen: mrScreens.recordsDashboard,
+  screen: mrScreens.suiteLauncher,
   /** Kept for existing imports (the platform page hero). */
   image: mrScreens.recordsDashboard as MrImage,
 };

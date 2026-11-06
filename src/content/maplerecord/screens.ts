@@ -6,7 +6,7 @@ import type { MrImage } from "@/lib/content/types";
  * captured to WebP by `npm run render:mr-screens`. The UI layout matches the real product; only the
  * sample content differs.
  */
-export type MrProductKey = "admin" | "records" | "requests" | "workflows" | "forms";
+export type MrProductKey = "suite" | "admin" | "records" | "requests" | "workflows" | "forms";
 
 export type MrScreen = MrImage & {
   id: string;
@@ -30,6 +30,8 @@ const s = (id: string, product: MrProductKey, label: string, alt: string): MrScr
 });
 
 export const mrScreens = {
+  // Maple suite
+  suiteLauncher: s("suite-launcher", "suite", "Maple · App dashboard", "Maple app dashboard listing the five MapleRecord modules — MR Admin, MR Records, MR Requests, MR Workflows and MR Forms — each with a short description, plus profile and account settings"),
   // MR Records
   recordsDashboard: s("records-dashboard", "records", "MR Records · Workspace overview", "MR Records workspace overview with record totals, storage, pending items, a twelve-month activity chart, today's tasks and recent activity"),
   recordsLifecycle: s("records-lifecycle", "records", "MR Records · Records management", "MR Records records list by record series with the lifecycle panel showing record type, retention clock and the current Official Record stage"),
