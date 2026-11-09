@@ -13,7 +13,7 @@ export const marketoEngage: AdobeProduct = {
   shortName: "Marketo Engage",
   area: "Marketing automation",
   legacyPaths: ["/adobe-marketo-services"],
-  summary: "Setup, Salesforce or Dynamics sync, nurture and scoring programs, and reporting for marketing operations.",
+  summary: "B2B marketing automation, lead lifecycle management and campaign operations, synced with your CRM.",
   description: "Marketing automation for lead management, nurturing and cross-channel engagement programs, widely used in B2B marketing.",
   meta: {
     title: "Adobe Marketo Engage Services",
@@ -138,8 +138,15 @@ export const marketoEngage: AdobeProduct = {
       slug: "experience-platform",
       why: "A source connector brings Marketo Engage data into Experience Platform, so marketing activity becomes part of the wider customer profile.",
     },
+    {
+      slug: "experience-manager",
+      why: "Marketo Engage can connect to AEM Assets as a Cloud Service, so marketers use approved images from the asset library in emails and landing pages.",
+    },
   ],
-  insights: ["enhancing-customer-experience-with-personalization-and-innovation"],
+  insights: [
+    "revolutionizing-customer-engagement-with-adobe-real-time-cdp",
+    "enhancing-customer-experience-with-personalization-and-innovation",
+  ],
   faqs: [
     {
       question: "Can you clean up an existing Marketo Engage instance?",

@@ -15,6 +15,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ ...content.meta, path: adobeAssessmentPath });
 
+/** Structured data only: the visible breadcrumb trail was removed site-wide. */
 const breadcrumbs = [
   { label: "Home", href: "/" },
   { label: "Adobe Services", href: adobeServicesPath },
@@ -36,7 +37,7 @@ export default function AdobeAssessmentPage() {
           faqJsonLd(content.faqs),
         ]}
       />
-      <AssessmentHero content={content} breadcrumbs={breadcrumbs} />
+      <AssessmentHero content={content} />
       <SituationsSection content={content} />
       <ReviewSection content={content} products={getAdobeProducts()} />
       <StepsSection content={content} />

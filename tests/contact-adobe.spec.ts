@@ -50,7 +50,7 @@ test("the Adobe applications fieldset only shows for Adobe Services", async ({ p
   const interest = page.getByLabel("Area of interest");
   await interest.selectOption("adobe-services");
   await expect(applicationsGroup(page)).toBeVisible();
-  await expect(applicationsGroup(page).getByRole("checkbox")).toHaveCount(7);
+  await expect(applicationsGroup(page).getByRole("checkbox")).toHaveCount(8);
   await page.getByRole("checkbox", { name: "Adobe Target" }).check();
   for (const other of ["ai-governance", "data-management", "general"]) {
     await interest.selectOption(other);

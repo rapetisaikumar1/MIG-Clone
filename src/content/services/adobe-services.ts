@@ -1,6 +1,9 @@
 import type { ServiceContent } from "@/lib/content/types";
 
 /**
+ * Pillar 03 of the Capability Matrix (Oct 2026), "Adobe Experience Cloud & MarTech: 9 Adobe offerings. One connected
+ * stack." The hub presents the umbrella offering, Adobe Experience Cloud (AEC: "end-to-end digital strategy, content,
+ * and customer journey orchestration", adobeHub.experienceCloud); the other eight offerings have their own pages.
  * Product scope and per-product service types come from the existing site's Adobe pages
  * (/adobe-experience-platform, /adobe-real-time-cdp, /adobe-experience-manager, /adobe-content-management,
  * /adobe-analytics, /adobe-target, /adobe-marketo-services, /adobe-commerce). Product names and
@@ -21,17 +24,15 @@ export const adobeServices: ServiceContent = {
   // Adobe articles are published under the insights theme "Adobe" (register GL-14).
   insightTheme: "Adobe",
   meta: {
-    title: "Adobe Services",
+    title: "Adobe Experience Cloud & MarTech",
     description:
-      "Implementation, integration and optimization for Adobe Experience Platform, Real-Time CDP, Experience Manager, Analytics, Target, Marketo Engage and Commerce.",
+      "Adobe Experience Cloud designed, implemented and optimized end to end: Experience Platform, Real-Time CDP, Experience Manager, Analytics, Marketo Engage, Target, Commerce and content management.",
   },
   hero: {
-    // The delivery verbs this page covers, as on the AI Governance and Data Management heroes (not the nav label
-    // again). Basis: verified old-site titles "Implementation and integration", "Implementation and customization",
-    // "Customization and optimization" and "Ongoing support and optimization".
-    eyebrow: "Implement · Integrate · Customize · Support",
-    title: "Make your Adobe platforms work as one customer experience system.",
-    lead: "We implement Adobe Experience Cloud applications, from Experience Platform and Real-Time CDP to Experience Manager and Commerce, integrate them with the CRM, commerce and data systems they depend on, customize them where standard features stop, and support them over time.",
+    // The pillar name from the Capability Matrix; the header nav keeps the shorter "Adobe Services".
+    eyebrow: "Adobe Experience Cloud & MarTech",
+    title: "Nine Adobe offerings. One connected stack.",
+    lead: "As an Adobe Solution Partner, MiG designs, implements and optimizes Adobe Experience Cloud end to end, from customer data and content to testing, analytics and commerce, and integrates it with the CRM and data systems around it.",
   },
   problem: {
     title: "Licensed capability isn't the same as delivered value.",
@@ -72,9 +73,9 @@ export const adobeServices: ServiceContent = {
     {
       id: "content",
       title: "Content and digital assets",
-      summary: "Websites and assets your teams can update quickly and reuse across sites, regions and channels.",
-      items: ["Site and component implementation", "Digital asset management", "Multi-site management and localization", "Content strategy and authoring workflows"],
-      platforms: ["Adobe Experience Manager"],
+      summary: "Enterprise asset management, headless and hybrid CMS, and streamlined content creation, governance and omnichannel publishing.",
+      items: ["Site and component implementation", "Digital asset management", "Multi-site management and localization", "Content strategy, governance and authoring workflows"],
+      platforms: ["Adobe Experience Manager", "Adobe Content Management"],
       provenance: "verified",
     },
     {
@@ -96,7 +97,7 @@ export const adobeServices: ServiceContent = {
     {
       id: "automation",
       title: "Marketing automation",
-      summary: "Lead management and nurture programs that run reliably across channels.",
+      summary: "B2B marketing automation, lead lifecycle management and campaign operations that run reliably across channels.",
       items: ["Instance setup and CRM integration", "Campaign and nurture program automation", "Campaign performance reporting", "Instance customization and optimization"],
       platforms: ["Adobe Marketo Engage"],
       provenance: "verified",
@@ -120,23 +121,20 @@ export const adobeServices: ServiceContent = {
   ],
   approach: [
     {
-      stage: "Assess",
-      activities: "Review your current Adobe setup, data flows, use cases and team practices.",
-      deliverable: "Platform assessment and prioritized opportunities",
+      stage: "Understand & strategize",
+      activities:
+        "Review your current Adobe setup, data flows, use cases and team practices, then define the target architecture, data model and the use cases to deliver first.",
+      deliverable: "Platform assessment, solution design and prioritized roadmap",
     },
     {
-      stage: "Design",
-      activities: "Define the target architecture, data model, integrations, and the use cases to deliver first.",
-      deliverable: "Solution design and implementation plan",
-    },
-    {
-      stage: "Implement",
-      activities: "Configure, build, integrate and test, and train your teams to run what we deliver.",
+      stage: "Implement & integrate",
+      activities:
+        "Configure, build and test the Adobe applications, integrate them with each other and your CRM, commerce and data platforms with minimal disruption, and train your teams.",
       deliverable: "Working implementation, documentation and trained users",
     },
     {
-      stage: "Improve",
-      activities: "Monitor adoption and performance, then refine journeys, tests and content.",
+      stage: "Optimize & grow",
+      activities: "Monitor adoption, data and performance, then refine journeys, audiences, tests, content and campaigns.",
       deliverable: "Optimization backlog and ongoing support",
     },
   ],
@@ -178,7 +176,7 @@ export const adobeServices: ServiceContent = {
     {
       question: "Which Adobe applications do you work with?",
       answer:
-        "Adobe Experience Platform, Real-Time CDP, Experience Manager, Analytics, Target, Marketo Engage and Commerce. We can focus on one application or work across several and the integrations between them. If you use another Adobe application, ask us and we'll tell you plainly whether we're a good fit.",
+        "Across Adobe Experience Cloud: Adobe Experience Platform, Real-Time CDP, Experience Manager, Analytics, Marketo Engage, Target, Commerce and content management in AEM Sites and Assets. We can focus on one application or work across several and the integrations between them. If you use another Adobe application, ask us and we'll tell you plainly whether we're a good fit.",
     },
     {
       question: "Can you improve an existing implementation?",
@@ -193,7 +191,7 @@ export const adobeServices: ServiceContent = {
     {
       question: "How do you handle customer data and consent in Adobe applications?",
       answer:
-        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow. This is where our Adobe work connects with our Data Management services.",
+        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow. This is where our Adobe work connects with our Data & Analytics practice.",
     },
     {
       question: "Where should we start?",
@@ -233,16 +231,25 @@ export type AdobeWayToWork = {
 };
 
 export const adobeHub = {
+  /**
+   * Offering 02 of the Capability Matrix, the umbrella over the other eight. Deck text: "Adobe Experience Cloud (AEC) —
+   * End-to-end digital strategy, content, and customer journey orchestration." No separate page: this hub is its page.
+   */
+  experienceCloud: {
+    area: "End to end",
+    name: "Adobe Experience Cloud",
+    summary: "End-to-end digital strategy, content and customer journey orchestration across the Adobe applications you use.",
+    points: [
+      "One roadmap and architecture across your Adobe applications",
+      "Data, content and measurement designed to work together",
+      "Customer journeys coordinated across channels and applications",
+      "Integration with your CRM, commerce and data platforms",
+    ],
+  },
   applications: {
-    eyebrow: "Adobe applications",
-    title: "The applications we implement and support",
-    intro: "Each application has its own page covering what it does and the services we provide for it.",
-    startTile: {
-      eyebrow: "Platform assessment",
-      title: "Not sure which application to start with?",
-      body: "An assessment maps how your Adobe applications are configured, connected and used, and sets the priorities for implementation.",
-      label: "About the assessment",
-    },
+    eyebrow: "Adobe offerings",
+    title: "Adobe Experience Cloud and the applications in it",
+    intro: "We work across Adobe Experience Cloud as a whole, and on each application within it. Every application has its own page covering what it does and the services we provide for it.",
   },
   waysToWork: {
     eyebrow: "Ways to work with us",
@@ -289,7 +296,7 @@ export const adobeHub = {
     eyebrow: "Governance built in",
     title: "Data governance inside your Adobe stack",
     intro:
-      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into Adobe work from the start, drawing on our Data Management services.",
+      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into Adobe work from the start, drawing on our Data & Analytics practice.",
     items: [
       {
         title: "Consent-aware profiles",
@@ -308,6 +315,6 @@ export const adobeHub = {
         body: "Data flows between Adobe applications and enterprise systems, documented and handed over to your teams.",
       },
     ],
-    link: { href: "/data-management", label: "Explore Data Management" },
+    link: { href: "/data-management", label: "Explore Data & Analytics" },
   },
 };

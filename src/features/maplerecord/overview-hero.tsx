@@ -224,7 +224,7 @@ export function OverviewHero() {
       aria-labelledby="mr-overview-title"
     >
       <Backdrop />
-      <Container className="relative pb-14 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20">
+      <Container className="relative pb-14 pt-10 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-14">
         {/* Headline block: one centred column, read top to bottom. */}
         <div className="mx-auto flex max-w-[52rem] flex-col items-center text-center">
           <MrBadge tone="dark">MapleRecord</MrBadge>

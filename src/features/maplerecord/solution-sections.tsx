@@ -13,6 +13,7 @@ import {
   Cog,
   Factory,
   Files,
+  FileSearch,
   FlaskConical,
   FolderOpen,
   Gauge,
@@ -30,6 +31,7 @@ import {
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
 import { ExternalLink } from "@/components/ui/external-link";
+import { keepHyphenatedWords } from "@/features/adobe/keep-hyphenated";
 import { mrOfficial } from "@/content/maplerecord/official";
 import { mrScreens, type MrScreen, type MrScreenKey } from "@/content/maplerecord/screens";
 import { mrSolutionFlows, mrSolutionModuleScreens, mrSolutionPointers, mrSolutionSummaries } from "@/content/maplerecord/solutions";
@@ -147,9 +149,9 @@ export function SolutionsIndexHero({
 }) {
   return (
     <section className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text">
-      <Container className="relative pb-16 pt-8 sm:pb-20 lg:pb-24 lg:pt-10">
+      <Container className="relative pb-16 pt-10 sm:pb-20 lg:pb-24 lg:pt-14">
         <MrCrumbs items={crumbs} tone="dark" />
-        <div className="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-6">
             <MrBadge tone="dark">Solutions</MrBadge>
             <h1 className="mt-6 text-h1">{title}</h1>
@@ -371,11 +373,23 @@ export function SolutionPlatformBand() {
   );
 }
 
+/* ---------------------------------------------------------------- impact */
+
+/**
+ * Impact items for MrStatsSection with hyphenated words in each label kept whole ("month-end", not
+ * "month-" / "end" in the narrow two-up cells on phones). Labels are plain strings there, so a word
+ * joiner (U+2060, invisible) goes either side of the hyphen instead of a no-wrap span.
+ */
+export function keepStatLabelsWhole<T extends { label: string }>(items: T[]): T[] {
+  return items.map((s) => ({ ...s, label: s.label.replace(/(?<=\w)-(?=\w)/g, "⁠-⁠") }));
+}
+
 /* ------------------------------------------------------------ challenges */
 
 /** Picks an icon from a challenge title; most specific rule first. */
 const challengeIconRules: [RegExp, Icon][] = [
   [/security|privacy/i, Lock],
+  [/preparedness|readiness/i, FileSearch],
   [/compliance|regulatory|audit/i, ShieldAlert],
   [/slow|delay|cycle|backlog|manual/i, Clock],
   [/fragment|overload/i, Files],
@@ -621,7 +635,7 @@ function FlowSteps({ steps, modules, className }: { steps: { title: string; body
               {String(i + 1).padStart(2, "0")}
             </span>
             <div className="pt-1.5">
-              <h3 className="text-lg font-semibold leading-snug tracking-tight">{s.title}</h3>
+              <h3 className="text-lg font-semibold leading-snug tracking-tight">{keepHyphenatedWords(s.title)}</h3>
               <p className="mt-2 inline-flex items-center gap-1.5 font-mono text-[0.75rem] uppercase tracking-[0.04em] text-ink-soft">
                 <ModuleIcon aria-hidden className="size-3.5 text-signal" />
                 <span className="sr-only">Runs in </span>
@@ -686,7 +700,7 @@ function FlowDiagram({ nodes, modules, className }: { nodes: string[]; modules: 
                   </span>
                 </p>
                 {/* Two lines reserved, so the nodes in a row match in height and the connectors stay centred. */}
-                <p className="mt-1.5 min-h-[2.75em] text-[0.875rem] font-semibold leading-snug tracking-tight xl:text-[0.9375rem]">{label}</p>
+                <p className="mt-1.5 min-h-[2.75em] text-[0.875rem] font-semibold leading-snug tracking-tight xl:text-[0.9375rem]">{keepHyphenatedWords(label)}</p>
                 <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-paper px-2 py-0.5 text-[0.75rem] font-medium text-ink-soft ring-1 ring-line">
                   <ModuleIcon className="size-3 text-signal" />
                   {getMrModuleName(modules[i]!)}

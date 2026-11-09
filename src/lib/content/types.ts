@@ -7,7 +7,19 @@ import type { ContactInterest } from "@/features/contact/schema";
  */
 export type Provenance = "verified" | "proposed";
 
-export type ServiceSlug = "ai-governance" | "adobe-services" | "data-management" | "software-development";
+/**
+ * Service pages, one per practice pillar of the 2026 Capability Matrix (plus AI Governance).
+ * URL slugs predate the pillar names and are kept for SEO: /data-management is "Data & Analytics",
+ * /software-development is "Engineering & Technology".
+ */
+export type ServiceSlug =
+  | "data-management"
+  | "software-development"
+  | "adobe-services"
+  | "experience-design"
+  | "digital-product"
+  | "business-transformation"
+  | "ai-governance";
 
 export type Capability = {
   id: string;
@@ -18,8 +30,11 @@ export type Capability = {
   platforms?: string[];
 };
 
+/** The three delivery stages from the Capability Matrix ("From vision to victory"). */
+export type ApproachStageName = "Understand & strategize" | "Implement & integrate" | "Optimize & grow";
+
 export type ApproachStage = {
-  stage: "Assess" | "Design" | "Implement" | "Improve";
+  stage: ApproachStageName;
   activities: string;
   deliverable: string;
 };
@@ -136,7 +151,8 @@ export type AdobeProductSlug =
   | "analytics"
   | "target"
   | "marketo-engage"
-  | "commerce";
+  | "commerce"
+  | "content-management";
 
 export type AdobeProduct = {
   slug: AdobeProductSlug;

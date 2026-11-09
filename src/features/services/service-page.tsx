@@ -18,7 +18,7 @@ import {
 } from "./sections";
 
 /**
- * Shared composition for the specialization pages (AI Governance, Adobe Services, Data Management, Software Development). Optional slots let a page add its own
+ * Shared composition for the service pages (the Capability Matrix practice pillars and AI Governance). Optional slots let a page add its own
  * sections (e.g. the MapleRecord callout, the Adobe hub sections) without forking the template:
  *
  * hero → afterHero → problem → capabilities → afterCapabilities → platforms → afterPlatforms →

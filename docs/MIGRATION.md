@@ -32,15 +32,15 @@ All of these are in the sitemap (priority 0.8).
 | `/adobe-experience-platform/` | `/adobe-services/experience-platform` | Renamed (dedicated page) |
 | `/adobe-real-time-cdp/` | `/adobe-services/real-time-cdp` | Renamed (dedicated page) |
 | `/adobe-experience-manager/` | `/adobe-services/experience-manager` | Renamed (dedicated page) |
-| `/adobe-content-management/` | `/adobe-services/experience-manager` | Merged into Experience Manager |
+| `/adobe-content-management/` | `/adobe-services/content-management` | Renamed (Adobe Content Management page, Capability Matrix 2026) |
 | `/adobe-analytics/` | `/adobe-services/analytics` | Renamed (dedicated page) |
 | `/adobe-target/` | `/adobe-services/target` | Renamed (dedicated page) |
 | `/adobe-marketo-services/` | `/adobe-services/marketo-engage` | Renamed (dedicated page) |
 | `/adobe-commerce/` | `/adobe-services/commerce` | Renamed (dedicated page) |
 | `/data-governance/` | `/data-management#governance` | Consolidated |
 | `/integrated-data-solutions/` | `/data-management#integration` | Consolidated |
-| `/microsoft-dynamics-365/` | `/data-management#integration` | **Retired, pending decision** (see HANDOFF) |
-| `/digital-transformation-consulting/` | `/about#approach` | Retired |
+| `/microsoft-dynamics-365/` | `/business-transformation#dynamics-365` | Renamed (Business Transformation & CRM, Capability Matrix 2026) |
+| `/digital-transformation-consulting/` | `/digital-product#digital-strategy` | Renamed (Digital & Product, Capability Matrix 2026) |
 | `/healthcare-pharmaceutical/` | `/industries#healthcare-pharmaceutical` | Consolidated |
 | `/retail-cpg/` | `/industries#retail-cpg` | Consolidated |
 | `/manufacturing-distribution/` | `/industries#manufacturing-distribution` | Consolidated |

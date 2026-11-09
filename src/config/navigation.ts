@@ -34,34 +34,115 @@ export type MapleRecordNav = {
 
 export const mapleRecordPath = "/maplerecord";
 
-/** The specializations shown in the desktop header (three, for space). Spread into `primaryNav`; don't append to it. */
-export const expertiseNav: NavItem[] = [
-  { label: "AI Governance", href: "/ai-governance", description: "Responsible AI, AI risk management and compliance support" },
-  { label: "Adobe Services", href: adobeServicesPath, description: "Adobe Experience Cloud implementation, integration and support" },
-  { label: "Data Management", href: "/data-management", description: "Data governance, integration, quality and lifecycle" },
-];
+export const servicesPath = "/services";
+export const moliPath = "/moli";
 
-/** The fourth specialization (owner directive 2026-11-07). Not in the desktop header, which has no room for it. */
-export const softwareDevelopmentNav: NavItem = {
-  label: "Software Development",
-  href: "/software-development",
-  description: "Enterprise applications, automation and integration",
+/** One practice pillar of the 2026 Capability Matrix, in the deck's order. */
+export type PillarNavItem = NavItem & {
+  /** Two-digit pillar number from the Capability Matrix ("01"–"07"). */
+  number: string;
+  /** Extra destinations inside the pillar (products for pillar 07). */
+  links?: NavItem[];
 };
 
-/** All four service specializations in priority order (footer, mobile menu, 404). The desktop header uses `expertiseNav`. */
-export const servicesNav: NavItem[] = [...expertiseNav, softwareDevelopmentNav];
+/**
+ * The seven practice pillars of the Maverick InnoGarage Capability Matrix (October 2026), the primary
+ * reference for what we offer. URL slugs predate the pillar names and are kept for SEO and legacy links.
+ * Pillar 07 has no service page of its own: it is delivered through our two products, MapleRecord and MOLI.
+ */
+export const pillarsNav: PillarNavItem[] = [
+  {
+    number: "01",
+    label: "Data & Analytics",
+    href: "/data-management",
+    description: "Data strategy, governance, modern data architecture, data science and visualization",
+  },
+  {
+    number: "02",
+    label: "Engineering & Technology",
+    href: "/software-development",
+    description: "Cloud on AWS and Azure, DevOps, AI/ML enablement, mobile, QA and custom software",
+  },
+  {
+    number: "03",
+    label: "Adobe Experience Cloud & MarTech",
+    href: adobeServicesPath,
+    description: "Experience Platform, Real-Time CDP, AEM, Analytics, Target, Marketo, Commerce",
+  },
+  {
+    number: "04",
+    label: "Experience Design",
+    href: "/experience-design",
+    description: "User research, service design, design thinking, content and CX optimization",
+  },
+  {
+    number: "05",
+    label: "Digital & Product",
+    href: "/digital-product",
+    description: "Digital strategy, product vision, product development, go-to-market and agile delivery",
+  },
+  {
+    number: "06",
+    label: "Business Transformation & CRM",
+    href: "/business-transformation",
+    description: "Process optimization, change enablement, program management and Microsoft Dynamics 365",
+  },
+  {
+    number: "07",
+    label: "Records Management & Compliance",
+    href: mapleRecordPath,
+    description: "MapleRecord and MOLI, our records management products",
+    links: [
+      { label: "MapleRecord", href: mapleRecordPath, description: "Public sector and enterprise records management with workflow automation" },
+      { label: "MOLI", href: moliPath, description: "AI-driven record management, designed to support global privacy compliance" },
+    ],
+  },
+];
 
-/** Desktop header: exactly seven items, so it fits on one row (tests/navigation.spec.ts). */
+/** AI Governance: responsible AI and AI risk work, alongside data governance and AI/ML enablement. */
+export const aiGovernanceNav: NavItem = {
+  label: "AI Governance",
+  href: "/ai-governance",
+  description: "Responsible AI, AI risk management and compliance support",
+};
+
+/**
+ * Every service page (pillars 01–06, then AI Governance) for the footer, mobile menu, 404 and
+ * "Connected expertise". Pillar 07 is reached through its products (MapleRecord, MOLI).
+ */
+export const servicesNav: NavItem[] = [
+  ...pillarsNav.filter((p) => p.number !== "07").map(({ label, href, description }) => ({ label, href, description })),
+  aiGovernanceNav,
+];
+
+/** Desktop header: a Services menu (the pillars), the Adobe and MapleRecord menus, then company pages. */
 export const primaryNav: NavItem[] = [
-  ...expertiseNav,
+  { label: "Services", href: servicesPath },
+  { label: "Adobe Services", href: adobeServicesPath },
   { label: "MapleRecord", href: mapleRecordPath },
   { label: "Industries", href: "/industries" },
   { label: "Insights", href: "/insights" },
   { label: "About", href: "/about" },
 ];
 
-/** Mobile sheet: all four specializations, then the rest of the header items. */
-export const mobileNav: NavItem[] = [...servicesNav, ...primaryNav.slice(expertiseNav.length)];
+/** Mobile sheet: the same items as the desktop header (the sheet expands Services into the pillars). */
+export const mobileNav: NavItem[] = primaryNav;
+
+/** Everything the header and mobile sheet need for the Services menu (plain data, safe to pass to client components). */
+export type ServicesNav = {
+  overview: NavItem;
+  pillars: PillarNavItem[];
+  aiGovernance: NavItem;
+};
+
+/** Services menu model, passed down as props like `getAdobeNav`. */
+export function getServicesNav(): ServicesNav {
+  return {
+    overview: { label: "All services", href: servicesPath, description: "The seven practice pillars and how we deliver them" },
+    pillars: pillarsNav,
+    aiGovernance: aiGovernanceNav,
+  };
+}
 
 /**
  * Builds the small Adobe menu model from the product content. Call it only from Server
@@ -87,19 +168,33 @@ export function getAdobeNav(): AdobeNav {
   };
 }
 
+/** Menu-length lines for the five modules, condensed from each module's published summary. */
+const mrModuleBlurbs: Record<MrModuleSlug, string> = {
+  "mr-records": "Secure, structured, searchable recordkeeping",
+  "mr-requests": "Public and internal information requests",
+  "mr-workflows": "No-code automation across modules",
+  "mr-forms": "Drag-and-drop and AI-generated forms",
+  "mr-admin": "Users, licenses, security and backups",
+};
+
 /** MapleRecord menu model. Server-only, like `getAdobeNav`. */
 export function getMapleRecordNav(): MapleRecordNav {
   return {
     overview: { label: "MapleRecord overview", href: mapleRecordPath },
     sections: [
-      { label: "Overview", href: mapleRecordPath, description: "AI-first hybrid records management" },
+      { label: "Overview", href: mapleRecordPath, description: "Public sector and enterprise records management" },
       { label: "Platform", href: `${mapleRecordPath}/platform`, description: "Five integrated modules" },
       { label: "Solutions", href: `${mapleRecordPath}/solutions`, description: "By industry and department" },
       { label: "Resources", href: `${mapleRecordPath}/resources`, description: "Articles, videos and events" },
       { label: "About", href: `${mapleRecordPath}/about`, description: "Story, mission and values" },
       { label: "Contact", href: `${mapleRecordPath}/contact`, description: "Sales team and offices" },
     ],
-    modules: getMrModules().map((m) => ({ label: m.name, href: `${mapleRecordPath}/platform/${m.slug}`, slug: m.slug })),
+    modules: getMrModules().map((m) => ({
+      label: m.name,
+      href: `${mapleRecordPath}/platform/${m.slug}`,
+      slug: m.slug,
+      description: mrModuleBlurbs[m.slug],
+    })),
     demo: { label: "Request a demo", href: mrOfficial.demo },
   };
 }
@@ -107,7 +202,9 @@ export function getMapleRecordNav(): MapleRecordNav {
 export type NavGroup = { heading: string; items: (NavItem & { srPrefix?: string })[] };
 
 const companyNav: NavItem[] = [
+  { label: "All services", href: servicesPath },
   { label: "MapleRecord", href: "/maplerecord" },
+  { label: "MOLI", href: moliPath },
   { label: "About", href: "/about" },
   { label: "Industries", href: "/industries" },
   { label: "Insights", href: "/insights" },
@@ -118,7 +215,7 @@ const companyNav: NavItem[] = [
 export function getFooterNav(): NavGroup[] {
   const adobe = getAdobeNav();
   return [
-    { heading: "Expertise", items: servicesNav },
+    { heading: "Services", items: servicesNav },
     {
       heading: "Adobe Services",
       // Short labels read as "Adobe Analytics", "Adobe platform assessment"… out of context.

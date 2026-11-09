@@ -27,7 +27,7 @@ export default async function InsightsPage() {
         <Container>
           <JsonLd data={breadcrumbJsonLd(crumbs, "/insights")} />
           <Breadcrumbs items={crumbs} />
-          <div className="mt-12">
+          <div>
             <Eyebrow>Insights</Eyebrow>
             <h1 className="mt-6 max-w-4xl text-h1 text-balance">Practical thinking on data and digital experience.</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-muted">

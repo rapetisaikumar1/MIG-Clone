@@ -3,9 +3,16 @@ import { legacyRedirects } from "../src/config/redirects";
 
 const corePages = [
   "/",
-  "/ai-governance",
-  "/adobe-services",
+  "/services",
   "/data-management",
+  "/software-development",
+  "/experience-design",
+  "/digital-product",
+  "/business-transformation",
+  "/ai-governance",
+  "/moli",
+  "/adobe-services",
+  "/adobe-services/content-management",
   "/adobe-services/assessment",
   "/adobe-services/experience-platform",
   "/adobe-services/real-time-cdp",
@@ -65,13 +72,25 @@ test("every internal link and fragment on core pages resolves", async ({ page, r
 test("primary navigation reaches each section", async ({ page }) => {
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of ["AI Governance", "Adobe Services", "Data Management", "MapleRecord", "Industries", "Insights", "About"]) {
+  for (const label of ["Services", "Adobe Services", "MapleRecord", "Industries", "Insights", "About"]) {
     await nav.getByRole("link", { name: label, exact: true }).click();
     await expect(page.locator("h1")).toBeVisible();
     await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
   }
   await page.getByRole("banner").getByRole("link", { name: "Talk to an Expert" }).click();
   await expect(page).toHaveURL(/\/contact$/);
+});
+
+test("the Services menu lists all seven Capability Matrix pillars", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const nav = page.getByRole("navigation", { name: "Primary" });
+  await nav.getByRole("button", { name: "Services menu", exact: true }).click();
+  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli", "/ai-governance"]) {
+    await expect(nav.locator(`a[href="${href}"]`).first()).toBeVisible();
+  }
+  await page.keyboard.press("Escape");
+  await expect(nav.getByRole("button", { name: "Services menu", exact: true })).toBeFocused();
 });
 
 test("the header fits on one row at common desktop widths", async ({ page }) => {
@@ -99,8 +118,8 @@ test("mobile menu is keyboard accessible", async ({ page }) => {
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
   await trigger.click();
-  await dialog.getByRole("link", { name: "Data Management" }).click();
-  await expect(page).toHaveURL(/\/data-management$/);
+  await dialog.getByRole("link", { name: "Industries", exact: true }).click();
+  await expect(page).toHaveURL(/\/industries$/);
   await expect(dialog).toBeHidden();
 });
 
@@ -131,7 +150,7 @@ test.describe("draft insights", () => {
   test("are hidden from public pages and the sitemap", async ({ page, request }) => {
     expect((await request.get(draft)).status()).toBe(404);
     await page.goto("/insights");
-    await expect(page.getByText("Start AI Governance with an Inventory")).toHaveCount(0);
+    await expect(page.getByText("Start AI governance with an inventory", { exact: false })).toHaveCount(0);
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).not.toContain("start-ai-governance-with-an-inventory");
     expect(sitemap).not.toContain("records-retention-from-schedule-to-system");

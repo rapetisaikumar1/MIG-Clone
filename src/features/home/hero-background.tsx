@@ -1,27 +1,21 @@
 import type { CSSProperties } from "react";
-import { HeroDataField } from "./hero-data-field";
 import { HeroPointerLight } from "./hero-pointer-light";
 import styles from "./hero.module.css";
 
 const GRID = 56; // px, matches background-size in hero.module.css
 
-/** Where the travelling highlights run: horizontal rows (n·56px from the top) and vertical columns (centre ± n·56px). */
-// Kept clear of the headline and lead: one row below the actions, two columns on the diagram side (lg up only; see hero.module.css).
+/**
+ * Where the travelling highlights run: horizontal rows (n·56px from the top) and vertical columns (centre ± n·56px).
+ * Kept clear of the headline and lead: one row near the foot of the hero, two columns either side of the capability
+ * map (lg up only; see hero.module.css).
+ */
 const pulses: { axis: "x" | "y"; at: number; duration: number; delay: number }[] = [
-  { axis: "x", at: 13, duration: 18, delay: 2 },
-  { axis: "y", at: 4, duration: 22, delay: 7 },
-  { axis: "y", at: 10, duration: 20, delay: 13 },
+  { axis: "x", at: 13, duration: 22, delay: 3 },
+  { axis: "y", at: 1, duration: 26, delay: 9 },
+  { axis: "y", at: 11, duration: 24, delay: 16 },
 ];
 
 type PulseStyle = CSSProperties & Record<"--pulse-duration" | "--pulse-delay", string>;
-
-/** Grid intersections (column offset from centre, row from top, in grid steps) where a signal node glows in turn. */
-const nodes: { col: number; row: number; delay: number }[] = [
-  { col: 4, row: 3, delay: 0 },
-  { col: 10, row: 5, delay: 1.8 },
-  { col: 7, row: 11, delay: 3.5 },
-  { col: 12, row: 9, delay: 5.2 },
-];
 
 function pulseStyle(p: (typeof pulses)[number]): PulseStyle {
   return {
@@ -32,11 +26,10 @@ function pulseStyle(p: (typeof pulses)[number]): PulseStyle {
 }
 
 /**
- * Decorative dark hero backdrop: a soft light behind the diagram, a drifting red aurora and warm glow,
- * a "data city" field of streaming red data points converging on the diagram (see HeroDataField),
- * a fine grid that fades towards the edges, red highlights travelling along grid lines, signal nodes
- * that glow in turn, and (fine pointers only) a soft light that follows the cursor. Static under
- * prefers-reduced-motion; fully rendered without JavaScript.
+ * Decorative dark hero backdrop (CSS only, aria-hidden): a slow-drifting red aurora and warm light behind the
+ * capability map, a fine grid that fades towards the edges, a few red highlights travelling along grid lines,
+ * and (fine pointers only) a soft light that follows the cursor. Transforms and opacity only, no blur filters;
+ * static under prefers-reduced-motion and fully rendered without JavaScript.
  */
 export function HeroBackground() {
   return (
@@ -44,7 +37,6 @@ export function HeroBackground() {
       <div className={styles.light} />
       <div className={styles.ember} />
       <div className={styles.glow} />
-      <HeroDataField className={styles.field} />
       <div className={styles.gridMask}>
         <div className={styles.grid} />
         {pulses.map((p) => (
@@ -52,13 +44,6 @@ export function HeroBackground() {
             key={`${p.axis}${p.at}`}
             className={p.axis === "x" ? styles.pulseX : styles.pulseY}
             style={pulseStyle(p)}
-          />
-        ))}
-        {nodes.map((n) => (
-          <span
-            key={`${n.col}-${n.row}`}
-            className={styles.node}
-            style={{ left: `calc(50% + ${GRID / 2 + n.col * GRID}px)`, top: n.row * GRID, ["--node-delay" as string]: `${n.delay}s` }}
           />
         ))}
         <HeroPointerLight className={styles.spot} gridClassName={styles.spotGrid} grid={GRID} />

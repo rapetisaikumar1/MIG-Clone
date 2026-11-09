@@ -252,7 +252,7 @@ export const mrSolutions: MrSolution[] = [
       intro: "MapleRecord is designed to support the security and compliance requirements of insurance carriers, MGAs, brokers, and reinsurers.",
       items: [
         "Enterprise-grade security and data protection",
-        "Supports regulatory requirements and audit readiness",
+        "Designed to support regulatory requirements and audit readiness",
         "Scales across high-volume claims and policy operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -270,14 +270,14 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/healthcare/",
     title: "MapleRecord for healthcare",
     description:
-      "Simplify healthcare administration with secure patient record management, automated workflows, and document handling with controls that support HIPAA requirements, built for hospitals, clinics, and health systems.",
+      "Simplify healthcare administration with secure patient record management, automated workflows, and controls that support HIPAA requirements, for hospitals, clinics, and health systems.",
     metaDescription: "Patient record management, automated workflows and access controls that support HIPAA requirements, for hospitals, clinics and health systems.",
     tagline: "Patient record requests · Authorizations · HIPAA requirements",
     image: mrScreens.requestsTriage,
     challenges: {
       heading: "Healthcare industry challenges",
       intro:
-        "Healthcare organizations face pressure to manage patient records securely, respond to medical record requests quickly, maintain HIPAA compliance, and reduce administrative burden.",
+        "Healthcare organizations face pressure to manage patient records securely, respond to medical record requests quickly, meet HIPAA requirements, and reduce administrative burden.",
       items: [
         {
           title: "Record request delays",
@@ -357,7 +357,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Compliance & audits",
-          body: "Automate compliance reporting, audit preparation, regulatory filings, and record retention with built-in governance controls.",
+          body: "Automate audit preparation, compliance reporting, and retention for patient-related and administrative records, with built-in governance controls.",
         },
         {
           title: "Authorization management",
@@ -374,7 +374,7 @@ export const mrSolutions: MrSolution[] = [
       intro: "MapleRecord is designed to support the security and compliance requirements of hospitals, health systems, clinics, and healthcare providers.",
       items: [
         "Enterprise-grade security and data protection",
-        "Supports HIPAA requirements and audit readiness",
+        "Designed to support HIPAA requirements and audit readiness",
         "Scales across multi-facility healthcare operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -479,7 +479,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Compliance & audits",
-          body: "Automate compliance reporting, audit preparation, regulatory filings, and record retention with built-in governance controls.",
+          body: "Automate audit preparation, compliance reporting, and retention for student and administrative records, with built-in governance controls.",
         },
         {
           title: "Verification services",
@@ -496,7 +496,7 @@ export const mrSolutions: MrSolution[] = [
       intro: "MapleRecord is designed to support the security and compliance requirements of K–12 schools, colleges, universities, and school districts.",
       items: [
         "Enterprise-grade security and data protection",
-        "Supports FERPA requirements and audit readiness",
+        "Designed to support FERPA requirements and audit readiness",
         "Scales across multi-campus operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -619,7 +619,7 @@ export const mrSolutions: MrSolution[] = [
         "MapleRecord is designed to support the security and compliance requirements of manufacturers, from aerospace and automotive to pharmaceuticals and electronics.",
       items: [
         "Enterprise-grade security and data protection",
-        "Supports regulatory requirements and audit readiness",
+        "Designed to support regulatory requirements and audit readiness",
         "Scales across multi-site manufacturing operations",
         "One connected platform for records, requests, and workflows",
         "Designed for reliability and operational continuity",
@@ -627,7 +627,7 @@ export const mrSolutions: MrSolution[] = [
     },
     cta: {
       title: "Ready to transform your manufacturing operations?",
-      body: "See how MapleRecord can help you modernize quality documentation, automate compliance workflows, and stay audit-ready.",
+      body: "See how MapleRecord can help you modernize quality documentation, automate compliance workflows, and prepare for audits with organized, traceable records.",
     },
   },
   {
@@ -637,7 +637,7 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/state-local/",
     title: "MapleRecord for state & local government",
     description:
-      "Modernize public records management with secure document handling, automated FOIA processing, and workflows that support public records laws, built for state agencies, counties, municipalities, and public institutions.",
+      "Modernize public records management with secure document handling, automated FOIA processing, and workflows that support public records laws, for state agencies, counties, and municipalities.",
     metaDescription: "Secure document handling, automated FOIA processing and workflows that support public records laws, for state agencies, counties and municipalities.",
     tagline: "FOIA requests · Public records · Retention schedules",
     image: mrScreens.requestsRedaction,
@@ -742,7 +742,7 @@ export const mrSolutions: MrSolution[] = [
         "MapleRecord is designed to support the security and compliance requirements of state agencies, municipal governments, county offices, and public institutions.",
       items: [
         "Enterprise-grade security and data protection",
-        "Supports public records law and FOIA requirements",
+        "Designed to support public records law and FOIA requirements",
         "Scales across multi-agency government operations",
         "One connected platform for records, requests, and workflows",
         "Designed for transparency and public accountability",
@@ -779,7 +779,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Data security concerns",
-          body: "Sensitive financial data needs proper access controls and must stay compliant with SOX, GDPR, and other financial regulations.",
+          body: "Sensitive financial data needs proper access controls and must be handled in line with SOX, GDPR, and other financial regulations.",
         },
       ],
     },
@@ -800,7 +800,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "An audit-ready outcome is delivered",
-          body: "Requests are completed on time with secure delivery, full traceability, and audit-ready documentation.",
+          body: "Requests are tracked to completion against their deadlines, with secure delivery, full traceability, and audit-ready documentation.",
         },
       ],
     },
@@ -809,7 +809,7 @@ export const mrSolutions: MrSolution[] = [
       items: [
         { value: "75%", label: "Faster month-end close", body: "Reduction in time spent on financial close processes." },
         { value: "60%", label: "Reduced processing time", body: "Decrease in invoice and expense report processing time." },
-        { value: "100%", label: "Audit readiness", body: "Complete audit trails and compliance documentation." },
+        { value: "100%", label: "Audit traceability", body: "Complete audit trails and compliance documentation." },
         { value: "85%", label: "Improved accuracy", body: "Reduction in manual data entry errors." },
       ],
     },
@@ -855,7 +855,7 @@ export const mrSolutions: MrSolution[] = [
     },
     cta: {
       title: "Ready to transform your finance operations?",
-      body: "See how MapleRecord can help your finance team automate document processing, accelerate the financial close, and stay audit-ready.",
+      body: "See how MapleRecord can help your finance team automate document processing, accelerate the financial close, and keep records ready for audit.",
     },
   },
   {
@@ -951,7 +951,7 @@ export const mrSolutions: MrSolution[] = [
       intro:
         "MapleRecord is designed to support the security and compliance requirements of legal and compliance departments handling sensitive and privileged information.",
       items: [
-        "Restricted access to privileged documents and ethical walls",
+        "Ethical walls and restricted access to privileged documents",
         "Legal hold management with defensible preservation",
         "Role-based access controls and need-to-know restrictions",
         "Automated retention and defensible deletion policies",
@@ -1010,7 +1010,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "A secure outcome is delivered",
-          body: "Requests are completed on time with controlled access, secure delivery, and full audit traceability.",
+          body: "Requests are tracked to completion against their deadlines, with controlled access, secure delivery, and full audit traceability.",
         },
       ],
     },
@@ -1115,7 +1115,7 @@ export const mrSolutions: MrSolution[] = [
         },
         {
           title: "Execution is completed with full visibility",
-          body: "Requests are resolved on time with real-time tracking, controlled access, and audit-ready documentation.",
+          body: "Requests are resolved with real-time tracking against their deadlines, controlled access, and audit-ready documentation.",
         },
       ],
     },
@@ -1124,7 +1124,7 @@ export const mrSolutions: MrSolution[] = [
       items: [
         { value: "70%", label: "Faster vendor onboarding", body: "Reduction in time to onboard and verify vendor documentation." },
         { value: "65%", label: "Process efficiency gains", body: "Decrease in time spent searching for operational documents." },
-        { value: "100%", label: "Quality traceability", body: "Complete audit trails for ISO and regulatory compliance." },
+        { value: "100%", label: "Quality traceability", body: "Complete audit trails for ISO and regulatory inspections." },
         { value: "80%", label: "Supply chain visibility", body: "Improvement in vendor documentation and compliance tracking." },
       ],
     },
@@ -1188,7 +1188,7 @@ export const mrSolutions: MrSolution[] = [
     challenges: {
       heading: "R&D challenges",
       intro:
-        "Research and development teams manage experimental data, protect intellectual property, maintain lab notebooks, coordinate regulatory submissions, and stay compliant across multi-year research initiatives.",
+        "Research and development teams manage experimental data, protect intellectual property, maintain lab notebooks, coordinate regulatory submissions, and meet compliance obligations across multi-year research initiatives.",
       items: [
         {
           title: "Slow research documentation",
@@ -1230,12 +1230,12 @@ export const mrSolutions: MrSolution[] = [
       items: [
         { value: "60%", label: "Faster innovation cycles", body: "Reduction in time from research to regulatory submission." },
         { value: "75%", label: "Research efficiency gains", body: "Decrease in time spent searching for experimental data." },
-        { value: "100%", label: "IP protection & traceability", body: "Complete audit trails for patents and regulatory compliance." },
+        { value: "100%", label: "IP and audit traceability", body: "Complete audit trails for patent and regulatory records." },
         { value: "85%", label: "Regulatory submission speed", body: "Improvement in assembling submission packages." },
       ],
     },
     useCases: {
-      heading: "Research & development use cases",
+      heading: "R&D use cases",
       items: [
         {
           title: "Lab notebook records",
@@ -1286,7 +1286,7 @@ export const mrSolutions: MrSolution[] = [
     officialUrl: "https://maplerecord.com/solution/customer-service/",
     title: "MapleRecord for customer service",
     description:
-      "Deliver exceptional customer experiences, resolve cases faster, centralize customer documentation, and support service compliance with intelligent document management built for customer service teams.",
+      "Resolve cases faster, centralize customer documentation, and support service compliance with intelligent document management built for customer service teams.",
     metaDescription: "Streamline case resolution, centralize customer documentation and support service compliance with document management for customer service teams.",
     tagline: "Case resolution · Contracts and warranties · SLA tracking",
     image: mrScreens.requestsDashboard,
@@ -1321,11 +1321,11 @@ export const mrSolutions: MrSolution[] = [
           body: "Account details, previous interactions, and supporting documents are retrieved securely from a centralized repository.",
         },
         {
-          title: "Tasks and approvals are automated",
+          title: "Requests are routed automatically",
           body: "Workflow automation routes requests to the right teams based on issue type and priority.",
         },
         {
-          title: "A timely, accurate response is delivered",
+          title: "A traceable response is delivered",
           body: "Requests are resolved with secure communication, full traceability, and audit-ready documentation.",
         },
       ],
@@ -1373,7 +1373,7 @@ export const mrSolutions: MrSolution[] = [
       intro:
         "MapleRecord is designed for customer service teams managing sensitive customer information, service agreements, and regulatory obligations.",
       items: [
-        "Supports GDPR, CCPA, and customer data privacy requirements",
+        "Designed to support GDPR, CCPA, and customer data privacy requirements",
         "Role-based access controls for sensitive customer information",
         "Complete audit trails for customer interactions and case handling",
         "SLA monitoring and automated alerts for compliance tracking",
@@ -1397,7 +1397,7 @@ export const mrSolutionSummaries: Record<string, string> = {
   "state-local-government": "FOIA processing, public records and retention schedules for agencies, counties and municipalities.",
   "finance-accounting": "Invoices, expenses and the month-end close, with audit trails ready for every review.",
   "legal-compliance": "Legal holds, eDiscovery, contracts and retention schedules under one governed system.",
-  "human-resources": "Employee files from hire to retire, verification requests and HR workflows, kept private.",
+  "human-resources": "Employee files from hire to retire, verification requests and HR workflows, with access controls.",
   operations: "Vendor onboarding, SOPs and quality records with version control and certification tracking.",
   "research-development": "Lab records, intellectual property and regulatory submissions, versioned and access-controlled.",
   "customer-service": "Customer records, contracts and case history at hand for faster, traceable resolutions.",

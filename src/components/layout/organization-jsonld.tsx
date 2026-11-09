@@ -8,23 +8,31 @@ export function OrganizationJsonLd() {
     name: company.name,
     alternateName: company.shortName,
     description: company.descriptor,
-    // The four specializations and MapleRecord's domain (owner directive 2026-11-07); topics, not credentials.
+    // The seven practice pillars of the Capability Matrix (October 2026) and AI governance; topics, not credentials.
     knowsAbout: [
-      "AI governance",
-      "Responsible AI",
-      "AI risk management",
-      "Adobe Experience Cloud",
-      "Data management",
+      "Data strategy and analytics",
       "Data governance",
-      "Software development",
-      "Enterprise software",
+      "Data engineering",
+      "Cloud engineering",
+      "DevOps",
+      "AI/ML enablement",
+      "Adobe Experience Cloud",
+      "Marketing technology",
+      "Experience design",
+      "Digital product development",
+      "Business transformation",
+      "Microsoft Dynamics 365",
       "Records management",
+      "AI governance",
     ],
     url: siteUrl,
     logo: `${siteUrl}/brand/mig-logo.svg`,
     sameAs: company.social.map((s) => s.href),
     // Confirmed by Maverick InnoGarage (2026-11-06): MapleRecord is its own product.
-    brand: { "@type": "Brand", name: "MapleRecord", url: `${siteUrl}/maplerecord` },
+    brand: [
+      { "@type": "Brand", name: "MapleRecord", url: `${siteUrl}/maplerecord` },
+      { "@type": "Brand", name: "MOLI", url: `${siteUrl}/moli` },
+    ],
     address: company.offices.map((o) => ({
       "@type": "PostalAddress",
       streetAddress: o.streetLines.join(", "),
@@ -35,6 +43,7 @@ export function OrganizationJsonLd() {
     })),
     // One entry per number: Delaware and Texas share +19409456180.
     contactPoint: company.offices
+      .flatMap((o) => (o.phone ? [{ ...o, phone: o.phone }] : []))
       .filter((o, i, all) => all.findIndex((x) => x.phone.e164 === o.phone.e164) === i)
       .map((o) => ({
         "@type": "ContactPoint",

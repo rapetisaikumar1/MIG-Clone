@@ -169,7 +169,8 @@ export function MrArticleCard({ article, headingLevel = "h3" }: { article: MrArt
         />
       </div>
       <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <ArticleMeta article={article} />
+        {/* Stacked, so cards side by side break their meta the same way whatever the category's length. */}
+        <ArticleMeta article={article} stacked />
         <Heading className="mt-4 text-[1.3125rem] font-semibold leading-snug tracking-tight">
           <Link href={articleHref(article)} className="after:absolute after:inset-0 focus-visible:outline-none group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
             {article.title}
@@ -247,11 +248,11 @@ export function MrHubGrid({ hubs }: { hubs: MrResourceHub[] }) {
 export function MrArticleHero({ article, crumbs }: { article: MrArticle; crumbs: Crumb[] }) {
   return (
     <header className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text">
-      <Container className="relative pb-28 pt-8 sm:pb-36 lg:pb-44 lg:pt-10">
+      <Container className="relative pb-28 pt-10 sm:pb-36 lg:pb-44 lg:pt-14">
         <MrCrumbs items={crumbs} tone="dark" />
-        <div className="mt-10 max-w-4xl lg:mt-14">
+        <div className="max-w-4xl">
           <MrBadge tone="dark">MapleRecord blog</MrBadge>
-          <h1 className="mt-6 text-[clamp(2rem,1.45rem+2.3vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.03em]">{article.title}</h1>
+          <h1 className="mt-6 text-[clamp(2rem,1.45rem+2.3vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.026em]">{article.title}</h1>
           <ArticleMeta article={article} tone="dark" className="mt-7" />
         </div>
       </Container>

@@ -1,29 +1,33 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. The palette is built from the original logo: ink #111111, the gray
- * wordmark, and the red dot #FF0000. Pure logo red is used only for graphics (3.7:1 on paper);
- * text and button fills use --signal, a deeper red that passes WCAG AA (≈5.2:1 on paper).
+ * Design tokens, aligned with the 2026 Capability Matrix deck: deep oxblood panels (--night*), warm
+ * stone grey (--line-strong, --night-muted), light warm-grey grounds (--paper*), black ink, white, and the
+ * logo's red dot. Pure logo red is used only for graphics (3.6:1 on paper); text and button fills use
+ * --signal, a deeper red that passes WCAG AA on paper (5.5:1), surface (6.1:1) and paper-deep (4.7:1).
+ * --muted passes 4.5:1 on paper, surface and paper-deep; --night-muted passes on night and night-raised.
  */
 :root {
-  --paper: #f6f4ef;
-  --paper-deep: #ece8df;
+  --paper: #f4f3f0;
+  --paper-deep: #e4e2dd;
   --surface: #ffffff;
   --ink: #111111;
-  --ink-soft: #2b2a28;
-  --muted: #5d5a54;
-  --line: #dcd6ca;
-  --line-strong: #bfb7a7;
+  --ink-soft: #2b2726;
+  --muted: #57524d;
+  --line: #d9d6d0;
+  --line-strong: #b5aea6;
   /* Form field boundaries need 3:1 against their background (WCAG 1.4.11) */
-  --line-field: #857d71;
-  --signal: #d00000;
-  --signal-hover: #a90000;
+  --line-field: #7e7770;
+  --signal: #c80000;
+  --signal-hover: #9e0000;
   --logo-red: #ff0000;
-  --night: #101011;
-  --night-raised: #19191b;
-  --night-line: #2e2d2b;
-  --night-muted: #a8a49c;
-  --night-text: #f1efe9;
+  --night: #2a1110;
+  --night-raised: #361a18;
+  --night-line: #4f302d;
+  --night-muted: #b5aea6;
+  --night-text: #f5f1ec;
+  /* Shadow tint: oxblood-black, so depth reads warm on the warm-grey grounds. */
+  --shadow-rgb: 34 14 13;
 }
 
 @theme inline {
@@ -46,21 +50,27 @@
   --color-night-text: var(--night-text);
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  /* Display headings use Poppins, the deck's typeface; body, navigation and UI text stay in Geist. */
+  --font-display: var(--font-poppins), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
-  /* Fluid type scale: ~40px → 80px display, tuned for the hero headline */
-  --text-display: clamp(2.5rem, 1.55rem + 3.7vw, 5rem);
-  --text-display--line-height: 1.02;
-  --text-display--letter-spacing: -0.038em;
-  --text-h1: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
-  --text-h1--line-height: 1.05;
-  --text-h1--letter-spacing: -0.034em;
-  --text-h2: clamp(1.875rem, 1.4rem + 1.9vw, 3.125rem);
-  --text-h2--line-height: 1.08;
-  --text-h2--letter-spacing: -0.03em;
-  --text-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.625rem);
-  --text-h3--line-height: 1.22;
-  --text-h3--letter-spacing: -0.018em;
+  /*
+   * Fluid type scale: ~38px → 74px display, tuned for the hero headline. Display sizes are set in Poppins,
+   * which runs wider and taller than Geist, so the scale sits ~7% smaller than the old Geist one with
+   * lighter negative tracking and a little more line height.
+   */
+  --text-display: clamp(2.375rem, 1.5rem + 3.4vw, 4.625rem);
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.03em;
+  --text-h1: clamp(2.125rem, 1.55rem + 2.35vw, 3.625rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.026em;
+  --text-h2: clamp(1.75rem, 1.33rem + 1.75vw, 2.875rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.022em;
+  --text-h3: clamp(1.1875rem, 1.08rem + 0.48vw, 1.5rem);
+  --text-h3--line-height: 1.28;
+  --text-h3--letter-spacing: -0.012em;
   --text-lead: clamp(1.125rem, 1.03rem + 0.4vw, 1.3125rem);
   --text-lead--line-height: 1.55;
   --text-label: 0.75rem;
@@ -102,6 +112,16 @@
   h4 {
     text-wrap: balance;
     font-weight: 600;
+  }
+
+  /*
+   * Display type (Poppins, the deck's typeface): headings h1–h3 and the heading-scale utilities. Poppins is
+   * wider and taller than Geist, so the scale carries its own, lighter negative tracking (see --text-*).
+   * Zero specificity in the base layer, so a font-mono / font-sans utility on a heading (mono labels) still
+   * wins. The MapleRecord product screen recreations ([data-screen]) keep their own UI type.
+   */
+  :where(h1, h2, h3, .text-display, .text-h1, .text-h2, .text-h3):where(:not([data-screen] *)) {
+    font-family: var(--font-display);
   }
 
   p {
@@ -180,7 +200,7 @@
   /* 20% larger than the stage on every side, so the drift never reveals the glow's edge. */
   .mr-stage-dark::after {
     inset: -10%;
-    background-image: radial-gradient(50% 46% at 73% 42%, rgb(208 0 0 / 0.16) 0%, transparent 70%);
+    background-image: radial-gradient(50% 46% at 73% 42%, rgb(200 0 0 / 0.1) 0%, transparent 70%);
   }
   @media (prefers-reduced-motion: no-preference) {
     .mr-stage-dark::after {
@@ -188,11 +208,11 @@
     }
   }
   .mr-stage-light {
-    background-color: #ece8df;
+    background-color: var(--paper-deep);
     background-image:
       radial-gradient(70% 60% at 50% 35%, rgb(255 255 255 / 0.75) 0%, transparent 72%),
-      linear-gradient(rgb(17 17 17 / 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(17 17 17 / 0.05) 1px, transparent 1px);
+      linear-gradient(rgb(var(--shadow-rgb) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--shadow-rgb) / 0.05) 1px, transparent 1px);
     background-size: 100% 100%, 32px 32px, 32px 32px;
     background-position: 0 0, -1px -1px, -1px -1px;
   }
@@ -211,10 +231,10 @@
 
   /* Backdrop for MapleRecord product screenshots: warm paper tones with a faint dot grid */
   .mr-panel {
-    background-color: #e9e5dc;
+    background-color: #e6e4df;
     background-image:
-      radial-gradient(circle at 1px 1px, rgb(17 17 17 / 0.07) 1px, transparent 0),
-      linear-gradient(160deg, #f1eee7 0%, #e6e1d6 100%);
+      radial-gradient(circle at 1px 1px, rgb(var(--shadow-rgb) / 0.07) 1px, transparent 0),
+      linear-gradient(160deg, #f0efeb 0%, #e2e0da 100%);
     background-size: 18px 18px, 100% 100%;
   }
 
@@ -281,7 +301,8 @@
   .prose-mig h2 {
     margin-top: 2.2em;
     color: var(--ink);
-    font-size: var(--text-h3);
+    /* Clearly larger than h3 at every width (on phones --text-h3 was barely above the 18px h3). */
+    font-size: max(var(--text-h3), 1.375rem);
     line-height: 1.25;
     letter-spacing: -0.018em;
   }
@@ -289,6 +310,7 @@
     margin-top: 1.8em;
     color: var(--ink);
     font-size: 1.125rem;
+    line-height: 1.3;
     letter-spacing: -0.01em;
   }
   .prose-mig h2 + *,
@@ -442,7 +464,7 @@
 .card-lift {
   --card-lift-shadow:
     var(--tw-inset-shadow, 0 0 #0000), var(--tw-inset-ring-shadow, 0 0 #0000), var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), 0 1px 2px rgb(17 17 17 / 0.05), 0 14px 28px -16px rgb(17 17 17 / 0.28);
+    var(--tw-ring-shadow, 0 0 #0000), 0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 16px 30px -16px rgb(var(--shadow-rgb) / 0.3);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -480,7 +502,7 @@
   top: 100%;
   height: 14px;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgb(17 17 17 / 0.07), transparent);
+  background: linear-gradient(to bottom, rgb(var(--shadow-rgb) / 0.07), transparent);
   opacity: 0;
 }
 @supports (animation-timeline: scroll()) {

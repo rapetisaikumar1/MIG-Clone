@@ -12,7 +12,7 @@ const HOVER_OPEN_DELAY = 120;
 const HOVER_CLOSE_DELAY = 220;
 
 /**
- * Desktop primary-nav entry with a panel (Adobe Services, MapleRecord): a normal link plus a
+ * Desktop primary-nav entry with a panel (Services, Adobe Services, MapleRecord): a normal link plus a
  * disclosure button that reveals a panel of links. Not an ARIA menu: it's a button (aria-expanded)
  * controlling a region of links. Opens on click/Enter/Space (and on hover with a delay, as an
  * enhancement); closes on Escape, outside click, focus leaving, and route change.

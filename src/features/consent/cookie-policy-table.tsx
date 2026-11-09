@@ -29,15 +29,15 @@ export function CookiePolicyTable() {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="leading-6">
           {cookies.map((c) => (
             <tr key={c.name} className="border-b border-line">
-              <th scope="row" className="py-4 pr-4 align-top font-mono text-[0.8125rem] font-normal text-ink">
+              <th scope="row" className="py-4 pr-4 align-top font-mono text-[0.8125rem] font-normal leading-6 text-ink">
                 {c.displayName}
               </th>
               <td className="py-4 pr-4 align-top">{c.category}</td>
-              <td className="py-4 pr-4 align-top">{c.provider}</td>
-              <td className="py-4 pr-4 align-top leading-relaxed">{c.purpose}</td>
+              <td className="whitespace-nowrap py-4 pr-4 align-top">{c.provider}</td>
+              <td className="text-pretty py-4 pr-4 align-top">{c.purpose}</td>
               <td className="whitespace-nowrap py-4 align-top">{c.duration}</td>
             </tr>
           ))}

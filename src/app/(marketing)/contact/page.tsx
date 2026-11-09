@@ -8,12 +8,13 @@ import { isAdobeApplication, isContactInterest, MAX_ADOBE_APPLICATIONS } from "@
 import { Breadcrumbs } from "@/features/services/sections";
 import { adobeAssessmentPath } from "@/lib/content/adobe";
 import { pageMetadata } from "@/lib/metadata";
+import { cn } from "@/lib/utils";
 import { isContactDeliveryConfigured } from "@/server/env";
 
 export const metadata = pageMetadata({
   title: "Contact",
   description:
-    "Talk to Maverick InnoGarage about AI governance, Adobe solutions, data management, software development or MapleRecord. Offices in Delaware, Texas and Ontario.",
+    "Talk to Maverick InnoGarage about data, cloud and engineering, Adobe Experience Cloud, experience design, digital products, CRM, MapleRecord or MOLI. Offices across the US and Canada.",
   path: "/contact",
 });
 
@@ -27,7 +28,7 @@ const nextSteps = {
     ["We agree on a first step", "Often an assessment or a scoped first project, never a hard sell."],
   ],
   phone: [
-    ["You call one of our offices", "The numbers for each office are listed on this page."],
+    ["Call the office nearest you", "The numbers are at the top of the form and in the office list below."],
     ["We talk it through", "We may ask a few questions about your goals, systems and timeline."],
     ["We agree on a first step", "Often an assessment or a scoped first project, never a hard sell."],
   ],
@@ -56,14 +57,14 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
         <Container>
           <JsonLd data={breadcrumbJsonLd(crumbs, "/contact")} />
           <Breadcrumbs items={crumbs} />
-          <div className="mt-12">
+          <div>
             <Eyebrow>Contact</Eyebrow>
             <h1 className="mt-6 max-w-4xl text-h1">Talk to an expert.</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-muted">
-              Tell us what you&apos;re working on, whether that&apos;s AI oversight, an Adobe platform, your data, or software you need
-              built.{" "}
+              Tell us what you&apos;re working on, whether that&apos;s your data, a cloud platform, an Adobe implementation, a
+              digital product or a records program.{" "}
               {/* Don't promise an email reply while the form can't deliver. */}
-              {deliveryConfigured ? "A member of our team will reply by email." : "Call one of our offices and we'll be glad to help."}
+              {deliveryConfigured ? "A member of our team will reply by email." : "The quickest way to reach us right now is by phone."}
             </p>
           </div>
         </Container>
@@ -83,12 +84,13 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
               />
             </div>
           </div>
-          {/* Sticky beside the long form only where the whole panel fits in the viewport. */}
+          {/* Two columns on tablets so the panels don't stack into a long column under the form; one sticky column
+              beside the form on desktop, only where the whole panel fits in the viewport. */}
           <aside
-            className="space-y-5 self-start lg:col-span-5 [@media(min-width:64rem)_and_(min-height:50rem)]:sticky [@media(min-width:64rem)_and_(min-height:50rem)]:top-24"
+            className="grid gap-5 self-start md:grid-cols-2 lg:col-span-5 lg:grid-cols-1 [@media(min-width:64rem)_and_(min-height:50rem)]:sticky [@media(min-width:64rem)_and_(min-height:50rem)]:top-24"
             aria-labelledby="next-title"
           >
-            <div className="rounded-2xl bg-paper-deep p-7 sm:p-8">
+            <div className={cn("rounded-2xl bg-paper-deep p-7 sm:p-8", deliveryConfigured && "md:col-span-2 lg:col-span-1")}>
               <h2 id="next-title" className="font-mono text-label uppercase text-muted">
                 What happens next
               </h2>
@@ -129,7 +131,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
       <section id="offices" className="border-t border-line bg-surface py-16 sm:py-20" aria-labelledby="offices-title">
         <Container>
           <SectionHeading id="offices-title" eyebrow="Where we are" title="Our offices" />
-          <OfficeList className="mt-10" />
+          <OfficeList className="mt-10" messages={deliveryConfigured} />
         </Container>
       </section>
     </>

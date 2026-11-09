@@ -26,15 +26,16 @@ export function ConnectionDiagram() {
           <li key={s.layer} className="reveal relative flex flex-col">
             <div className="card-lift group relative flex-1 rounded-2xl border border-night-line bg-night-raised p-7 transition-colors duration-200 hover:border-night-muted focus-within:border-night-muted sm:p-8 lg:p-7 xl:p-8">
               <span className="font-mono text-label uppercase text-night-muted">{s.layer}</span>
-              <span className="mt-6 flex items-center gap-3">
+              {/* The marker centers on the first line, so a pillar name that wraps keeps it beside the first word. */}
+              <span className="mt-6 flex items-start gap-3 text-h3">
                 <span
                   aria-hidden
-                  className="size-3 shrink-0 rounded-full border border-night-muted transition-colors duration-200 group-focus-within:border-logo-red group-focus-within:bg-logo-red group-hover:border-logo-red group-hover:bg-logo-red"
+                  className="mt-[calc((1lh-0.75rem)/2)] size-3 shrink-0 rounded-full border border-night-muted transition-colors duration-200 group-focus-within:border-logo-red group-focus-within:bg-logo-red group-hover:border-logo-red group-hover:bg-logo-red"
                 />
                 {/* Stretched link: the whole card is clickable, but its accessible name stays short. */}
                 <Link
                   href={s.href}
-                  className="text-h3 font-semibold decoration-1 underline-offset-4 after:absolute after:inset-0 after:rounded-2xl group-hover:underline"
+                  className="font-semibold decoration-1 underline-offset-4 after:absolute after:inset-0 after:rounded-2xl group-hover:underline"
                 >
                   {s.area}
                 </Link>

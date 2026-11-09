@@ -4,6 +4,7 @@ import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { ButtonLink } from "@/components/ui/button";
 import { MrCta, MrHero, MrSecuritySection, MrStatsSection } from "@/features/maplerecord/mr-sections";
 import {
+  keepStatLabelsWhole,
   SolutionChallenges,
   SolutionHeroMeta,
   SolutionModules,
@@ -58,7 +59,7 @@ export default async function SolutionPage({ params }: PageProps<"/maplerecord/s
       <SolutionChallenges {...s.challenges} />
       {s.modules ? <SolutionModules slug={s.slug} label={s.label} {...s.modules} /> : null}
       {s.workflow ? <SolutionWorkflow slug={s.slug} {...s.workflow} /> : null}
-      <MrStatsSection eyebrow="Business impact" heading={s.impact.heading} items={s.impact.items} />
+      <MrStatsSection eyebrow="Business impact" heading={s.impact.heading} items={keepStatLabelsWhole(s.impact.items)} />
       <SolutionUseCases slug={s.slug} {...s.useCases} />
       <MrSecuritySection {...s.security} />
       <SolutionRelated current={s} siblings={siblings} />

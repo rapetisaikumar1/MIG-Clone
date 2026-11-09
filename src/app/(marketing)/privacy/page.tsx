@@ -3,7 +3,7 @@ import { Container, Eyebrow } from "@/components/ui/layout";
 import { company } from "@/config/site";
 import { Breadcrumbs } from "@/features/services/sections";
 import { pageMetadata } from "@/lib/metadata";
-import { OnThisPage, type TocItem } from "./on-this-page";
+import { OnThisPage, OnThisPageDisclosure, type TocItem } from "./on-this-page";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { buttonVariants } from "@/components/ui/button";
 import { CONSENT_COOKIE, CONSENT_MAX_AGE_DAYS } from "@/features/consent/config";
@@ -29,7 +29,7 @@ const privacySections: TocItem[] = [
 /*
  * Describes the actual implementation; keep it in step with the code when it changes:
  * - fields: src/features/contact/schema.ts (contactSchema)
- * - delivery and logging: src/server/contact/submit.ts, src/server/email/resend.ts
+ * - delivery and logging: src/server/contact/submit.ts, src/server/email/{smtp,resend}.ts (SMTP mailbox or Resend)
  * - abuse controls: src/app/api/contact/route.ts, src/server/contact/rate-limit.ts
  * - prefill query parameters: src/app/(marketing)/contact/page.tsx, src/features/contact/links.ts
  * - cookies and consent categories: src/features/consent/config.ts (also drives /cookies)
@@ -41,18 +41,19 @@ export default function PrivacyPage() {
       <Container>
         <JsonLd data={breadcrumbJsonLd([{ label: "Home", href: "/" }, { label: "Privacy notice" }], "/privacy")} />
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Privacy notice" }]} />
-        <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12">
-          <div className="max-w-3xl lg:col-span-8">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12">
+          <div className="max-w-2xl lg:col-span-8 lg:max-w-3xl">
             <Eyebrow>Legal · Privacy</Eyebrow>
             <h1 className="mt-6 text-h1">Website privacy notice</h1>
-            <p className="mt-4 text-sm text-muted">Last updated: November 6, 2026</p>
+            <p className="mt-4 text-sm text-muted">Last updated: November 9, 2026</p>
+            <OnThisPageDisclosure items={privacySections} className="mt-8 lg:hidden" />
             <div className="prose-mig mt-10">
               <p>
                 This notice explains how the {company.name} ({company.shortName}) website handles the information you share with
                 us. {company.descriptor}
               </p>
               <p>
-                This notice covers this website only. It does not cover the MapleRecord application or the software and services we
+                This notice covers this website only. It does not cover the MapleRecord or MOLI applications or the software and services we
                 deliver for clients.
               </p>
 
@@ -79,8 +80,7 @@ export default function PrivacyPage() {
 
               <h2 id="how-your-message-reaches-us">How your message reaches us</h2>
               <p>
-                Form submissions are checked on our server and delivered to our team by email through a third-party email delivery
-                provider. Replies come from our team to the email address you gave. We don&apos;t sell your information or use it
+                Form submissions are checked on our server and delivered to our team by email through our email service provider. Replies come from our team to the email address you gave. We don&apos;t sell your information or use it
                 for advertising.
               </p>
 
@@ -124,7 +124,7 @@ export default function PrivacyPage() {
               <h2 id="your-choices">Your choices</h2>
               <p>
                 To ask about the information we hold about you, or to have it corrected or deleted, please get in touch. Our{" "}
-                <Link href="/contact">contact page</Link> lists a telephone number for each of our offices.
+                <Link href="/contact">contact page</Link> has an inquiry form and lists our office addresses and telephone numbers.
               </p>
             </div>
           </div>

@@ -118,6 +118,13 @@ export function MrStorySection() {
             {mrAbout.story.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
+            <p>
+              {mrAbout.storyRelated.before}
+              <Link href={mrAbout.storyRelated.href} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
+                {mrAbout.storyRelated.label}
+              </Link>
+              {mrAbout.storyRelated.after}
+            </p>
           </div>
           <div className="min-w-0 lg:col-span-7">
             <div className="reveal">
@@ -209,9 +216,9 @@ export function MrIndustriesSection() {
 export function MrContactHero({ crumbs }: { crumbs: { label: string; href?: string }[] }) {
   return (
     <section className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text" aria-labelledby="contact-hero-title">
-      <Container className="relative pb-28 pt-8 sm:pb-32 lg:pb-36 lg:pt-10">
+      <Container className="relative pb-28 pt-10 sm:pb-32 lg:pb-36 lg:pt-14">
         <MrCrumbs items={crumbs} tone="dark" />
-        <div className="mt-10 grid gap-8 lg:mt-12 lg:grid-cols-12 lg:items-end lg:gap-14">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-14">
           <div className="lg:col-span-7">
             <MrBadge tone="dark">{mrContact.eyebrow}</MrBadge>
             <h1 id="contact-hero-title" className="mt-6 text-h2 font-semibold">
@@ -344,7 +351,7 @@ export function MrContactOffices() {
             <h3 className="mt-5 text-lg font-semibold tracking-tight">{partner.title}</h3>
             <p className="mt-2 text-[0.9375rem] text-muted">{partner.body}</p>
             <div className="mt-auto pt-4">
-              <ArrowLink href={contactHref("data-management")}>{partner.action}</ArrowLink>
+              <ArrowLink href={contactHref("records-management")}>{partner.action}</ArrowLink>
             </div>
           </li>
         </ul>

@@ -23,8 +23,8 @@ export default function ResourcesPage() {
       <MrHero
         crumbs={crumbs}
         eyebrow="Resources"
-        title="MapleRecord blog"
-        description="Insights, best practices, and thought leadership on records management, compliance, and workflow automation."
+        title="MapleRecord blog and resources"
+        description="Articles on records management, compliance, and workflow automation, plus videos, webinars, events, and press from the MapleRecord team."
       >
         <ButtonLink href="#resource-hubs" variant="outline-night">
           Videos, webinars &amp; events

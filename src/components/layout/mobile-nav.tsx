@@ -4,11 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { Dialog } from "radix-ui";
-import { Menu, X, ArrowRight } from "lucide-react";
-import type { AdobeNav, MapleRecordNav, NavItem } from "@/config/navigation";
+import { Menu, X, ArrowRight, ArrowUpRight } from "lucide-react";
+import type { AdobeNav, MapleRecordNav, NavItem, ServicesNav } from "@/config/navigation";
 import { company, primaryPhone } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { isActivePath } from "./nav-links";
+import { isActivePath, isServicesActive } from "./nav-links";
 
 /** Child links of a top-level item: two columns on a tinted, captioned block, so they read as that item's pages. */
 const subListClass = "grid grid-cols-2 gap-x-3";
@@ -27,8 +27,47 @@ function SubList({ caption, children }: { caption: string; children: ReactNode }
   );
 }
 
+/** A child link; the current page gets a red marker (in place of `lead`, e.g. a pillar number). */
+function SubLink({
+  href,
+  label,
+  pathname,
+  onNavigate,
+  lead,
+  exact = false,
+}: {
+  href: string;
+  label: string;
+  pathname: string;
+  onNavigate: () => void;
+  lead?: ReactNode;
+  exact?: boolean;
+}) {
+  const current = exact ? pathname === href : isActivePath(pathname, href);
+  return (
+    <Link href={href} onClick={onNavigate} aria-current={current ? "page" : undefined} className={cn(subLinkClass, current && "font-medium text-ink")}>
+      {lead}
+      {current && !lead ? <span aria-hidden className="size-1.5 rounded-full bg-logo-red" /> : null}
+      <span>{label}</span>
+      {current && lead ? <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-logo-red" /> : null}
+    </Link>
+  );
+}
+
 /** Full-screen sheet built on Radix Dialog: focus trap, Escape to close, scroll lock, labelled. */
-export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]; cta: NavItem; adobe?: AdobeNav; mapleRecord?: MapleRecordNav }) {
+export function MobileNav({
+  items,
+  cta,
+  services,
+  adobe,
+  mapleRecord,
+}: {
+  items: NavItem[];
+  cta: NavItem;
+  services?: ServicesNav;
+  adobe?: AdobeNav;
+  mapleRecord?: MapleRecordNav;
+}) {
   const pathname = usePathname();
   // Open only for the path it was opened on, so any navigation (including Back) closes the sheet.
   const [openOn, setOpenOn] = useState<string | null>(null);
@@ -60,10 +99,11 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
               <X aria-hidden className="size-5" />
             </Dialog.Close>
           </div>
-          <nav aria-label="Mobile" className="flex-1 px-5 py-6">
-            <ul className="divide-y divide-line border-y border-line">
+          <nav aria-label="Mobile" className="flex-1 px-5 pt-2 pb-6">
+            <ul className="divide-y divide-line border-b border-line">
               {items.map((item) => {
-                const active = isActivePath(pathname, item.href);
+                const isServices = services !== undefined && item.href === services.overview.href;
+                const active = isServices ? isServicesActive(pathname, services, items) : isActivePath(pathname, item.href);
                 return (
                   <li key={item.href}>
                     <Link
@@ -78,13 +118,53 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
                       </span>
                       <ArrowRight aria-hidden className="size-4 text-muted transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
+                    {isServices ? (
+                      <SubList caption="Practice pillars">
+                        <ul aria-label="Services" className="grid">
+                          {services.pillars.map((pillar) => {
+                            const number = (
+                              <span aria-hidden className="w-6 shrink-0 font-mono text-[0.75rem] tabular-nums text-signal">
+                                {pillar.number}
+                              </span>
+                            );
+                            if (pillar.links?.length) {
+                              // Pillar 07 is delivered through our two products, so it lists them instead of one page.
+                              return (
+                                <li key={pillar.number} className="pt-2.5">
+                                  <p className="flex items-baseline gap-2 text-[0.9375rem] leading-snug text-ink-soft">
+                                    {number}
+                                    {pillar.label}
+                                  </p>
+                                  <ul aria-label={pillar.label} className="ml-8 flex flex-wrap gap-x-6">
+                                    {pillar.links.map((sub) => (
+                                      <li key={sub.href}>
+                                        <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </li>
+                              );
+                            }
+                            return (
+                              <li key={pillar.href}>
+                                <SubLink href={pillar.href} label={pillar.label} pathname={pathname} onNavigate={() => setOpen(false)} lead={number} />
+                              </li>
+                            );
+                          })}
+                        </ul>
+                        <ul aria-label="More services" className={cn(subListClass, "mt-1 border-t border-line pt-1")}>
+                          {[services.aiGovernance, services.overview].map((sub) => (
+                            <li key={sub.href}>
+                              <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} exact />
+                            </li>
+                          ))}
+                        </ul>
+                      </SubList>
+                    ) : null}
                     {adobe && item.href === adobe.overview.href ? (
                       <SubList caption="Adobe applications">
                         <ul aria-label="Adobe applications" className={subListClass}>
-                          {[
-                            ...adobe.products.map((p) => ({ href: p.href, label: p.label })),
-                            { href: adobe.assessment.href, label: "Platform assessment" },
-                          ].map((sub) => {
+                          {adobe.products.map((sub) => {
                             const current = pathname === sub.href;
                             return (
                               <li key={sub.href}>
@@ -104,10 +184,22 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
                             );
                           })}
                         </ul>
+                        {/* The assessment is a service, not an application: its own row, like "More services" above. */}
+                        <ul aria-label="Adobe platform assessment" className="mt-1 border-t border-line pt-1">
+                          <li>
+                            <SubLink
+                              href={adobe.assessment.href}
+                              label={adobe.assessment.label}
+                              pathname={pathname}
+                              onNavigate={() => setOpen(false)}
+                              exact
+                            />
+                          </li>
+                        </ul>
                       </SubList>
                     ) : null}
                     {mapleRecord && item.href === mapleRecord.overview.href ? (
-                      <SubList caption="MapleRecord">
+                      <SubList caption="Product pages">
                         <ul aria-label="MapleRecord pages" className={subListClass}>
                           {mapleRecord.sections.slice(1).map((sub) => {
                             const current = isActivePath(pathname, sub.href);
@@ -125,6 +217,18 @@ export function MobileNav({ items, cta, adobe, mapleRecord }: { items: NavItem[]
                               </li>
                             );
                           })}
+                          <li>
+                            <a
+                              href={mapleRecord.demo.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={cn(subLinkClass, "text-signal hover:text-signal-hover")}
+                            >
+                              {mapleRecord.demo.label}
+                              <ArrowUpRight aria-hidden className="size-4 shrink-0" />
+                              <span className="sr-only"> (opens maplerecord.com in a new tab)</span>
+                            </a>
+                          </li>
                         </ul>
                       </SubList>
                     ) : null}

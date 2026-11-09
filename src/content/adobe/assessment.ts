@@ -3,8 +3,8 @@ import type { AdobeProductSlug } from "@/lib/content/types";
 /**
  * Adobe platform assessment landing page (/adobe-services/assessment).
  *
- * Basis (verified, src/content/services/adobe-services.ts): the "Assess" stage ("Review your current Adobe
- * setup, data flows, use cases and team practices" → "Platform assessment and prioritized opportunities"),
+ * Basis (verified, src/content/services/adobe-services.ts): the "Understand & strategize" stage ("Review your
+ * current Adobe setup, data flows, use cases and team practices" → platform assessment and roadmap),
  * the "Platform assessment" deliverable, and the FAQ "Can you improve an existing implementation?".
  * Everything else is new copy (proposed) — it describes the scope of the work only. It deliberately names
  * no durations, prices, clients, metrics or certifications.
@@ -46,10 +46,10 @@ export const adobeAssessment: AdobeAssessmentContent = {
       "The first phase of Adobe delivery: a scoped review of your setup, data flows and use cases that ends in prioritized opportunities and a roadmap to implement.",
   },
   hero: {
-    // The four steps below, as on the AI Governance and Data Management heroes; the breadcrumb already names the page.
+    // The four steps below, as on the AI Governance and Data Management heroes.
     eyebrow: "Scope · Review · Prioritize · Roadmap",
     title: "Find out what's holding your Adobe platforms back.",
-    lead: "A scoped review of your current Adobe setup — configuration, data flows, use cases and team practices — that ends with prioritized opportunities and a roadmap. It's the first step of delivery: we implement the priorities with you, or your team acts on the roadmap directly.",
+    lead: "A scoped review of your Adobe setup, from configuration and data flows to use cases and team practices, that ends with prioritized opportunities and a roadmap to implement. It's the first phase of delivery, not a standalone report.",
   },
   summary: {
     title: "At a glance",
@@ -112,13 +112,13 @@ export const adobeAssessment: AdobeAssessmentContent = {
         "Asset organization and metadata in AEM Assets",
       ],
       analytics: [
-        "Data collection through Tags or Web SDK",
+        "Data collection through Tags or Web\u00a0SDK",
         "Report suites, eVars, props and events",
         "Data quality and consistency",
         "Analysis Workspace projects in use",
       ],
       target: [
-        "Implementation through at.js or Web SDK",
+        "Implementation through at.js or Web\u00a0SDK",
         "Activity types, setup and goal metrics",
         "Audiences and targeting rules",
         "Reporting source, including Analytics for Target (A4T)",
@@ -134,6 +134,12 @@ export const adobeAssessment: AdobeAssessmentContent = {
         "Extensions and custom code",
         "Performance and caching",
         "Version, patches and upgrade path",
+      ],
+      "content-management": [
+        "Content types, templates and Content Fragment Models",
+        "Authoring, review and approval workflows",
+        "Metadata, tagging and asset expiry",
+        "Publishing to sites, apps and language copies",
       ],
     },
     other: {
@@ -264,6 +270,6 @@ export const adobeAssessment: AdobeAssessmentContent = {
   ],
   cta: {
     title: "Start with a clear picture of your Adobe setup.",
-    body: "Tell us which Adobe applications you use and what you'd like to understand. We'll scope the assessment with you as the first step of delivery.",
+    body: "Tell us which Adobe applications you use and what you'd like to understand, and we'll agree the scope of the assessment with you.",
   },
 };

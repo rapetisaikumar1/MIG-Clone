@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
-import { Container, Section, SectionHeading } from "@/components/ui/layout";
+import { Container, Dot, Section, SectionHeading } from "@/components/ui/layout";
+import { adobeHub } from "@/content/services/adobe-services";
 import { AdobePartnerPanel } from "@/features/adobe/partner-panel";
 import { adobeAssessmentPath, adobeProductPath, adobeServicesPath, getAdobeProducts } from "@/lib/content/adobe";
 import type { AdobeProduct } from "@/lib/content/types";
@@ -18,26 +19,50 @@ function groupByArea(products: AdobeProduct[]) {
 }
 
 /**
- * Home page showcase of the Adobe Services section: an application map by capability area, the assessment entry
- * point and the partner statement. Product descriptions are left to /adobe-services and the header menu,
- * so the home page shows names and areas only.
+ * Home page showcase of the Adobe Services section (Capability Matrix pillar 03, "9 Adobe offerings. One connected
+ * stack."): Adobe Experience Cloud, the umbrella offering, then the other eight as an application map by capability
+ * area, the assessment entry point and the partner statement. Product descriptions are left to /adobe-services and
+ * the header menu, so the home page shows names and areas only.
  */
 export function AdobeSection() {
   const groups = groupByArea(getAdobeProducts());
+  const aec = adobeHub.experienceCloud;
 
   return (
     <Section id="adobe" aria-labelledby="adobe-title">
       <Container>
         <SectionHeading
           id="adobe-title"
-          eyebrow="Adobe Services"
-          title="The Adobe Experience Cloud applications we implement"
-          intro="We implement, integrate and optimize these applications, and connect them to each other and to your enterprise systems so profiles, content and measurement work from the same data."
+          eyebrow="Adobe Experience Cloud & MarTech"
+          title="Nine Adobe offerings. One connected stack."
+          intro="As an Adobe Solution Partner, we design, implement and optimize Adobe Experience Cloud end to end, from customer data and content to testing, analytics and commerce, so profiles, content and measurement work from the same data."
           className="reveal"
         />
 
+        {/* The umbrella offering, full width above the application map. */}
+        <div className="reveal mt-14 grid gap-3 border-t border-ink py-6 sm:py-7 lg:grid-cols-3 lg:gap-0">
+          <div>
+            <p className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
+              <Dot />
+              {aec.area}
+            </p>
+            <Link href={adobeServicesPath} className="group mt-3 flex min-h-11 items-center justify-between gap-4 py-1.5 lg:pr-6">
+              <span className="text-lg font-semibold leading-snug tracking-tight decoration-1 underline-offset-4 group-hover:underline">
+                {aec.name}
+              </span>
+              <ArrowRight
+                aria-hidden
+                className="size-4 shrink-0 text-muted transition-colors duration-200 group-hover:text-signal motion-safe:transition-[color,transform] motion-safe:group-hover:translate-x-0.5"
+              />
+            </Link>
+          </div>
+          <p className="max-w-[60ch] text-[0.9375rem] text-muted lg:col-span-2 lg:self-end lg:border-l lg:border-line lg:py-1.5 lg:pl-6">
+            {aec.summary}
+          </p>
+        </div>
+
         {/* Application map: one cell per capability area, hairline grid like the expertise columns. */}
-        <ul className="mt-14 grid border-t border-ink sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((group) => (
             <li
               key={group.area}

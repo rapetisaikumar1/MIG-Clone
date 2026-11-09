@@ -37,7 +37,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata({
   title: "MapleRecord Hybrid Records Management",
   description:
-    "MapleRecord, designed and built by Maverick InnoGarage: AI-first hybrid records management for electronic and physical records, with five integrated modules.",
+    "MapleRecord by Maverick InnoGarage: records management for government, municipalities and regulated organizations, with workflow automation and governance.",
   path: "/maplerecord",
 });
 
@@ -343,8 +343,8 @@ export default function MapleRecordPage() {
 
       <FaqSection faqs={mrFaqs} title={mrOverviewCopy.faqTitle} />
 
-      {/* The ownership sentence and the source line ("Product details are also published on maplerecord.com") sit in the CTA's contact card. */}
-      <MrCta title={mrOverviewCopy.cta.title} body={mrOverviewCopy.cta.body} source />
+      {/* The ownership sentence, the MOLI line and the source line ("Product details are also published on maplerecord.com") sit in the CTA's contact card. */}
+      <MrCta title={mrOverviewCopy.cta.title} body={mrOverviewCopy.cta.body} source related />
     </>
   );
 }

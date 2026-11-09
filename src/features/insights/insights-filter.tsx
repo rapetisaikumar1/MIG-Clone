@@ -7,8 +7,10 @@ import { ArticleCard, type ArticleCardData } from "./article-card";
 const ALL = "All";
 const CHANGE_EVENT = "insights-theme-change";
 
-/** "Data Management" -> "data-management", used in the shareable `?theme=` query. */
+/** "Data & Analytics" -> "data-analytics", used in the shareable `?theme=` query. */
 const toParam = (theme: string) => theme.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+/** Earlier theme names, so bookmarked filters keep working ("Data Management" is now "Data & Analytics"). */
+const legacyParams: Record<string, string> = { "data-management": "data-analytics" };
 
 function subscribe(onChange: () => void) {
   window.addEventListener("popstate", onChange);
@@ -30,7 +32,8 @@ const getServerParam = () => "";
 export function InsightsFilter({ articles, themes }: { articles: ArticleCardData[]; themes: readonly string[] }) {
   const param = useSyncExternalStore(subscribe, getParam, getServerParam);
   const available = themes.filter((t) => articles.some((a) => a.theme === t));
-  const theme = available.find((t) => toParam(t) === toParam(param)) ?? ALL;
+  const wanted = toParam(param);
+  const theme = available.find((t) => toParam(t) === (legacyParams[wanted] ?? wanted)) ?? ALL;
   const visible = theme === ALL ? articles : articles.filter((a) => a.theme === theme);
 
   function select(next: string) {

@@ -36,11 +36,15 @@ const serviceId = (title: string) =>
     .replace(/^-|-$/g, "")}`;
 
 /**
- * Two-column grids at md leave an odd last card alone with an empty slot beside it; let it span the row instead.
- * `resetAtLg` undoes the span where the grid switches to three columns.
+ * Two-column grids leave an odd last item alone with an empty slot beside it; let it span the row instead.
+ * `from` is the breakpoint where the grid becomes two columns; `resetAtLg` undoes the span where it switches to
+ * three columns. Class strings stay literal so Tailwind can see them.
  */
-const spanOddLast = (resetAtLg: boolean) =>
-  cn("md:[&>li:last-child:nth-child(odd)]:col-span-2", resetAtLg && "lg:[&>li:last-child:nth-child(odd)]:col-span-1");
+const spanOddLast = (resetAtLg: boolean, from: "sm" | "md" = "md") =>
+  cn(
+    from === "sm" ? "sm:[&>li:last-child:nth-child(odd)]:col-span-2" : "md:[&>li:last-child:nth-child(odd)]:col-span-2",
+    resetAtLg && "lg:[&>li:last-child:nth-child(odd)]:col-span-1",
+  );
 
 function DashList({ items, className }: { items: string[]; className?: string }) {
   return (
@@ -62,7 +66,7 @@ export function ProductHero({ product, crumbs }: { product: AdobeProduct; crumbs
     <section className="border-b border-line bg-paper pb-16 pt-10 sm:pb-20 lg:pb-24 lg:pt-14">
       <Container>
         <Breadcrumbs items={crumbs} />
-        <div className="mt-10 grid items-start gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="min-w-0 lg:col-span-7">
             <Eyebrow>{product.area}</Eyebrow>
             <h1 className="mt-6 text-h1 [overflow-wrap:break-word]">{product.hero.title}</h1>
@@ -149,13 +153,13 @@ export function ProductOverview({ product }: { product: AdobeProduct }) {
               intro={overview.intro}
             />
             <p className="mt-8 max-w-[52ch] border-l-2 border-line-strong pl-4 text-sm text-muted">
-              Describes Adobe&apos;s product, not a {company.name} offering.
+              Describes Adobe&apos;s software, not a {company.name} offering.
             </p>
           </div>
           {overview.features.length > 0 ? (
             /* From lg, subgrid rows keep titles and bodies aligned across the two columns when a title wraps;
                below lg the columns are too narrow for that to help, so each item flows on its own. */
-            <ul className="-mb-10 grid content-start gap-x-10 sm:grid-cols-2 lg:col-span-7">
+            <ul className={cn("-mb-10 grid content-start gap-x-10 sm:grid-cols-2 lg:col-span-7", spanOddLast(false, "sm"))}>
               {overview.features.map((f) => (
                 <li key={f.title} className="reveal border-t border-line-strong pb-10 pt-6 lg:row-span-2 lg:grid lg:grid-rows-subgrid">
                   <h3 className="text-lg font-semibold leading-snug tracking-tight">{keepHyphenatedWords(f.title)}</h3>
@@ -178,8 +182,15 @@ export function ProductSignals({ product }: { product: AdobeProduct }) {
     <Section aria-labelledby="signals-title">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5">
-            <SectionHeading className="reveal" id="signals-title" eyebrow="When teams reach out" title="Problems we solve" />
+          {/* Sticky at lg like the overview heading, so the heading column doesn't sit empty beside a longer list. */}
+          <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
+            <SectionHeading
+              className="reveal"
+              id="signals-title"
+              eyebrow="When teams reach out"
+              title="Problems we solve"
+              intro={keepHyphenatedWords(`Common reasons teams bring us in for ${product.shortName} work, whether the platform is new or already live.`)}
+            />
           </div>
           <div className="reveal self-start rounded-2xl bg-paper-deep p-7 sm:p-9 lg:col-span-7">
             <ul className="space-y-5">
@@ -207,7 +218,13 @@ export function ProductServices({ product }: { product: AdobeProduct }) {
         <SectionHeading className="reveal" id="services-title" eyebrow="Services" title={keepHyphenatedWords(`What we deliver for ${product.shortName}`)} />
         {/* From lg, each item spans four subgrid rows (number, title, body, list) so they line up across a row.
             Below lg the bodies differ too much in length for that, so items flow naturally. */}
-        <ol className={cn("-mb-14 mt-14 grid gap-x-10 sm:grid-cols-2", gridCols(product.services.length))}>
+        <ol
+          className={cn(
+            "-mb-14 mt-14 grid gap-x-10 sm:grid-cols-2",
+            gridCols(product.services.length),
+            spanOddLast(product.services.length % 3 === 0, "sm"),
+          )}
+        >
           {product.services.map((s, i) => (
             <li
               key={s.title}
@@ -290,10 +307,25 @@ export function RelatedProducts({ product, related }: { product: AdobeProduct; r
           eyebrow="Related applications"
           title={keepHyphenatedWords(`Applications that work alongside ${product.shortName}`)}
         />
-        <ul className={cn("reveal mt-12 grid gap-6 md:grid-cols-2", threeUp && "lg:grid-cols-3", spanOddLast(threeUp))}>
+        {/* From md, each card is a four-row subgrid (area, name, note, link), so notes and links line up across a row
+            even when one product name wraps. Row gaps become margins so they don't open up inside the subgrid. */}
+        <ul
+          className={cn(
+            "reveal mt-12 grid gap-6 md:-mb-6 md:gap-y-0",
+            // Rows of three stay one column until lg, so tablets don't show two cards plus one stretched card.
+            threeUp ? "lg:grid-cols-3" : "md:grid-cols-2",
+            !threeUp && spanOddLast(false),
+          )}
+        >
           {related.map(({ product: r, why }) => (
-            <li key={r.slug}>
-              <AdobeProductCard product={r} note={why} className="bg-paper" />
+            <li key={r.slug} className="md:row-span-4 md:mb-6 md:grid md:grid-rows-subgrid">
+              {/* "Adobe" + the short name keeps every title on one line, so a long full name ("Adobe Real-Time Customer
+                  Data Platform") doesn't open a blank line under its neighbours' titles in the subgrid row. */}
+              <AdobeProductCard
+                product={{ ...r, name: `Adobe ${r.shortName}` }}
+                note={why}
+                className="bg-paper md:row-span-4 md:grid md:grid-rows-subgrid md:gap-y-0"
+              />
             </li>
           ))}
         </ul>
@@ -361,6 +393,7 @@ export function RelatedInsights({ articles }: { articles: ArticleCardData[] }) {
 /**
  * Compact index of the applications not already shown on the page (the page filters out itself and its related
  * applications), then the partner statement. `tone` lets the page keep section backgrounds alternating.
+ * Four entries sit in one row of four at lg rather than three plus a lone fourth.
  */
 export function OtherProducts({ others, tone = "paper" }: { others: AdobeProduct[]; tone?: "paper" | "deep" }) {
   return (
@@ -375,7 +408,13 @@ export function OtherProducts({ others, tone = "paper" }: { others: AdobeProduct
           </ArrowLink>
         </div>
         {others.length > 0 ? (
-          <ul className="mt-6 grid border-t border-ink sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
+          <ul
+            className={cn(
+              "mt-6 grid border-t border-ink sm:grid-cols-2 sm:gap-x-10",
+              others.length % 4 === 0 ? "lg:grid-cols-4" : "lg:grid-cols-3",
+              spanOddLast(others.length % 4 !== 0, "sm"),
+            )}
+          >
             {others.map((o) => (
               <li key={o.slug} className="border-b border-line">
                 <Link

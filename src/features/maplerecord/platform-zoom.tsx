@@ -68,7 +68,8 @@ export function MrZoomFrame({ image, label, children }: { image: MrImage; label:
               height={image.height}
               sizes="(min-width: 768px) min(96vw, 148dvh), 56rem"
               // Phones: wider than the screen, to pan. From md: the whole screen, as large as the viewport allows.
-              className="block h-auto w-[56rem] max-w-none md:w-[min(96vw,calc((92dvh-3.625rem)*1.6))]"
+              // bg-paper-deep: a warm placeholder (as in MrWindow) while the full-size screen loads, not a blank white sheet.
+              className="block h-auto w-[56rem] max-w-none bg-paper-deep md:w-[min(96vw,calc((92dvh-3.625rem)*1.6))]"
             />
           ) : null}
         </div>

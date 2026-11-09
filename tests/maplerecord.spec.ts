@@ -283,11 +283,12 @@ test("MapleRecord pages emit breadcrumb and article structured data", async ({ p
   const ld = () => page.$$eval('script[type="application/ld+json"]', (els) => els.flatMap((e) => [JSON.parse(e.textContent ?? "null")].flat()) as { "@type": string; [k: string]: unknown }[]);
   for (const path of mrPages.filter((p) => p !== "/maplerecord")) {
     await page.goto(path);
-    const crumbs = await page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("listitem").allTextContents();
+    // Visible trails are switched off site-wide (2026-11-09); the structured data still starts at MiG's home page.
     const list = (await ld()).find((n) => n["@type"] === "BreadcrumbList");
     expect(list, path).toBeTruthy();
     const names = (list!.itemListElement as { name: string }[]).map((i) => i.name);
-    expect(names, path).toEqual(crumbs.map((c) => c.replace(/^\//, "").trim()));
+    expect(names[0], path).toBe("Home");
+    expect(names.length, path).toBeGreaterThan(1);
   }
   for (const a of mrArticles) {
     await page.goto(`/maplerecord/resources/${a.slug}`);
@@ -319,8 +320,8 @@ test("contact page shows MapleRecord's published contact details", async ({ page
   await expect(page.getByText("739 D'Arcy St")).toBeVisible();
   await expect(page.getByText("26875 US Highway 380").first()).toBeVisible();
   await page.getByRole("main").getByRole("link", { name: "Talk to an expert", exact: true }).click();
-  await expect(page).toHaveURL(/\/contact\?interest=data-management/);
-  await expect(page.getByLabel("Area of interest")).toHaveValue("data-management");
+  await expect(page).toHaveURL(/\/contact\?interest=records-management/);
+  await expect(page.getByLabel("Area of interest")).toHaveValue("records-management");
 });
 
 test("unknown MapleRecord URLs return 404", async ({ request }) => {
@@ -356,7 +357,7 @@ test.describe("mobile", () => {
   test("site menu still links to MapleRecord", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Open menu" }).click();
-    await page.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "MapleRecord" }).click();
+    await page.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "MapleRecord", exact: true }).first().click();
     await expect(page).toHaveURL(/\/maplerecord$/);
   });
 });

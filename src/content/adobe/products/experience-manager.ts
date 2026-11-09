@@ -9,14 +9,18 @@ import type { AdobeProduct } from "@/lib/content/types";
  * Content Fragments can be exported to Adobe Target as offers.
  * Not claimed (unconfirmed by MiG): AEM 6.5 to AEM as a Cloud Service migration, AEM Forms, Edge Delivery
  * Services builds. Add them only once MiG confirms delivery capability.
+ * Scope split with content-management.ts (Nov 2026): this page covers the platform (implementation,
+ * configuration, integration, headless delivery, multi-site setup, custom code). Day-to-day authoring,
+ * governance rules (ownership, approvals, expiry) and author training live on content-management.ts.
+ * Keep scenarios, signals and FAQs distinct between the two pages.
  */
 export const experienceManager: AdobeProduct = {
   slug: "experience-manager",
   name: "Adobe Experience Manager",
   shortName: "Experience Manager",
   area: "Content",
-  legacyPaths: ["/adobe-experience-manager", "/adobe-content-management"],
-  summary: "Websites, content and digital assets in Adobe Experience Manager that teams can update and reuse across channels.",
+  legacyPaths: ["/adobe-experience-manager"],
+  summary: "Enterprise digital asset management, headless and hybrid CMS, and omnichannel content delivery.",
   description: "Adobe's content and digital asset management platform for building websites and delivering content and assets across channels.",
   meta: {
     title: "Adobe Experience Manager Services",
@@ -24,8 +28,8 @@ export const experienceManager: AdobeProduct = {
       "Adobe Experience Manager implementation, integration, multi-site management, content strategy and custom development for AEM Sites and AEM Assets.",
   },
   hero: {
-    title: "Content and assets your teams can publish and reuse across every site.",
-    lead: "We implement and integrate Adobe Experience Manager, organize your content and assets, set up multi-site management, and build the custom components and personalization your teams need.",
+    title: "One Adobe Experience Manager platform for your sites, assets and apps.",
+    lead: "We implement and integrate Adobe Experience Manager, configure AEM Sites and AEM Assets, set up multi-site management and headless delivery, and build the custom components and personalization your teams need.",
   },
   overview: {
     heading: "What Adobe Experience Manager does",
@@ -64,7 +68,7 @@ export const experienceManager: AdobeProduct = {
     "Images and documents scattered across shared drives with no single source",
     "A new region, language or brand to launch on an existing AEM setup",
     "An AEM implementation that authors find hard to use or that has drifted from its original design",
-    "Content that needs to reach apps or other channels, not just web pages",
+    "Apps and front ends that need AEM content through headless delivery, not just web pages",
   ],
   services: [
     {
@@ -83,9 +87,10 @@ export const experienceManager: AdobeProduct = {
       body: "We organize content and assets so authors can find, reuse and publish them without workarounds.",
       items: [
         "Folder structure, metadata schemas and tag setup in AEM Assets",
+        "Processing profiles that create the renditions each channel needs",
         "Content Fragment Models for structured, reusable content",
-        "Authoring and approval workflows with user groups and permissions",
-        "Training for authors and asset managers",
+        "Workflow models, user groups and access permissions configured in AEM",
+        "Training for asset managers and administrators",
       ],
       provenance: "verified",
     },
@@ -113,12 +118,12 @@ export const experienceManager: AdobeProduct = {
     },
     {
       title: "Content strategy",
-      body: "We define with you what content you need, how it is structured and who owns it, before it's built into templates and models.",
+      body: "We plan with you what content your sites and channels need and how it is structured, before it's built into templates, components and models.",
       items: [
-        "Audit of existing content and assets: what to keep, merge or retire",
+        "Inventory of current sites, content types and assets",
+        "Site structure and navigation for each brand, region and language",
         "Content model and reuse plan across sites and channels",
-        "Ownership, review steps and publishing standards",
-        "Taxonomy and naming conventions that tags and metadata follow",
+        "Mapping of content types to templates, components and Content Fragment Models",
       ],
       provenance: "verified",
     },
@@ -140,19 +145,23 @@ export const experienceManager: AdobeProduct = {
       context:
         "A consumer goods company keeps product images and documents across shared drives and agency folders, and its websites often show outdated versions.",
       approach:
-        "Design a folder structure, metadata schema and tagging model in AEM Assets, migrate the current assets, and set up review and expiry workflows for marketing and product teams.",
+        "Design a folder structure, metadata schema and tagging model in AEM Assets, migrate the current assets with their metadata, and set up processing profiles so each website receives the renditions it needs.",
       outcome: "Teams find approved assets in one place, and the websites draw from the same library.",
     },
     {
-      title: "Reusing content beyond the website",
+      title: "Regional sites from one blueprint",
       context:
-        "A financial services firm maintains the same product details in its website, its mobile app and printed materials, and updates often fall out of step.",
+        "A financial services firm runs a separate AEM site for each country, built at different times with different components, and every new market means another build.",
       approach:
-        "Define Content Fragment Models for product information, move the content into Content Fragments, and connect the app to AEM through headless delivery while the website uses the same fragments.",
-      outcome: "Product details are edited once and appear consistently on the website and in the app.",
+        "Rebuild the sites on shared editable templates and Core Components, with a Multi Site Manager blueprint, a live copy per country and language copies for local content.",
+      outcome: "New regional sites start from the blueprint, and shared updates roll out to every country while local teams keep control of local pages.",
     },
   ],
   related: [
+    {
+      slug: "content-management",
+      why: "Content management covers how teams create, govern and publish content in AEM day to day, once the platform is in place.",
+    },
     {
       slug: "target",
       why: "Experience Fragments and Content Fragments created in Experience Manager can be exported to Target as offers for testing and personalization.",
@@ -184,9 +193,9 @@ export const experienceManager: AdobeProduct = {
         "Yes. Multi Site Manager lets related sites inherit content from a shared blueprint while allowing local changes, and language copies support translation. We design that structure with you and set up the rollout and translation workflows.",
     },
     {
-      question: "Do you train content authors?",
+      question: "Can AEM deliver content to apps as well as websites?",
       answer:
-        "Yes. Training is part of how we hand over work, so authors and asset managers can create, update and publish content without relying on developers for routine changes.",
+        "Yes. Content Fragments hold structured content that apps and other front ends retrieve through AEM's GraphQL API and other delivery APIs, while websites use the same fragments. We design the Content Fragment Models and build the integrations.",
     },
     {
       question: "Can you help with a specific AEM feature or project type you don't list here?",

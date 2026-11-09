@@ -4,14 +4,14 @@ type LdNode = { "@type": string };
 /** JSON-LD types on the page; a script may hold one node or an array of nodes. */
 const ldTypes = (blocks: string[]) => blocks.flatMap((b) => [JSON.parse(b) as LdNode | LdNode[]].flat()).map((d) => d["@type"]);
 
-const products = ["experience-platform", "real-time-cdp", "experience-manager", "analytics", "target", "marketo-engage", "commerce"];
+const products = ["experience-platform", "real-time-cdp", "experience-manager", "analytics", "target", "marketo-engage", "commerce", "content-management"];
 
 test.describe("Adobe application pages", () => {
   for (const slug of products) {
-    test(`/adobe-services/${slug} has breadcrumbs, services, FAQ and valid structured data`, async ({ page }) => {
+    test(`/adobe-services/${slug} has services, FAQ and valid structured data`, async ({ page }) => {
       await page.goto(`/adobe-services/${slug}`);
-      const crumbs = page.getByRole("navigation", { name: "Breadcrumb" });
-      await expect(crumbs.getByRole("link", { name: "Adobe Services" })).toHaveAttribute("href", "/adobe-services");
+      // Visible breadcrumb trails are switched off site-wide (2026-11-09); the BreadcrumbList JSON-LD remains.
+      await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toHaveCount(0);
       await expect(page.locator("#services")).toBeVisible();
       await expect(page.locator("details").first()).toBeAttached();
       await expect(page.getByText("TODO", { exact: false })).toHaveCount(0);

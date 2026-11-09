@@ -14,8 +14,8 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-signal text-white shadow-[0_1px_0_rgb(17_17_17/0.08)] hover:bg-signal-hover hover:shadow-[0_8px_18px_-10px_rgb(208_0_0/0.6)]",
-        ink: "bg-ink text-paper hover:bg-ink-soft hover:shadow-[0_8px_18px_-10px_rgb(17_17_17/0.55)]",
+        primary: "bg-signal text-white shadow-[0_1px_0_rgb(34_14_13/0.08)] hover:bg-signal-hover hover:shadow-[0_8px_18px_-10px_rgb(200_0_0/0.6)]",
+        ink: "bg-ink text-paper hover:bg-ink-soft hover:shadow-[0_8px_18px_-10px_rgb(34_14_13/0.55)]",
         outline: "border border-ink/25 bg-transparent text-ink hover:border-ink hover:bg-ink/[0.03]",
         "outline-night": "border border-night-text/30 text-night-text hover:border-night-text hover:bg-white/5",
         light: "bg-night-text text-night hover:bg-white",

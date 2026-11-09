@@ -43,7 +43,7 @@ test("delivers an inquiry by SMTP with reply-to, subject and escaped content", a
   expect(mail!.to.join(",")).toContain("inbox@example.test");
   expect(mail!.data).toContain(marker);
   expect(mail!.data).toMatch(/^Reply-To: priya\.shah@example\.org/m);
-  expect(header(mail!.data, "Subject")).toBe("Website inquiry — Data Management — Harbourview <Records> & Co");
+  expect(header(mail!.data, "Subject")).toBe("Website inquiry — Data & Analytics — Harbourview <Records> & Co");
   // The company name is HTML-escaped in the HTML part.
   // Quoted-printable bodies wrap long lines with soft breaks ("=" + CRLF), so unfold them first.
   expect(mail!.data.replace(/=\r?\n/g, "")).toContain("Harbourview &lt;Records&gt; &amp; Co");

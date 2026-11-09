@@ -31,6 +31,13 @@ const errorCopy: Record<ServerError, string> = {
   network: "We couldn't reach the server. Please check your connection and try again.",
 };
 
+/** The seven practice pillars first, then everything else, so the nine options scan as two short groups. */
+const otherInterests: ContactInterest[] = ["ai-governance", "general"];
+const interestGroups = [
+  { label: "Practice pillars", options: contactInterests.filter((i) => !otherInterests.includes(i.value)) },
+  { label: "Other", options: contactInterests.filter((i) => otherInterests.includes(i.value)) },
+];
+
 const fieldOrder: ContactField[] = ["fullName", "email", "company", "phone", "interest", "adobeApplications", "message"];
 
 const inputClass =
@@ -267,10 +274,14 @@ export function ContactForm({
             <option value="" disabled>
               Select an area
             </option>
-            {contactInterests.map((i) => (
-              <option key={i.value} value={i.value}>
-                {i.label}
-              </option>
+            {interestGroups.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.options.map((i) => (
+                  <option key={i.value} value={i.value}>
+                    {i.label}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
           {fieldError("interest")}

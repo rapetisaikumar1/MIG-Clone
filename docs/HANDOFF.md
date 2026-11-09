@@ -45,7 +45,7 @@ All use cases and the homepage scenario are labeled "Illustrative use case" on t
 
 ## Business decisions
 
-- **Microsoft Dynamics 365** and **Digital Transformation Consulting** are outside the three specializations. They now redirect to Data Management integration and the About approach section. Decide whether to keep offering them.
+- **Microsoft Dynamics 365** and **Digital Transformation** are back as services (Capability Matrix pillars 06 and 05, 2026-11-09). Their legacy URLs now redirect to `/business-transformation#dynamics-365` and `/digital-product#digital-strategy`.
 - **Further Adobe applications.** Adobe partners commonly feature applications that MiG doesn't list today: Adobe Journey Optimizer, Customer Journey Analytics, Adobe Workfront, AEM Assets and AEM Forms as separate offers, AEM as a Cloud Service migration, Edge Delivery Services, and Adobe GenStudio for Performance Marketing. **Add a page only if MiG confirms delivery capability** for it (new file in `src/content/adobe/products/`, slug added to `AdobeProductSlug`).
 - **Real-Time CDP / AEM versions.** Product pages don't claim AEM 6.5 → Cloud Service migration or Edge Delivery Services builds. Add an FAQ about AEM versions once MiG confirms.
 - **MapleRecord inquiries** use the Data Management interest on the contact form. Add a dedicated "MapleRecord" interest if inquiries should be routed separately.
@@ -82,3 +82,53 @@ The site now presents Maverick InnoGarage as a **software development and profes
 6. **MapleRecord services.** Confirm "configuration, integration with your systems, training and ongoing support".
 7. **One team.** About says one team works across all specializations. Is that accurate?
 8. **Desktop header.** Software Development is not in the desktop header (no room for an eighth item). Adding it needs a "Services" menu.
+
+## Capability Matrix alignment (2026-11-09)
+
+The site now follows the **Maverick InnoGarage Capability Matrix (Capability Deck, October 2026)** as the primary reference: seven practice pillars, the three-stage delivery approach ("From vision to victory"), eight industries and four offices. Structure:
+
+| Pillar | Page |
+|---|---|
+| 01 Data & Analytics | `/data-management` (URL kept) |
+| 02 Engineering & Technology | `/software-development` (URL kept) |
+| 03 Adobe Experience Cloud & MarTech | `/adobe-services` + 8 application pages (new: `/adobe-services/content-management`) |
+| 04 Experience Design | `/experience-design` (new) |
+| 05 Digital & Product | `/digital-product` (new) |
+| 06 Business Transformation & CRM | `/business-transformation` (new) |
+| 07 Records Management & Compliance | `/maplerecord` and `/moli` (new) |
+| Hub | `/services` (new) |
+
+AI Governance (`/ai-governance`) is kept, positioned as the responsible-AI extension of pillars 01 and 02. **The deck does not list AI governance** — decide whether to keep it.
+
+### Claims requiring confirmation (new)
+
+| Claim | Status |
+|---|---|
+| **Client impact** (T-Mobile, Wells Fargo, Walmart, NBC Universal) | **Hidden.** The deck attributes these to "Data Affect client testimonials". Confirm MiG's relationship to Data Affect and written permission to name each client, then set `published: true` in `src/content/client-impact.ts` |
+| "12+ years" of delivery | Shown (home proof strip, About). The old site said "over 7 years" — confirm which is correct, and whether it includes predecessor entities |
+| "Official Adobe Solution Partner" | Deck wording; the badge shows Bronze. Same caveats as the header badge |
+| Virginia office (Ashburn, VA) | Added from the deck; no phone number is published for it |
+| **MOLI** | Every claim comes from the deck. Confirm: product name and capitalization, availability, the depth of AWS/Azure integration, "designed to support" GDPR, PDPA (read as Singapore's law), PIPEDA and CCPA (CCPA is in the deck title but not in MOLI's own capability line) |
+| Engineering & Technology details | Bullets under the deck capabilities (e.g. landing zones and infrastructure as code, performance and load testing, testing across devices) expand on the deck — confirm depth. Only AWS and Azure are named |
+| Microsoft Dynamics 365 | Named apps (Sales, Customer Service, Customer Insights – Journeys) are generic; no Microsoft partnership is claimed |
+| Experience Design / Digital & Product | Accessibility reviews against WCAG, an in-house design team, Scrum/Kanban practice — confirm |
+| Adobe wording | Commerce says "order handling" (not "order orchestration": Adobe's order management product was retired). Analytics says "journey analysis" (Customer Journey Analytics is a separate product). Adobe Content Management is described as delivered with AEM Sites and Assets, since Adobe has no separate product of that name |
+| Data & Analytics | Data science, predictive modeling and visualization bullets are general descriptions of the deck items |
+| Industries | Each industry's focus line is from the deck; healthcare says "HIPAA-aware" with no compliance claim. Applications per pillar are typical needs, not client work |
+| All use cases | Labelled "Illustrative use case"; none describe clients |
+
+## Final verification round (2026-11-09)
+
+Every page was reviewed in a browser at desktop, tablet and mobile, fixed and re-verified (screenshots: `qa-out/before/` and `qa-out/after/`, one folder per page). New items needing confirmation:
+
+| Item | Status |
+|---|---|
+| Home hero | New headline "One partner for data, AI, Adobe and cloud.", eyebrow "Adobe Solution Partner · 12+ years of delivery", capability map linking AI Governance, Adobe Experience Cloud, Data & Analytics and Engineering & Technology. Confirm the wording |
+| AI Governance prominence | Now a featured band on `/services` and a card on `/about`; all nine capabilities are still `provenance: "proposed"` |
+| Custom applications and workflow automation | Marked `verified` on `/software-development` on the basis of the owner naming enterprise technology solutions as core; confirm it is sold to clients beyond MapleRecord |
+| Adobe facts updated | Analytics: 1.4 API end of life (Aug 31, 2026) and legacy Report Builder retirement noted, with a migration service item. AEP article: Attribution AI removed (not sold to new customers); AI Assistant / Agent Orchestrator added. AEM article: 6.5 LTS mentioned. Confirm MiG delivers the 1.4 → 2.0 API migration |
+| Virginia office | No phone published; the site routes callers to the main line (Delaware and Texas). Confirm |
+| MapleRecord figures | Unchanged and attributed to maplerecord.com. Inconsistencies to resolve: Legal "90% risk reduction" vs body "improvement in compliance adherence"; Customer service "95% SLA compliance" (rate or improvement?); About stats (5+ organizations, 99.9% uptime, 24/7 support) read like commitments |
+| MapleRecord capabilities not shown in screens | Barcode/RFID, 100+ field types, rollback, end-to-end encryption, data residency, named integrations (SAP, Oracle, NetSuite, EMRs, SIS, LIMS/ELN) — from maplerecord.com, unverified |
+| MapleRecord wording | Workflow automation is now consistently "no-code" (overview previously said "low-code") |
+| Privacy notice and cookie policy | Updated for accuracy (email provider wording, MOLI scope, mobile "On this page"); still need legal review |

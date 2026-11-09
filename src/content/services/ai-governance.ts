@@ -1,22 +1,21 @@
 import type { ServiceContent } from "@/lib/content/types";
 
 /**
- * AI Governance is the first of MiG's four specializations (owner directive 2026-11-07). The original
- * site did not describe AI governance work, so every capability below stays "proposed" pending owner
- * confirmation of what MiG delivers today (see docs/HANDOFF.md and register items AI-01, AI-02).
+ * AI Governance is not a pillar of the 2026 Capability Matrix. The deck lists the work it builds on: Data Governance &
+ * Data Management and Regulatory Compliance, Data Quality & Security (pillar 01, /data-management) and AI/ML Enablement
+ * (pillar 02, /software-development). This page presents responsible-AI work as the extension of that delivery, not as
+ * the company's headline. The page links to both pillars from the band in src/app/(marketing)/ai-governance/page.tsx.
  *
- * Positioning follows the messaging guide of 2026-11-07 (section 5.1): MiG puts responsible AI in place
- * and keeps it running (assessment as the first phase of delivery, then the AI register, risk tiers,
- * policies and decision rights, intake and approval, third-party AI review, monitoring routines and
- * training). It does not claim delivered software (register tooling, guardrails, automated monitoring)
- * or name AI platforms until the owner confirms them.
+ * The owner names AI governance as a core expertise (responsible AI, AI risk management, compliance support; Nov 2026),
+ * but the deck does not list the individual capabilities, so each stays "proposed" until the owner confirms the scope
+ * (docs/HANDOFF.md, register items AI-01, AI-02). No delivered tooling (register software, guardrails, automated
+ * monitoring) or AI platforms are claimed: the work is implemented in the client's existing tools.
  *
- * Framework wording rules (reviewed Nov 2026): NIST AI RMF and ISO/IEC 42001 are named as references
- * to "align with" or "map to", never as something MiG certifies. The EU AI Act is mentioned without
- * dates, because its application timetable has changed since it was adopted. No legal advice or compliance outcome
- * is promised. Adobe AI features are named with Adobe's current terms (AI Assistant, Adobe Experience
- * Platform agents) and only as things MiG reviews, not as products MiG builds or resells.
- * Capability ids are stable anchors (/ai-governance#inventory etc.); don't rename them.
+ * Framework wording rules (reviewed Nov 2026): NIST AI RMF and ISO/IEC 42001 are named as references to "align with"
+ * or "map to", never as something MiG certifies. The EU AI Act is mentioned without dates, because its application
+ * timetable has changed since it was adopted. No legal advice or compliance outcome is promised. Adobe AI features are
+ * named with Adobe's current terms (AI Assistant, Adobe Experience Platform agents) and only as things MiG reviews.
+ * Capability ids are stable anchors (/ai-governance#inventory etc., used by the home page); don't rename them.
  */
 export const aiGovernance: ServiceContent = {
   slug: "ai-governance",
@@ -25,21 +24,21 @@ export const aiGovernance: ServiceContent = {
   meta: {
     title: "AI Governance",
     description:
-      "Responsible AI, AI risk management and compliance support: find where AI is used, tier it by risk, assign owners and put proportionate review in place.",
+      "Responsible AI and AI risk management: AI inventories, risk tiers, policies, oversight workflows and monitoring, built on our data governance work.",
   },
   hero: {
-    eyebrow: "Responsible AI · Risk management · Compliance support",
+    eyebrow: "Responsible AI · AI risk · Compliance",
     title: "Put clear oversight around how your organization uses AI.",
-    lead: "We put responsible AI into practice: an inventory of where AI is used, risk tiers, a named owner for each use, and review that matches the risk, so teams can adopt AI without stalling useful work.",
+    lead: "We put responsible AI into practice: AI inventories, risk tiers, policies, oversight workflows with named owners, and monitoring, built on the data governance and AI/ML enablement work we already deliver.",
   },
   problem: {
     title: "AI adoption is moving faster than the controls around it.",
     body: [
-      "AI now reaches your organization in several ways: features added to tools your teams already use, services bought from vendors, models built in-house, and increasingly agents that can take actions in other systems. In many organizations, no one can say which of these are in use, what data they touch, or who is accountable when an output is wrong.",
-      "Banning AI pushes its use out of sight. Adopting it without review creates privacy, security, and reputational exposure. What works is a proportionate system, put in place and kept running: a light touch for low-risk uses, and closer review for anything that affects customers, employees, or regulated processes.",
+      "AI now reaches your organization in several ways: features added to tools your teams already use, services bought from vendors, models built in-house, and increasingly agents that can take actions in other systems. In many organizations, no one can say which of these are in use, what data they touch or who is accountable when an output is wrong.",
+      "Banning AI pushes its use out of sight. Adopting it without review creates privacy, security and reputational exposure. What works is a proportionate system, put in place and kept running: a light touch for low-risk uses, and closer review for anything that affects customers, employees or regulated processes.",
     ],
     signals: [
-      "No single list of the AI tools, features, and vendors in use",
+      "No single list of the AI tools, features and vendors in use",
       "Approvals depend on who you ask, not on a defined process",
       "Unclear rules on what data people can enter into AI tools",
       "AI features in existing platforms switched on without review",
@@ -48,18 +47,18 @@ export const aiGovernance: ServiceContent = {
   },
   audience: [
     { role: "CIOs and CTOs", need: "A clear view of AI use across the technology estate." },
-    { role: "Chief data and analytics officers", need: "Rules for the data that trains, grounds, and feeds AI." },
+    { role: "Chief data and analytics officers", need: "Rules for the data that trains, grounds and feeds AI." },
     { role: "Risk, compliance and legal teams", need: "Documented controls and records that show oversight is working." },
     { role: "Business and product leaders", need: "A predictable route to approval for useful AI initiatives." },
   ],
   capabilitiesIntro:
-    "Our services are modular. Combine the capabilities below to fit your situation, from a first assessment to a governance program that runs inside your existing tools and processes.",
+    "Combine the capabilities below to fit your situation, from a first assessment to a review process that runs inside your existing tools. Each one builds on the data governance, data quality and security, and AI/ML enablement work we already deliver.",
   capabilities: [
     {
       id: "readiness",
       title: "Readiness and governance assessment",
       summary:
-        "The first phase of delivery. We review your current AI use, policies, roles and controls against your goals and obligations, and turn the gaps into a prioritized plan we implement with you.",
+        "The first stage of delivery. We review your current AI use, policies, roles and controls against your goals and obligations, and turn the gaps into a prioritized plan we implement with you.",
       items: [
         "Stakeholder interviews and policy review",
         "Maturity view across strategy, risk, data and operations",
@@ -71,7 +70,7 @@ export const aiGovernance: ServiceContent = {
       id: "inventory",
       title: "AI inventory",
       summary:
-        "Nobody can govern AI they can't see. We build one register of the AI tools, embedded vendor features, in-house models and agents in use, so you know exactly what you are governing.",
+        "You can't govern AI you can't see. We build one register of the AI tools, embedded vendor features, in-house models and agents in use.",
       items: [
         "Discovery across business units, IT and procurement",
         "Purpose, owner, data, users and risk tier recorded for each use",
@@ -81,9 +80,9 @@ export const aiGovernance: ServiceContent = {
     },
     {
       id: "risk",
-      title: "Risk assessment and prioritization",
+      title: "AI risk tiering",
       summary:
-        "Without a shared way to rate risk, every review starts from scratch. We define risk tiers by impact, so review effort goes where it matters.",
+        "Without a shared way to rate risk, every review starts from scratch. We define risk tiers by impact and assess each use against them, so review effort goes where it matters.",
       items: [
         "Risk tiers based on impact on people, data sensitivity and degree of autonomy",
         "Assessment templates for new and existing uses",
@@ -95,7 +94,7 @@ export const aiGovernance: ServiceContent = {
       id: "policy",
       title: "Policies and accountability",
       summary:
-        "Unwritten rules get applied unevenly. We write the policies and decision rights people can follow without a specialist at their side.",
+        "Unwritten rules get applied unevenly. We write policies and decision rights that people can follow in their day-to-day work.",
       items: [
         "Acceptable-use policy for AI tools",
         "Decision rights for proposing, approving and monitoring AI uses",
@@ -105,9 +104,9 @@ export const aiGovernance: ServiceContent = {
     },
     {
       id: "oversight",
-      title: "Human oversight and review",
+      title: "Oversight workflows",
       summary:
-        "Ad hoc approvals become a defined route. We set up intake and approval with human checkpoints matched to the level of risk.",
+        "Ad hoc approvals become a defined route. We set up intake and approval in your existing tools, with human checkpoints matched to the level of risk.",
       items: [
         "Intake and approval workflow",
         "Human review points for higher-risk outputs and decisions",
@@ -125,6 +124,7 @@ export const aiGovernance: ServiceContent = {
         "Guidance for confidential and personal data in prompts, grounding and training",
         "Approved data sources, with lineage expectations",
         "Alignment with consent, retention and access policies",
+        "Built on the governance, quality and security controls from our Data & Analytics practice",
       ],
       provenance: "proposed",
     },
@@ -142,13 +142,15 @@ export const aiGovernance: ServiceContent = {
     },
     {
       id: "monitoring",
-      title: "Monitoring and documentation",
+      title: "Monitoring and compliance records",
       summary:
-        "Oversight can't stop at approval. We set up the documentation, monitoring, incident reporting and reassessment routines that keep it going and show that it works.",
+        "Oversight can't stop at approval. We set up the monitoring, documentation, incident reporting and reassessment routines that keep it running and show it is working.",
       items: [
         "Documentation templates for each use case and model",
-        "Monitoring expectations for quality, drift and incidents",
+        "Monitoring routines for quality, drift and incidents, each with an owner",
         "Incident reporting route and reassessment schedule",
+        "Records of reviews and decisions, organized to support audit and regulatory requests",
+        "Applied to the models and AI features we build through our Engineering & Technology practice",
       ],
       provenance: "proposed",
     },
@@ -156,7 +158,7 @@ export const aiGovernance: ServiceContent = {
       id: "adoption",
       title: "Responsible adoption and training",
       summary:
-        "Rules alone don't change how people work. We train your teams to use AI well, not just avoid misuse, with guidance written for each role.",
+        "Rules alone don't change how people work. We train your teams to use AI well, with guidance written for each role.",
       items: [
         "Role-based guidance and training material",
         "Everyday dos and don'ts for common AI tools",
@@ -167,31 +169,28 @@ export const aiGovernance: ServiceContent = {
   ],
   approach: [
     {
-      stage: "Assess",
-      activities: "Interview stakeholders, review existing policies, and build a first inventory of AI use.",
-      deliverable: "Current-state assessment and initial AI inventory",
+      stage: "Understand & strategize",
+      activities:
+        "Interview stakeholders, review your AI, data and privacy policies, and build a first inventory of AI use, rated by risk.",
+      deliverable: "Current-state assessment, initial AI inventory and prioritized plan",
     },
     {
-      stage: "Design",
-      activities: "Define risk tiers, decision rights, policies, and a review workflow that fit how your organization already works.",
-      deliverable: "Governance framework, responsibility model and policy set",
+      stage: "Implement & integrate",
+      activities:
+        "Put risk tiers, policies, decision rights and an intake and review workflow in place, built on your data governance and your existing tools. Pilot on real use cases and train the reviewers.",
+      deliverable: "Policy set, working review workflow and trained reviewers",
     },
     {
-      stage: "Implement",
-      activities: "Pilot intake and review on real use cases, refine the templates, and train the people who will run the process.",
-      deliverable: "Working review workflow and trained reviewers",
-    },
-    {
-      stage: "Improve",
-      activities: "Set up monitoring and reassessment routines, and adjust controls as your AI use and the rules around it change.",
-      deliverable: "Monitoring plan and prioritized roadmap",
+      stage: "Optimize & grow",
+      activities: "Run monitoring, documentation and reassessment routines, and adjust controls as your AI use and the rules around it change.",
+      deliverable: "Monitoring plan and governance roadmap",
     },
   ],
   deliverables: [
-    { title: "Governance assessment", description: "Findings, a maturity view and prioritized gaps that set the order of implementation, with a summary for executives and detail for the teams doing the work." },
+    { title: "Governance assessment", description: "Findings, a maturity view and prioritized gaps that set the order of implementation." },
     { title: "AI register", description: "Every known AI use with its purpose, owner, data sources and risk tier, in a format your team can maintain." },
     { title: "Responsibility model", description: "Who proposes, reviews, approves and monitors each AI use, and who is accountable for it." },
-    { title: "Policy set", description: "An acceptable-use policy, an AI risk standard, and requirements for third-party AI." },
+    { title: "Policy set", description: "An acceptable-use policy, an AI risk standard and requirements for third\u2011party AI." },
     { title: "Review workflow", description: "Intake form, risk-tiering questions, review checkpoints and escalation paths, piloted on real use cases." },
     { title: "Governance roadmap", description: "The next steps, in order, that turn initial controls into a lasting program." },
   ],
@@ -216,7 +215,7 @@ export const aiGovernance: ServiceContent = {
     },
   ],
   benefits: [
-    { title: "Visibility", description: "Know which AI is in use, by whom, and with what data." },
+    { title: "Visibility", description: "Know which AI is in use, by whom and with what data." },
     { title: "Proportionate control", description: "Focus review effort on high-impact uses and keep low-risk adoption moving." },
     { title: "Clear accountability", description: "Named owners and decision rights for every significant use of AI." },
     { title: "Records of oversight", description: "Documentation that helps you answer questions from internal audit, customers and regulators." },
@@ -243,9 +242,9 @@ export const aiGovernance: ServiceContent = {
         "Yes. Adobe Experience Cloud applications can now include AI Assistant, Adobe Experience Platform agents and generative AI features, depending on your licenses. We review each feature with you: whether to enable it, what customer data it may use under your consent and data usage policies, and who owns it. Because we also implement Adobe applications, we can check configuration as well as policy.",
     },
     {
-      question: "How does AI governance relate to data governance?",
+      question: "How does AI governance relate to your data and AI/ML work?",
       answer:
-        "Closely. AI is only as reliable as the data it uses. We build AI oversight on your existing data ownership, quality, consent and retention rules instead of creating a separate structure. If those foundations are missing, our Data Management services can put them in place.",
+        "It extends both. AI is only as reliable as the data it uses, so we build AI oversight on your existing data ownership, quality, consent and retention rules instead of creating a separate structure. If those foundations are missing, our Data & Analytics practice can put them in place. When we build or integrate AI through our AI/ML enablement work, the same risk tiers, owners and monitoring apply.",
     },
     {
       question: "Who needs to be involved from our side?",

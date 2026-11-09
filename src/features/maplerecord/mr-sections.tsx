@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { mrOfficial } from "@/content/maplerecord/official";
-import { mrContact, mrFiguresNote, mrOwnership, mrSampleDataNote } from "@/content/maplerecord/overview";
+import { mrContact, mrFiguresNote, mrOwnership, mrRelated, mrSampleDataNote } from "@/content/maplerecord/overview";
 import { contactHref } from "@/features/contact/links";
 import { MrBadge, MrCrumbs, MrIconTile, MrLinkCard, MrWindow, mrHalfSizes, type MrFocus } from "@/features/maplerecord/mr-ui";
 import type { MrImage } from "@/lib/content/types";
@@ -170,12 +170,12 @@ export function MrHero({
   const windowFit = screen ? "top" : imageFit;
   return (
     <section className="on-night mr-stage-dark relative overflow-hidden border-b border-night-line text-night-text">
-      <Container className={cn("relative pt-8 lg:pt-10", image ? "pb-16 sm:pb-20 lg:pb-24" : "pb-14 sm:pb-16 lg:pb-20")}>
+      <Container className={cn("relative pt-10 lg:pt-14", image ? "pb-16 sm:pb-20 lg:pb-24" : "pb-14 sm:pb-16 lg:pb-20")}>
         <MrCrumbs items={crumbs} tone="dark" />
-        <div className={cn("mt-10 grid gap-12 lg:mt-14", image && "lg:grid-cols-12 lg:items-start lg:gap-14")}>
+        <div className={cn("grid gap-12", image && "lg:grid-cols-12 lg:items-start lg:gap-14")}>
           <div className={image ? "lg:col-span-6" : "max-w-3xl"}>
             <MrBadge tone="dark">{eyebrow}</MrBadge>
-            <h1 className={cn("mt-6 text-balance", image ? "text-[clamp(2.25rem,1.6rem+1.9vw,3.25rem)] leading-[1.06] tracking-[-0.032em]" : "text-h1")}>{title}</h1>
+            <h1 className={cn("mt-6 text-balance", image ? "text-[clamp(2.125rem,1.5rem+1.8vw,3rem)] leading-[1.1] tracking-[-0.026em]" : "text-h1")}>{title}</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-night-muted">{description}</p>
             {meta ? <div className="mt-7">{meta}</div> : null}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -575,7 +575,8 @@ export function MrChecklist({
               <Check className="size-3" strokeWidth={3} />
             </span>
           </span>
-          <span>{item}</span>
+          {/* text-pretty: no one-word last lines ("trails", "40%", "months") in narrow cards. */}
+          <span className="text-pretty">{item}</span>
         </li>
       ))}
     </ul>
@@ -642,9 +643,10 @@ export function MrSecuritySection({
  * states once that MapleRecord is designed and built by Maverick InnoGarage (messaging guide §5.5), and
  * links to Maverick InnoGarage for implementation; pass `source` to add the
  * "also published on maplerecord.com" link there (true for the site's home page, or a specific URL),
- * e.g. on the overview, instead of a separate disclosure strip.
+ * e.g. on the overview, instead of a separate disclosure strip. Pass `related` (overview only) to add one line
+ * pointing to MOLI, Maverick InnoGarage's other records management product.
  */
-export function MrCta({ title, body, source }: { title: string; body: string; source?: boolean | string }) {
+export function MrCta({ title, body, source, related }: { title: string; body: string; source?: boolean | string; related?: boolean }) {
   const sourceUrl = source === true ? mrOfficial.site : source || undefined;
   return (
     <section
@@ -680,6 +682,16 @@ export function MrCta({ title, body, source }: { title: string; body: string; so
           <div className="mt-2 border-t border-white/10 pt-4">
             <p className="text-sm text-night-muted">
               {mrOwnership}
+              {related ? (
+                <>
+                  {" "}
+                  {mrRelated.before}
+                  <Link href={mrRelated.href} className="text-night-text underline decoration-night-line underline-offset-4 hover:decoration-night-text">
+                    {mrRelated.label}
+                  </Link>
+                  {mrRelated.after}
+                </>
+              ) : null}
               {sourceUrl ? (
                 <>
                   {" "}
@@ -698,7 +710,7 @@ export function MrCta({ title, body, source }: { title: string; body: string; so
                 </>
               ) : null}
             </p>
-            <Link href={contactHref("data-management")} className="mt-1 flex min-h-11 items-center gap-3 text-night-text hover:underline hover:underline-offset-4">
+            <Link href={contactHref("records-management")} className="mt-1 flex min-h-11 items-center gap-3 text-night-text hover:underline hover:underline-offset-4">
               <ArrowRight aria-hidden className="size-4 shrink-0 text-night-muted" />
               Implement MapleRecord with Maverick InnoGarage
             </Link>

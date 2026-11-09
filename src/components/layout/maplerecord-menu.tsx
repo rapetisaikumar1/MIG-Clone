@@ -69,7 +69,10 @@ export function MapleRecordMenu({
                     <span aria-hidden className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-paper text-signal ring-1 ring-line">
                       <Icon className="size-4" />
                     </span>
-                    <span className="text-[0.9375rem] font-medium leading-snug text-ink">{module.label}</span>
+                    <span className="flex flex-col">
+                      <span className="text-[0.9375rem] font-medium leading-snug text-ink">{module.label}</span>
+                      {module.description ? <span className="mt-0.5 text-sm leading-snug text-muted">{module.description}</span> : null}
+                    </span>
                     {current ? <span aria-hidden className="ml-auto size-1.5 rounded-full bg-logo-red" /> : null}
                   </Link>
                 </li>

@@ -260,11 +260,11 @@ export const mrModules: MrModule[] = [
       image: mrScreens.requestsTriage
     },
     tour: {
-      intro: "A closer look at the screens request coordinators work in, from the operational overview to redaction.",
+      intro: "A closer look at the screens request coordinators work in, from the operational overview to exemption codes and redaction.",
       stops: [
         { screen: mrScreens.requestsDashboard, title: "See the operational overview", body: "The overview counts active, due-soon, overdue and closed requests, and shows request and appeal breakdowns, SLA risk and the pipeline by stage." },
-        { screen: mrScreens.requestsRedaction, title: "Redact with a full history", body: "The redaction history logs every step on a document, from AI analysis and accepted suggestions to manual redactions, applied exemptions and the redacted copy." },
         { screen: mrScreens.requestsExemptions, title: "Manage exemption codes", body: "Exemption management lists each exemption code with its name, category and status." },
+        { screen: mrScreens.requestsRedaction, title: "Redact with a full history", body: "The redaction history logs every step on a document, from AI analysis and accepted suggestions to manual redactions, applied exemptions and the redacted copy." },
       ],
     },
     impact: [
@@ -325,8 +325,8 @@ export const mrModules: MrModule[] = [
       {
         title: "Compliance and governance support",
         items: [
-          "Supports regulatory and governance requirements",
-          "Support reporting, audits, and reviews",
+          "Designed to support regulatory and governance requirements",
+          "Support for reporting, audits, and reviews",
           "Exemption codes managed in one place"
         ]
       },
@@ -548,11 +548,11 @@ export const mrModules: MrModule[] = [
     slug: "mr-forms",
     name: "MR Forms",
     officialUrl: "https://maplerecord.com/platform/mr-forms/",
-    summary: "Build forms with a drag-and-drop builder or AI generation, and send submissions straight into MapleRecord.",
+    summary: "Drag-and-drop or AI-generated forms that send submissions straight into MapleRecord.",
     highlights: [
       "AI form generation",
-      "Mobile-responsive design",
-      "Direct record integration"
+      "Mobile-responsive",
+      "Records integration"
     ],
     tabImage: {
       src: "/maplerecord/module-forms.webp",
@@ -610,11 +610,11 @@ export const mrModules: MrModule[] = [
       image: mrScreens.formsLogic
     },
     tour: {
-      intro: "A closer look at the screens form owners work in, from a new form to its submissions.",
+      intro: "A closer look at the screens form owners work in, from the dashboard to a new form and its submissions.",
       stops: [
-        { screen: mrScreens.formsChooser, title: "Choose what the form is for", body: "A new form starts with one choice: is it for Records, FOI or Workflow?" },
+        { screen: mrScreens.formsDashboard, title: "Follow activity on the dashboard", body: "The dashboard counts published forms, open requests, pending approvals and overdue items, charts recent submissions and breaks them down by status, with views and conversion for each form." },
+        { screen: mrScreens.formsChooser, title: "Choose what the form is for", body: "A new form starts with one choice: is it for Records, FOI or Workflow? Templates and a blank form come next." },
         { screen: mrScreens.formsSubmissions, title: "Track every submission", body: "The submissions archive lists each submission’s tracking number, form version, mode, status and routing, with its statutory deadline." },
-        { screen: mrScreens.formsDashboard, title: "Follow activity on the dashboard", body: "The dashboard counts published forms, open requests, pending approvals and overdue items, charts recent submissions and breaks them down by status." },
       ],
     },
     impact: [
@@ -673,7 +673,7 @@ export const mrModules: MrModule[] = [
         title: "Security and compliance",
         items: [
           "End-to-end encryption",
-          "Supports HIPAA and GDPR requirements",
+          "Designed to support HIPAA and GDPR requirements",
           "Role-based access control"
         ]
       }
@@ -715,11 +715,11 @@ export const mrModules: MrModule[] = [
   {
     slug: "mr-admin",
     name: "MR Admin",
-    summary: "Suite administration for MapleRecord: users, products and licenses, security, integrations and backups in one console.",
+    summary: "One console for users, licenses, security, integrations and backups across the suite.",
     highlights: [
-      "Shared staff directory",
-      "Products and licensing",
-      "Organization-wide security"
+      "Staff directory",
+      "Product licensing",
+      "Suite-wide security"
     ],
     tabImage: mrScreens.adminProducts,
     hero: {
@@ -866,6 +866,20 @@ export const mrPlatformFlow = {
   } satisfies { module: MrModuleSlug; role: string; body: string },
 };
 
+/**
+ * Module hero focus (MrFocus: x/y in %, around which the screen is scaled). Shown whole in the half-width hero, a
+ * 1280px-wide screen's UI text drops to about 5px; zooming 1.22× around the right edge leaves out the app's navigation
+ * sidebar (the left 18%), and y 33 starts the window just below the app's header row, at the page title.
+ */
+const heroFocus = { x: 100, y: 33, zoom: 1.22 };
+export const mrModuleHeroFocus: Record<MrModuleSlug, { x: number; y: number; zoom: number }> = {
+  "mr-records": heroFocus,
+  "mr-requests": heroFocus,
+  "mr-workflows": heroFocus,
+  "mr-forms": heroFocus,
+  "mr-admin": heroFocus,
+};
+
 /** Platform index (/maplerecord/platform) copy that is specific to that page. */
 export const mrPlatformPage = {
   title: "One unified platform. Five integrated modules.",
@@ -877,8 +891,9 @@ export const mrPlatformPage = {
   /**
    * The products table fills only the top half of that screen; shown whole, the hero reads as mostly blank.
    * Zoom in on the table (MrFocus: x/y in %, around which the screen is scaled), leaving out the sidebar.
+   * y 24 also leaves out the app's header row, whose clipped divider and avatar showed at the top-right edge.
    */
-  heroFocus: { x: 89, y: 0, zoom: 1.32 },
+  heroFocus: { x: 89, y: 24, zoom: 1.32 },
   showcase: {
     eyebrow: "Modules",
     title: "Start with the module you need",
@@ -917,31 +932,32 @@ const content = (y = 0.06, w = 0.8, phone: MrFocusRegion = { x: 0.185, y: 0.06, 
 
 export const mrScreenFocus: Record<string, MrScreenFocus> = {
   // MR Records
-  [mrScreens.recordsFiles.src]: { x: 0.045, y: 0.08, w: 0.72, phone: { x: 0.045, y: 0.12, w: 0.4 } },
-  [mrScreens.recordsSearch.src]: { x: 0.185, y: 0.06, w: 0.8, phone: { x: 0.185, y: 0.1, w: 0.45 } },
+  [mrScreens.recordsFiles.src]: { x: 0.045, y: 0.1, w: 0.72, phone: { x: 0.045, y: 0.12, w: 0.4 } },
+  [mrScreens.recordsSearch.src]: { x: 0.185, y: 0.06, w: 0.8, phone: { x: 0.185, y: 0.085, w: 0.45 } },
   [mrScreens.recordsBoxes.src]: { x: 0.185, y: 0.06, w: 0.8, phone: { x: 0.185, y: 0.09, w: 0.45 } },
   [mrScreens.recordsAudit.src]: { x: 0.185, y: 0.09, w: 0.8, phone: { x: 0.185, y: 0.09, w: 0.48 } },
   [mrScreens.recordsRetention.src]: content(0.06),
   [mrScreens.recordsLifecycle.src]: content(0.04, 0.8, { x: 0.15, y: 0.06, w: 0.48 }),
   // MR Requests
-  [mrScreens.requestsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.45 }),
-  [mrScreens.requestsRedaction.src]: content(0.1, 0.78, { x: 0.185, y: 0.2, w: 0.45 }),
-  [mrScreens.requestsExemptions.src]: content(0.06, 0.8, { x: 0.185, y: 0.15, w: 0.48 }),
-  [mrScreens.requestsTriage.src]: { x: 0.05, y: 0.08, w: 0.9, phone: { x: 0.06, y: 0.2, w: 0.48 } },
-  [mrScreens.requestsKanban.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
+  [mrScreens.requestsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.085, w: 0.45 }),
+  // Phone regions start just above the page title (y 0.15 to 0.2 cut through the tab or subtitle rows of these screens).
+  [mrScreens.requestsRedaction.src]: content(0.088, 0.8, { x: 0.185, y: 0.085, w: 0.45 }),
+  [mrScreens.requestsExemptions.src]: content(0.06, 0.8, { x: 0.185, y: 0.085, w: 0.48 }),
+  [mrScreens.requestsTriage.src]: { x: 0.05, y: 0.095, w: 0.9, phone: { x: 0.06, y: 0.225, w: 0.48 } },
+  [mrScreens.requestsKanban.src]: content(0.06, 0.8, { x: 0.185, y: 0.085, w: 0.48 }),
   // MR Workflows
   [mrScreens.workflowsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.06, w: 0.48 }),
-  [mrScreens.workflowsList.src]: content(0.05, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
-  [mrScreens.workflowsCanvas.src]: { x: 0.4, y: 0.17, w: 0.6, phone: { x: 0.42, y: 0.22, w: 0.46 } },
-  [mrScreens.workflowsRuns.src]: content(0.06, 0.8, { x: 0.185, y: 0.1, w: 0.48 }),
+  [mrScreens.workflowsList.src]: content(0.05, 0.8, { x: 0.185, y: 0.085, w: 0.48 }),
+  [mrScreens.workflowsCanvas.src]: { x: 0.4, y: 0.225, w: 0.6, phone: { x: 0.42, y: 0.22, w: 0.46 } },
+  [mrScreens.workflowsRuns.src]: content(0.06, 0.8, { x: 0.185, y: 0.085, w: 0.48 }),
   // MR Forms
-  [mrScreens.formsChooser.src]: { x: 0.17, y: 0.1, w: 0.8, phone: { x: 0.185, y: 0.06, w: 0.62 } },
-  [mrScreens.formsSubmissions.src]: content(0.06, 0.8, { x: 0.185, y: 0.2, w: 0.48 }),
+  [mrScreens.formsChooser.src]: { x: 0.185, y: 0.1, w: 0.8, phone: { x: 0.185, y: 0.06, w: 0.62 } },
+  [mrScreens.formsSubmissions.src]: content(0.06, 0.8, { x: 0.185, y: 0.085, w: 0.48 }),
   [mrScreens.formsDashboard.src]: content(0.06, 0.8, { x: 0.185, y: 0.06, w: 0.48 }),
-  [mrScreens.formsLogic.src]: content(0.06, 0.8, { x: 0.185, y: 0.14, w: 0.48 }),
+  [mrScreens.formsLogic.src]: content(0.06, 0.8, { x: 0.185, y: 0.125, w: 0.48 }),
   [mrScreens.formsBuilder.src]: { x: 0.185, y: 0.06, w: 0.62, phone: { x: 0.185, y: 0.1, w: 0.4 } },
   // MR Admin
-  [mrScreens.adminProducts.src]: { x: 0.22, y: 0.04, w: 0.76, phone: { x: 0.22, y: 0.1, w: 0.45 } },
+  [mrScreens.adminProducts.src]: { x: 0.22, y: 0.04, w: 0.76, phone: { x: 0.22, y: 0.08, w: 0.45 } },
   [mrScreens.adminStatus.src]: { x: 0.22, y: 0.07, w: 0.78, phone: { x: 0.22, y: 0.31, w: 0.48 } },
   [mrScreens.adminIntegrations.src]: content(0.06, 0.6, { x: 0.185, y: 0.06, w: 0.46 }),
   [mrScreens.adminBackup.src]: content(0.06, 0.62, { x: 0.185, y: 0.09, w: 0.48 }),

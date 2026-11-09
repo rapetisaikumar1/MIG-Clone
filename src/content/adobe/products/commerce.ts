@@ -13,7 +13,7 @@ export const commerce: AdobeProduct = {
   shortName: "Commerce",
   area: "Commerce",
   legacyPaths: ["/adobe-commerce"],
-  summary: "Strategy, implementation, migration and ongoing support for B2C and B2B stores on Adobe Commerce.",
+  summary: "Scalable B2B and B2C commerce experiences, from catalog and checkout to order handling and integration.",
   description: "A commerce platform, formerly Magento Commerce, for B2C and B2B online stores, with catalog management and extensibility.",
   meta: {
     title: "Adobe Commerce Services",
@@ -34,7 +34,7 @@ export const commerce: AdobeProduct = {
         body: "Consumer and business storefronts can run on a single Commerce instance. B2B features include company accounts, shared catalogs with custom pricing, quotes, requisition lists and purchase order approvals.",
       },
       {
-        title: "Catalog and multi-store management",
+        title: "Catalog and multiple stores",
         body: "Products, categories, pricing and inventory are managed from one Admin, with websites, stores and store views for different brands, regions and languages.",
       },
       {
@@ -46,11 +46,11 @@ export const commerce: AdobeProduct = {
         body: "GraphQL and REST APIs cover catalog, cart, checkout, customers and orders. Adobe Developer App Builder, API Mesh, events and webhooks support integrations and custom extensions, with availability varying by deployment.",
       },
       {
-        title: "Search, recommendations and catalog services",
+        title: "Search and recommendations",
         body: "Live Search and Product Recommendations add AI-assisted product search and behavior-based recommendations. Catalog Service gives storefronts fast, read-only access to product data through GraphQL.",
       },
       {
-        title: "Relationship to Magento Open Source",
+        title: "Magento Open Source",
         body: "Magento Open Source is the free, open-source edition built on the same core application. Adobe Commerce adds B2B and other commercial features, Adobe's commerce services and Adobe-hosted deployment options.",
       },
     ],

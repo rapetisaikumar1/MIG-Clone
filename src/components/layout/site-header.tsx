@@ -1,4 +1,4 @@
-import { contactCta, getAdobeNav, getMapleRecordNav, mobileNav, primaryNav } from "@/config/navigation";
+import { contactCta, getAdobeNav, getMapleRecordNav, getServicesNav, mobileNav, primaryNav } from "@/config/navigation";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/layout";
 import { AdobePartnerBadge } from "./adobe-partner-badge";
@@ -13,6 +13,7 @@ import { MobileNav } from "./mobile-nav";
  */
 export function SiteHeader() {
   // Built here (server) so only labels and hrefs, not product content, reach the client menus.
+  const services = getServicesNav();
   const adobe = getAdobeNav();
   const mapleRecord = getMapleRecordNav();
   return (
@@ -24,14 +25,14 @@ export function SiteHeader() {
           <AdobePartnerBadge />
         </div>
         <nav aria-label="Primary" className="hidden xl:block">
-          <NavLinks items={primaryNav} adobe={adobe} mapleRecord={mapleRecord} />
+          <NavLinks items={primaryNav} services={services} adobe={adobe} mapleRecord={mapleRecord} />
         </nav>
         <div className="flex shrink-0 items-center gap-3">
           <ButtonLink href={contactCta.href} size="sm" className="hidden whitespace-nowrap sm:inline-flex xl:px-4">
             {contactCta.label}
           </ButtonLink>
-          {/* The sheet lists all four specializations; the desktop bar keeps seven items so it fits on one row. */}
-          <MobileNav items={mobileNav} cta={contactCta} adobe={adobe} mapleRecord={mapleRecord} />
+          {/* Below xl the sheet carries the whole menu, with Services, Adobe and MapleRecord expanded into their pages. */}
+          <MobileNav items={mobileNav} cta={contactCta} services={services} adobe={adobe} mapleRecord={mapleRecord} />
         </div>
       </Container>
     </header>

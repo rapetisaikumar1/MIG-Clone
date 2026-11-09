@@ -5,7 +5,8 @@ import type { AdobeProduct } from "@/lib/content/types";
  * page (their titles must stay as listed). Product feature names were checked against Adobe
  * Experience League documentation (Analysis Workspace, segment containers, attribution, report suites
  * and virtual report suites, Web SDK, datastreams and Tags, Analytics for Target, and the Customer
- * Journey Analytics comparison), Nov 2026. Scenarios are hypothetical.
+ * Journey Analytics comparison), Nov 2026. The 1.4 API shutdown (Aug 2026) and legacy Report Builder
+ * retirement (June 2026) are from the Adobe Analytics release notes. Scenarios are hypothetical.
  */
 export const analytics: AdobeProduct = {
   slug: "analytics",
@@ -13,7 +14,7 @@ export const analytics: AdobeProduct = {
   shortName: "Analytics",
   area: "Analytics",
   legacyPaths: ["/adobe-analytics"],
-  summary: "Measurement plans, Web SDK implementation and Analysis Workspace dashboards your teams can rely on.",
+  summary: "Deep audience intelligence, attribution modeling and journey analysis, from tracking design to dashboards.",
   description: "Collects and analyzes behavioral data from websites, apps and other digital channels, with segmentation, reporting and attribution.",
   meta: {
     title: "Adobe Analytics Services",
@@ -46,7 +47,7 @@ export const analytics: AdobeProduct = {
         body: "Data is collected into report suites, each with its own variables and settings. Virtual report suites create filtered views of that data for specific teams or uses.",
       },
       {
-        title: "Data collection with Web SDK and Tags",
+        title: "Web SDK data collection",
         body: "Adobe recommends the Adobe Experience Platform Web SDK for new implementations, deployed through Tags or as a JavaScript library. Data travels through the Edge Network to the report suites set in a datastream.",
       },
       {
@@ -60,7 +61,7 @@ export const analytics: AdobeProduct = {
     "Tracking has drifted as the site or app changed, and no one owns the measurement plan",
     "A move from AppMeasurement or the Analytics extension to Web SDK is on the roadmap",
     "Variables, segments and projects have piled up, and no one knows which are still in use",
-    "Analysts spend more time pulling and checking data than answering questions",
+    "Integrations or workbooks still rely on the retired 1.4 API or the legacy Report Builder",
     "Stakeholders ask for spreadsheets instead of opening Analysis Workspace",
   ],
   services: [
@@ -101,8 +102,8 @@ export const analytics: AdobeProduct = {
       title: "Ongoing support and optimization",
       body: "We keep the implementation accurate as your sites, apps and campaigns change, and train your teams to get more out of it.",
       items: [
-        "Regular checks of key variables, pages and conversion events",
-        "Tracking updates for new features, pages and campaigns",
+        "Regular checks and tracking updates as pages and campaigns change",
+        "Migration of 1.4 API integrations to the 2.0 API",
         "Clean-up of unused variables, segments and projects",
         "Training for analysts and report consumers",
       ],
@@ -143,7 +144,10 @@ export const analytics: AdobeProduct = {
       why: "Content and page performance on Adobe Experience Manager sites is commonly measured in Adobe Analytics.",
     },
   ],
-  insights: ["the-importance-of-data-governance-in-the-digital-age"],
+  insights: [
+    "the-importance-of-data-governance-in-the-digital-age",
+    "driving-customer-experience-excellence-with-adobe-experience-platform",
+  ],
   faqs: [
     {
       question: "What does an Adobe Analytics assessment cover?",

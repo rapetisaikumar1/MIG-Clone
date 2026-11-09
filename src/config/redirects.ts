@@ -32,7 +32,7 @@ export const legacyRedirects: LegacyRedirect[] = [
   { source: "/adobe-experience-platform", destination: "/adobe-services/experience-platform", note: "renamed" },
   { source: "/adobe-real-time-cdp", destination: "/adobe-services/real-time-cdp", note: "renamed" },
   { source: "/adobe-experience-manager", destination: "/adobe-services/experience-manager", note: "renamed" },
-  { source: "/adobe-content-management", destination: "/adobe-services/experience-manager", note: "consolidated" },
+  { source: "/adobe-content-management", destination: "/adobe-services/content-management", note: "renamed" },
   { source: "/adobe-analytics", destination: "/adobe-services/analytics", note: "renamed" },
   { source: "/adobe-target", destination: "/adobe-services/target", note: "renamed" },
   { source: "/adobe-marketo-services", destination: "/adobe-services/marketo-engage", note: "renamed" },
@@ -41,9 +41,9 @@ export const legacyRedirects: LegacyRedirect[] = [
   // Data services → Data Management
   { source: "/data-governance", destination: "/data-management#governance", note: "consolidated" },
   { source: "/integrated-data-solutions", destination: "/data-management#integration", note: "consolidated" },
-  // Retired service names; the URLs are kept as legacy redirects (see docs/HANDOFF.md)
-  { source: "/microsoft-dynamics-365", destination: "/data-management#integration", note: "retired" },
-  { source: "/digital-transformation-consulting", destination: "/about#approach", note: "retired" },
+  // Restored by the 2026 Capability Matrix (pillars 05 and 06)
+  { source: "/microsoft-dynamics-365", destination: "/business-transformation#dynamics-365", note: "renamed" },
+  { source: "/digital-transformation-consulting", destination: "/digital-product#digital-strategy", note: "renamed" },
 
   industry("healthcare-pharmaceutical"),
   industry("retail-cpg"),

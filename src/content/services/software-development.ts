@@ -1,75 +1,135 @@
 import type { ServiceContent } from "@/lib/content/types";
 
 /*
- * Grounding (see the software-development spec and the messaging guide, §5.4):
- * - owner-stated: the owner directive of 2026-11-07 names software development a core specialization (the area, not specific services).
+ * Pillar 02 of the Capability Matrix (Capability Deck, October 2026): Engineering & Technology. The URL slug
+ * /software-development predates the pillar name and is kept for SEO.
+ *
+ * Grounding:
+ * - deck (verified): Cloud Strategy & Engineering (AWS, Azure); DevOps & CI/CD Automation; AI/ML Enablement;
+ *   Mobile Development; Quality Assurance Engineering. The deck names no tools or stacks beyond AWS and Azure, so
+ *   none are named here.
+ * - verified old-site titles: AEM "Custom development", Commerce "Implementation and customization" / "Platform
+ *   migration", AEP and Marketo "Customization and optimization", Integrated Data Solutions integration titles.
  * - evidenced by MapleRecord: MiG designed, built and runs MapleRecord (five modules), confirmed by the owner on 2026-11-06.
- * - verified old-site title: AEM "Custom development", Commerce "Implementation and customization" / "Platform migration",
- *   AEP and Marketo "Customization and optimization", Integrated Data Solutions integration titles, "Training and support".
- * No technology stacks, clients, team size, delivery models, SLAs or certifications: those are owner questions.
+ * - owner-stated (2026-11-07, restated in the round-3 brief): custom enterprise software is core expertise
+ *   ("Enterprise Technology Solutions": engineering, cloud, custom software). The application patterns named here
+ *   (forms, approval routing, workflows, audit trails) are the ones MapleRecord itself demonstrates.
+ * MapleRecord is presented by the callout placed directly after the capabilities (see the page), so it is not repeated
+ * here as a capability card.
+ * No clients, team size, delivery models, SLAs or certifications: those are owner questions.
  */
 export const softwareDevelopment: ServiceContent = {
   slug: "software-development",
   interest: "software-development",
-  name: "Software Development",
+  name: "Engineering & Technology",
   meta: {
-    title: "Software Development",
+    title: "Engineering & Technology",
+    // 155 characters.
     description:
-      "Enterprise software designed, built and integrated by the team behind MapleRecord: business applications, workflow automation and Adobe development.",
+      "Cloud engineering on AWS and Azure, DevOps and CI/CD, AI/ML enablement, mobile development, QA and custom enterprise applications, designed, built and run.",
   },
   hero: {
-    eyebrow: "Design · Build · Integrate · Support",
-    title: "Enterprise software, built around how your teams work.",
-    lead: "We design, build and integrate enterprise software: business applications, workflow and forms automation, system integration and custom development on Adobe platforms. We also build and run MapleRecord, our own records management platform.",
+    eyebrow: "Cloud · DevOps · AI/ML · Mobile · QA",
+    title: "Engineering that ships, scales and keeps running.",
+    lead: "We engineer cloud platforms on AWS and Azure, automate delivery with DevOps and CI/CD, bring AI/ML into real applications, and build mobile apps and enterprise software, with quality assurance built into every release.",
   },
   problem: {
-    title: "When off-the-shelf tools don't fit, work falls back to spreadsheets and email.",
+    title: "Slow releases and fragile systems hold the rest of the business back.",
     body: [
-      "Approvals, requests, records and handoffs often run on spreadsheets, shared inboxes and tools that were never designed to work together. Each workaround adds manual effort, hides status and makes it hard to show who did what, and when.",
-      "Buying another package rarely closes the gap. What works is software shaped around the actual process, connected to the systems that already hold your data, and built so your teams can run it and change it as needs evolve.",
+      "Applications run on infrastructure nobody wants to touch. Releases are manual and infrequent, testing happens at the end, and every change carries risk. Meanwhile, teams wait on mobile access, AI pilots stall before production, and critical processes still run on spreadsheets and email.",
+      "Adding tools rarely fixes it. What works is engineering discipline end to end: cloud platforms designed for how you operate, automated pipelines with quality checks at every step, and software shaped around the actual process and connected to the systems that hold your data.",
     ],
     signals: [
+      "Releases that are manual, infrequent and risky",
+      "Cloud costs and environments that nobody fully owns",
+      "Defects found by users instead of by testing",
+      "AI/ML pilots that never reach production",
+      "Field and frontline teams without mobile access to core systems",
       "Critical processes tracked in spreadsheets and email",
-      "The same data re-keyed between systems",
-      "Approvals and requests with no visible status or audit trail",
-      "Customizations on core platforms that are hard to maintain",
-      "Packaged software that covers most of the process, but not the part that matters",
     ],
   },
   audience: [
-    { role: "CIOs and IT leaders", need: "Software that fits the process and connects to the systems you already run." },
-    { role: "Operations and department heads", need: "Requests, approvals and records handled in one place, with visible status." },
-    { role: "Records, compliance and audit teams", need: "Role-based access and audit trails built in from the start." },
-    { role: "Digital and marketing teams", need: "Adobe platforms extended where standard features stop." },
+    { role: "CIOs, CTOs and IT leaders", need: "Cloud platforms and software that are secure, supported and cost-aware." },
+    { role: "Engineering and product leaders", need: "Faster, safer releases through automation and built-in testing." },
+    { role: "Operations and department heads", need: "Applications and mobile tools that fit how the work is actually done." },
+    { role: "Data and analytics teams", need: "A path from AI/ML models to applications people use every day." },
   ],
   capabilitiesIntro:
-    "Take each capability on its own or combine them, from a single integration to a complete business application.",
+    "Enterprise technology solutions, one capability at a time or combined: from a cloud migration or a test automation program to a complete custom application.",
   capabilities: [
     {
-      // Basis: owner-stated 2026-11-07; pattern evidenced by MapleRecord (records, requests, admin).
+      id: "cloud",
+      title: "Cloud strategy and engineering",
+      summary: "Cloud platforms on AWS and Azure, planned around your workloads and engineered to be secure, resilient and cost-aware.",
+      items: [
+        "Cloud strategy, readiness assessment and roadmap",
+        "Architecture and landing zones on AWS and Azure",
+        "Migration and modernization of existing applications",
+        "Security, access and cost controls built in",
+      ],
+      provenance: "verified",
+    },
+    {
+      id: "devops",
+      title: "DevOps and CI/CD automation",
+      summary: "Build, test and release automated end to end, so changes ship more often with less risk.",
+      items: [
+        "Continuous integration and delivery pipelines",
+        "Infrastructure as code and repeatable environments",
+        "Automated quality and security checks in every pipeline",
+        "Monitoring, alerting and release practices",
+      ],
+      provenance: "verified",
+    },
+    {
+      id: "ai-ml",
+      title: "AI/ML enablement",
+      summary: "AI and machine learning moved from pilot to production, inside the applications and workflows people already use.",
+      items: [
+        "Use-case selection and feasibility",
+        "Data pipelines and cloud environments for model development",
+        "AI/ML capabilities built into applications and workflows",
+        "Responsible-AI controls with our AI Governance practice",
+      ],
+      provenance: "verified",
+    },
+    {
+      id: "mobile",
+      title: "Mobile development",
+      summary: "Mobile apps that give customers, staff and field teams secure access to the services and data they need.",
+      items: [
+        "Mobile app design and development",
+        "Secure connections to enterprise systems and workflows",
+        "Testing across devices and screen sizes",
+        "Release, monitoring and ongoing updates",
+      ],
+      provenance: "verified",
+    },
+    {
+      id: "qa",
+      title: "Quality assurance engineering",
+      summary: "Testing built into delivery from the first sprint, so defects are found by your pipeline, not your users.",
+      items: [
+        "Test strategy and planning",
+        "Functional, regression and integration testing",
+        "Test automation within CI/CD pipelines",
+        "Performance and load testing",
+      ],
+      provenance: "verified",
+    },
+    {
+      // Basis: owner-stated core expertise (custom enterprise software); pattern evidenced by MapleRecord
+      // (MR Workflows, MR Forms, MR Requests). Keep the id stable for deep links.
       id: "custom-applications",
-      title: "Custom enterprise applications",
-      summary: "Business applications designed and built around your processes, for the work packaged software doesn't fit.",
+      title: "Custom applications and workflow automation",
+      summary: "Business applications, digital forms and workflows built around your processes, for the work packaged software doesn't fit.",
       items: [
         "Requirements, process mapping and solution design",
         "Application design and development",
+        "Digital forms, approval routing and automated workflows",
         "Role-based access and audit trails built in",
-        "Testing, release, documentation and handover",
       ],
-      provenance: "proposed",
-    },
-    {
-      // Basis: evidenced by MapleRecord (MR Workflows, MR Forms, MR Requests); delivering this for clients is owner-stated.
-      id: "automation",
-      title: "Workflow, forms and process automation",
-      summary: "Manual steps replaced with digital forms, routing rules and automated workflows that people can follow and audit.",
-      items: [
-        "Digital forms with conditional logic",
-        "Approval and routing workflows",
-        "Scheduled and event-triggered automation",
-        "Request intake and tracking",
-      ],
-      provenance: "proposed",
+      provenance: "verified",
     },
     {
       // Basis: verified old-site titles (Integrated Data Solutions; Adobe "Implementation and integration").
@@ -80,7 +140,6 @@ export const softwareDevelopment: ServiceContent = {
         "Integration across databases, cloud services and on-premises systems",
         "Connections between Adobe Experience Cloud applications and enterprise systems",
         "Real-time access where decisions depend on it",
-        "Architecture that scales as systems are added",
       ],
       provenance: "verified",
     },
@@ -93,67 +152,54 @@ export const softwareDevelopment: ServiceContent = {
       items: [
         "Adobe Experience Manager custom development",
         "Adobe Commerce implementation, customization and platform migration",
-        "Customization and optimization of Adobe Experience Platform and Marketo Engage",
+        "Customization of Adobe Experience Platform and Marketo Engage",
       ],
       provenance: "verified",
-    },
-    {
-      // Basis: evidenced by MapleRecord (owner confirmation 2026-11-06; five modules from the real UI).
-      id: "product-engineering",
-      title: "Product engineering: MapleRecord",
-      summary: "We design, build and run our own enterprise platform, MapleRecord, for electronic and physical records.",
-      items: [
-        "Five modules: MR Records, MR Requests, MR Workflows, MR Forms and MR Admin",
-        "Retention schedules, request handling and workflows in one platform",
-        "Configured for organizations whose records needs it fits",
-      ],
-      provenance: "verified",
-    },
-    {
-      // Basis: verified old-site "Ongoing support and optimization" / "Training and support" (Adobe and data pages);
-      // extending it to custom software is owner-stated and needs confirmation.
-      id: "support",
-      title: "Support and continued improvement",
-      summary: "Software kept useful after launch, with fixes, enhancements and training for the people who run it.",
-      items: [
-        "Ongoing support and optimization",
-        "Enhancements as processes and regulations change",
-        "Training for users and administrators",
-      ],
-      provenance: "proposed",
     },
   ],
   approach: [
     {
-      stage: "Assess",
-      activities: "Map the process, users, systems and data involved, and agree what the first release must do.",
-      deliverable: "Scope and prioritized requirements",
+      stage: "Understand & strategize",
+      activities:
+        "Review your applications, infrastructure, release process and the problem to solve, then agree the target architecture and what the first release must do.",
+      deliverable: "Assessment, target architecture and delivery roadmap",
     },
     {
-      stage: "Design",
-      activities: "Design the solution, the integrations and the access model, and agree what to build and what to configure.",
-      deliverable: "Solution design and release plan",
+      stage: "Implement & integrate",
+      activities:
+        "Build, migrate and integrate in short iterations, with automated pipelines and testing from the start, and release with minimal disruption.",
+      deliverable: "Working software and platforms, pipelines and documentation",
     },
     {
-      stage: "Implement",
-      activities: "Build, integrate and test in short iterations, then release with documentation and training.",
-      deliverable: "Working software, documentation and trained users",
-    },
-    {
-      stage: "Improve",
-      activities: "Support the software in use, fix issues and add enhancements as needs change.",
-      deliverable: "Enhancement backlog and ongoing support",
+      stage: "Optimize & grow",
+      activities:
+        "Monitor performance, reliability and cost, fix issues, and add enhancements as your needs and platforms change.",
+      deliverable: "Monitoring, an improvement backlog and ongoing support",
     },
   ],
   deliverables: [
-    { title: "Scope and requirements", description: "The process, users, data and systems involved, and what the first release must do." },
-    { title: "Solution design", description: "How the software works, what it connects to, and who can see and do what." },
-    { title: "Working software", description: "Built, tested and released, with access controls and audit trails where they matter." },
-    { title: "Integrations", description: "Documented connections to the systems that hold your data." },
-    { title: "Documentation and handover", description: "Plain-language guides for users and administrators." },
-    { title: "Support plan", description: "How issues are reported and resolved, and how enhancements are prioritized." },
+    { title: "Assessment and roadmap", description: "Where your applications and platforms stand today, and a prioritized path forward." },
+    { title: "Target architecture", description: "How the cloud platform, applications and integrations fit together, and who can access what." },
+    { title: "Working software and platforms", description: "Built, tested and released, with access controls and audit trails where they matter." },
+    { title: "Automated pipelines", description: "Repeatable build, test and deployment, with quality checks at every step." },
+    { title: "Test assets", description: "Test plans, automated test suites and results your teams can keep running." },
+    { title: "Documentation and support", description: "Plain-language guides, a handover for your teams, and an agreed way to resolve issues." },
   ],
   useCases: [
+    {
+      title: "Moving a core application to the cloud",
+      context: "An organization runs a customer-facing application on aging on-premises servers, with quarterly manual releases.",
+      approach:
+        "Assess the application and its dependencies, design the target environment on AWS or Azure, migrate in stages, and set up a CI/CD pipeline with automated regression tests.",
+      outcome: "Releases become routine instead of risky events, and the platform scales with demand.",
+    },
+    {
+      title: "Giving field teams a mobile app",
+      context: "Inspectors record findings on paper and re-enter them at the office, so reports lag by days.",
+      approach:
+        "Design a mobile app around the inspection workflow, connect it securely to the back-office system, and test it across the devices the team uses.",
+      outcome: "Findings are captured once, on site, and reach the people who act on them the same day.",
+    },
     {
       title: "Replacing a spreadsheet approval process",
       context: "A public agency tracks permit approvals in spreadsheets and email, and nobody can see where a request is.",
@@ -161,33 +207,33 @@ export const softwareDevelopment: ServiceContent = {
         "Map the steps and decision points, build a digital form and approval workflow with role-based access, and connect it to the systems that hold applicant data.",
       outcome: "Each request has a visible status, a named owner and an audit trail, and staff stop re-keying data.",
     },
-    {
-      title: "Connecting a commerce platform to back-office systems",
-      context: "A distributor's Adobe Commerce store and its ERP don't share orders or pricing, so staff re-enter both by hand.",
-      approach:
-        "Design the integration around the ERP as the source for pricing and inventory, customize the store where the standard flow falls short, and test with real order volumes.",
-      outcome:
-        "Orders and prices flow between systems without manual entry, and the team spends its time on customers instead of data entry.",
-    },
-    {
-      title: "Records and requests in one system",
-      context: "A municipality handles records retention and information requests in separate tools and paper files.",
-      approach:
-        "Configure MapleRecord, our records management platform, with record series, retention schedules, request intake and role-based access.",
-      outcome: "Records and requests are managed in one system, with retention applied consistently and every action recorded.",
-    },
   ],
   benefits: [
+    { title: "Faster, safer releases", description: "Automated pipelines and testing reduce the risk of every change." },
+    { title: "Cloud you control", description: "Platforms on AWS and Azure with security and cost controls built in." },
     { title: "Software that fits", description: "Built around the process, not the other way round." },
-    { title: "Less manual work", description: "Fewer handoffs, re-keyed data and status-chasing emails." },
-    { title: "Visible accountability", description: "Role-based access and audit trails show who did what, and when." },
-    { title: "Room to change", description: "Documented, supported software your teams can extend as needs evolve." },
+    { title: "Room to grow", description: "Documented, supported systems your teams can extend as needs evolve." },
   ],
   faqs: [
     {
-      question: "What kind of software do you build?",
+      question: "Which cloud platforms do you work with?",
       answer:
-        "Enterprise business software: applications for requests, approvals, records and other multi-step processes; workflow and forms automation; integrations between systems; and custom development on Adobe Experience Cloud applications. We also build and run MapleRecord, our own records management platform.",
+        "AWS and Azure. We plan, build and migrate workloads on either, and connect them to the on-premises and cloud systems you already run.",
+    },
+    {
+      question: "What does quality assurance engineering cover?",
+      answer:
+        "Test strategy and planning, functional, regression and integration testing, and test automation inside your delivery pipelines. We build testing into delivery from the start, whether we are building the software or testing software your teams build.",
+    },
+    {
+      question: "Do you build mobile apps?",
+      answer:
+        "Yes. We design and build mobile apps for customers, staff and field teams, connect them securely to your enterprise systems, and test them across the devices your users have.",
+    },
+    {
+      question: "How does AI/ML enablement relate to your data and AI governance work?",
+      answer:
+        "AI/ML depends on well-governed data and needs clear rules for responsible use. Our engineering teams build the pipelines, environments and application features; our Data & Analytics and AI Governance practices cover the data foundations and the controls around them.",
     },
     {
       question: "Do you build from scratch, or extend what we already have?",
@@ -199,19 +245,9 @@ export const softwareDevelopment: ServiceContent = {
       answer:
         "If the need is records management, information requests, records workflows or forms, MapleRecord may already cover it, and configuring it is usually faster than building. If the process is specific to your organization, custom software may fit better. We'll tell you plainly which one makes sense.",
     },
-    {
-      question: "How does software development connect with your other services?",
-      answer:
-        "Closely. Software we build follows the data governance and AI governance rules your organization sets, and it can connect to your Adobe applications. Our AI Governance, Adobe Services and Data Management work and our software development share the same delivery approach.",
-    },
-    {
-      question: "Who needs to be involved from our side?",
-      answer:
-        "A business owner for the process, the people who do the work today, and someone from IT who knows the systems the software must connect to. We keep their time focused on requirements, reviews and testing.",
-    },
   ],
   cta: {
-    title: "Tell us what you need to build.",
-    body: "Describe the process, the people and the systems involved. We'll scope a practical first release with you.",
+    title: "Tell us what you need to build or modernize.",
+    body: "Describe the application, platform or process involved. We'll scope a practical first release with you.",
   },
 };

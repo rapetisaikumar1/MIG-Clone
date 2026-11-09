@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { company } from "@/config/site";
 import { Breadcrumbs } from "@/features/services/sections";
 import { pageMetadata } from "@/lib/metadata";
-import { OnThisPage, type TocItem } from "../privacy/on-this-page";
+import { OnThisPage, OnThisPageDisclosure, type TocItem } from "../privacy/on-this-page";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { CONSENT_COOKIE, CONSENT_MAX_AGE_DAYS, CONSENT_SYNC_KEY, consentCategories } from "@/features/consent/config";
 import { CookiePolicyTable, getPolicyCookies } from "@/features/consent/cookie-policy-table";
@@ -45,19 +45,20 @@ export default function CookiePolicyPage() {
       <Container>
         <JsonLd data={breadcrumbJsonLd(crumbs, "/cookies")} />
         <Breadcrumbs items={crumbs} />
-        <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12">
-          <div className="max-w-3xl lg:col-span-8">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12">
+          <div className="max-w-2xl lg:col-span-8 lg:max-w-3xl">
             <Eyebrow>Legal · Cookies</Eyebrow>
             <h1 className="mt-6 text-h1">Cookie policy</h1>
-            <p className="mt-4 text-sm text-muted">Last updated: November 6, 2026</p>
+            <p className="mt-4 text-sm text-muted">Last updated: November 9, 2026</p>
+            <OnThisPageDisclosure items={cookieSections} className="mt-8 lg:hidden" />
             <div className="prose-mig mt-10">
               <p>
                 This policy explains which cookies the {company.name} ({company.shortName}) website sets, what they are for, and
                 how you can control them. {company.descriptor}
               </p>
               <p>
-                This policy covers this website only. It does not cover the MapleRecord application or maplerecord.com, which
-                have their own policies.
+                This policy covers this website only. It does not cover the MapleRecord or MOLI applications, or
+                maplerecord.com, MapleRecord&apos;s product site.
               </p>
 
               <h2 id="what-cookies-are">What cookies are</h2>
@@ -78,8 +79,15 @@ export default function CookiePolicyPage() {
                   <div key={category.id}>
                     <h3>{category.label}</h3>
                     <p className="mt-2 font-mono text-label uppercase text-muted">
-                      {category.required ? "Always on" : "Off unless you allow it"}
-                      {inUse ? null : " · Not currently in use"}
+                      <span className="whitespace-nowrap">{category.required ? "Always on" : "Off unless you allow it"}</span>
+                      {inUse ? (
+                        null
+                      ) : (
+                        <>
+                          {" · "}
+                          <span className="whitespace-nowrap">Not currently in use</span>
+                        </>
+                      )}
                     </p>
                     <p className="mt-3">{category.description}</p>
                   </div>

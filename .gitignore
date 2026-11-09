@@ -11,3 +11,6 @@ next-env.d.ts
 .env*.local
 .vercel
 .DS_Store
+
+# Local QA screenshots (large, generated)
+qa-out/

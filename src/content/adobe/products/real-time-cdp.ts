@@ -16,7 +16,7 @@ export const realTimeCdp: AdobeProduct = {
   shortName: "Real-Time CDP",
   area: "Customer data",
   legacyPaths: ["/adobe-real-time-cdp"],
-  summary: "Setup, data strategy and audience activation for Adobe Real-Time CDP, plus training for the teams who run it.",
+  summary: "Real-time B2B and B2C audience segmentation and privacy-safe activation, set up and run with your teams.",
   description: "An application built on Adobe Experience Platform for building audiences from unified profiles and activating them to marketing, advertising and personalization destinations.",
   meta: {
     title: "Adobe Real-Time CDP Services",
@@ -162,7 +162,7 @@ export const realTimeCdp: AdobeProduct = {
         "At activation, Experience Platform checks the data usage labels on the audience's data, the marketing action set on the destination, and your policies, and it blocks an activation that would violate them. With Adobe Healthcare Shield or Privacy & Security Shield, consent policies also exclude profiles that lack the required consent. We translate your own consent and data use rules into that configuration with your privacy team. It supports compliance but doesn't replace your legal or privacy review.",
     },
     {
-      question: "Can you improve an existing Real-Time CDP setup?",
+      question: "Can you improve a setup that's already live?",
       answer:
         "Yes. We start with an assessment of your current sources, identity settings, audiences and destinations, then fix what's holding the setup back and extend it to new use cases.",
     },
@@ -179,7 +179,7 @@ export const realTimeCdp: AdobeProduct = {
     {
       question: "Do you also work with Journey Optimizer or Customer Journey Analytics?",
       answer:
-        "Our Real-Time CDP services cover implementation and setup, data strategy and management, personalization and campaign optimization, and training and support. Our Adobe services also cover Experience Platform, Experience Manager, Analytics, Target, Marketo Engage and Commerce. For other applications built on Experience Platform, ask us and we'll tell you plainly whether we're a good fit.",
+        "Our Real-Time CDP services cover implementation and setup, data strategy and management, personalization and campaign optimization, and training and support. Our Adobe services also cover Experience Platform, Experience Manager, Analytics, Marketo Engage, Target, Commerce and content management. For other applications built on Experience Platform, ask us and we'll tell you plainly whether we're a good fit.",
     },
   ],
   cta: {

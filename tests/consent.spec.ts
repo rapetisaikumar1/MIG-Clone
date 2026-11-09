@@ -343,6 +343,8 @@ for (const viewport of [
 
 test.describe("keyboard", () => {
   test("Tab reaches the banner buttons and Enter on Reject non-essential works", async ({ page, context }) => {
+    // Tabs through every link on the home page one key press at a time, which is slow under parallel load.
+    test.setTimeout(120_000);
     await page.goto("/");
     await expect(banner(page)).toBeVisible();
     await settle(page);

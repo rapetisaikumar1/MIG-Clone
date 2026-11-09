@@ -1,5 +1,7 @@
-import { Phone } from "lucide-react";
-import { company, formatAddress } from "@/config/site";
+import Link from "next/link";
+import { Mail, Phone } from "lucide-react";
+import { contactHref } from "./links";
+import { company, formatAddress, primaryPhone } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,6 +11,7 @@ import { cn } from "@/lib/utils";
 export function officePhones() {
   const lines = new Map<string, { regions: string[]; display: string; e164: string }>();
   for (const office of company.offices) {
+    if (!office.phone) continue;
     const line = lines.get(office.phone.e164);
     if (line) line.regions.push(office.region);
     else lines.set(office.phone.e164, { regions: [office.region], ...office.phone });
@@ -40,12 +43,30 @@ export function PhoneLinks({ className }: { className?: string }) {
   );
 }
 
-export function OfficeList({ tone = "light", className }: { tone?: "light" | "night"; className?: string }) {
+/**
+ * `messages`: whether the inquiry form can currently deliver. Pages that know (contact, about) pass it, so an office
+ * without a number never points to a form that would only say online messages are unavailable.
+ */
+export function OfficeList({
+  tone = "light",
+  messages = true,
+  className,
+}: {
+  tone?: "light" | "night";
+  messages?: boolean;
+  className?: string;
+}) {
   const night = tone === "night";
+  const mainLineLabel = officePhones().find((line) => line.e164 === primaryPhone.e164)?.label ?? "Delaware";
+  const linkClass = cn(
+    "mt-auto inline-flex min-h-11 items-center gap-2 self-start pt-3 font-medium underline decoration-1 underline-offset-4",
+    night ? "text-night-text decoration-night-line hover:decoration-night-text" : "text-ink decoration-line-strong hover:decoration-signal",
+  );
+  const iconClass = cn("size-4", night ? "text-night-muted" : "text-signal");
   return (
-    <ul className={cn("grid gap-x-8 gap-y-10 sm:grid-cols-3", className)}>
+    <ul className={cn("grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4", className)}>
       {company.offices.map((office) => (
-        // Flex column so each phone link sits on the same line, however many address lines precede it.
+        // Flex column so each phone (or message) link sits on the same line, however many address lines precede it.
         <li key={office.id} className={cn("reveal flex flex-col border-t pt-5", night ? "border-night-line" : "border-ink")}>
           <h3 className="text-lg font-semibold tracking-tight">{office.label}</h3>
           <address className={cn("mt-3 not-italic leading-relaxed", night ? "text-night-muted" : "text-muted")}>
@@ -55,16 +76,35 @@ export function OfficeList({ tone = "light", className }: { tone?: "light" | "ni
               </span>
             ))}
           </address>
-          <a
-            href={`tel:${office.phone.e164}`}
-            className={cn(
-              "mt-auto inline-flex min-h-11 items-center gap-2 self-start pt-3 font-medium underline decoration-1 underline-offset-4",
-              night ? "text-night-text decoration-night-line hover:decoration-night-text" : "text-ink decoration-line-strong hover:decoration-signal",
-            )}
-          >
-            <Phone aria-hidden className={cn("size-4", night ? "text-night-muted" : "text-signal")} />
-            {office.phone.display}
-          </a>
+          {!office.phone && !messages ? (
+            <p className={cn("mt-2 text-sm", night ? "text-night-muted" : "text-muted")}>
+              No direct line. Calls go to our main line, answered in {mainLineLabel}.
+            </p>
+          ) : null}
+          {/* Offices without a published number (Virginia) offer the inquiry form in the same place, so rows stay level;
+              while the form can't deliver, they offer the company's main line instead, with a note saying so. */}
+          {office.phone ? (
+            <a
+              href={`tel:${office.phone.e164}`}
+              className={linkClass}
+            >
+              <Phone aria-hidden className={iconClass} />
+              {office.phone.display}
+            </a>
+          ) : !messages ? (
+            <a href={`tel:${primaryPhone.e164}`} className={linkClass} aria-label={`Call our main line, ${primaryPhone.display}`}>
+              <Phone aria-hidden className={iconClass} />
+              {primaryPhone.display}
+            </a>
+          ) : (
+            <Link
+              href={contactHref()}
+              className={linkClass}
+            >
+              <Mail aria-hidden className={iconClass} />
+              Send us a message
+            </Link>
+          )}
         </li>
       ))}
     </ul>

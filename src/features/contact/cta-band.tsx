@@ -39,8 +39,8 @@ export function CtaBand({
       <svg
         aria-hidden
         viewBox="0 0 600 600"
-        // Small until xl: at 1024px the large rings put the orbiting dot behind the one-line headline.
-        className="pointer-events-none absolute -right-48 -top-48 hidden w-[28rem] opacity-40 motion-safe:animate-spin md:block lg:opacity-50 xl:-right-40 xl:-top-40 xl:w-[38rem] xl:opacity-60"
+        // Only from xl: on tablets and small laptops the headline runs under the rings and the red dot lands on its letters.
+        className="pointer-events-none absolute -right-40 -top-40 hidden w-[38rem] opacity-60 motion-safe:animate-spin xl:block"
         style={{ animationDuration: "120s" }}
       >
         <circle cx="300" cy="300" r="299" fill="none" stroke="var(--night-line)" />

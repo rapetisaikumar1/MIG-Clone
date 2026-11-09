@@ -2,13 +2,14 @@
 // Light edits only: acronym casing, typos, list punctuation. See docs/MAPLERECORD-SOURCES.md.
 // Claims edits (2026-11-07, messaging guide §4 and §5.5): compliance is described as supported, never guaranteed or
 // "by default"; absolute outcomes are softened; the ROI article's unsourced "20–40%" efficiency figure is removed.
-// Headings, structure and source attribution (officialUrl, published date) are unchanged.
+// Headings, structure and source attribution (officialUrl, published date) are unchanged, except that titles and
+// headings are set in sentence case (site style, 2026-11-09).
 import type { MrArticle } from "@/lib/content/types";
 
 export const mrArticles: MrArticle[] = [
   {
     slug: "modernizing-government-records-management",
-    title: "Modernizing Government Records Management for Transparency, Compliance, and Service Delivery",
+    title: "Modernizing government records management for transparency, compliance, and service delivery",
     metaTitle: "Modernizing Government Records",
     category: "Business Solution",
     published: "2025-12-22",
@@ -30,7 +31,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "1. Supporting Transparency and Accountability"
+        text: "1. Supporting transparency and accountability"
       },
       {
         type: "paragraph",
@@ -55,7 +56,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "2. Faster Response to Legal and Information Requests"
+        text: "2. Faster response to legal and information requests"
       },
       {
         type: "paragraph",
@@ -80,7 +81,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "3. Secure Records Management Across Departments"
+        text: "3. Secure records management across departments"
       },
       {
         type: "paragraph",
@@ -105,7 +106,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "4. Improving Operational Efficiency"
+        text: "4. Improving operational efficiency"
       },
       {
         type: "paragraph",
@@ -129,7 +130,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "5. Building Trust Through Compliance-by-Design"
+        text: "5. Building trust through compliance by design"
       },
       {
         type: "paragraph",
@@ -163,7 +164,7 @@ export const mrArticles: MrArticle[] = [
   },
   {
     slug: "modern-records-management-enterprise-intelligence",
-    title: "Modern Records Management: From Operational Overhead to Enterprise Intelligence",
+    title: "Modern records management: from operational overhead to enterprise intelligence",
     metaTitle: "From Records Overhead to Intelligence",
     category: "Business Solution",
     published: "2025-12-20",
@@ -185,7 +186,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "The Limitations of Legacy Records Systems"
+        text: "The limitations of legacy records systems"
       },
       {
         type: "paragraph",
@@ -207,7 +208,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "The Architecture Shift: Intelligent Records Management"
+        text: "The architecture shift: intelligent records management"
       },
       {
         type: "paragraph",
@@ -233,7 +234,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Records as an Enterprise Intelligence Layer"
+        text: "Records as an enterprise intelligence layer"
       },
       {
         type: "paragraph",
@@ -268,7 +269,7 @@ export const mrArticles: MrArticle[] = [
   },
   {
     slug: "roi-of-modern-records-management",
-    title: "The ROI of Modern Records Management Systems",
+    title: "The ROI of modern records management systems",
     metaTitle: "ROI of Modern Records Management",
     category: "Business Value",
     published: "2025-11-20",
@@ -286,11 +287,11 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "Modern Records Management Systems (RMS) deliver quantifiable ROI by aligning governance, automation, security, and scalability within a single, enterprise-grade platform."
+        text: "Modern records management systems (RMS) deliver quantifiable ROI by aligning governance, automation, security, and scalability within a single, enterprise-grade platform."
       },
       {
         type: "heading",
-        text: "1. Operational Efficiency Through Automation"
+        text: "1. Operational efficiency through automation"
       },
       {
         type: "paragraph",
@@ -315,7 +316,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "2. Reduced Total Cost of Ownership (TCO)"
+        text: "2. Reduced total cost of ownership (TCO)"
       },
       {
         type: "paragraph",
@@ -340,7 +341,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "3. Compliance-by-Design Architecture"
+        text: "3. Compliance-by-design architecture"
       },
       {
         type: "paragraph",
@@ -365,7 +366,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "4. Security and Risk Mitigation at Scale"
+        text: "4. Security and risk mitigation at scale"
       },
       {
         type: "paragraph",
@@ -390,7 +391,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "How MapleRecord’s AI-Enabled Capabilities Accelerate ROI"
+        text: "How MapleRecord’s AI-enabled capabilities accelerate ROI"
       },
       {
         type: "paragraph",
@@ -398,7 +399,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Intelligent Classification and Metadata Enrichment",
+        text: "Intelligent classification and metadata enrichment",
         level: 3
       },
       {
@@ -419,7 +420,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Automated Retention and Policy Enforcement",
+        text: "Automated retention and policy enforcement",
         level: 3
       },
       {
@@ -440,7 +441,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "AI-Powered Search and Discovery",
+        text: "AI-powered search and discovery",
         level: 3
       },
       {
@@ -461,7 +462,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Predictive Risk and Compliance Insights",
+        text: "Predictive risk and compliance insights",
         level: 3
       },
       {
@@ -482,7 +483,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Scalable AI Architecture for Future Growth",
+        text: "Scalable AI architecture for future growth",
         level: 3
       },
       {
@@ -503,7 +504,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Improved Data Governance and Executive Visibility",
+        text: "Improved data governance and executive visibility",
         level: 3
       },
       {
@@ -525,7 +526,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "heading",
-        text: "Measuring ROI Beyond Cost Reduction"
+        text: "Measuring ROI beyond cost reduction"
       },
       {
         type: "paragraph",
@@ -547,7 +548,7 @@ export const mrArticles: MrArticle[] = [
       },
       {
         type: "paragraph",
-        text: "Modern Records Management Systems deliver measurable ROI by replacing fragmented, manual processes with automated, secure, and scalable governance platforms. MapleRecord enhances this value further by embedding AI-driven intelligence across classification, compliance, discovery, and risk management."
+        text: "Modern records management systems deliver measurable ROI by replacing fragmented, manual processes with automated, secure, and scalable governance platforms. MapleRecord enhances this value further by embedding AI-driven intelligence across classification, compliance, discovery, and risk management."
       },
       {
         type: "paragraph",

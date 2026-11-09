@@ -1,0 +1,211 @@
+/*
+ * Capability map in the home hero: the platform stack (SVG, decorative) with one linked label per layer.
+ * Layout follows the space the map gets, not the viewport:
+ *   - 34rem and wider: labels with a detail line, laid over the art at the end of each leader line;
+ *   - 26–34rem: the same, label and layer name only;
+ *   - narrower: the stack alone, centred, with the labels as a list of links below it.
+ * Motion (a slow float, pulses rising along the beams) runs only when motion is allowed; transforms and opacity only.
+ */
+
+.host {
+  container-type: inline-size;
+}
+
+.map {
+  position: relative;
+}
+
+.art {
+  position: relative;
+}
+
+.labels {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  justify-content: center;
+  border-radius: 0.375rem;
+  color: var(--night-text);
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--night-muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition: text-decoration-color 200ms ease-out;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.arrow {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.4rem;
+  vertical-align: -0.125em;
+  color: var(--logo-red);
+  transition: transform 200ms ease-out;
+}
+
+.detail {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--night-muted);
+  text-wrap: pretty;
+}
+
+.link:hover .title,
+.link:focus-visible .title {
+  text-decoration-color: var(--logo-red);
+}
+
+/* Wide: labels over the art, vertically centred on their leader line. */
+@container (min-width: 26rem) {
+  .labels {
+    position: absolute;
+    inset: 0;
+  }
+  .label {
+    position: absolute;
+    left: calc(var(--x) + 0.5rem);
+    right: 0;
+    top: var(--y);
+    translate: 0 -50%;
+  }
+}
+
+/* With room to spare, labels may use the container's side padding, so the longest service names fit on one line. */
+@container (min-width: 34rem) {
+  .label {
+    right: -2.5rem;
+  }
+}
+
+@container (min-width: 26rem) and (max-width: 33.999rem) {
+  .detail {
+    display: none;
+  }
+  .title {
+    font-size: 1rem;
+  }
+}
+
+/* Narrow: the stack alone (cropped to its own width), then the labels as a list. */
+@container (max-width: 25.999rem) {
+  .art {
+    width: min(100%, 15rem);
+    margin-inline: auto;
+    overflow: hidden;
+  }
+  .svg {
+    width: var(--stack-share);
+    max-width: none;
+  }
+  .svg [data-leader] {
+    display: none;
+  }
+  .labels {
+    margin-top: 2rem;
+    border-top: 1px solid var(--night-line);
+  }
+  .label {
+    border-bottom: 1px solid var(--night-line);
+  }
+  .link {
+    padding-block: 1rem;
+  }
+}
+
+/* Hovering or focusing a label lifts its layer and lights its leader line. */
+.svg [data-plate],
+.svg [data-frame] {
+  transition: transform 300ms ease-out;
+}
+.svg [data-rim],
+.svg [data-leader] path,
+.svg [data-frame] path {
+  transition: stroke 200ms ease-out;
+}
+
+.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-plate="experience"],
+.map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-plate="data"],
+.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-plate="foundation"] {
+  transform: translateY(-7px);
+}
+.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-plate="experience"] [data-rim],
+.map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-plate="data"] [data-rim],
+.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-plate="foundation"] [data-rim],
+.map:has([data-layer="governance"] .link:is(:hover, :focus-visible)) [data-frame] path,
+.map:has([data-layer="governance"] .link:is(:hover, :focus-visible)) [data-leader="governance"] path,
+.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-leader="experience"] path,
+.map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-leader="data"] path,
+.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-leader="foundation"] path {
+  stroke: var(--logo-red);
+}
+
+.pulse {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .float {
+    animation: float 10s ease-in-out infinite alternate;
+  }
+  .pulse {
+    animation: rise 4.2s cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite both;
+  }
+  .link:hover .arrow,
+  .link:focus-visible .arrow {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes float {
+  from {
+    transform: translateY(3px);
+  }
+  to {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12%,
+  55% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    transform: translateY(var(--rise));
+    opacity: 0;
+  }
+}

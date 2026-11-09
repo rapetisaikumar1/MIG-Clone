@@ -112,18 +112,15 @@ test("every sitemap page has unique metadata, one h1, canonical, social tags and
 
     const breadcrumb = nodes.find((n) => n["@type"] === "BreadcrumbList");
     if (breadcrumb) {
+      // Visible breadcrumb trails are switched off site-wide (2026-11-09); check the list's own consistency.
       const items = breadcrumb.itemListElement as ListItem[];
-      if (!d.crumbs) fail("BreadcrumbList without visible breadcrumbs");
-      else {
-        const names = items.map((i) => i.name);
-        const visible = d.crumbs.map((c) => c.label);
-        if (JSON.stringify(names) !== JSON.stringify(visible)) fail(`BreadcrumbList ${JSON.stringify(names)} != visible ${JSON.stringify(visible)}`);
-        items.forEach((item, i) => {
-          if (item.position !== i + 1) fail(`breadcrumb position ${item.position} at index ${i}`);
-          const visibleHref = d.crumbs?.[i]?.href ?? path;
-          if (new URL(item.item).pathname !== visibleHref) fail(`breadcrumb ${i + 1} → ${item.item}, visible link ${visibleHref}`);
-        });
-      }
+      if (d.crumbs) fail("visible breadcrumb trail is shown");
+      if (items[0]?.name !== "Home") fail("BreadcrumbList does not start at Home");
+      items.forEach((item, i) => {
+        if (item.position !== i + 1) fail(`breadcrumb position ${item.position} at index ${i}`);
+        if (!item.item) fail(`breadcrumb ${i + 1} has no URL`);
+      });
+      if (items.length && new URL(items[items.length - 1]!.item).pathname !== path) fail(`last breadcrumb is not ${path}`);
     }
 
     const faq = nodes.find((n) => n["@type"] === "FAQPage");

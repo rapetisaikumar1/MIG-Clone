@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Dot, Section, SectionHeading } from "@/components/ui/layout";
 import { adobeHub } from "@/content/services/adobe-services";
-import { contactHref } from "@/features/contact/links";
+import { contactHref, isContactTopic } from "@/features/contact/links";
 import { keepHyphenatedWords } from "@/features/adobe/keep-hyphenated";
 import { AdobePartnerPanel } from "@/features/adobe/partner-panel";
 import { adobeAssessmentPath, adobeProductPath, getAdobeProducts } from "@/lib/content/adobe";
@@ -24,19 +24,40 @@ const nightCard =
   "card-lift group relative flex flex-col rounded-2xl p-6 transition-colors focus-within:border-night-text has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-night-text sm:row-span-4 sm:mb-4 sm:grid sm:grid-rows-subgrid sm:gap-y-0 sm:p-7";
 
 /**
- * The one place the hub lists Adobe applications: area, name and a one-line summary of our work on it.
- * The per-application service lists live on each application's page (and in "Services and capabilities"
- * above), so the cards don't repeat them. Each card links to its page and carries the product slug as
- * its id, so /adobe-services#target and similar anchors keep working.
+ * The one place the hub lists the Adobe offerings (Capability Matrix pillar 03, "9 Adobe offerings"): Adobe Experience
+ * Cloud, the umbrella, as a full-width tile; then each application's area, name and one-line summary (eight cards,
+ * so complete rows at 2 or 4 across). The assessment is offered once, in "Ways to work with us", not repeated here.
+ * The per-application service lists live on each application's page, so the cards don't repeat them. Each card links
+ * to its page and carries the product slug as its id, so /adobe-services#target and similar anchors keep working.
  */
 export function AdobeApplicationsSection() {
-  const { eyebrow, title, intro, startTile } = adobeHub.applications;
+  const { eyebrow, title, intro } = adobeHub.applications;
+  const aec = adobeHub.experienceCloud;
   const products = getAdobeProducts();
   return (
     <Section tone="night" id="applications" aria-labelledby="applications-title">
       <Container>
         <SectionHeading tone="night" id="applications-title" eyebrow={eyebrow} title={title} intro={intro} />
         <ul className="reveal mt-12 grid gap-4 sm:-mb-4 sm:grid-cols-2 sm:gap-y-0 xl:grid-cols-4">
+          <li id="experience-cloud" className="rounded-2xl border border-night-muted/60 bg-night-raised p-6 sm:col-span-full sm:mb-4 sm:p-8 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+              <div className="lg:col-span-5">
+                <p className="flex items-center gap-2.5 font-mono text-label uppercase text-night-muted">
+                  <Dot />
+                  {aec.area}
+                </p>
+                <h3 className="mt-3 text-h3">{aec.name}</h3>
+                <p className="mt-3 text-night-muted">{aec.summary}</p>
+              </div>
+              <ul className="grid content-start gap-x-8 gap-y-4 sm:grid-cols-2 lg:col-span-7 lg:pt-1">
+                {aec.points.map((point) => (
+                  <li key={point} className="border-t border-night-line pt-4 text-[0.9375rem] leading-snug">
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
           {products.map((p) => (
             <li key={p.slug} id={p.slug} className={cn(nightCard, "border border-night-line bg-night-raised hover:border-night-muted")}>
               <p className="font-mono text-label uppercase text-night-muted">{p.area}</p>
@@ -52,22 +73,6 @@ export function AdobeApplicationsSection() {
               </span>
             </li>
           ))}
-          <li className={cn(nightCard, "border border-dashed border-night-muted/60 hover:border-night-text")}>
-            <p className="flex items-center gap-2.5 font-mono text-label uppercase text-night-muted">
-              <Dot />
-              {startTile.eyebrow}
-            </p>
-            <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">
-              <Link href={adobeAssessmentPath} className="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none">
-                {startTile.title}
-              </Link>
-            </h3>
-            <p className="mt-2 text-[0.9375rem] text-night-muted">{startTile.body}</p>
-            <span aria-hidden className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium">
-              {startTile.label}
-              <ArrowRight className="size-4 text-signal transition-transform duration-200 group-hover:translate-x-0.5" />
-            </span>
-          </li>
         </ul>
         <AdobePartnerPanel tone="night" className="mt-14" />
       </Container>
@@ -118,7 +123,11 @@ export function AdobeWaysToWorkSection() {
         <SectionHeading id="ways-to-work-title" eyebrow={eyebrow} title={title} intro={intro} />
         <ul className="reveal mt-14 grid gap-x-4 gap-y-8 sm:-mb-6 sm:grid-cols-2 sm:gap-y-0 xl:grid-cols-4">
           {items.map((e) => {
-            const href = e.action === "assessment" ? adobeAssessmentPath : contactHref("adobe-services");
+            // Contact cards open the form with their own prefilled message (contactTopics in features/contact/links).
+            const href =
+              e.action === "assessment"
+                ? adobeAssessmentPath
+                : contactHref("adobe-services", isContactTopic(e.id) ? { topic: e.id } : {});
             const recommended = e.action === "assessment";
             return (
               <li

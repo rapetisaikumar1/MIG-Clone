@@ -15,7 +15,7 @@ export const experiencePlatform: AdobeProduct = {
   shortName: "Experience Platform",
   area: "Customer data",
   legacyPaths: ["/adobe-experience-platform"],
-  summary: "Schemas, identity, data ingestion and governance that give your Adobe applications accurate customer profiles.",
+  summary: "Unified customer profiles and cross-channel data activation, built on sound schemas, identity and governance.",
   description: "Adobe's foundation for bringing customer data together from across channels and standardizing it into real-time customer profiles that other Adobe applications use.",
   meta: {
     title: "Adobe Experience Platform Services",

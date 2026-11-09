@@ -3,7 +3,6 @@ import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/u
 import type { AdobeAssessmentContent } from "@/content/adobe/assessment";
 import { AdobePartnerPanel } from "@/features/adobe/partner-panel";
 import { contactHref } from "@/features/contact/links";
-import { Breadcrumbs } from "@/features/services/sections";
 import { adobeProductPath, adobeServicesPath } from "@/lib/content/adobe";
 import type { AdobeProduct } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
@@ -18,12 +17,11 @@ function Rule({ night = false }: { night?: boolean }) {
   return <span aria-hidden className={cn("mt-[0.7rem] h-px w-3 shrink-0", night ? "bg-night-text" : "bg-ink")} />;
 }
 
-export function AssessmentHero({ content, breadcrumbs }: { content: Content; breadcrumbs: { label: string; href?: string }[] }) {
+export function AssessmentHero({ content }: { content: Content }) {
   return (
     <section aria-labelledby="assessment-title" className="relative overflow-hidden border-b border-line bg-paper pb-16 pt-10 sm:pb-20 lg:pb-24 lg:pt-14">
       <Container>
-        <Breadcrumbs items={breadcrumbs} />
-        <div className="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             {/* A multi-term eyebrow can wrap on phones: as on the service heroes, keep the dot on the first line and
                 each separator with the term before it, so a wrapped line never starts with "·". */}
@@ -95,12 +93,19 @@ export function SituationsSection({ content }: { content: Content }) {
   );
 }
 
+/** Column span for the "another application" card so it completes the last row at 2 (sm) and 3 (lg) columns. */
+function otherSpan(count: number) {
+  const sm = count % 2 === 0 ? "sm:col-span-2" : "sm:col-span-1";
+  const lg = ["lg:col-span-3", "lg:col-span-2", "lg:col-span-1"][count % 3];
+  return cn(sm, lg);
+}
+
 /** Card chrome for the review grid; from sm, subgrid rows keep titles, lists and links aligned across a row. */
 const reviewCard = "flex flex-col rounded-2xl p-6 sm:row-span-4 sm:mb-5 sm:grid sm:grid-rows-subgrid sm:gap-y-0 sm:p-7";
 
 /**
- * Per-application review areas, then the cross-cutting areas at full width. The seven application cards plus
- * the "another application" card fill even rows: 2×4 from sm, and 3 + 3 + (1 + the wide "another" card) from lg.
+ * Per-application review areas, then the cross-cutting areas at full width. The "another application" card
+ * stretches to fill the last row, whatever the number of applications (otherSpan), so no row is left with a gap.
  * The partner statement closes the section and covers the Adobe trademark notice.
  */
 export function ReviewSection({ content, products }: { content: Content; products: AdobeProduct[] }) {
@@ -112,8 +117,10 @@ export function ReviewSection({ content, products }: { content: Content; product
       <Container>
         <SectionHeading id="review-title" eyebrow={r.eyebrow} title={r.title} intro={r.intro} />
 
-        {/* Plain anchors, not next/link: a real hash navigation is what makes the destination card match :target. */}
-        <nav aria-label="Jump to an Adobe application" className="mt-10">
+        {/* Plain anchors, not next/link: a real hash navigation is what makes the destination card match :target.
+            Below lg only, where the cards stack into a long list; from lg all nine sit in view as a 3 x 3 grid, and the
+            nine chips would wrap with one left alone on a second row. */}
+        <nav aria-label="Jump to an Adobe application" className="mt-10 lg:hidden">
           <ul className="flex flex-wrap gap-2">
             {products.map((p) => (
               <li key={p.slug}>
@@ -155,7 +162,7 @@ export function ReviewSection({ content, products }: { content: Content; product
               </li>
             );
           })}
-          <li className={cn(reviewCard, "border border-dashed border-line-strong lg:col-span-2")}>
+          <li className={cn(reviewCard, "border border-dashed border-line-strong", otherSpan(products.length))}>
             <p className="font-mono text-label uppercase text-muted">Other applications</p>
             <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">{r.other.title}</h3>
             <p className="mt-2 text-[0.9375rem] text-muted">{r.other.body}</p>

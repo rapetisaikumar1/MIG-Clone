@@ -18,7 +18,7 @@ export function SiteFooter() {
     <footer className="on-night border-t border-night-line bg-night text-night-text">
       <Container className="py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-8">
-          <div className="lg:col-span-4 xl:col-span-3">
+          <div className="lg:col-span-4">
             <Logo variant="white" width={132} loading="eager" />
             <p className="mt-6 max-w-sm text-pretty text-[0.9375rem] leading-relaxed text-night-muted">{company.blurb}</p>
             {/* Two even columns where the column is narrow, so no pill is left alone on a second row. */}
@@ -39,14 +39,15 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-x-8 lg:col-span-8 xl:col-span-6">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-x-8 lg:col-span-8">
             {footerNav.map((group) => (
               <div key={group.heading} className={group.items.length === longest ? "row-span-2 sm:row-span-1" : undefined}>
                 <h2 className="font-mono text-label uppercase text-night-muted">{group.heading}</h2>
-                <ul className="mt-4 space-y-1">
+                {/* Even padding (not a centered min-height) keeps the gap between labels the same when one wraps. */}
+                <ul className="mt-2.5">
                   {group.items.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href} className="inline-flex min-h-10 items-center text-[0.9375rem] leading-snug underline-offset-4 transition-colors hover:text-white hover:underline">
+                      <Link href={item.href} className="inline-flex py-2.5 text-[0.9375rem] leading-snug text-pretty underline-offset-4 transition-colors hover:text-white hover:underline">
                         <span>
                           {item.srPrefix ? <span className="sr-only">{item.srPrefix}</span> : null}
                           {item.label}
@@ -59,11 +60,12 @@ export function SiteFooter() {
             ))}
           </nav>
 
-          <div className="lg:col-span-12 lg:border-t lg:border-night-line lg:pt-10 xl:col-span-3 xl:border-t-0 xl:pt-0">
+          {/* A full-width row, so the four offices sit side by side (two by two below xl, where "Delaware, United States" would wrap) at an even height. */}
+          <div className="border-t border-night-line pt-10 lg:col-span-12">
             <h2 className="font-mono text-label uppercase text-night-muted">Offices</h2>
-            <ul className="mt-4 grid gap-6 sm:grid-cols-3 xl:grid-cols-1">
+            <ul className="mt-5 grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-4">
               {company.offices.map((office) => (
-                <li key={office.id}>
+                <li key={office.id} className="sm:border-l sm:border-night-line sm:pl-5">
                   <p className="font-medium">{office.label}</p>
                   <address className="mt-1 text-sm not-italic leading-relaxed text-night-muted">
                     {formatAddress(office).map((line) => (
@@ -71,9 +73,11 @@ export function SiteFooter() {
                         {line}
                       </span>
                     ))}
-                    <a href={`tel:${office.phone.e164}`} className="inline-flex min-h-11 items-center text-night-text underline-offset-4 hover:underline sm:min-h-8">
-                      {office.phone.display}
-                    </a>
+                    {office.phone ? (
+                      <a href={`tel:${office.phone.e164}`} className="inline-flex min-h-11 items-center text-night-text underline-offset-4 hover:underline sm:min-h-8">
+                        {office.phone.display}
+                      </a>
+                    ) : null}
                   </address>
                 </li>
               ))}
@@ -81,7 +85,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-night-line pt-8 text-sm text-night-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-night-line pt-8 text-sm text-night-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {company.name}. All rights reserved.
           </p>

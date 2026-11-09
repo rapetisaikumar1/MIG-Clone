@@ -7,6 +7,11 @@
 // builds MapleRecord (owner-confirmed 2026-11-06), compliance is "supported" rather than guaranteed, and the CTA no
 // longer implies a customer base. The figures below are MapleRecord's own published claims, pending owner substantiation.
 // Consistency sweep (2026-11-07): the "Security first" value says "data protection" (not "end-to-end"), matching modules.ts.
+// Capability deck alignment (2026-11-09): the story's closing paragraph places MapleRecord in MiG's records management
+// and compliance practice (deck pillar 07) and links to MOLI (storyRelated) instead of labelling the company and
+// listing unrelated services; the "today" paragraph names the deck's audience. Figures unchanged.
+// Final QA (2026-11-09): the story no longer says "built" in three consecutive paragraphs; the CTA body names the five
+// modules instead of repeating "how MapleRecord can help" from its heading; the Healthcare card is one line shorter.
 import type { MrImage } from "@/lib/content/types";
 import { mrScreens } from "./screens";
 
@@ -33,11 +38,18 @@ export const mrAbout = {
   storyTitle: "Rethinking how organizations manage information",
   modulesTitle: "One platform, five modules",
   story: [
-    "Maverick InnoGarage built MapleRecord to rethink how organizations manage information in a fast-changing digital world. As data volumes grow and regulations tighten, many teams still rely on fragmented tools and manual processes that slow them down.",
-    "We built MapleRecord as an AI-driven platform that unifies records, requests, and workflows in one place. By simplifying how information is captured, governed, and shared, we help teams work faster and respond with confidence.",
-    "Today, MapleRecord supports enterprises and public-sector organizations looking to modernize information management without added complexity. Our focus is on secure, scalable solutions that grow with our customers and keep teams focused on outcomes, not administration.",
-    "MapleRecord is designed and built by Maverick InnoGarage, a software development and professional services company that also delivers AI governance, Adobe solutions and data management.",
+    "Maverick InnoGarage created MapleRecord to rethink how organizations manage information in a fast-changing digital world. As data volumes grow and regulations tighten, many teams still rely on fragmented tools and manual processes that slow them down.",
+    "MapleRecord is an AI-driven platform that unifies records, requests, and workflows in one place. By simplifying how information is captured, governed, and shared, we help teams work faster and respond with confidence.",
+    "Today, MapleRecord supports government, municipalities and regulated organizations looking to modernize information management without added complexity. Our focus is on secure, scalable solutions that grow with our customers and keep teams focused on outcomes, not administration.",
   ],
+  /** Closing story paragraph, rendered with a link to MOLI (company-sections.tsx). */
+  storyRelated: {
+    before:
+      "MapleRecord is part of Maverick InnoGarage’s records management and compliance practice, alongside ",
+    label: "MOLI, our AI-driven record management system",
+    href: "/moli",
+    after: ".",
+  },
   valuesTitle: "The principles behind the platform",
   values: [
     {
@@ -72,7 +84,7 @@ export const mrAbout = {
   industriesTitle: "Solutions tailored to your sector",
   industries: [
     { name: "Financial services", body: "Banking, investment, and financial compliance solutions", solution: "financial-services", icon: "finance" },
-    { name: "Healthcare", body: "Patient records management with access controls, audit trails and retention that support HIPAA requirements", solution: "healthcare", icon: "health" },
+    { name: "Healthcare", body: "Patient records with access controls and audit trails that support HIPAA requirements", solution: "healthcare", icon: "health" },
     { name: "Education", body: "Student records and academic document management", solution: "education", icon: "education" },
     { name: "Insurance", body: "Policy and claims document management", solution: "insurance", icon: "insurance" },
     { name: "Manufacturing", body: "Quality, compliance, and supply chain records", solution: "manufacturing", icon: "manufacturing" },
@@ -80,7 +92,7 @@ export const mrAbout = {
   ] satisfies { name: string; body: string; solution: string; icon: MrAboutIndustryIcon }[],
   cta: {
     title: "See how MapleRecord can help your records management",
-    body: "Discover how MapleRecord can help your organization streamline workflows, support compliance, and unlock the value in your documents.",
+    body: "Request a demo to see MR Records, MR Requests, MR Workflows, MR Forms and MR Admin working together on one platform.",
   },
   images: {
     hero: image("about-meeting", 1080, 608, "Four colleagues in business attire talking around a meeting table with a laptop"),

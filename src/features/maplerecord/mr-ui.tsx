@@ -276,40 +276,10 @@ export function MrFeatureCard({
 }
 
 /**
- * Breadcrumbs for MapleRecord heroes; `tone="dark"` on dark stages. The "/" separators are drawn by
- * `.mr-crumbs` in globals.css after each item (not as text), so a wrapped trail never starts a line with
- * a lone slash, and each item's text stays exactly its label. A long current page (an article title)
- * truncates to one line; the full title is the h1 right below.
+ * Visible breadcrumb trails are switched off site-wide (owner request, 2026-11-09), as in `Breadcrumbs`
+ * (src/features/services/sections.tsx). The BreadcrumbList JSON-LD on each page is unchanged.
  */
-export function MrCrumbs({ items, tone = "light" }: { items: { label: string; href?: string }[]; tone?: "light" | "dark" }) {
-  const dark = tone === "dark";
-  return (
-    <nav aria-label="Breadcrumb">
-      <ol className={cn("mr-crumbs flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm", dark ? "text-night-muted" : "text-muted")}>
-        {items.map((item) => (
-          <li key={item.label} className={cn("flex min-w-0 items-center gap-2", item.href ? "whitespace-nowrap" : "max-w-full")}>
-            {item.href ? (
-              // The ::after pad extends the hit area to 44px tall (touch target) without changing the trail's layout.
-              <Link
-                href={item.href}
-                className={cn(
-                  "relative inline-flex min-h-6 items-center underline-offset-4 after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-[''] hover:underline",
-                  dark ? "hover:text-night-text" : "hover:text-ink",
-                )}
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span aria-current="page" className={cn("min-w-0 truncate", dark ? "text-night-text" : "text-ink")}>
-                {item.label}
-              </span>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
+export const MrCrumbs: (props: { items: { label: string; href?: string }[]; tone?: "light" | "dark" }) => null = () => null;
 
 /** Responsive `sizes` for a window in one of two hero/feature columns inside the 78rem container. */
 export const mrHalfSizes = "(min-width: 1248px) 36rem, (min-width: 1024px) 45vw, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)";
@@ -413,7 +383,7 @@ export function MrLinkCard({
         "card-lift group relative flex h-full flex-col rounded-2xl p-6 transition-[box-shadow,background-color,transform] duration-200 sm:p-7",
         "has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2",
         dark
-          ? "bg-night-raised ring-1 ring-night-line hover:bg-[#1e1e20] hover:ring-white/20 has-[a:focus-visible]:outline-night-text"
+          ? "bg-night-raised ring-1 ring-night-line hover:bg-night-line/40 hover:ring-white/20 has-[a:focus-visible]:outline-night-text"
           : "bg-surface ring-1 ring-line hover:shadow-[0_18px_40px_-24px_rgb(17_17_17/0.3)] hover:ring-line-strong has-[a:focus-visible]:outline-signal",
         className,
       )}

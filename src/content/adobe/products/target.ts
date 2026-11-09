@@ -12,7 +12,7 @@ export const target: AdobeProduct = {
   shortName: "Target",
   area: "Personalization",
   legacyPaths: ["/adobe-target"],
-  summary: "Implementation, personalization strategy, and A/B and multivariate testing run as an ongoing program.",
+  summary: "A/B and multivariate testing, AI-driven personalization and recommendations, run as an ongoing program.",
   description: "Testing and personalization: A/B and multivariate tests, plus rule-based and AI-assisted targeting of content and offers.",
   meta: {
     title: "Adobe Target Services",
@@ -118,7 +118,7 @@ export const target: AdobeProduct = {
       outcome: "Tests run from a shared backlog, and each result ends in a recorded decision.",
     },
     {
-      title: "Personalizing the website with shared audiences",
+      title: "Personalizing with shared audiences",
       context:
         "A telecommunications provider builds audiences in Real-Time CDP for email campaigns but shows every website visitor the same home page.",
       approach:

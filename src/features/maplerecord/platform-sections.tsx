@@ -37,7 +37,7 @@ import { ArrowLink } from "@/components/ui/button";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { mrPlatformFlow, mrPlatformPage, mrScreenFocus, type MrFocusRegion } from "@/content/maplerecord/modules";
 import { MrChecklist, MrSteps } from "@/features/maplerecord/mr-sections";
-import { LeafMark, MrChips, MrFeatureCard, MrIconTile, mrModuleIcons, MrStage } from "@/features/maplerecord/mr-ui";
+import { LeafMark, MrChips, MrIconTile, mrModuleIcons, MrStage } from "@/features/maplerecord/mr-ui";
 import { MrZoomFrame } from "@/features/maplerecord/platform-zoom";
 import { getMrModule, getMrSolution } from "@/lib/content/maplerecord";
 import type { MrImage, MrModule } from "@/lib/content/types";
@@ -121,7 +121,8 @@ export function MrDarkChips({ label, items }: { label: string; items: { label: s
   const links = items.some((i) => i.href);
   return (
     // Links: two equal columns on phones (an odd last pill spans both, so none is left orphaned), a wrapping row from sm.
-    <ul className={cn(links ? "grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" : "flex flex-wrap gap-x-6 gap-y-2.5")} aria-label={label}>
+    // Highlights: a short stacked list on phones (a wrapping row there leaves the third one alone on its line).
+    <ul className={cn(links ? "grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" : "flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-6")} aria-label={label}>
       {items.map(({ label: text, href, icon: ChipIcon }, i) => (
         <li key={text} className={cn(links && i === items.length - 1 && items.length % 2 === 1 && "col-span-2")}>
           {href ? (
@@ -541,7 +542,12 @@ export function MrModuleTour({ module: m }: { module: MrModule }) {
   );
 }
 
-/** Key capabilities as icon cards with checklists; balanced for 4 (2 × 2), 5 (3 + 2) and 6 (3 × 2) items. */
+/**
+ * Key capabilities as icon cards with checklists; balanced for 4 (2 × 2), 5 (3 + 2) and 6 (3 × 2) items. Each card
+ * spans three rows of a subgrid (icon, title, checklist), so when one title in a row wraps to two lines the
+ * hairlines and checklists of its neighbors still start level. The grid's row gap (1.25rem) doubles as the space
+ * between those parts.
+ */
 export function MrModuleCapabilities({ module: m }: { module: MrModule }) {
   const n = m.capabilities.length;
   return (
@@ -556,17 +562,17 @@ export function MrModuleCapabilities({ module: m }: { module: MrModule }) {
             <li
               key={c.title}
               className={cn(
-                "reveal",
+                "reveal row-span-3 grid grid-rows-subgrid rounded-2xl bg-surface p-6 ring-1 ring-line sm:p-7",
                 // Five cards: 2 + 2 + 1 (full width) on tablets, 3 + 2 on wide screens.
                 n === 5 && (i < 3 ? "lg:col-span-2" : "lg:col-span-3"),
                 n === 5 && i === 4 && "sm:col-span-2",
               )}
             >
-              <MrFeatureCard icon={capabilityIcons[c.title] ?? Sparkles} title={c.title}>
-                <div className="mt-5 border-t border-line pt-5 text-[0.9375rem] text-ink-soft">
-                  <MrChecklist items={c.items} />
-                </div>
-              </MrFeatureCard>
+              <MrIconTile icon={capabilityIcons[c.title] ?? Sparkles} className="justify-self-start" />
+              <h3 className="text-lg font-semibold leading-snug tracking-tight">{c.title}</h3>
+              <div className="border-t border-line pt-5 text-[0.9375rem] text-ink-soft">
+                <MrChecklist items={c.items} />
+              </div>
             </li>
           ))}
         </ul>
@@ -577,7 +583,8 @@ export function MrModuleCapabilities({ module: m }: { module: MrModule }) {
 
 /**
  * "Who it helps": department cards linked to the matching MapleRecord solution pages; compact two-up
- * name cards on phones. Seven teams get an "All solutions" card to fill a 4 × 2 grid; otherwise that link
+ * name cards on phones, icon above the name (beside it, Poppins names such as "Healthcare administration"
+ * overflow at 390px). Seven teams get an "All solutions" card to fill a 4 × 2 grid; otherwise that link
  * sits beside the heading. Skipped without `audience`.
  */
 export function MrModuleAudience({ module: m }: { module: MrModule }) {
@@ -601,9 +608,9 @@ export function MrModuleAudience({ module: m }: { module: MrModule }) {
             return (
               <li key={t.title} className="reveal">
                 <div className={cn(card, "group")}>
-                  <div className="flex items-center gap-3 max-[359px]:block sm:block">
+                  <div>
                     <MrIconTile icon={meta?.icon ?? Users} className="size-9 rounded-lg sm:size-11 sm:rounded-xl" />
-                    <h3 className="min-w-0 text-[0.9375rem] font-semibold leading-snug tracking-tight max-[359px]:mt-3 sm:mt-5 sm:text-lg">
+                    <h3 className="mt-3 min-w-0 text-[0.9375rem] font-semibold leading-snug tracking-tight sm:mt-5 sm:text-lg">
                       {solution ? (
                         <Link href={`/maplerecord/solutions/${solution.slug}`} className={stretched}>
                           {t.title}
@@ -627,9 +634,9 @@ export function MrModuleAudience({ module: m }: { module: MrModule }) {
           {cell ? (
             <li className="reveal">
               <div className={cn(card, "group bg-transparent ring-line-strong/70")}>
-                <div className="flex items-center gap-3 max-[359px]:block sm:block">
+                <div>
                   <MrIconTile icon={LayoutGrid} className="size-9 rounded-lg sm:size-11 sm:rounded-xl" />
-                  <h3 className="min-w-0 text-[0.9375rem] font-semibold leading-snug tracking-tight max-[359px]:mt-3 sm:mt-5 sm:text-lg">
+                  <h3 className="mt-3 min-w-0 text-[0.9375rem] font-semibold leading-snug tracking-tight sm:mt-5 sm:text-lg">
                     <Link href="/maplerecord/solutions" className={stretched}>
                       All solutions
                     </Link>

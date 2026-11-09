@@ -27,8 +27,10 @@ export function generateStaticParams() {
 const themeService: Record<InsightTheme, { href: string; label: string; interest: ContactInterest }> = {
   "AI Governance": { href: "/ai-governance", label: "AI Governance services", interest: "ai-governance" },
   Adobe: { href: "/adobe-services", label: "Adobe Services", interest: "adobe-services" },
-  "Data Management": { href: "/data-management", label: "Data Management services", interest: "data-management" },
-  "Customer Experience": { href: "/adobe-services", label: "Adobe Services", interest: "adobe-services" },
+  // The Data & Analytics pillar keeps its original /data-management URL.
+  "Data & Analytics": { href: "/data-management", label: "Data & Analytics services", interest: "data-management" },
+  // Customer experience optimization sits in the Experience Design pillar.
+  "Customer Experience": { href: "/experience-design", label: "Experience Design services", interest: "experience-design" },
 };
 
 function textOf(node: ReactNode): string {
@@ -72,9 +74,11 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
 
   const Body = await loadInsightBody(slug);
   const headings = await getInsightHeadings(slug);
-  // Same-theme articles first, topped up with the latest others so no article ends without onward reading.
+  // Same-theme articles first, then any hand-picked ones, topped up with the latest others so no article ends
+  // without onward reading.
   const others = (await getInsights({ includeDrafts: isEnabled })).filter((a) => a.slug !== slug);
-  const related = [...others.filter((a) => a.theme === article.theme), ...others.filter((a) => a.theme !== article.theme)].slice(0, 2);
+  const picked = (article.related ?? []).map((s) => others.find((a) => a.slug === s)).filter((a) => a !== undefined);
+  const related = [...new Set([...others.filter((a) => a.theme === article.theme), ...picked, ...others])].slice(0, 2);
   const relatedTitle = related.every((a) => a.theme === article.theme) ? `More on ${article.theme}` : "More insights";
   // Articles about one Adobe application link to that application's service page and pre-select it in the contact form.
   const product = article.adobeProduct ? getAdobeProduct(article.adobeProduct) : undefined;
@@ -82,9 +86,8 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
     ? { href: adobeProductPath(product.slug), label: `Adobe ${product.shortName} services`, interest: "adobe-services" as const }
     : themeService[article.theme];
   const path = `/insights/${slug}`;
-  // The visible crumb uses the short title so it fits on one line on phones; the H1 below carries the full title.
-  // The JSON-LD crumbs use the same list, so structured data matches what is shown.
-  const crumbs = [{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.metaTitle ?? article.title }];
+  // Breadcrumbs are structured data only (no visible trail); the last crumb is the article's own title.
+  const crumbs = [{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: article.title }];
   // Structured data only for published articles; drafts are noindex previews.
   const jsonLd =
     article.status === "published"
@@ -116,7 +119,7 @@ export default async function InsightPage({ params }: PageProps<"/insights/[slug
         <header className="border-b border-line pb-12 pt-10 lg:pb-14 lg:pt-14">
           <Container>
             <Breadcrumbs items={crumbs} />
-            <div className="mt-12 max-w-4xl">
+            <div className="max-w-4xl">
               <Eyebrow>{article.theme}</Eyebrow>
               <h1 className="mt-6 text-h1 text-balance">{article.title}</h1>
               <p className="mt-6 max-w-[60ch] text-lead text-muted">{article.description}</p>

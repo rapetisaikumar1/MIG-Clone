@@ -1,6 +1,6 @@
 /**
  * Verified company identity. Every item here was checked against the live site
- * (maverickinnogarage.com/contact, footer) on 2026-11-02. Header, footer, contact page,
+ * (maverickinnogarage.com/contact, footer) on 2026-11-02, or comes from the Capability Matrix (October 2026). Header, footer, contact page,
  * metadata and JSON-LD all read from this module — do not duplicate these values elsewhere.
  */
 export type Office = {
@@ -12,7 +12,8 @@ export type Office = {
   locality: string;
   regionCode: string;
   postalCode: string;
-  phone: { display: string; e164: string };
+  /** Omitted where no number is published for the office (Virginia). */
+  phone?: { display: string; e164: string };
 };
 
 const offices: [Office, ...Office[]] = [
@@ -49,23 +50,38 @@ const offices: [Office, ...Office[]] = [
     postalCode: "L1N 1C4",
     phone: { display: "+1 (647) 674-2623", e164: "+16476742623" },
   },
+  {
+    // Added from the 2026 Capability Matrix (page 09), which lists no telephone number for this office.
+    id: "virginia",
+    label: "Virginia, United States",
+    region: "Virginia",
+    country: "US",
+    streetLines: ["20130 Lakeview Center Plz", "Suite 400"],
+    locality: "Ashburn",
+    regionCode: "VA",
+    postalCode: "20147",
+  },
 ];
 
 export const company = {
   name: "Maverick InnoGarage",
   shortName: "MiG",
-  // Positioning per the owner directive of 2026-11-07: a software development and professional services
-  // company. Four specializations in priority order (AI Governance, Adobe Services, Data Management,
-  // Software Development), plus MapleRecord, MiG's own product. Use these strings verbatim for self-description.
-  /** Canonical sentence: About lead, Organization JSON-LD `description`, README and long-form intros. */
+  // Positioning per the owner directive of 2026-11-07 and the Capability Matrix (October 2026): MiG delivers
+  // software, platforms, engineering and professional services across seven practice pillars (data, cloud and
+  // engineering, Adobe Experience Cloud and MarTech, human-centric design, digital product, business transformation
+  // and CRM, records management) for enterprises and the public sector, and makes MapleRecord and MOLI.
+  // It is not a consultancy. Use these strings verbatim for self-description; don't repeat a company-type label.
+  /** Canonical sentence: About lead, Organization JSON-LD `description`, privacy and cookie notices, long-form intros. */
   descriptor:
-    "Maverick InnoGarage is a software development and professional services company specializing in AI governance, Adobe enterprise solutions, data management and enterprise software, and the maker of MapleRecord, our records management platform.",
+    "Maverick InnoGarage is a digital transformation, data, engineering and MarTech partner for enterprises and the public sector. We deliver data, cloud and engineering, Adobe Experience Cloud and MarTech, human-centric design, CRM and records management end to end, as software, platforms and professional services, and we make MapleRecord and MOLI, our own records management products.",
   /** Short variant (≤ 160 characters): default and home meta description, OG and Twitter descriptions. */
   positioning:
-    "Software development and professional services for AI governance, Adobe solutions, data management and enterprise software, from the makers of MapleRecord.",
+    "Data, cloud & engineering, Adobe Experience Cloud & MarTech and human-centric design for enterprises and the public sector. Makers of MapleRecord and MOLI.",
   /** One-line footer blurb. */
-  blurb: "Software development and professional services for responsible AI, Adobe solutions, enterprise data and records management.",
-  thesis: "Trusted data supports responsible AI and effective digital experiences.",
+  blurb:
+    "Data, cloud and engineering, Adobe Experience Cloud and MarTech, human-centric design, CRM and records management, delivered end to end.",
+  /** Belief statement: About "What we believe" and the home page "How it connects" heading. */
+  thesis: "Data, engineering and design deliver more together.",
   // No email address is published on the current site. Leave null until confirmed.
   email: null as string | null,
   offices,
@@ -87,7 +103,7 @@ export const company = {
 } as const;
 
 /** Main line shown in calls to action (Delaware and Texas share this number). */
-export const primaryPhone = offices[0].phone;
+export const primaryPhone = offices[0].phone!;
 
 export function formatAddress(office: Office) {
   return [...office.streetLines, `${office.locality}, ${office.regionCode} ${office.postalCode}`];

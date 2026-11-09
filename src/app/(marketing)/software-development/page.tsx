@@ -1,4 +1,4 @@
-import { SoftwareGraphic } from "@/components/graphics/service-graphics";
+import { EngineeringGraphic } from "@/components/graphics/pillars/engineering";
 import { ServicePage } from "@/features/services/service-page";
 import { MapleRecordCallout } from "@/features/services/maplerecord-callout";
 import { getService } from "@/lib/content/services";
@@ -6,20 +6,21 @@ import { pageMetadata } from "@/lib/metadata";
 
 const content = getService("software-development");
 
+/** Pillar 02 of the Capability Matrix, Engineering & Technology. The slug predates the pillar name and is kept for SEO. */
 export const metadata = pageMetadata({ ...content.meta, path: "/software-development" });
 
-export default function SoftwareDevelopmentPage() {
+export default function EngineeringPage() {
   // As on /data-management and /ai-governance, the benefits strip would restate the hero lead and capabilities.
-  // The MapleRecord callout is the proof point: software we designed and built ourselves. The callout already says
-  // "designed and built by Maverick InnoGarage", so the closing sentence ties it to this page instead of repeating
-  // that (wording from the guide's §5.4 positioning line: "from the team that builds and runs MapleRecord").
+  // The MapleRecord callout is the proof point: a product we engineered ourselves (it replaces a capability card that
+  // repeated the same facts directly above it). The callout already says
+  // "designed and built by Maverick InnoGarage", so the closing sentence ties it to this page instead of repeating that.
   return (
     <ServicePage
       content={content}
-      graphic={<SoftwareGraphic />}
-      capabilityLinks={{ MapleRecord: "/maplerecord" }}
+      graphic={<EngineeringGraphic />}
+      capabilityLinks={{ "AI Governance": "/ai-governance" }}
       showBenefits={false}
-      afterCapabilities={<MapleRecordCallout context="MapleRecord is software we designed and built ourselves." />}
+      afterCapabilities={<MapleRecordCallout context="It is built with the same engineering practices we bring to client work." />}
     />
   );
 }

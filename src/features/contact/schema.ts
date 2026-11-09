@@ -3,14 +3,18 @@ import type { AdobeProductSlug } from "@/lib/content/types";
 
 /**
  * Shared by the client form (usability) and the API route (enforcement). Contains no secrets.
- * Interests follow the site's order of prominence (AI Governance, Adobe Services, Data Management,
- * Software Development); the email subject and body take their labels from this list.
+ * Interests follow the seven practice pillars of the Capability Matrix, then AI Governance and general
+ * inquiries; the email subject and body take their labels from this list.
  */
 export const contactInterests = [
+  { value: "data-management", label: "Data & Analytics" },
+  { value: "software-development", label: "Engineering & Technology" },
+  { value: "adobe-services", label: "Adobe Experience Cloud & MarTech" },
+  { value: "experience-design", label: "Experience Design" },
+  { value: "digital-product", label: "Digital & Product" },
+  { value: "business-transformation", label: "Business Transformation & CRM" },
+  { value: "records-management", label: "Records Management (MapleRecord, MOLI)" },
   { value: "ai-governance", label: "AI Governance" },
-  { value: "adobe-services", label: "Adobe Services" },
-  { value: "data-management", label: "Data Management" },
-  { value: "software-development", label: "Software Development" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 
@@ -32,9 +36,10 @@ export const adobeApplications = [
   { value: "real-time-cdp", label: "Adobe Real-Time CDP" },
   { value: "experience-manager", label: "Adobe Experience Manager" },
   { value: "analytics", label: "Adobe Analytics" },
-  { value: "target", label: "Adobe Target" },
   { value: "marketo-engage", label: "Adobe Marketo Engage" },
+  { value: "target", label: "Adobe Target" },
   { value: "commerce", label: "Adobe Commerce" },
+  { value: "content-management", label: "Adobe Content Management" },
 ] as const;
 
 export type AdobeApplication = (typeof adobeApplications)[number]["value"];
@@ -44,7 +49,7 @@ type SameUnion<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : fals
 export const adobeApplicationsMatchProducts: SameUnion<AdobeApplication, AdobeProductSlug> = true;
 
 const adobeApplicationValues = adobeApplications.map((a) => a.value) as [AdobeApplication, ...AdobeApplication[]];
-export const MAX_ADOBE_APPLICATIONS = 7;
+export const MAX_ADOBE_APPLICATIONS = 8;
 
 export function isAdobeApplication(value: unknown): value is AdobeApplication {
   return typeof value === "string" && (adobeApplicationValues as string[]).includes(value);

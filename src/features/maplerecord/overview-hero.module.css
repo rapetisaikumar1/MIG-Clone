@@ -9,8 +9,8 @@
 
 .title {
   font-size: clamp(2.5rem, 1.45rem + 3.3vw, 4.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.038em;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
 /* Between night-text and night-muted: the lead reads second, the mono tagline third (≈ 12.6:1 on night). */
@@ -40,7 +40,8 @@
   mask-image: radial-gradient(95% 70% at 50% 30%, #000 30%, transparent 100%);
 }
 
-/* Pre-softened radial gradients (no filter), moved with transform only. */
+/* Pre-softened radial gradients (no filter), moved with transform only. Kept faint (2026-11-09): on the oxblood night
+   tone a stronger red glow turned the hero saturated red. */
 .auroraRed,
 .auroraWarm {
   position: absolute;
@@ -53,14 +54,14 @@
   left: 50%;
   top: 34rem;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(208 0 0 / 0.3) 0%, rgb(208 0 0 / 0.13) 42%, rgb(208 0 0 / 0.04) 70%, transparent 100%);
+  background: radial-gradient(closest-side, rgb(200 0 0 / 0.16) 0%, rgb(200 0 0 / 0.07) 42%, rgb(200 0 0 / 0.02) 70%, transparent 100%);
 }
 .auroraWarm {
   width: 48rem;
   left: 82%;
   top: 4rem;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgb(255 96 64 / 0.1) 0%, rgb(255 96 64 / 0.04) 55%, transparent 100%);
+  background: radial-gradient(closest-side, rgb(255 96 64 / 0.06) 0%, rgb(255 96 64 / 0.025) 55%, transparent 100%);
 }
 
 /* Faint record shapes and connectors sit at the sides; the mask keeps them away from the headline. */
@@ -203,7 +204,7 @@
   stroke-dashoffset: 0;
 }
 .node {
-  fill: #19191b;
+  fill: var(--night-raised);
   stroke: rgb(241 239 233 / 0.18);
 }
 .nodeGlyph {

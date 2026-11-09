@@ -15,14 +15,14 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
 
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: "#f6f4ef", color: "#111111", fontFamily: "ui-sans-serif, system-ui, sans-serif", lineHeight: 1.6 }}>
+      <body style={{ margin: 0, background: "#f4f3f0", color: "#111111", fontFamily: "ui-sans-serif, system-ui, sans-serif", lineHeight: 1.6 }}>
         <title>{`Something went wrong · ${company.name}`}</title>
         <main style={{ maxWidth: "40rem", margin: "0 auto", padding: "6rem 1.25rem" }}>
-          <p style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.75rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "#5d5a54" }}>
+          <p style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.75rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "#57524d" }}>
             {company.name}
           </p>
           <h1 style={{ fontSize: "2.25rem", lineHeight: 1.1, letterSpacing: "-0.03em", margin: "1rem 0 0" }}>This page didn&apos;t load correctly.</h1>
-          <p style={{ color: "#5d5a54", fontSize: "1.125rem", marginTop: "1.25rem" }}>
+          <p style={{ color: "#57524d", fontSize: "1.125rem", marginTop: "1.25rem" }}>
             It may be a temporary problem, so please try again. If it keeps happening, call us at{" "}
             <a href={`tel:${primaryPhone.e164}`} style={{ color: "#111111" }}>
               {primaryPhone.display}
@@ -33,7 +33,7 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
             <button
               type="button"
               onClick={() => retry()}
-              style={{ minHeight: "3rem", padding: "0 1.5rem", border: 0, borderRadius: "999px", background: "#d00000", color: "#ffffff", font: "inherit", fontWeight: 500, cursor: "pointer" }}
+              style={{ minHeight: "3rem", padding: "0 1.5rem", border: 0, borderRadius: "999px", background: "#c80000", color: "#ffffff", font: "inherit", fontWeight: 500, cursor: "pointer" }}
             >
               Try again
             </button>

@@ -2,13 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { AdobeNav, MapleRecordNav, NavItem } from "@/config/navigation";
+import type { AdobeNav, MapleRecordNav, NavItem, ServicesNav } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { AdobeMenu } from "./adobe-menu";
 import { MapleRecordMenu } from "./maplerecord-menu";
+import { ServicesMenu } from "./services-menu";
 
 export function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * Services is "you are here" on the hub and on every page its menu reaches, except pages that have
+ * their own top-level item (Adobe Services, MapleRecord), so only one item is ever marked.
+ */
+export function isServicesActive(pathname: string, services: ServicesNav, items: NavItem[]) {
+  if (isActivePath(pathname, services.overview.href)) return true;
+  if (items.some((i) => i.href !== services.overview.href && isActivePath(pathname, i.href))) return false;
+  const hrefs = [...services.pillars.flatMap((p) => [p.href, ...(p.links ?? []).map((l) => l.href)]), services.aiGovernance.href];
+  return hrefs.some((href) => isActivePath(pathname, href));
 }
 
 function linkClassName(active: boolean, withMenu: boolean) {
@@ -26,14 +38,29 @@ function linkClassName(active: boolean, withMenu: boolean) {
 }
 
 /**
- * Desktop primary links. `adobe` and `mapleRecord` (built server-side by `getAdobeNav` and
- * `getMapleRecordNav`) attach their disclosure panels to the item whose href matches their overview link.
+ * Desktop primary links. `services`, `adobe` and `mapleRecord` (built server-side by `getServicesNav`,
+ * `getAdobeNav` and `getMapleRecordNav`) attach their disclosure panels to the item whose href matches
+ * their overview link.
  */
-export function NavLinks({ items, adobe, mapleRecord }: { items: NavItem[]; adobe?: AdobeNav; mapleRecord?: MapleRecordNav }) {
+export function NavLinks({
+  items,
+  services,
+  adobe,
+  mapleRecord,
+}: {
+  items: NavItem[];
+  services?: ServicesNav;
+  adobe?: AdobeNav;
+  mapleRecord?: MapleRecordNav;
+}) {
   const pathname = usePathname();
   return (
     <ul className="flex items-center">
       {items.map((item) => {
+        if (services && item.href === services.overview.href) {
+          const active = isServicesActive(pathname, services, items);
+          return <ServicesMenu key={item.href} item={item} menu={services} active={active} linkClassName={linkClassName(active, true)} />;
+        }
         const active = isActivePath(pathname, item.href);
         if (adobe && item.href === adobe.overview.href) {
           return <AdobeMenu key={item.href} item={item} menu={adobe} active={active} linkClassName={linkClassName(active, true)} />;

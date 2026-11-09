@@ -22,6 +22,11 @@
 // integration pillar says "on-premises" (the site's spelling elsewhere), and the page meta carries the ownership line.
 // Consistency sweep (2026-11-07): pillar eyebrows lose hype labels ("Smart", "Zero-friction", "Seamless"); pillar
 // points and figures are unchanged (MR-13 flag).
+// Capability deck alignment (2026-11-09, Capability Deck Oct 2026, pillar 07 "Flagship Records Management &
+// Compliance"): the hero lead uses the deck's description (government, municipalities and regulated organizations;
+// workflow automation; lifecycle governance), the ownership line names the records management and compliance
+// practice, the FAQ drops the company label and names the deck's audience, and the overview's CTA card mentions MOLI
+// once (mrRelated). Published figures are unchanged.
 import type { MrImage, MrModuleSlug } from "@/lib/content/types";
 import { mrScreens, type MrScreen, type MrScreenKey } from "./screens";
 
@@ -32,9 +37,9 @@ export { mrOfficial } from "./official";
 
 export const mrHero = {
   headline: "Manage your information ecosystem",
-  lead: "An AI-first hybrid records management platform for electronic and physical records",
+  lead: "AI-first records management for government, municipalities and regulated organizations, with workflow automation and lifecycle governance for electronic and physical records.",
   /** Shown under the tagline (register MR-03). */
-  maker: "Designed and built by Maverick InnoGarage.",
+  maker: "Designed and built by Maverick InnoGarage, part of our records management and compliance practice.",
   tagline: "Secure records. Automate requests. Streamline operations.",
   screen: mrScreens.suiteLauncher,
   /**
@@ -72,6 +77,9 @@ export const mrFiguresNote = "Figures as published on maplerecord.com, MapleReco
 
 /** The ownership sentence (messaging guide §5.5), stated in the closing CTA card on every MapleRecord page. */
 export const mrOwnership = "MapleRecord is designed and built by Maverick InnoGarage.";
+
+/** Light cross-link to MiG's other records product, shown once in the overview's CTA card (after mrOwnership). */
+export const mrRelated = { before: "It sits alongside ", label: "MOLI, our AI-driven record management system", href: "/moli", after: "." };
 
 /** Section headings on the overview page (sentence case; no claims beyond the official site). */
 export const mrOverviewCopy = {
@@ -185,10 +193,10 @@ export const mrPillars = [
   {
     eyebrow: "Workflow automation",
     icon: "workflows",
-    title: "Low-code workflow automation",
+    title: "No-code workflow automation",
     points: [
       "Automate creation, review, and approvals",
-      "Configure workflows quickly with low-code templates",
+      "Configure workflows quickly with no-code templates",
       "Reduce manual finance and invoice handling by 84%",
     ],
     screen: mrScreens.workflowsRuns,
@@ -227,7 +235,7 @@ export const mrFaqs = [
     // provenance: proposed (owner-stated 2026-11-07: MiG builds MapleRecord and provides professional services around it).
     question: "Who builds and implements MapleRecord?",
     answer:
-      "MapleRecord is designed and built by Maverick InnoGarage, a software development and professional services company. Our team also implements it: we configure it for your records program, integrate it with your systems, train your people and provide ongoing support.",
+      "MapleRecord is designed and built by Maverick InnoGarage as part of its records management and compliance practice. Our team also implements it: we configure it for your records program, integrate it with your systems, train your people and provide ongoing support.",
   },
   {
     question: "Why choose MapleRecord?",
@@ -235,7 +243,7 @@ export const mrFaqs = [
   },
   {
     question: "Who is MapleRecord designed for?",
-    answer: "MapleRecord is built for enterprises and public-sector organizations operating in regulated environments.",
+    answer: "MapleRecord is built for government, municipalities and regulated organizations, from public-sector agencies to enterprises in regulated industries.",
   },
   {
     question: "How does MapleRecord support security and compliance?",

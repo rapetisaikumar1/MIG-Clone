@@ -1,3 +1,4 @@
+import { servicesNav } from "@/config/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
@@ -31,39 +32,11 @@ function balancedItem(index: number, count: number, max: 3 | 4, sm = true) {
   return cn(sm && count % 2 === 1 && count > 1 && "sm:col-span-2", (lastSpan > 1 || (sm && count % 2 === 1)) && LG_SPAN[lastSpan]);
 }
 
-export function Breadcrumbs({ items }: { items: { label: string; href?: string }[] }) {
-  return (
-    <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
-        {/*
-          Each "/" trails the item before it (not leading the next), so a wrapped trail never starts a line with a
-          lone slash. A long current page (an article title) truncates to one line; the full title is the h1 below.
-        */}
-        {items.map((item, i) => (
-          <li key={item.label} className={`flex min-w-0 items-center gap-2 ${item.href ? "whitespace-nowrap" : "max-w-full"}`}>
-            {/*
-              min-h-6 keeps each link at the WCAG 2.2 minimum 24px target height (2.5.8). On touch-sized
-              screens the link grows to 44px and a matching negative margin keeps the visual spacing.
-            */}
-            {item.href ? (
-              <Link
-                href={item.href}
-                className="inline-flex min-h-6 items-center underline-offset-4 transition-colors hover:text-ink hover:underline max-sm:-my-2.5 max-sm:min-h-11"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span aria-current="page" className="block min-w-0 truncate text-ink">
-                {item.label}
-              </span>
-            )}
-            {i < items.length - 1 ? <span aria-hidden className="text-line-strong">/</span> : null}
-          </li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
+/**
+ * Visible breadcrumb trails are switched off site-wide (owner request, 2026-11-09). Pages still pass their trail
+ * here and emit the matching BreadcrumbList JSON-LD, so the hierarchy stays available to search engines.
+ */
+export const Breadcrumbs: (props: { items: { label: string; href?: string }[] }) => null = () => null;
 
 export type HeroCta = { label: string; href: string };
 
@@ -81,7 +54,7 @@ export function ServiceHero({
     <section className="relative overflow-hidden border-b border-line bg-paper pb-16 pt-10 sm:pb-20 lg:pb-24 lg:pt-14">
       <Container>
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: content.name }]} />
-        <div className="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             {/* Multi-term eyebrows can wrap on phones: keep the dot on the first line and each separator with the
                 term before it, so a wrapped line never starts with "·". */}
@@ -100,7 +73,7 @@ export function ServiceHero({
             </div>
           </div>
           {/* Below lg the graphic stacks under the CTAs; capping its width keeps the hero to about one screen. */}
-          <div className="w-full max-lg:max-w-lg lg:col-span-5">
+          <div className="w-full max-lg:mx-auto max-lg:max-w-lg lg:col-span-5">
             <div className="rounded-2xl border border-line bg-surface/70 p-4 sm:p-6 lg:p-8">{graphic}</div>
           </div>
         </div>
@@ -218,6 +191,9 @@ function CapabilityItem({
   const isLast = index === count - 1;
   const wideSm = isLast && count % 2 === 1;
   const wideLg = isLast && count % 3 === 1;
+  // With two items on the last desktop row, the grid switches to 6 tracks: every item spans 2, the last two span 3,
+  // so that row is filled by two wider items instead of leaving an empty third cell.
+  const lgSpan = count % 3 === 2 ? (index >= count - 2 ? "lg:col-span-3" : "lg:col-span-2") : undefined;
   // Wrappers dissolve (display: contents) wherever the item is a subgrid, so their children sit on the shared rows.
   const wrapper = cn(!wideSm && "sm:contents", wideSm && !wideLg && "lg:contents", !wideSm && wideLg && "lg:block");
   return (
@@ -229,6 +205,7 @@ function CapabilityItem({
         wideSm && "sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-x-10",
         wideSm && !wideLg && "lg:col-span-1 lg:row-span-4 lg:grid-cols-1 lg:grid-rows-subgrid lg:gap-y-0",
         wideLg && "lg:col-span-3 lg:row-span-1 lg:grid lg:grid-cols-12 lg:grid-rows-none lg:gap-x-10",
+        lgSpan,
       )}
     >
       <div className={cn(wrapper, wideLg && "lg:col-span-5")}>
@@ -252,7 +229,15 @@ function CapabilityItem({
           ))}
         </ul>
         {capability.platforms ? (
-          <ul className="mt-auto flex flex-wrap content-start gap-2 pt-6" aria-label={`Platforms for ${capability.title}`}>
+          <ul
+            className={cn(
+              "mt-auto flex flex-wrap content-start gap-2 pt-6",
+              // On a full-width last item the list runs in two columns; a rule above the tags spans both, so the tags
+              // read as belonging to the whole item rather than to the first column.
+              wideLg && "lg:mt-6 lg:border-t lg:border-line lg:pt-5",
+            )}
+            aria-label={`Platforms for ${capability.title}`}
+          >
             {capability.platforms.map((p) => {
               const href = adobeTagHrefs.get(p);
               return (
@@ -297,7 +282,7 @@ export function CapabilitiesSection({
           intro={content.capabilitiesIntro}
           className="reveal"
         />
-        <ul className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
+        <ul className={cn("mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 sm:gap-y-14", count % 3 === 2 ? "lg:grid-cols-6" : "lg:grid-cols-3")}>
           {content.capabilities.map((c, i) => (
             <CapabilityItem key={c.id} capability={c} index={i} count={count} termLinks={termLinks} />
           ))}
@@ -441,15 +426,18 @@ export function ApproachSteps({
   );
 }
 
+const COUNT_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six"];
+
 export function ApproachSection({ content }: { content: ServiceContent }) {
+  const count = content.approach.length;
   return (
     <Section aria-labelledby="approach-title">
       <Container>
         <SectionHeading
           id="approach-title"
-          eyebrow="Delivery approach"
-          title="Assess, design, implement, improve"
-          intro="Four stages, each ending in something tangible you can review, use and build on. The deliverables below are what you keep."
+          eyebrow="From vision to victory"
+          title={`${COUNT_WORDS[count] ?? count} stages, one accountable team`}
+          intro="Each stage ends with something tangible you can review, use and build on. What you keep is listed under What you receive, further down this page."
           className="reveal"
         />
         {/* The deliverables section that follows lists each stage's outputs in full, so the steps omit them. */}
@@ -489,7 +477,7 @@ export function DeliverablesSection({ content }: { content: ServiceContent }) {
                   <path d="M13 1 V7 H19" fill="none" stroke="currentColor" strokeWidth="1.5" />
                 </svg>
                 <div>
-                  <h3 className="text-lg font-semibold tracking-tight">{d.title}</h3>
+                  <h3 className="font-display text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em]">{d.title}</h3>
                   <p className="mt-2 text-[0.9375rem] text-muted">{d.description}</p>
                 </div>
               </li>
@@ -508,13 +496,20 @@ function UseCaseCard({ useCase, className }: { useCase: UseCase; className?: str
     ["Intended outcome", useCase.outcome],
   ];
   return (
-    <li className={cn("flex flex-col rounded-2xl border border-line bg-paper p-6 sm:p-7", className)}>
+    // From md the card is a subgrid over five shared rows (label, title, three terms), so each term starts at the
+    // same height across a row of cards however the titles and texts wrap.
+    <li
+      className={cn(
+        "flex flex-col rounded-2xl border border-line bg-paper p-6 sm:p-7 md:row-span-5 md:grid md:grid-rows-subgrid md:gap-y-0",
+        className,
+      )}
+    >
       {/* Outline variant: the label stays for accuracy without being the darkest thing on the card. */}
-      <IllustrativeLabel className="self-start border border-line-strong bg-transparent text-muted" />
+      <IllustrativeLabel className="self-start justify-self-start border border-line-strong bg-transparent text-muted" />
       <h3 className="mt-6 text-h3">{useCase.title}</h3>
-      <dl className="mt-6 space-y-5">
-        {rows.map(([term, text]) => (
-          <div key={term}>
+      <dl className="mt-6 max-md:space-y-5 md:contents">
+        {rows.map(([term, text], i) => (
+          <div key={term} className={cn(i === 0 ? "md:mt-6" : "md:mt-5")}>
             <dt className="font-mono text-label uppercase text-muted">{term}</dt>
             <dd className="mt-1.5 text-[0.9375rem] text-ink-soft">{text}</dd>
           </div>
@@ -589,7 +584,7 @@ export function BenefitsSection({ content }: { content: ServiceContent }) {
         >
           {content.benefits.map((b, i) => (
             <li key={b.title} className={cn("bg-surface p-7", balancedItem(i, content.benefits.length, 4))}>
-              <h3 className="text-lg font-semibold tracking-tight">{b.title}</h3>
+              <h3 className="font-display text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em]">{b.title}</h3>
               <p className="mt-2 text-[0.9375rem] text-muted">{b.description}</p>
             </li>
           ))}
@@ -647,44 +642,38 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
 export type ReadingLink = { title: string; href: string };
 
 export function RelatedServices({ current, reading }: { current: ServiceContent["slug"]; reading?: ReadingLink[] }) {
-  // The four specializations in the site's order of prominence; each page lists the other three.
-  const all = [
-    { slug: "ai-governance", name: "AI Governance", line: "Responsible AI, AI risk management and compliance support." },
-    { slug: "adobe-services", name: "Adobe Services", line: "Adobe Experience Cloud implementation, integration and support." },
-    { slug: "data-management", name: "Data Management", line: "Data governance, integration, quality and lifecycle." },
-    { slug: "software-development", name: "Software Development", line: "Enterprise applications, workflow automation and integration." },
-  ] as const;
+  // Every service page (the Capability Matrix pillars, then AI Governance); each page lists the others.
+  const all = servicesNav.map((s) => ({ slug: s.href.slice(1), name: s.label, line: s.description ?? "" }));
   return (
     <Section tone="deep" spacing="compact" aria-labelledby="related-title">
       <Container>
-        <h2 id="related-title" className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
-          <Dot />
-          Connected expertise
-        </h2>
+        <SectionHeading id="related-title" eyebrow="Connected expertise" title="Explore related services" className="reveal" />
         {/*
-          auto-rows-fr keeps the three cards the same height when they stack, as well as side by side. Below lg they
-          stack (three columns at 768px squeezed the arrow out of the card); from lg each card is a column with the
-          arrow at the bottom, so the names line up across the row and the descriptions get the full card width.
+          Six cards (every other service page): one column on phones, 2 × 3 on tablets, 3 × 2 from lg. md:auto-rows-fr
+          keeps every card in the grid the same height; the arrow sits beside the name, so a short description
+          doesn't leave an empty band at the bottom of the card.
         */}
-        <ul className="mt-8 grid auto-rows-fr gap-4 lg:grid-cols-3">
+        <ul className="mt-10 grid gap-4 md:auto-rows-fr md:grid-cols-2 lg:grid-cols-3">
           {all
             .filter((s) => s.slug !== current)
             .map((s) => (
               <li key={s.slug}>
                 <Link
                   href={`/${s.slug}`}
-                  className="card-lift group flex h-full items-center justify-between gap-6 rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink lg:flex-col lg:items-start"
+                  className="card-lift group flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink sm:p-7"
                 >
-                  <span>
-                    <span className="block text-h3 font-semibold">{s.name}</span>
-                    <span className="mt-1 block text-muted">{s.line}</span>
+                  <span className="flex items-start justify-between gap-5">
+                    <span className="font-display text-[1.1875rem] font-semibold leading-snug tracking-[-0.012em] sm:text-[1.3125rem]">
+                      {s.name}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="-mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line-strong text-signal transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white"
+                    >
+                      <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </span>
                   </span>
-                  <span
-                    aria-hidden
-                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line-strong text-signal transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white lg:self-end"
-                  >
-                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                  </span>
+                  <span className="mt-3 block max-w-[40ch] text-[0.9375rem] leading-relaxed text-muted">{s.line}</span>
                 </Link>
               </li>
             ))}

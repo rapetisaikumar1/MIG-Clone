@@ -1,8 +1,9 @@
 import { expect, test, type APIRequestContext } from "@playwright/test";
 
 /**
- * Business positioning (owner directive, 2026-11-07): Maverick InnoGarage is a software development and
- * professional services company, not a consultancy. These checks keep that from regressing.
+ * Business positioning (owner directive, 2026-11-07; Capability Matrix, October 2026): Maverick InnoGarage
+ * delivers software, platforms, engineering and professional services across seven practice pillars, and is
+ * not a consultancy. These checks keep that from regressing.
  */
 
 async function sitemapPaths(request: APIRequestContext) {
@@ -25,21 +26,18 @@ test("no page describes Maverick InnoGarage as a consultancy (text, title, meta 
   expect(failures, failures.join("\n")).toEqual([]);
 });
 
-test("the company is described as a software development and professional services company", async ({ page }) => {
-  await page.goto("/about");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /software development and professional services/i);
+test("the home page presents the seven Capability Matrix pillars", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("main")).toContainText(/software development and professional services company/i);
+  const main = page.getByRole("main");
+  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli"]) {
+    await expect(main.locator(`a[href="${href}"]`).first()).toBeAttached();
+  }
 });
 
-test("Software Development is linked site-wide but not added to the desktop header", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/software-development");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-
+test("every service page is linked from the footer", async ({ page }) => {
   await page.goto("/");
-  const nav = page.getByRole("navigation", { name: "Primary" });
-  await expect(nav.locator('a[href="/software-development"]')).toHaveCount(0);
-  await expect(page.getByRole("main").locator('a[href="/software-development"]').first()).toBeVisible();
-  await expect(page.getByRole("contentinfo").locator('a[href="/software-development"]')).toHaveCount(1);
+  const footer = page.getByRole("contentinfo");
+  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/ai-governance"]) {
+    await expect(footer.locator(`a[href="${href}"]`)).toHaveCount(1);
+  }
 });

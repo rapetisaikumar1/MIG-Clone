@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { NodeLabel, Plane, svgSmallLabelSize } from "./primitives";
+import { NodeLabel, Plane, svgLabelSize, svgSmallLabelSize } from "./primitives";
 
 type GraphicProps = { className?: string };
 
@@ -61,11 +61,12 @@ export function AiGovernanceGraphic({ className }: GraphicProps) {
       <text x="270" y="144" className={cn("fill-muted font-mono", svgSmallLabelSize)}>
         HIGHER
       </text>
-      <Box x={196} y={168} lines={["Human", "review"]} />
+      <Box x={180} y={168} w={160} lines={["Human", "review"]} />
       <Arrow d="M260 220 V248" head={[260, 248, "down"]} />
-      <Box x={196} y={252} lines={["Owner", "sign-off"]} />
-      <circle cx="312" cy="264" r="7" className="fill-surface stroke-ink" strokeWidth="1.25" />
-      <path d="M308.5 264 L311 266.5 L315.5 261.5" fill="none" className="stroke-signal" strokeWidth="1.5" strokeLinecap="round" />
+      <Box x={180} y={252} w={160} lines={["Owner", "sign-off"]} />
+      {/* Approval mark sits on the box's corner, clear of the label. */}
+      <circle cx="340" cy="252" r="9" className="fill-surface stroke-ink" strokeWidth="1.25" />
+      <path d="M335.5 252 L338.5 255 L344.5 248.5" fill="none" className="stroke-signal" strokeWidth="1.75" strokeLinecap="round" />
       <Arrow d="M260 304 V336" head={[260, 336, "down"]} />
       <Arrow d="M416 108 V336" head={[416, 336, "down"]} />
       <Box x={40} y={340} w={440} h={52} lines={["Monitor · document · re-assess"]} dark />
@@ -187,12 +188,12 @@ export function DataGraphic({ className }: GraphicProps) {
           </g>
         );
       })}
-      <circle cx={cx} cy={cy} r="58" className="fill-ink" />
-      <circle cx={cx} cy={cy - 30} r="5" className="fill-logo-red" />
-      <text x={cx} y={cy + 2} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgSmallLabelSize)}>
+      <circle cx={cx} cy={cy} r="70" className="fill-ink" />
+      <circle cx={cx} cy={cy - 32} r="5" className="fill-logo-red" />
+      <text x={cx} y={cy + 2} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgLabelSize)}>
         Owners &amp;
       </text>
-      <text x={cx} y={cy + 18} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgSmallLabelSize)}>
+      <text x={cx} y={cy + 22} textAnchor="middle" className={cn("fill-night-text font-mono uppercase", svgLabelSize)}>
         stewards
       </text>
     </svg>

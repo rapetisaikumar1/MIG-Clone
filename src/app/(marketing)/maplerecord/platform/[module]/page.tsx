@@ -12,6 +12,7 @@ import {
   MrModuleTour,
   MrOtherModules,
 } from "@/features/maplerecord/platform-sections";
+import { mrModuleHeroFocus } from "@/content/maplerecord/modules";
 import { getMrModule, getMrModules } from "@/lib/content/maplerecord";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -42,6 +43,7 @@ export default async function ModulePage({ params }: PageProps<"/maplerecord/pla
         description={m.hero.description}
         image={m.hero.image}
         imageLabel={m.hero.image.label}
+        imageFocus={mrModuleHeroFocus[m.slug]}
         officialUrl={m.officialUrl}
         meta={
           <>

@@ -27,13 +27,14 @@ export function MapleRecordCallout({
           <div>
             <Eyebrow>Our product · MapleRecord</Eyebrow>
             <h2 id="maplerecord-callout-title" className="mt-5 text-h2">
-              AI-first hybrid records management.
+              Public sector and enterprise records management.
             </h2>
+            {/* Description from the Capability Deck (Oct 2026), pillar 07: Flagship Records Management & Compliance. */}
             <p className="mt-6 max-w-[54ch] text-muted">
-              MapleRecord, designed and built by Maverick InnoGarage, manages electronic and physical records in one system,
-              with smart retention, full audit trails and role-based access. Its five modules, MR Records, MR Requests, MR
-              Workflows, MR Forms and MR Admin, cover records, information requests, workflows, forms and administration on
-              one platform. {context}
+              MapleRecord, designed and built by Maverick InnoGarage, is customized records management software for
+              government, municipalities and regulated organizations, with workflow automation, a seamless user experience
+              and lifecycle governance. Five integrated modules cover electronic and physical records, information
+              requests, workflows, forms and administration. {context}
             </p>
             <ArrowLink href="/maplerecord" className="mt-8">
               Explore MapleRecord
