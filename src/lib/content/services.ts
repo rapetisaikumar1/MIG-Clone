@@ -4,6 +4,7 @@ import { businessTransformation } from "@/content/services/business-transformati
 import { dataManagement } from "@/content/services/data-management";
 import { digitalProduct } from "@/content/services/digital-product";
 import { experienceDesign } from "@/content/services/experience-design";
+import { informationGovernance } from "@/content/services/information-governance";
 import { softwareDevelopment } from "@/content/services/software-development";
 import type { ServiceContent, ServiceSlug } from "./types";
 
@@ -15,6 +16,7 @@ const services: Record<ServiceSlug, ServiceContent> = {
   "experience-design": experienceDesign,
   "digital-product": digitalProduct,
   "business-transformation": businessTransformation,
+  "information-governance": informationGovernance,
   "ai-governance": aiGovernance,
 };
 

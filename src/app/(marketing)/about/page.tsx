@@ -10,12 +10,13 @@ import { isContactDeliveryConfigured } from "@/server/env";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 import { ArrowLink } from "@/components/ui/button";
 import { contactHref } from "@/features/contact/links";
-import { aiGovernanceNav, moliPath, mapleRecordPath, pillarsNav } from "@/config/navigation";
+import { aiGovernanceNav, coreExpertiseNav, moliPath, mapleRecordPath, pillarsNav } from "@/config/navigation";
+import { adobeServicesPath } from "@/lib/content/adobe";
 
 export const metadata = pageMetadata({
   title: "About",
   description:
-    "Maverick InnoGarage unites data, cloud and engineering, Adobe Experience Cloud and MarTech, and human-centric design for enterprises and the public sector, with 12+ years of delivery.",
+    "Maverick InnoGarage delivers information, data and AI governance and MarTech on Adobe Experience Cloud for enterprises and the public sector, with 12+ years of delivery.",
   path: "/about",
 });
 
@@ -27,11 +28,35 @@ const facts = [
   { value: String(company.offices.length), label: "offices across the United States and Canada" },
 ];
 
-/** Pillars 01–06 link to their service pages; pillar 07 is delivered through our two products, shown below them. */
-const servicePillars = pillarsNav.filter((p) => p.number !== "07");
-const recordsPillar = pillarsNav.find((p) => p.number === "07");
+/**
+ * The four core areas we lead with (owner direction, 2026-11-10), in coreExpertiseNav's order. Information Governance
+ * (pillar 07) is shown first with its two products; the other three are peers in one row.
+ */
+const informationGovernance = coreExpertiseNav.find((a) => a.href === "/information-governance")!;
+const otherCoreAreas = coreExpertiseNav.filter((a) => a !== informationGovernance);
 
-/** Pillar 07's products. Summaries restate the Capability Matrix; compliance is "designed to support", never certified. */
+/** Where each core area sits in the Capability Matrix, so the supporting pillars below read as the rest of the seven. */
+const coreAreaPillars: Record<string, string> = {
+  "/information-governance": "Pillar 07",
+  "/data-management": "Pillar 01",
+  [aiGovernanceNav.href]: "Pillars 01 and 02",
+  [adobeServicesPath]: "Pillar 03",
+};
+
+/** Card copy for the other three core areas, restating the Capability Matrix and the existing service pages. */
+const coreAreaBodies: Record<string, string> = {
+  "/data-management":
+    "Data ownership, quality, security and regulatory compliance, with analytics built on top. We turn fragmented enterprise data into governed, AI-ready assets on AWS and Azure.",
+  [aiGovernanceNav.href]:
+    "Responsible AI and AI risk management: an inventory of where AI is used, risk tiers, a named owner for each use and review matched to the risk.",
+  [adobeServicesPath]:
+    "Customer data, content, personalization, analytics, marketing automation and commerce, designed, implemented and optimized on Adobe Experience Cloud.",
+};
+
+/** The remaining Capability Matrix pillars, which support the core areas and are also delivered on their own. */
+const supportingPillars = pillarsNav.filter((p) => !["01", "03", "07"].includes(p.number));
+
+/** Information Governance's products (pillar 07). Summaries restate the Capability Matrix; compliance is "designed to support", never certified. */
 const products = [
   {
     title: "MapleRecord",
@@ -96,88 +121,98 @@ export default function AboutPage() {
           <SectionHeading
             id="what-title"
             eyebrow="What we do"
-            title="Seven practice pillars. One accountable partner."
-            intro="From data foundations and cloud engineering to Adobe MarTech, experience design, CRM and records management, we cover the full digital transformation lifecycle."
+            title="Governance and MarTech, delivered end to end."
+            intro="Four core areas lead our work. Engineering, design, product and CRM work from our seven practice pillars supports all four."
             className="reveal"
           />
-          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {servicePillars.map((p) => (
+
+          <h3 className="mt-14 font-mono text-label uppercase text-muted">Core areas</h3>
+
+          {/* Information Governance is delivered with our two products, so its card holds them rather than being one link. */}
+          <div className="reveal mt-6 rounded-2xl border border-line bg-paper-deep p-7 sm:p-8">
+            <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-10">
+              <div className="lg:col-span-5">
+                <p className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
+                  <Dot />
+                  {coreAreaPillars[informationGovernance.href]}
+                </p>
+                <h4 className="mt-5 text-h3">{informationGovernance.label}</h4>
+              </div>
+              <div className="mt-3 lg:col-span-7 lg:mt-1">
+                <p className="max-w-[60ch] text-[0.9375rem] text-muted">
+                  Records lifecycle, retention and privacy compliance support for government, municipalities and regulated
+                  organizations, delivered with MapleRecord and MOLI, the records management software we design and build
+                  ourselves.
+                </p>
+                <ArrowLink href={informationGovernance.href} className="mt-4">
+                  Explore Information Governance
+                </ArrowLink>
+              </div>
+            </div>
+            <ul aria-label="Our products" className="mt-7 grid gap-5 md:grid-cols-2">
+              {products.map((product) => (
+                <li key={product.title} className="flex">
+                  <div className="card-lift relative flex w-full flex-col rounded-xl border border-line bg-surface p-5 transition-colors hover:border-ink/40 has-focus-visible:border-ink sm:p-7">
+                    <p className="font-mono text-label uppercase text-muted">Product</p>
+                    <h5 className="mt-3 text-xl font-semibold tracking-tight">{product.title}</h5>
+                    <p className="mt-2 flex-1 text-[0.9375rem] text-muted">{product.body}</p>
+                    <ul aria-label={product.tagsLabel} className="mt-5 flex flex-wrap gap-2">
+                      {product.tags.map((t) => (
+                        <li key={t}>
+                          <Tag className="whitespace-nowrap px-3 py-1 text-ink-soft">{t}</Tag>
+                        </li>
+                      ))}
+                    </ul>
+                    <ArrowLink href={product.href} className="mt-6 self-start after:absolute after:inset-0 after:rounded-xl">
+                      Explore {product.title}
+                    </ArrowLink>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <ul aria-label="More core areas" className="mt-5 grid gap-5 md:grid-cols-3">
+            {otherCoreAreas.map((area) => (
               // reveal (scroll) and card-lift (hover) both use transform, so they sit on separate elements.
-              <li key={p.href} className="reveal flex">
+              <li key={area.href} className="reveal flex">
                 {/* The link's ::after covers the card, so the whole card is the click target. */}
-                <div className="card-lift relative flex w-full flex-col rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink/40 has-focus-visible:border-ink sm:p-8">
+                <div className="card-lift relative flex w-full flex-col rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink/40 has-focus-visible:border-ink sm:p-8 md:p-6 lg:p-8">
                   <p className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
                     <Dot />
-                    Pillar {p.number}
+                    {coreAreaPillars[area.href]}
                   </p>
-                  <h3 className="mt-5 text-h3">{p.label}</h3>
-                  <p className="mt-3 flex-1 text-[0.9375rem] text-muted">{p.description}</p>
-                  <ArrowLink href={p.href} className="mt-6 self-start after:absolute after:inset-0 after:rounded-2xl">
-                    Learn more<span className="sr-only"> about {p.label}</span>
+                  <h4 className="mt-5 text-h3">{area.label}</h4>
+                  <p className="mt-3 flex-1 text-[0.9375rem] text-muted">{coreAreaBodies[area.href] ?? area.description}</p>
+                  <ArrowLink href={area.href} className="mt-6 self-start after:absolute after:inset-0 after:rounded-2xl">
+                    Learn more<span className="sr-only"> about {area.label}</span>
                   </ArrowLink>
                 </div>
               </li>
             ))}
           </ul>
 
-          {/* Pillar 07 has no service page of its own: it is delivered through our two products. */}
-          {recordsPillar ? (
-            <div className="reveal mt-5 rounded-2xl border border-line bg-paper-deep p-7 sm:p-8">
-              <div className="lg:grid lg:grid-cols-12 lg:items-end lg:gap-10">
-                <div className="lg:col-span-5">
-                  <p className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
-                    <Dot />
-                    Pillar {recordsPillar.number}
-                  </p>
-                  <h3 className="mt-5 text-h3">{recordsPillar.label}</h3>
-                </div>
-                <p className="mt-3 max-w-[60ch] text-[0.9375rem] text-muted lg:col-span-7 lg:mt-0">
-                  AI-driven records management for government and regulated industries, designed to support compliance and
-                  delivered through software we design and build ourselves.
-                </p>
-              </div>
-              <ul aria-label="Our products" className="mt-7 grid gap-5 md:grid-cols-2">
-                {products.map((product) => (
-                  <li key={product.title} className="flex">
-                    <div className="card-lift relative flex w-full flex-col rounded-xl border border-line bg-surface p-5 transition-colors hover:border-ink/40 has-focus-visible:border-ink sm:p-7">
-                      <p className="font-mono text-label uppercase text-muted">Product</p>
-                      <h4 className="mt-3 text-xl font-semibold tracking-tight">{product.title}</h4>
-                      <p className="mt-2 flex-1 text-[0.9375rem] text-muted">{product.body}</p>
-                      <ul aria-label={product.tagsLabel} className="mt-5 flex flex-wrap gap-2">
-                        {product.tags.map((t) => (
-                          <li key={t}>
-                            <Tag className="whitespace-nowrap px-3 py-1 text-ink-soft">{t}</Tag>
-                          </li>
-                        ))}
-                      </ul>
-                      <ArrowLink href={product.href} className="mt-6 self-start after:absolute after:inset-0 after:rounded-xl">
-                        Explore {product.title}
-                      </ArrowLink>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+          <div className="mt-16 border-t border-ink pt-10">
+            <div className="lg:grid lg:grid-cols-12 lg:items-baseline lg:gap-10">
+              <h3 className="font-mono text-label uppercase text-muted lg:col-span-4">Supporting capabilities</h3>
+              <p className="mt-3 max-w-[60ch] text-[0.9375rem] text-muted lg:col-span-8 lg:mt-0">
+                Practice pillars that the core areas build on, and that we also deliver on their own.
+              </p>
             </div>
-          ) : null}
-
-          {/* AI Governance isn't a pillar: it extends Data Governance and AI/ML Enablement to responsible AI. */}
-          <div className="reveal mt-5">
-            <div className="card-lift relative flex flex-col gap-5 rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-ink/40 has-focus-visible:border-ink sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-              <div className="max-w-[72ch]">
-                <p className="flex items-center gap-2.5 font-mono text-label uppercase text-muted">
-                  <Dot />
-                  Extends pillars 01 and 02
-                </p>
-                <h3 className="mt-5 text-h3">{aiGovernanceNav.label}</h3>
-                <p className="mt-3 text-[0.9375rem] text-muted">
-                  The responsible-AI extension of our data governance and AI/ML enablement work: an inventory of where AI is used,
-                  risk tiers, a named owner for each use and review matched to the risk.
-                </p>
-              </div>
-              <ArrowLink href={aiGovernanceNav.href} className="shrink-0 self-start lg:self-center after:absolute after:inset-0 after:rounded-2xl">
-                Explore AI Governance
-              </ArrowLink>
-            </div>
+            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {supportingPillars.map((p) => (
+                <li key={p.href} className="reveal flex">
+                  <div className="card-lift relative flex w-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink/40 has-focus-visible:border-ink">
+                    <p className="font-mono text-label uppercase text-muted">Pillar {p.number}</p>
+                    <h4 className="mt-4 text-lg font-semibold tracking-tight">{p.label}</h4>
+                    <p className="mt-2 flex-1 text-[0.9375rem] text-muted">{p.description}</p>
+                    <ArrowLink href={p.href} className="mt-5 self-start after:absolute after:inset-0 after:rounded-2xl">
+                      Learn more<span className="sr-only"> about {p.label}</span>
+                    </ArrowLink>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <AdobePartnerPanel className="mt-12" />
@@ -191,15 +226,16 @@ export default function AboutPage() {
           </div>
           <div className="max-w-[65ch] space-y-5 text-[1.0625rem] text-ink-soft lg:col-span-7 lg:pt-12">
             <p>
-              Data, cloud platforms, marketing technology and the experiences built on them depend on each other. Personalization
-              is only as good as the customer profiles behind it. Analytics only pays off when people can act on it. A records
-              program only works if people use it every day.
+              Records, data, AI and marketing technology depend on each other. Personalization is only as good as the customer
+              profiles behind it, and those profiles are only as good as the data quality and privacy rules that govern them. An
+              AI model inherits the gaps in the data it learns from. A records program only works if people use it every day.
             </p>
             <p>
-              That&apos;s why we work across all seven pillars. We build governed, AI-ready data and run it on secure, automated
-              cloud platforms. We implement Adobe Experience Cloud and design experiences people value. We ship digital products,
-              change how the organization works around them, and put records under lifecycle governance. When one team is accountable for all
-              of it, fewer problems fall between projects.
+              That&apos;s why we lead with governance and build on it. We put records under lifecycle governance with MapleRecord
+              and MOLI, turn enterprise data into governed, AI-ready assets, give every AI use a named owner and a review matched to
+              its risk, and implement Adobe Experience Cloud on that foundation. Cloud engineering, experience design, digital
+              product and CRM work support all four. When one team is accountable for all of it, fewer problems fall between
+              projects.
             </p>
           </div>
         </Container>
@@ -256,7 +292,7 @@ export default function AboutPage() {
           <div className="mt-14 rounded-2xl border border-line bg-surface p-7 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-9">
             <div>
               <h3 className="text-h3">Interested in joining us?</h3>
-              <p className="mt-2 max-w-[56ch] text-muted">We&apos;re always glad to hear from people who care about data, engineering, design and digital experience.</p>
+              <p className="mt-2 max-w-[56ch] text-muted">We&apos;re always glad to hear from people who care about governance, data, MarTech, engineering and design.</p>
             </div>
             <ArrowLink href={contactHref("general", { topic: "careers" })} className="mt-4 shrink-0 sm:mt-0">
               Get in touch
@@ -267,7 +303,7 @@ export default function AboutPage() {
 
       <CtaBand
         title="Let's talk about what you're building."
-        body="Whether you're starting with your data, a cloud platform, an Adobe implementation, a digital product or a records program, we'll scope a practical first step with you."
+        body="Whether you're starting with a records program, your data, the AI you already use or your MarTech stack, we'll scope a practical first step with you."
       />
     </>
   );

@@ -6,70 +6,74 @@ import type { ApproachStage } from "@/lib/content/types";
  * describes a specific client.
  */
 
-/** Meta description for "/" (≤ 160 characters): the core expertise named in the hero. */
+/** Meta description for "/" (≤ 160 characters): the four core areas named in the hero, and who they are for. */
 export const homeDescription =
-  "AI governance, Adobe Experience Cloud, data & analytics, and cloud & custom software on AWS and Azure, delivered for enterprises and the public sector.";
+  "Information, data and AI governance, and MarTech on Adobe Experience Cloud, designed, implemented, run and supported for enterprises and the public sector.";
 
 /**
- * Home hero. The headline names what we deliver; the lead names the core expertise (Capability Matrix pillars
- * 01–03 and 07, plus AI Governance) and who it is for. Figures: "12+ years" and "Adobe Solution Partner" are
- * from the deck.
+ * Home hero. The headline names the four core areas (Information, Data and AI Governance, and MarTech); the lead
+ * says what we do in them and for whom. Adobe appears only as the platform MarTech is delivered on. Figures:
+ * "12+ years" and "enterprises and the public sector" are from the deck; the Adobe Solution Partner badge is in
+ * the header.
  */
 export const hero = {
-  eyebrow: ["Adobe Solution Partner", "12+ years of delivery"],
-  /** The last word and the full stop are kept together when rendered, so the line never ends on an orphan. */
-  title: "One partner for data, AI, Adobe and cloud.",
-  lead: "We design, implement and support AI governance, Adobe Experience Cloud, data and analytics, and cloud and custom software on AWS and Azure for enterprises and the public sector.",
-  /** Second sentence of the lead, with the two product names rendered as links. */
-  products: {
-    before: "We also build our own records management products, ",
+  eyebrow: ["Enterprises and the public sector", "12+ years of delivery"],
+  /** The last two words and the full stop are kept together when rendered, so the line never ends on an orphan. */
+  title: "Information, data and AI governance. MarTech built on it.",
+  /** The lead, with the two product names rendered as links between `before` and `after`. */
+  lead: {
+    before:
+      "We design, implement, run and support information, data and AI governance programs and the software behind them, including our own records management products, ",
     links: [
       { label: "MapleRecord", href: "/maplerecord" },
       { label: "MOLI", href: "/moli" },
     ],
+    after: ". We deliver MarTech on Adobe Experience Cloud.",
   },
   primaryCta: { label: "Talk to an Expert", href: "/contact#inquiry" },
   secondaryCta: { label: "Explore our services", href: "/services" },
 };
 
 /**
- * The hero's capability map: four core areas as layers of one platform, each linking to its service page.
- * Order is top to bottom in the illustration. `layer` is the illustration's layer name, `label` the service.
+ * The hero's capability map: the four core areas as layers of one governed stack, each linking to its service
+ * page (labels and links as in `coreExpertiseNav`, src/config/navigation.ts). Order is top to bottom in the
+ * illustration; `id` is the illustration's layer, `layer` its name, `label` the service.
  */
 export const heroLayers = [
   {
-    id: "governance",
-    layer: "Across every layer",
+    id: "information",
+    layer: "Records & information",
+    label: "Information Governance",
+    detail: "Records lifecycle, retention and privacy, with MapleRecord and MOLI",
+    href: "/information-governance",
+  },
+  {
+    id: "data",
+    layer: "Data",
+    label: "Data Governance",
+    detail: "Data ownership, quality, security and regulatory compliance",
+    href: "/data-management",
+  },
+  {
+    id: "ai",
+    layer: "AI & models",
     label: "AI Governance",
     detail: "Responsible AI, AI risk management and compliance support",
     href: "/ai-governance",
   },
   {
-    id: "experience",
-    layer: "Experience",
-    label: "Adobe Experience Cloud",
-    detail: "Experience Platform, Real-Time CDP, AEM, Analytics, Target",
+    id: "martech",
+    layer: "Customer experience",
+    label: "MarTech",
+    detail: "Customer data, content and personalization on Adobe Experience Cloud",
     href: "/adobe-services",
-  },
-  {
-    id: "data",
-    layer: "Data & AI",
-    label: "Data & Analytics",
-    detail: "Data governance, modern data architecture, data science",
-    href: "/data-management",
-  },
-  {
-    id: "foundation",
-    layer: "Foundation",
-    label: "Engineering & Technology",
-    detail: "Cloud on AWS and Azure, DevOps, custom software",
-    href: "/software-development",
   },
 ] as const;
 
 /**
  * Capabilities per practice pillar, keyed by the pillar number in `pillarsNav` (src/config/navigation.ts),
- * which supplies the labels and links. Wording follows the deck's capability matrix.
+ * which supplies the labels and links. Wording follows the deck's capability matrix. On the home page,
+ * pillars 01, 03 and 07 appear as core areas (`coreAreas`); the others as supporting pillars.
  */
 export const pillarCapabilities: Record<string, readonly string[]> = {
   "01": [
@@ -130,97 +134,146 @@ export const pillarCapabilities: Record<string, readonly string[]> = {
   ],
 };
 
+/**
+ * The four core areas (owner direction, 2026-11-10), in `coreExpertiseNav` order, keyed by its `href`, which
+ * supplies the label and link. `ref` is the Capability Matrix pillar number behind each area; AI Governance is not a
+ * pillar in the deck and extends pillars 01 (data governance) and 02 (AI/ML enablement). Capabilities follow the
+ * deck (07, 01, 03) and the AI Governance page's capability list.
+ */
+export const coreAreas: Record<string, { ref: string; capabilities: readonly string[] }> = {
+  "/information-governance": {
+    ref: "07",
+    capabilities: [
+      "Records lifecycle governance",
+      "Public sector & enterprise records management with MapleRecord",
+      "Workflow automation",
+      "AI-driven record management with MOLI",
+      "Designed to support GDPR, PDPA, PIPEDA & CCPA compliance",
+    ],
+  },
+  "/data-management": {
+    ref: "01",
+    capabilities: [
+      "Data governance & data management",
+      "Regulatory compliance, data quality & security",
+      "Data strategy & analytics",
+      "Modern data architecture & engineering",
+      "Data science & visualization",
+    ],
+  },
+  "/ai-governance": {
+    ref: "01 + 02",
+    capabilities: [
+      "Readiness & governance assessment",
+      "AI inventory & risk tiering",
+      "Policies, accountability & oversight workflows",
+      "Data handling for AI",
+      "Monitoring & compliance records",
+    ],
+  },
+  "/adobe-services": {
+    ref: "03",
+    capabilities: [
+      "Customer data & real-time profiles",
+      "Content & digital asset management",
+      "Personalization & testing",
+      "Analytics & attribution",
+      "Marketing automation & commerce",
+      "Delivered on Adobe Experience Cloud",
+    ],
+  },
+};
+
 export const pillarsIntro = {
   eyebrow: "Capability matrix",
-  title: "7 practice pillars. One accountable partner.",
+  title: "Four core areas. Seven practice pillars behind them.",
   intro:
-    "Start with one practice or combine several. Each card links to the full detail.",
-  /** AI Governance is not a pillar in the deck: shown as the responsible-AI extension of pillars 01 and 02. */
-  aiGovernance: {
-    eyebrow: "Also",
-    title: "AI Governance",
-    body: "Responsible AI and AI risk management, extending our data governance and AI/ML enablement work.",
-  },
+    "Governance and MarTech lead our work. Engineering, design, product and business transformation build and run what each one needs. Start with one area or combine several.",
+  coreLabel: "Core expertise",
+  supportingLabel: "Supporting practice pillars",
 } as const;
 
 /**
- * "How it connects": one hypothetical scenario walked through three of the pillars.
+ * "How it connects": one hypothetical scenario walked through the four core areas, from information to MarTech.
  * Illustrative only. It describes no client and is labeled as such on the page.
  */
 export const connection = {
   eyebrow: "How it connects",
-  title: "Three pillars, one customer journey.",
-  body: "Personalization on unreliable data creates risk, and a well-built platform still falls short if the journey doesn't fit how people work. Delivering across pillars lets us build the data, the platform and the experience as one.",
+  title: "Four areas, one governed customer journey.",
+  body: "Personalization built on ungoverned records, unreliable data or unreviewed AI creates risk. Delivering the four areas together means every step follows the same rules.",
 };
 
 export const connectionScenario = {
-  title: "Personalizing customer journeys on unified data",
+  title: "Personalizing customer journeys under one set of rules",
   steps: [
     {
-      layer: "Data foundations",
-      area: "Data & Analytics",
-      href: "/data-management",
-      body: "Bring customer data from CRM, commerce and service systems into governed pipelines, confirm who owns it, and fix quality issues in critical fields.",
+      layer: "Information",
+      area: "Information Governance",
+      href: "/information-governance",
+      body: "Classify the customer records you hold, set retention rules, and apply them consistently across systems.",
     },
     {
-      layer: "Platforms & activation",
-      area: "Adobe Experience Cloud & MarTech",
-      href: "/adobe-services",
-      body: "Unify profiles in Adobe Experience Platform, build audiences in Real-Time CDP, and test personalized content with Adobe Target.",
+      layer: "Data",
+      area: "Data Governance",
+      href: "/data-management#governance",
+      body: "Give customer data named owners, shared definitions and quality rules, so every later use starts from trusted fields.",
     },
     {
-      layer: "Customer experience",
-      area: "Experience Design",
-      href: "/experience-design",
-      body: "Research what customers need, design the journeys and content around it, and measure what changes with Adobe Analytics.",
+      layer: "AI",
+      area: "AI Governance",
+      href: "/ai-governance#risk",
+      body: "Register and risk-tier the AI that scores or segments customers, with review checkpoints before it goes live.",
+    },
+    {
+      layer: "MarTech",
+      area: "MarTech",
+      href: "/adobe-services#customer-data",
+      body: "Unify profiles in Adobe Experience Platform, build audiences in Real-Time CDP and personalize with Adobe Target.",
     },
   ],
-  feedback: "What customers actually do feeds back into data quality, audiences and design decisions.",
+  feedback: "Campaign results and customer requests feed back into retention rules, data quality and AI reviews.",
 } as const;
 
-/** Business problems, one per practice pillar (`pillar` = number in `pillarsNav`). */
+/**
+ * Business problems: the four core areas first, then two supporting pillars. `area` is the label shown above
+ * each problem; `href` points at the page, or the capability anchor on it, that addresses the problem.
+ */
 export const problems = [
   {
-    problem: "Data is fragmented or unreliable",
-    detail: "Systems disagree, quality issues surface late, and nobody trusts the numbers.",
-    pillar: "01",
-    href: "/data-management#quality",
+    problem: "Records and retention are applied inconsistently",
+    detail: "Retention schedules exist on paper, and finding the right record takes days.",
+    area: "Information Governance",
+    href: "/information-governance#records-lifecycle",
+  },
+  {
+    problem: "Nobody owns or trusts the data",
+    detail: "Systems disagree, definitions vary by team, and quality issues surface late.",
+    area: "Data Governance",
+    href: "/data-management#governance",
+  },
+  {
+    problem: "AI is in use without clear oversight",
+    detail: "Teams adopt AI tools faster than anyone can review them, and nobody holds a complete list.",
+    area: "AI Governance",
+    href: "/ai-governance#inventory",
+  },
+  {
+    problem: "Customer data, content and analytics don't connect",
+    detail: "Profiles, content and measurement run as separate projects with manual handoffs.",
+    area: "MarTech",
+    href: "/adobe-services#customer-data",
   },
   {
     problem: "Infrastructure slows every release",
     detail: "Manual deployments, aging environments and thin test coverage hold back new features.",
-    pillar: "02",
+    area: "Engineering & Technology",
     href: "/software-development#cloud",
-  },
-  {
-    problem: "Adobe and enterprise systems don't talk to each other",
-    detail: "Profiles, content and analytics run as separate projects with manual handoffs.",
-    pillar: "03",
-    href: "/adobe-services#integration",
-  },
-  {
-    problem: "Digital experiences don't reflect what users need",
-    detail: "Journeys are designed around internal structures, and nobody measures where people drop off.",
-    pillar: "04",
-    href: "/experience-design",
-  },
-  {
-    problem: "Product ideas stall before they reach market",
-    detail: "Priorities shift, teams work in silos, and launches slip from quarter to quarter.",
-    pillar: "05",
-    href: "/digital-product",
   },
   {
     problem: "Processes and CRM don't match how teams work",
     detail: "Sales, service and operations work around their systems with spreadsheets and email.",
-    pillar: "06",
+    area: "Business Transformation & CRM",
     href: "/business-transformation#process-optimization",
-  },
-  {
-    problem: "Records and retention are applied inconsistently",
-    detail: "Retention schedules exist on paper, and finding the right record takes days.",
-    pillar: "07",
-    href: "/maplerecord",
   },
 ] as const;
 
@@ -244,9 +297,11 @@ export const deliveryApproach: ApproachStage[] = [
 ];
 
 export const maplerecordFeature = {
-  eyebrow: "Our products",
+  eyebrow: "Information Governance",
   title: "MapleRecord",
   body: "Public sector & enterprise records management for government, municipalities and regulated organizations, with workflow automation, lifecycle governance and five integrated modules. Designed and built by Maverick InnoGarage.",
+  /** Closing line of the card: both products are delivered as part of Information Governance. */
+  governance: { before: "Both products are part of our ", label: "Information Governance", href: "/information-governance", after: " work." },
   modules: ["MR Records", "MR Requests", "MR Workflows", "MR Forms", "MR Admin"],
   moli: {
     label: "MOLI",
@@ -256,5 +311,5 @@ export const maplerecordFeature = {
 
 export const homeCta = {
   title: "Ready to plan your next step?",
-  body: "Tell us about your data, cloud, Adobe, design or records management project. We'll scope a practical first step and deliver it with you.",
+  body: "Tell us about your information governance, data governance, AI governance or MarTech project, or the engineering and design work around it. We'll scope a practical first step and deliver it with you.",
 };

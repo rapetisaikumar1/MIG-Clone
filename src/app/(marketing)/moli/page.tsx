@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata({ title: moliMeta.title, description: moliMeta.description, path: moliMeta.path });
 
 /** Breadcrumb trail for structured data only; visible breadcrumbs were removed site-wide. */
-const crumbs = [{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: "MOLI" }];
+const crumbs = [{ label: "Home", href: "/" }, { label: "Information Governance & Records", href: "/information-governance" }, { label: "MOLI" }];
 
 /*
  * Section rhythm: paper hero → white (four pillars) → paper-deep (privacy regulations) → white (MOLI and

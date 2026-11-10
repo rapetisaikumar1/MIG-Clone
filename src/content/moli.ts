@@ -17,7 +17,7 @@ export const moliMeta = {
 } as const;
 
 export const moliHero = {
-  eyebrow: "Our product · Records Management & Compliance",
+  eyebrow: "Our product · Information Governance & Records",
   title: "MOLI, AI-driven record management",
   lead: "MOLI is our flagship AI-powered record management system for government and regulated industries. It pairs advanced search and retrieval with cloud integration across AWS and Azure, and is designed to support compliance with GDPR, PDPA, PIPEDA and CCPA.",
   primaryLabel: "Talk to an Expert",
@@ -92,7 +92,7 @@ export const moliRelationship = {
   eyebrow: "MOLI and MapleRecord",
   title: "Two records products, one practice",
   intro:
-    "MOLI and MapleRecord are both Maverick InnoGarage products in our Records Management & Compliance practice. Each takes its own approach to records management.",
+    "MOLI and MapleRecord are both Maverick InnoGarage products in our Information Governance & Records practice. Each takes its own approach to records management.",
   rows: ["What it is", "Focus", "Built for"],
   moli: {
     label: "AI-first RMS",
@@ -118,6 +118,8 @@ export const moliRelationship = {
     href: "/maplerecord",
   },
   footer: "Not sure which fits? Tell us about your records and we will walk you through both.",
+  /** The practice both products belong to (Capability Matrix pillar 07, presented as Information Governance & Records). */
+  practice: { label: "Information Governance & Records", href: "/information-governance" },
 } as const;
 
 export const moliFaqs = [

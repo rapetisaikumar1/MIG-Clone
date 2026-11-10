@@ -16,10 +16,10 @@ export default async function OpengraphImage() {
         <img src={logoSrc} width={225} height={100} alt="" />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 22, letterSpacing: 2, color: "#57524d", textTransform: "uppercase" }}>
-            Data & Analytics · Engineering · Adobe MarTech · Experience Design
+            Information Governance · Data Governance · AI Governance · MarTech
           </div>
           <div style={{ marginTop: 24, fontSize: 68, lineHeight: 1.05, letterSpacing: -2, color: "#111111", fontWeight: 600, maxWidth: 980 }}>
-            Your digital transformation, data, engineering & MarTech partner.
+            Information, data & AI governance and MarTech, delivered end to end.
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>

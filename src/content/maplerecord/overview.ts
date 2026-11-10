@@ -27,6 +27,8 @@
 // workflow automation; lifecycle governance), the ownership line names the records management and compliance
 // practice, the FAQ drops the company label and names the deck's audience, and the overview's CTA card mentions MOLI
 // once (mrRelated). Published figures are unchanged.
+// Repositioning (2026-11-10): the ownership line and FAQ name the Information Governance & Records practice (pillar 07,
+// renamed); the hero line links it. The CTA body says "get more value from" instead of the slogan "unlock the value in".
 import type { MrImage, MrModuleSlug } from "@/lib/content/types";
 import { mrScreens, type MrScreen, type MrScreenKey } from "./screens";
 
@@ -39,7 +41,12 @@ export const mrHero = {
   headline: "Manage your information ecosystem",
   lead: "AI-first records management for government, municipalities and regulated organizations, with workflow automation and lifecycle governance for electronic and physical records.",
   /** Shown under the tagline (register MR-03). */
-  maker: "Designed and built by Maverick InnoGarage, part of our records management and compliance practice.",
+  maker: {
+    before: "Designed and built by Maverick InnoGarage, part of our ",
+    label: "Information Governance & Records practice",
+    href: "/information-governance",
+    after: ".",
+  },
   tagline: "Secure records. Automate requests. Streamline operations.",
   screen: mrScreens.suiteLauncher,
   /**
@@ -100,7 +107,7 @@ export const mrOverviewCopy = {
   faqTitle: "Frequently asked questions",
   cta: {
     title: "Ready to transform your records management?",
-    body: "Discover how MapleRecord can help your organization streamline workflows, support compliance, and unlock the value in your documents.",
+    body: "Discover how MapleRecord can help your organization streamline workflows, support compliance, and get more value from your documents.",
   },
 };
 
@@ -235,7 +242,7 @@ export const mrFaqs = [
     // provenance: proposed (owner-stated 2026-11-07: MiG builds MapleRecord and provides professional services around it).
     question: "Who builds and implements MapleRecord?",
     answer:
-      "MapleRecord is designed and built by Maverick InnoGarage as part of its records management and compliance practice. Our team also implements it: we configure it for your records program, integrate it with your systems, train your people and provide ongoing support.",
+      "MapleRecord is designed and built by Maverick InnoGarage as part of its Information Governance & Records practice. Our team also implements it: we configure it for your records program, integrate it with your systems, train your people and provide ongoing support.",
   },
   {
     question: "Why choose MapleRecord?",

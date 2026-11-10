@@ -404,7 +404,7 @@ export function OtherProducts({ others, tone = "paper" }: { others: AdobeProduct
             Other Adobe applications
           </h2>
           <ArrowLink href={adobeServicesPath} className="self-start sm:self-auto">
-            Adobe Services overview
+            MarTech overview
           </ArrowLink>
         </div>
         {others.length > 0 ? (

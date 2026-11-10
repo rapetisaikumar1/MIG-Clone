@@ -52,14 +52,10 @@ function PillarRow({ pillar }: { pillar: MatrixPillar }) {
         </span>
         <div className="min-w-0">
           <h3 id={titleId} className="text-[clamp(1.5rem,1.3rem+0.8vw,2.125rem)] leading-[1.12] tracking-[-0.028em] text-balance">
-            {pillar.products ? (
-              pillar.label
-            ) : (
-              <Link href={pillar.href} className="group decoration-2 underline-offset-[6px] hover:underline">
-                {pillar.label}
-                <ArrowRight aria-hidden className={`ml-2 inline-block size-[0.8em] align-[-0.06em] ${arrow}`} />
-              </Link>
-            )}
+            <Link href={pillar.href} className="group decoration-2 underline-offset-[6px] hover:underline">
+              {pillar.label}
+              <ArrowRight aria-hidden className={`ml-2 inline-block size-[0.8em] align-[-0.06em] ${arrow}`} />
+            </Link>
           </h3>
           <p className="mt-3 font-mono text-label uppercase text-muted">
             <span className="sr-only">Pillar {pillar.number}, </span>

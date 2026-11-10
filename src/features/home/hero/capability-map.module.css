@@ -3,8 +3,8 @@
  * Layout follows the space the map gets, not the viewport:
  *   - 34rem and wider: labels with a detail line, laid over the art at the end of each leader line;
  *   - 26–34rem: the same, label and layer name only;
- *   - narrower: the stack alone, centred, with the labels as a list of links below it.
- * Motion (a slow float, pulses rising along the beams) runs only when motion is allowed; transforms and opacity only.
+ *   - narrower (phones): the labels alone, as a list of links.
+ * Motion (a slow float, pulses falling along the beams) runs only when motion is allowed; transforms and opacity only.
  */
 
 .host {
@@ -115,56 +115,45 @@
   }
 }
 
-/* Narrow: the stack alone (cropped to its own width), then the labels as a list. */
+/* Narrow (phones): the labels alone, as a compact list of links; the illustration needs more room than this. */
 @container (max-width: 25.999rem) {
   .art {
-    width: min(100%, 15rem);
-    margin-inline: auto;
-    overflow: hidden;
-  }
-  .svg {
-    width: var(--stack-share);
-    max-width: none;
-  }
-  .svg [data-leader] {
     display: none;
   }
   .labels {
-    margin-top: 2rem;
     border-top: 1px solid var(--night-line);
   }
   .label {
     border-bottom: 1px solid var(--night-line);
   }
   .link {
-    padding-block: 1rem;
+    padding-block: 0.875rem;
   }
 }
 
 /* Hovering or focusing a label lifts its layer and lights its leader line. */
-.svg [data-plate],
-.svg [data-frame] {
+.svg [data-plate] {
   transition: transform 300ms ease-out;
 }
 .svg [data-rim],
-.svg [data-leader] path,
-.svg [data-frame] path {
+.svg [data-leader] path {
   transition: stroke 200ms ease-out;
 }
 
-.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-plate="experience"],
+.map:has([data-layer="information"] .link:is(:hover, :focus-visible)) [data-plate="information"],
 .map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-plate="data"],
-.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-plate="foundation"] {
+.map:has([data-layer="ai"] .link:is(:hover, :focus-visible)) [data-plate="ai"],
+.map:has([data-layer="martech"] .link:is(:hover, :focus-visible)) [data-plate="martech"] {
   transform: translateY(-7px);
 }
-.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-plate="experience"] [data-rim],
+.map:has([data-layer="information"] .link:is(:hover, :focus-visible)) [data-plate="information"] [data-rim],
 .map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-plate="data"] [data-rim],
-.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-plate="foundation"] [data-rim],
-.map:has([data-layer="governance"] .link:is(:hover, :focus-visible)) [data-frame] path,
-.map:has([data-layer="governance"] .link:is(:hover, :focus-visible)) [data-leader="governance"] path,
-.map:has([data-layer="experience"] .link:is(:hover, :focus-visible)) [data-leader="experience"] path,
+.map:has([data-layer="ai"] .link:is(:hover, :focus-visible)) [data-plate="ai"] [data-rim],
+.map:has([data-layer="martech"] .link:is(:hover, :focus-visible)) [data-plate="martech"] [data-rim],
+.map:has([data-layer="information"] .link:is(:hover, :focus-visible)) [data-leader="information"] path,
 .map:has([data-layer="data"] .link:is(:hover, :focus-visible)) [data-leader="data"] path,
-.map:has([data-layer="foundation"] .link:is(:hover, :focus-visible)) [data-leader="foundation"] path {
+.map:has([data-layer="ai"] .link:is(:hover, :focus-visible)) [data-leader="ai"] path,
+.map:has([data-layer="martech"] .link:is(:hover, :focus-visible)) [data-leader="martech"] path {
   stroke: var(--logo-red);
 }
 
@@ -177,7 +166,7 @@
     animation: float 10s ease-in-out infinite alternate;
   }
   .pulse {
-    animation: rise 4.2s cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite both;
+    animation: fall 4.2s cubic-bezier(0.45, 0, 0.55, 1) var(--delay, 0s) infinite both;
   }
   .link:hover .arrow,
   .link:focus-visible .arrow {
@@ -194,7 +183,7 @@
   }
 }
 
-@keyframes rise {
+@keyframes fall {
   0% {
     transform: translateY(0);
     opacity: 0;
@@ -205,7 +194,7 @@
   }
   75%,
   100% {
-    transform: translateY(var(--rise));
+    transform: translateY(var(--fall));
     opacity: 0;
   }
 }

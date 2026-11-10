@@ -35,7 +35,7 @@ export default async function AdobeProductPage({ params }: PageProps<"/adobe-ser
   if (!product) notFound();
 
   const path = adobeProductPath(product.slug);
-  const crumbs = [{ label: "Home", href: "/" }, { label: "Adobe Services", href: adobeServicesPath }, { label: product.shortName }];
+  const crumbs = [{ label: "Home", href: "/" }, { label: "MarTech", href: adobeServicesPath }, { label: product.shortName }];
 
   // Ignore links to products that aren't on the site, and never link a page to itself.
   const related: RelatedAdobeProduct[] = product.related.flatMap(({ slug, why }) => {

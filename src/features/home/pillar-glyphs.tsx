@@ -1,4 +1,4 @@
-import { BuildGlyph, JourneyGlyph, LifecycleGlyph } from "@/components/graphics/service-graphics";
+import { BuildGlyph, GovernanceGlyph, JourneyGlyph, LifecycleGlyph } from "@/components/graphics/service-graphics";
 import { cn } from "@/lib/utils";
 
 type GlyphProps = { className?: string };
@@ -54,7 +54,7 @@ function TransformGlyph({ className }: GlyphProps) {
   );
 }
 
-/** 07 Records Management & Compliance: a stack of records, found and governed. */
+/** 07 Information Governance & Records: a stack of records, found and governed. */
 function RecordsGlyph({ className }: GlyphProps) {
   return (
     <svg viewBox="0 0 96 64" aria-hidden className={cn("h-16 w-24", className)}>
@@ -77,4 +77,12 @@ export const pillarGlyphs: Record<string, (props: GlyphProps) => React.JSX.Eleme
   "05": ProductGlyph,
   "06": TransformGlyph,
   "07": RecordsGlyph,
+};
+
+/** Glyph per core area, keyed by the area's `href` in `coreExpertiseNav` (AI Governance has no pillar number). */
+export const coreGlyphs: Record<string, (props: GlyphProps) => React.JSX.Element> = {
+  "/information-governance": RecordsGlyph,
+  "/data-management": LifecycleGlyph,
+  "/ai-governance": GovernanceGlyph,
+  "/adobe-services": JourneyGlyph,
 };

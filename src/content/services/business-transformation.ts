@@ -48,7 +48,7 @@ export const businessTransformation: ServiceContent = {
     { role: "IT and enterprise applications teams", need: "A CRM that is configured, integrated and maintainable." },
   ],
   capabilitiesIntro:
-    "Four ways we modernize how enterprises run. Business transformation and Microsoft Dynamics\u00a0365 are set out below; records management for government and regulated industries runs on our own products, MapleRecord and MOLI.",
+    "Six capabilities, delivered on their own or as one program, from customer engagement and process redesign to Microsoft Dynamics\u00a0365. When the change reaches records, our Information Governance\u00a0&\u00a0Records practice delivers it on our own products, MapleRecord and MOLI.",
   capabilities: [
     {
       id: "customer-experience",
@@ -209,7 +209,7 @@ export const businessTransformation: ServiceContent = {
     {
       question: "Can Dynamics\u00a0365 work alongside our Adobe stack?",
       answer:
-        "Yes. Adobe Marketo Engage syncs natively with Microsoft Dynamics, and we set up and maintain that sync as part of our Adobe Services. We also integrate CRM data with the data platforms behind analytics and personalization, so customer information stays consistent.",
+        "Yes. Adobe Marketo Engage syncs natively with Microsoft Dynamics, and we set up and maintain that sync as part of our MarTech work on Adobe. We also integrate CRM data with the data platforms behind analytics and personalization, so customer information stays consistent.",
     },
     {
       question: "How do you make sure the change sticks?",
@@ -219,7 +219,7 @@ export const businessTransformation: ServiceContent = {
     {
       question: "How does this relate to MapleRecord and MOLI?",
       answer:
-        "MapleRecord and MOLI are our own records management products for government and regulated industries. MapleRecord covers public sector and enterprise records management with workflow automation, and MOLI is our AI-driven record management system, designed to support compliance with GDPR, PDPA, PIPEDA and CCPA.",
+        "MapleRecord and MOLI are our own records management products for government and regulated industries. MapleRecord covers public sector and enterprise records management with workflow automation, and MOLI is our AI-driven record management system, designed to support compliance with GDPR, PDPA, PIPEDA and CCPA. Both are delivered through our Information Governance & Records practice.",
     },
   ],
   cta: {

@@ -20,7 +20,7 @@ export default function EngineeringPage() {
       graphic={<EngineeringGraphic />}
       capabilityLinks={{ "AI Governance": "/ai-governance" }}
       showBenefits={false}
-      afterCapabilities={<MapleRecordCallout context="It is built with the same engineering practices we bring to client work." />}
+      afterCapabilities={<MapleRecordCallout context="We build it with the same engineering practices we bring to client work." />}
     />
   );
 }

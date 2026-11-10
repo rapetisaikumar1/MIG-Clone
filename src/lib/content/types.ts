@@ -19,6 +19,7 @@ export type ServiceSlug =
   | "experience-design"
   | "digital-product"
   | "business-transformation"
+  | "information-governance"
   | "ai-governance";
 
 export type Capability = {
@@ -55,7 +56,7 @@ export type ServiceContent = {
   slug: ServiceSlug;
   interest: ContactInterest;
   name: string;
-  /** The insights theme for this page's "Further reading" list, when it differs from `name` (e.g. "Adobe"). */
+  /** The insights theme for this page's "Further reading" list, when it differs from `name` (e.g. "MarTech"). */
   insightTheme?: string;
   meta: { title: string; description: string };
   hero: { eyebrow: string; title: string; lead: string };

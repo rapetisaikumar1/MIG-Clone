@@ -5,7 +5,7 @@
  */
 import type { AdobeProductSlug } from "@/lib/content/types";
 
-export const insightThemes = ["AI Governance", "Adobe", "Data & Analytics", "Customer Experience"] as const;
+export const insightThemes = ["AI Governance", "MarTech", "Data & Analytics", "Customer Experience"] as const;
 export type InsightTheme = (typeof insightThemes)[number];
 
 export type InsightMeta = {
@@ -51,7 +51,7 @@ export const insights: InsightMeta[] = [
     metaTitle: "Adobe Experience Platform and CX",
     title: "Driving customer experience excellence with Adobe Experience Platform",
     description: "How unified profiles, streaming data, audiences and AI in Adobe Experience Platform support personalized customer experiences.",
-    theme: "Adobe",
+    theme: "MarTech",
     status: "published",
     published: "2024-12-06",
     adobeProduct: "experience-platform",
@@ -61,7 +61,7 @@ export const insights: InsightMeta[] = [
     metaTitle: "Customer Engagement with Real-Time CDP",
     title: "Improving customer engagement with Adobe Real-Time CDP",
     description: "An overview of Adobe Real-Time CDP: unified profiles, real-time audiences, activation to other channels, and privacy controls.",
-    theme: "Adobe",
+    theme: "MarTech",
     status: "published",
     published: "2024-12-06",
     adobeProduct: "real-time-cdp",
@@ -71,7 +71,7 @@ export const insights: InsightMeta[] = [
     metaTitle: "Maximizing Efficiency with AEM",
     title: "Maximizing efficiency with Adobe Experience Manager",
     description: "How AEM Sites, AEM Assets and multi-channel content delivery in Adobe Experience Manager help teams work more efficiently.",
-    theme: "Adobe",
+    theme: "MarTech",
     status: "published",
     published: "2024-12-06",
     adobeProduct: "experience-manager",

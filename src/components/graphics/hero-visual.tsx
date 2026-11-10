@@ -2,41 +2,41 @@ import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /*
- * Home hero illustration: the platform we build, as an isometric stack of three layers.
- *   - Foundation (base): cloud & engineering, shown as compute blocks.
- *   - Data & AI (middle): a governed data store with connected sources and models.
- *   - Experience (top, lit): applications and digital experiences, shown as upright screens.
- * Light beams carry data upward from layer to layer, and a governance frame (corner rails with a checkpoint at
- * every layer) wraps the whole stack: AI and data governance applies across every layer.
+ * Home hero illustration: the four core areas as one governed stack, top to bottom, in the order information
+ * flows through an organization.
+ *   - Records & information (top, lit): records filed in a drawer, one carrying a retention tab.
+ *   - Data: a governed data store with its connected sources.
+ *   - AI & models: a model chip wired into the plate.
+ *   - Customer experience (MarTech, base): performance bars rising toward the front.
+ * Light beams carry governed information down from layer to layer, and a governance frame (corner rails with a
+ * checkpoint at every layer) wraps the whole stack: governance applies across every layer.
  *
  * The SVG is decorative; the labels that name each layer are HTML links laid over it by the caller
  * (see `src/features/home/hero/capability-map.tsx`), positioned from `heroVisualAnchors` below.
- * Colors come from the site tokens. Motion (a slow float and rising pulses) lives in the caller's CSS module and
+ * Colors come from the site tokens. Motion (a slow float and falling pulses) lives in the caller's CSS module and
  * only runs when motion is allowed.
  */
 
 export const HERO_VISUAL_WIDTH = 650;
-export const HERO_VISUAL_HEIGHT = 584;
-/** Width of the stack alone (the area left of the leader lines), for layouts that show the stack without labels. */
-export const HERO_VISUAL_STACK_WIDTH = 362;
+export const HERO_VISUAL_HEIGHT = 628;
 
-const CX = 180; // stack centre line
-const A = 84; // half-depth of a plate: its top face is a rhombus 2·A tall and 2·√3·A wide
+const CX = 163; // stack centre line
+const A = 68; // half-depth of a plate: its top face is a rhombus 2·A tall and 2·√3·A wide
 const K = A * Math.sqrt(3);
-const T = 12; // plate thickness
-const LEVEL = { experience: 204, data: 334, foundation: 464 } as const;
-const FRAME = { top: 64, bottom: 488, half: 100 } as const; // governance frame: rail heights and half-depth
+const T = 10; // plate thickness
+const LEVEL = { information: 178, data: 293, ai: 408, martech: 523 } as const;
+const FRAME = { top: 98, bottom: 533, half: 84 } as const; // governance frame: rail heights and half-depth
 const FRAME_K = FRAME.half * Math.sqrt(3);
-const LEADER_END = 372;
+const LEADER_END = 352;
 
-export type HeroLayerId = keyof typeof LEVEL | "governance";
+export type HeroLayerId = keyof typeof LEVEL;
 
 /** Where each layer's leader line ends (viewBox units); the caller places that layer's label there. */
 export const heroVisualAnchors: Record<HeroLayerId, { x: number; y: number }> = {
-  governance: { x: LEADER_END, y: FRAME.top },
-  experience: { x: LEADER_END, y: LEVEL.experience },
+  information: { x: LEADER_END, y: LEVEL.information },
   data: { x: LEADER_END, y: LEVEL.data },
-  foundation: { x: LEADER_END, y: LEVEL.foundation },
+  ai: { x: LEADER_END, y: LEVEL.ai },
+  martech: { x: LEADER_END, y: LEVEL.martech },
 };
 
 type Pt = readonly [number, number];
@@ -48,16 +48,16 @@ const down = ([x, y]: Pt, d: number): Pt => [x, y + d];
 const up = ([x, y]: Pt, d: number): Pt => [x, y - d];
 const line = ([x1, y1]: Pt, [x2, y2]: Pt) => `M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`;
 
-/** Where the beams rise between layers (left, front, right of each plate). */
+/** Where the beams fall between layers (left, front, right of each plate). */
 const BEAMS = [
-  { u: -0.6, v: 0.62, delay: 0 },
+  { u: -0.62, v: 0.62, delay: 0 },
   { u: 0.66, v: 0.66, delay: 1.4 },
-  { u: 0.62, v: -0.6, delay: 2.6 },
+  { u: 0.62, v: -0.62, delay: 2.6 },
 ] as const;
 
-type PulseStyle = CSSProperties & Record<"--rise" | "--delay", string>;
+type PulseStyle = CSSProperties & Record<"--fall" | "--delay", string>;
 
-function Plate({ id, lit = false, children }: { id: keyof typeof LEVEL; lit?: boolean; children?: ReactNode }) {
+function Plate({ id, lit = false, children }: { id: HeroLayerId; lit?: boolean; children?: ReactNode }) {
   const cy = LEVEL[id];
   const t = at(cy, -1, -1);
   const r = at(cy, 1, -1);
@@ -95,59 +95,62 @@ function Plate({ id, lit = false, children }: { id: keyof typeof LEVEL; lit?: bo
   );
 }
 
-/** Foundation: compute blocks, back to front. */
-function Blocks() {
-  const cy = LEVEL.foundation;
-  const c = 0.17;
-  const cells: [number, number, number][] = [
-    [-0.55, -0.55, 18],
-    [-0.05, -0.55, 26],
-    [0.45, -0.6, 14],
-    [-0.55, -0.05, 22],
-    [-0.05, -0.05, 14],
-    [0.3, 0.12, 20],
-    [-0.15, 0.4, 12],
+/** Records & information: record cards filed upright in a drawer, back to front; the front one carries a red retention tab. */
+function Records() {
+  const cy = LEVEL.information;
+  const u0 = -0.5;
+  const u1 = 0.46;
+  const h = 38;
+  const cards = [
+    { v: -0.5, tab: 0.58 },
+    { v: -0.14, tab: 0.32 },
+    { v: 0.22, tab: 0.06, accent: true },
   ];
+  const along = (v: number, s: number, lift: number) => at(cy, u0 + (u1 - u0) * s, v, lift);
   return (
     <g>
-      {cells
-        .sort((p, q) => p[0] + p[1] - (q[0] + q[1]))
-        .map(([u, v, h]) => {
-          const tb = at(cy, u - c, v - c, h);
-          const tr = at(cy, u + c, v - c, h);
-          const tf = at(cy, u + c, v + c, h);
-          const tl = at(cy, u - c, v + c, h);
-          const bf = at(cy, u + c, v + c);
-          const bl = at(cy, u - c, v + c);
-          const br = at(cy, u + c, v - c);
-          return (
-            <g key={`${u}${v}`}>
-              <polygon points={pts(tl, tf, bf, bl)} className="fill-night-raised" />
-              <polygon points={pts(tl, tf, bf, bl)} className="fill-night-text/[0.06]" />
-              <polygon points={pts(tf, tr, br, bf)} className="fill-night" />
-              <polygon points={pts(tb, tr, tf, tl)} className="fill-night-raised stroke-night-text/35" strokeWidth="0.9" />
-              <polygon points={pts(tb, tr, tf, tl)} className="fill-night-text/[0.1]" />
-              <path d={line(tf, bf)} className="stroke-night-text/25" strokeWidth="0.9" />
-            </g>
-          );
-        })}
+      {cards.map(({ v, tab, accent }) => {
+        const p0 = at(cy, u0, v);
+        const p1 = at(cy, u1, v);
+        const tab0 = along(v, tab, h);
+        const tab1 = along(v, tab + 0.26, h);
+        const row = (from: number, to: number, lift: number) => line(along(v, from, lift), along(v, to, lift));
+        return (
+          <g key={v}>
+            {/* Tab on the top edge, then the card. */}
+            <polygon
+              points={pts(tab0, tab1, up(tab1, 7), up(tab0, 7))}
+              className={accent ? "fill-logo-red stroke-logo-red" : "fill-night-raised stroke-night-text/40"}
+              strokeWidth="0.9"
+            />
+            <polygon points={pts(p0, p1, up(p1, h), up(p0, h))} className="fill-night-raised" />
+            <polygon
+              points={pts(p0, p1, up(p1, h), up(p0, h))}
+              className={accent ? "fill-night-text/[0.1] stroke-night-text/55" : "fill-night-text/[0.06] stroke-night-text/35"}
+              strokeWidth="0.9"
+            />
+            {accent ? (
+              <path d={row(0.1, 0.78, h - 11) + row(0.1, 0.56, h - 19) + row(0.1, 0.68, h - 27)} className="stroke-night-text/30" strokeWidth="1.6" strokeLinecap="round" />
+            ) : null}
+          </g>
+        );
+      })}
     </g>
   );
 }
 
-/** Data & AI: a data store at the centre, linked to sources and models on the plate. */
+/** Data: a data store at the centre, linked to its sources on the plate. */
 function DataStore() {
   const cy = LEVEL.data;
   const [x, y] = at(cy, 0, 0);
-  const rx = 27;
-  const ry = 15.5;
-  const h = 30;
+  const rx = 23;
+  const ry = 13.3;
+  const h = 18;
   const nodes: [number, number, boolean][] = [
-    [-0.62, -0.3, false],
-    [-0.25, -0.7, true],
-    [0.55, -0.12, false],
-    [0.2, 0.62, true],
-    [-0.62, 0.32, false],
+    [-0.62, -0.25, false],
+    [0.55, -0.15, false],
+    [0.22, 0.62, true],
+    [-0.6, 0.38, false],
   ];
   return (
     <g>
@@ -158,16 +161,16 @@ function DataStore() {
         strokeWidth="0.9"
         strokeDasharray="2 3"
       />
-      {nodes.map(([u, v, ai]) => {
+      {nodes.map(([u, v, accent]) => {
         const [nx, ny] = at(cy, u, v);
         return (
           <g key={`${u}${v}`}>
-            <ellipse cx={nx} cy={ny} rx="7.5" ry="4.3" className={ai ? "fill-logo-red/20" : "fill-night-text/10"} />
-            <ellipse cx={nx} cy={ny} rx="3.4" ry="2" className={ai ? "fill-logo-red" : "fill-night-text/80"} />
+            <ellipse cx={nx} cy={ny} rx="7" ry="4" className={accent ? "fill-logo-red/20" : "fill-night-text/10"} />
+            <ellipse cx={nx} cy={ny} rx="3.2" ry="1.9" className={accent ? "fill-logo-red" : "fill-night-text/80"} />
           </g>
         );
       })}
-      {/* Cylinder: body, lower rim, top face with two ring lines. */}
+      {/* Cylinder: body, a ring line, the top face. */}
       <path
         d={`M${f(x - rx)} ${f(y)}V${f(y - h)}A${rx} ${ry} 0 0 0 ${f(x + rx)} ${f(y - h)}V${f(y)}A${rx} ${ry} 0 0 1 ${f(x - rx)} ${f(y)}Z`}
         className="fill-night-raised"
@@ -185,47 +188,130 @@ function DataStore() {
   );
 }
 
-/** Experience: upright screens (applications and digital experiences), back to front. */
-function Screens() {
-  const cy = LEVEL.experience;
-  const panels = [
-    { v: -0.62, u0: -0.6, u1: 0.3, h: 50 },
-    { v: -0.02, u0: -0.5, u1: 0.42, h: 58 },
-    { v: 0.58, u0: -0.42, u1: 0.5, h: 46, accent: true },
+/** AI & models: a model chip with pins on every side, wired to two nodes on the plate. */
+function ModelChip() {
+  const cy = LEVEL.ai;
+  const s = 0.27; // half-size of the chip in plate units
+  const lift = 7;
+  const pins = [-0.14, 0, 0.14];
+  const pinPaths = pins
+    .map(
+      (p) =>
+        line(at(cy, p, -s - 0.13), at(cy, p, -s)) +
+        line(at(cy, p, s), at(cy, p, s + 0.13)) +
+        line(at(cy, -s - 0.13, p), at(cy, -s, p)) +
+        line(at(cy, s, p), at(cy, s + 0.13, p)),
+    )
+    .join("");
+  const traces: [Pt, Pt, Pt][] = [
+    [at(cy, 0.14, s + 0.13), at(cy, 0.14, 0.62), at(cy, -0.3, 0.62)],
+    [at(cy, s + 0.13, -0.14), at(cy, 0.64, -0.14), at(cy, 0.64, 0.3)],
+  ];
+  const tb = at(cy, -s, -s, lift);
+  const tr = at(cy, s, -s, lift);
+  const tf = at(cy, s, s, lift);
+  const tl = at(cy, -s, s, lift);
+  const c = 0.12;
+  return (
+    <g>
+      <path d={pinPaths} className="stroke-night-text/45" strokeWidth="1.2" strokeLinecap="round" />
+      <path d={traces.map(([a, b, e]) => `M${pts(a, b, e)}`).join("")} fill="none" className="stroke-night-text/30" strokeWidth="0.9" strokeDasharray="2 3" />
+      {traces.map(([, , [x, y]], i) => (
+        <g key={i}>
+          <ellipse cx={x} cy={y} rx="7" ry="4" className={i === 0 ? "fill-logo-red/20" : "fill-night-text/10"} />
+          <ellipse cx={x} cy={y} rx="3.2" ry="1.9" className={i === 0 ? "fill-logo-red" : "fill-night-text/80"} />
+        </g>
+      ))}
+      {/* Chip body: front faces, then the top with its core. */}
+      <polygon points={pts(tl, tf, down(tf, lift), down(tl, lift))} className="fill-night-raised" />
+      <polygon points={pts(tl, tf, down(tf, lift), down(tl, lift))} className="fill-night-text/[0.08]" />
+      <polygon points={pts(tf, tr, down(tr, lift), down(tf, lift))} className="fill-night" />
+      <polygon points={pts(tb, tr, tf, tl)} className="fill-night-raised stroke-night-text/45" strokeWidth="0.9" />
+      <polygon points={pts(tb, tr, tf, tl)} className="fill-night-text/[0.08]" />
+      <polygon
+        points={pts(at(cy, -c, -c, lift), at(cy, c, -c, lift), at(cy, c, c, lift), at(cy, -c, c, lift))}
+        className="fill-logo-red/25 stroke-logo-red/80"
+        strokeWidth="0.9"
+      />
+    </g>
+  );
+}
+
+/** Customer experience (MarTech): performance bars rising toward the front right, the tallest one lit, with a trend line. */
+function PerformanceBars() {
+  const cy = LEVEL.martech;
+  const c = 0.14;
+  const bars: [number, number, number][] = [
+    [-0.54, 0.1, 12],
+    [-0.18, 0.1, 21],
+    [0.18, 0.1, 30],
+    [0.54, 0.1, 40],
   ];
   return (
     <g>
-      {panels.map(({ v, u0, u1, h, accent }) => {
-        const p0 = at(cy, u0, v);
-        const p1 = at(cy, u1, v);
-        const row = (from: number, to: number, lift: number) => line(at(cy, u0 + (u1 - u0) * from, v, lift), at(cy, u0 + (u1 - u0) * to, v, lift));
+      {bars.map(([u, v, h], i) => {
+        const lit = i === bars.length - 1;
+        const tb = at(cy, u - c, v - c, h);
+        const tr = at(cy, u + c, v - c, h);
+        const tf = at(cy, u + c, v + c, h);
+        const tl = at(cy, u - c, v + c, h);
+        const bf = at(cy, u + c, v + c);
+        const bl = at(cy, u - c, v + c);
+        const br = at(cy, u + c, v - c);
         return (
-          <g key={v}>
-            <polygon points={pts(p0, p1, up(p1, h), up(p0, h))} className="fill-night-raised" />
-            <polygon points={pts(p0, p1, up(p1, h), up(p0, h))} className="fill-night-text/[0.07] stroke-night-text/40" strokeWidth="0.9" />
-            {/* Title bar and content lines. */}
-            <path d={row(0.08, 0.3, h - 8)} className={accent ? "stroke-logo-red" : "stroke-night-text/60"} strokeWidth="2.2" strokeLinecap="round" />
-            <path d={row(0.08, 0.86, h - 19) + row(0.08, 0.64, h - 27) + row(0.08, 0.74, h - 35)} className="stroke-night-text/25" strokeWidth="1.6" strokeLinecap="round" />
-            <path d={line(p0, p1)} className="stroke-night-text/40" strokeWidth="0.9" />
+          <g key={u}>
+            <polygon points={pts(tl, tf, bf, bl)} className="fill-night-raised" />
+            <polygon
+              points={pts(tl, tf, bf, bl)}
+              className={lit ? "fill-logo-red/45 stroke-logo-red/70" : "fill-night-text/[0.14] stroke-night-text/30"}
+              strokeWidth="0.8"
+            />
+            <polygon points={pts(tf, tr, br, bf)} className="fill-night" />
+            <polygon
+              points={pts(tf, tr, br, bf)}
+              className={lit ? "fill-logo-red/25 stroke-logo-red/60" : "fill-night-text/[0.04] stroke-night-text/25"}
+              strokeWidth="0.8"
+            />
+            <polygon
+              points={pts(tb, tr, tf, tl)}
+              className={lit ? "fill-logo-red stroke-logo-red" : "fill-night-raised stroke-night-text/45"}
+              strokeWidth="0.9"
+            />
+            {lit ? null : <polygon points={pts(tb, tr, tf, tl)} className="fill-night-text/[0.16]" />}
           </g>
         );
+      })}
+      {/* Trend line across the bar tops. */}
+      <path
+        d={`M${pts(...bars.map(([u, v, h]) => at(cy, u, v, h + 9)))}`}
+        fill="none"
+        className="stroke-logo-red/70"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+      />
+      {bars.map(([u, v, h]) => {
+        const [x, y] = at(cy, u, v, h + 9);
+        return <circle key={u} cx={x} cy={y} r="2" className="fill-logo-red" />;
       })}
     </g>
   );
 }
 
-/** Small ring where a beam reaches the plate above. */
-function Landing({ cy, u, v }: { cy: number; u: number; v: number }) {
+/** Small ring where a beam leaves a plate for the one below. */
+function Outlet({ cy, u, v }: { cy: number; u: number; v: number }) {
   const [x, y] = at(cy, u, v);
   return (
     <g>
-      <ellipse cx={x} cy={y} rx="9" ry="5.2" className="fill-logo-red/15 stroke-logo-red/50" strokeWidth="0.8" />
-      <ellipse cx={x} cy={y} rx="2.6" ry="1.5" className="fill-logo-red" />
+      <ellipse cx={x} cy={y} rx="8" ry="4.6" className="fill-logo-red/15 stroke-logo-red/50" strokeWidth="0.8" />
+      <ellipse cx={x} cy={y} rx="2.4" ry="1.4" className="fill-logo-red" />
     </g>
   );
 }
 
-/** Beams between two plates, with a pulse rising along each (the pulse animates only when motion is allowed). */
+/**
+ * Beams from a plate down to the plate below, with a pulse falling along each (animated only when motion is
+ * allowed). Drawn before the upper plate, which covers the beam's start.
+ */
 function Beams({ from, to, pulseClassName }: { from: number; to: number; pulseClassName?: string }) {
   return (
     <g>
@@ -235,14 +321,14 @@ function Beams({ from, to, pulseClassName }: { from: number; to: number; pulseCl
         return (
           <g key={`${u}${v}`}>
             {/* A thin rect, not a stroked line: a gradient needs a non-zero-width bounding box. */}
-            <rect x={x - 0.75} y={y1} width="1.5" height={y0 - y1} fill="url(#hv-beam)" />
-            <ellipse cx={x} cy={y0} rx="5" ry="2.9" className="fill-logo-red/30" />
+            <rect x={x - 0.75} y={y0} width="1.5" height={y1 - y0} fill="url(#hv-beam)" />
+            <ellipse cx={x} cy={y1} rx="5" ry="2.9" className="fill-logo-red/30" />
             <circle
               cx={x}
-              cy={y0}
+              cy={y0 + T}
               r="2.2"
               className={cn("fill-logo-red", pulseClassName)}
-              style={{ "--rise": `${f(y1 - y0)}px`, "--delay": `${delay + (from === LEVEL.data ? 0.7 : 0)}s` } as PulseStyle}
+              style={{ "--fall": `${f(y1 - y0 - T)}px`, "--delay": `${delay + (from - LEVEL.information) / 165}s` } as PulseStyle}
             />
           </g>
         );
@@ -280,8 +366,8 @@ function GovernanceFrame({ front }: { front: boolean }) {
       {Object.values(LEVEL).flatMap((y) =>
         [left, right].map((x) => (
           <g key={`${x}${y}`}>
-            <circle cx={x} cy={y} r="5.5" className="fill-night stroke-logo-red/60" strokeWidth="1" />
-            <circle cx={x} cy={y} r="1.8" className="fill-logo-red" />
+            <circle cx={x} cy={y} r="5" className="fill-night stroke-logo-red/60" strokeWidth="1" />
+            <circle cx={x} cy={y} r="1.7" className="fill-logo-red" />
           </g>
         )),
       )}
@@ -289,22 +375,15 @@ function GovernanceFrame({ front }: { front: boolean }) {
   );
 }
 
-/** Leader lines from each layer to where its label sits. */
+/** Leader lines from each layer, past the frame's checkpoint, to where its label sits. */
 function Leaders() {
-  const starts: Record<HeroLayerId, Pt> = {
-    governance: [CX + FRAME_K, FRAME.top],
-    experience: at(LEVEL.experience, 1, -1),
-    data: at(LEVEL.data, 1, -1),
-    foundation: at(LEVEL.foundation, 1, -1),
-  };
   return (
     <g>
-      {(Object.keys(starts) as HeroLayerId[]).map((id) => {
-        const [x, y] = starts[id];
-        const start = id === "governance" ? x + 8 : x + 4;
+      {(Object.keys(LEVEL) as HeroLayerId[]).map((id) => {
+        const y = LEVEL[id];
         return (
           <g key={id} data-leader={id}>
-            <path d={`M${f(start)} ${f(y)}H${LEADER_END - 6}`} className="stroke-night-text/30" strokeWidth="1" />
+            <path d={`M${f(CX + FRAME_K + 8)} ${y}H${LEADER_END - 6}`} className="stroke-night-text/30" strokeWidth="1" />
             <circle cx={LEADER_END - 3} cy={y} r="2" className="fill-night-text/60" />
           </g>
         );
@@ -321,7 +400,7 @@ export function HeroVisual({
   className?: string;
   /** Applied to the stack group (slow float when motion is allowed). */
   floatClassName?: string;
-  /** Applied to each rising pulse. */
+  /** Applied to each falling pulse. */
   pulseClassName?: string;
 }) {
   return (
@@ -353,9 +432,9 @@ export function HeroVisual({
           <stop offset="0.6" style={{ stopColor: "var(--night-text)", stopOpacity: 0.03 }} />
           <stop offset="1" style={{ stopColor: "#000", stopOpacity: 0.2 }} />
         </linearGradient>
-        <linearGradient id="hv-beam" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" style={{ stopColor: "var(--logo-red)", stopOpacity: 0.7 }} />
-          <stop offset="1" style={{ stopColor: "var(--logo-red)", stopOpacity: 0.1 }} />
+        <linearGradient id="hv-beam" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style={{ stopColor: "var(--logo-red)", stopOpacity: 0.1 }} />
+          <stop offset="1" style={{ stopColor: "var(--logo-red)", stopOpacity: 0.7 }} />
         </linearGradient>
         <radialGradient id="hv-halo" cx="50%" cy="50%" r="50%">
           <stop offset="0" style={{ stopColor: "var(--logo-red)", stopOpacity: 0.22 }} />
@@ -369,27 +448,34 @@ export function HeroVisual({
       </defs>
 
       {/* Soft red light behind the stack and a shadow under it. */}
-      <ellipse cx={CX} cy={LEVEL.data - 20} rx="250" ry="210" fill="url(#hv-halo)" />
-      <ellipse cx={CX} cy={LEVEL.foundation + A + 26} rx="190" ry="44" fill="url(#hv-floor)" />
+      <ellipse cx={CX} cy={(LEVEL.data + LEVEL.ai) / 2} rx="240" ry="250" fill="url(#hv-halo)" />
+      <ellipse cx={CX} cy={LEVEL.martech + A + 24} rx="180" ry="40" fill="url(#hv-floor)" />
 
       <g className={floatClassName}>
         <GovernanceFrame front={false} />
-        <Plate id="foundation">
-          <Blocks />
+        <Plate id="martech">
+          <PerformanceBars />
         </Plate>
-        <Beams from={LEVEL.foundation} to={LEVEL.data} pulseClassName={pulseClassName} />
+        <Beams from={LEVEL.ai} to={LEVEL.martech} pulseClassName={pulseClassName} />
+        <Plate id="ai">
+          {BEAMS.map(({ u, v }) => (
+            <Outlet key={`${u}${v}`} cy={LEVEL.ai} u={u} v={v} />
+          ))}
+          <ModelChip />
+        </Plate>
+        <Beams from={LEVEL.data} to={LEVEL.ai} pulseClassName={pulseClassName} />
         <Plate id="data">
           {BEAMS.map(({ u, v }) => (
-            <Landing key={`${u}${v}`} cy={LEVEL.data} u={u} v={v} />
+            <Outlet key={`${u}${v}`} cy={LEVEL.data} u={u} v={v} />
           ))}
           <DataStore />
         </Plate>
-        <Beams from={LEVEL.data} to={LEVEL.experience} pulseClassName={pulseClassName} />
-        <Plate id="experience" lit>
+        <Beams from={LEVEL.information} to={LEVEL.data} pulseClassName={pulseClassName} />
+        <Plate id="information" lit>
           {BEAMS.map(({ u, v }) => (
-            <Landing key={`${u}${v}`} cy={LEVEL.experience} u={u} v={v} />
+            <Outlet key={`${u}${v}`} cy={LEVEL.information} u={u} v={v} />
           ))}
-          <Screens />
+          <Records />
         </Plate>
         <GovernanceFrame front />
         <Leaders />

@@ -49,13 +49,13 @@ test("service pages publish FAQ and breadcrumb structured data", async ({ page }
   }
 });
 
-test.describe("Adobe Services menu (desktop)", () => {
+test.describe("MarTech (Adobe) menu (desktop)", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
   test("opens from the keyboard, lists every application, and closes on Escape", async ({ page }) => {
     await page.goto("/");
     const nav = page.getByRole("navigation", { name: "Primary" });
-    const toggle = nav.getByRole("button", { name: "Adobe Services menu" });
+    const toggle = nav.getByRole("button", { name: "MarTech menu", exact: true });
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     const panel = page.locator(`#${await toggle.getAttribute("aria-controls")}`);
     await expect(panel).toBeHidden();
@@ -75,7 +75,7 @@ test.describe("Adobe Services menu (desktop)", () => {
     await panel.locator('a[href="/adobe-services/experience-manager"]').click();
     await expect(page).toHaveURL(/\/adobe-services\/experience-manager$/);
     await expect(panel).toBeHidden();
-    await expect(nav.getByRole("link", { name: "Adobe Services", exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: "MarTech", exact: true })).toHaveAttribute("aria-current", "page");
   });
 });
 

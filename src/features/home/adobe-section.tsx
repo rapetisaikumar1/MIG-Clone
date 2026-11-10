@@ -19,23 +19,24 @@ function groupByArea(products: AdobeProduct[]) {
 }
 
 /**
- * Home page showcase of the Adobe Services section (Capability Matrix pillar 03, "9 Adobe offerings. One connected
- * stack."): Adobe Experience Cloud, the umbrella offering, then the other eight as an application map by capability
- * area, the assessment entry point and the partner statement. Product descriptions are left to /adobe-services and
- * the header menu, so the home page shows names and areas only.
+ * MarTech on the home page (Capability Matrix pillar 03, "MarTech & Adobe Experience Cloud"). The heading leads with
+ * MarTech outcomes; Adobe Experience Cloud is the platform we deliver them on (owner direction, 2026-11-10: not
+ * Adobe-first). Below: Adobe Experience Cloud, the umbrella offering, then the other eight applications mapped by
+ * MarTech capability area, the assessment entry point and the partner statement. Product descriptions are left to
+ * /adobe-services and the header menu, so the home page shows names and areas only.
  */
 export function AdobeSection() {
   const groups = groupByArea(getAdobeProducts());
   const aec = adobeHub.experienceCloud;
 
   return (
-    <Section id="adobe" aria-labelledby="adobe-title">
+    <Section id="martech" aria-labelledby="martech-title">
       <Container>
         <SectionHeading
-          id="adobe-title"
-          eyebrow="Adobe Experience Cloud & MarTech"
-          title="Nine Adobe offerings. One connected stack."
-          intro="As an Adobe Solution Partner, we design, implement and optimize Adobe Experience Cloud end to end, from customer data and content to testing, analytics and commerce, so profiles, content and measurement work from the same data."
+          id="martech-title"
+          eyebrow="MarTech"
+          title="Customer data, content and campaigns that work as one."
+          intro="We deliver MarTech on Adobe Experience Cloud, designing, implementing and optimizing it end to end. Each application below is mapped to the MarTech capability it serves, and all of them work from the same governed customer data."
           className="reveal"
         />
 
@@ -61,7 +62,7 @@ export function AdobeSection() {
           </p>
         </div>
 
-        {/* Application map: one cell per capability area, hairline grid like the expertise columns. */}
+        {/* Application map: one cell per MarTech capability area, hairline grid like the expertise columns. */}
         <ul className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((group) => (
             <li
@@ -102,7 +103,7 @@ export function AdobeSection() {
               Request an assessment
             </ButtonLink>
             <ArrowLink href={adobeServicesPath} className="self-start sm:self-auto">
-              Explore Adobe Services
+              Explore MarTech services
             </ArrowLink>
           </div>
         </div>

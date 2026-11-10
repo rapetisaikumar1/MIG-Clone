@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Dot, Eyebrow } from "@/components/ui/layout";
 import { industries, type IndustryApplication, type IndustryArea } from "@/content/industries";
-import { aiGovernanceNav, mapleRecordPath, pillarsNav } from "@/config/navigation";
+import { aiGovernanceNav, pillarsNav } from "@/config/navigation";
 import { CtaBand } from "@/features/contact/cta-band";
 import { Breadcrumbs } from "@/features/services/sections";
 import { adobeProductPath, getAdobeProduct } from "@/lib/content/adobe";
@@ -13,26 +13,26 @@ import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
 export const metadata = pageMetadata({
   title: "Industries",
   description:
-    "Our focus in healthcare, financial services, retail, telecom, government, media, manufacturing and software, and how our data, engineering, Adobe and design practices apply.",
+    "Our focus in healthcare, financial services, retail, telecom, government, media, manufacturing and software, and how our information, data and AI governance, MarTech and engineering work applies.",
   path: "/industries",
 });
 
-/** Each area links to its pillar page (from the navigation config, so slugs stay in one place). */
-const pillarHref = (label: string) => pillarsNav.find((p) => p.label === label)?.href ?? "/services";
+/**
+ * Each area links to its pillar page (from the navigation config, so slugs stay in one place); pillar 07,
+ * Information Governance & Records, links to /information-governance. Applications render in content order,
+ * which leads with what matters most in each sector (see src/content/industries.ts).
+ */
+const pillarHref = (label: IndustryArea) => pillarsNav.find((p) => p.label === label)?.href ?? "/services";
 const areaHref: Record<IndustryArea, string> = {
   "Data & Analytics": pillarHref("Data & Analytics"),
   "Engineering & Technology": pillarHref("Engineering & Technology"),
-  "Adobe Experience Cloud & MarTech": pillarHref("Adobe Experience Cloud & MarTech"),
+  "MarTech & Adobe Experience Cloud": pillarHref("MarTech & Adobe Experience Cloud"),
   "Experience Design": pillarHref("Experience Design"),
   "Digital & Product": pillarHref("Digital & Product"),
   "Business Transformation & CRM": pillarHref("Business Transformation & CRM"),
-  "Records Management & Compliance": mapleRecordPath,
+  "Information Governance & Records": pillarHref("Information Governance & Records"),
   "AI Governance": aiGovernanceNav.href,
 };
-
-/** Every industry lists its applications in pillar order (01–07, then AI Governance), so sectors are easy to compare. */
-const areaOrder = Object.keys(areaHref) as IndustryArea[];
-const byArea = (a: IndustryApplication, b: IndustryApplication) => areaOrder.indexOf(a.area) - areaOrder.indexOf(b.area);
 
 function ProductLinks({ products }: { products: NonNullable<IndustryApplication["products"]> }) {
   const items = products.flatMap((slug) => {
@@ -83,8 +83,8 @@ export default function IndustriesPage() {
               <h1 className="mt-6 text-h1">Eight core industries, each with its own realities.</h1>
               <p className="mt-6 max-w-[60ch] text-lead text-muted">
                 Every industry has its own regulations, customers and systems. Here is where we focus in each, and how our
-                practice pillars apply: the data we integrate, the platforms we build and implement, and the experiences we
-                design.
+                practice pillars apply: the information and data we govern, the AI we put oversight around, the platforms we
+                build and implement, and the experiences we design.
               </p>
               <p className="mt-4 max-w-[60ch] text-[0.9375rem] text-muted">
                 These are typical needs and applications, not descriptions of client work.
@@ -149,8 +149,8 @@ export default function IndustriesPage() {
               </div>
               <div className="lg:col-span-7">
                 <ul className="divide-y divide-line rounded-2xl border border-line bg-surface">
-                  {industry.applications.toSorted(byArea).map((a) => (
-                    // Label above text at every width: pillar names such as "Adobe Experience Cloud & MarTech" are too
+                  {industry.applications.map((a) => (
+                    // Label above text at every width: pillar names such as "MarTech & Adobe Experience Cloud" are too
                     // long for a side column.
                     <li key={a.area} className="grid gap-1.5 p-5 sm:p-6">
                       {/* 44px target; the negative margin keeps the label level with the first line of text beside it. */}

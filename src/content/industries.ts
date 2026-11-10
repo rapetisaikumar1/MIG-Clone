@@ -5,6 +5,8 @@ import type { AdobeProductSlug } from "@/lib/content/types";
  * `focus` is the deck's one-liner for each industry. Applications describe typical needs and how our practice
  * pillars apply — not claims about specific clients. Compliance is phrased as "privacy-safe", "HIPAA-aware" or
  * "designed to support"; never as certified or guaranteed compliance.
+ * Applications are shown in the order listed: governance needs lead where they drive the sector (healthcare, financial
+ * services, government), and MarTech leads where it is central to the focus line (retail, media).
  * `id` values are redirect targets for the legacy industry URLs (src/config/redirects.ts); don't rename them.
  * `products` link an application to the matching /adobe-services/<slug> pages; list only the
  * Adobe applications MiG offers (AdobeProductSlug) and only where the text names them.
@@ -12,15 +14,15 @@ import type { AdobeProductSlug } from "@/lib/content/types";
 export type IndustryArea =
   | "Data & Analytics"
   | "Engineering & Technology"
-  | "Adobe Experience Cloud & MarTech"
+  | "MarTech & Adobe Experience Cloud"
   | "Experience Design"
   | "Digital & Product"
   | "Business Transformation & CRM"
-  | "Records Management & Compliance"
+  | "Information Governance & Records"
   | "AI Governance";
 
 export type IndustryApplication = {
-  /** A practice pillar, named exactly as in `pillarsNav` (pillar 07 = MapleRecord and MOLI), or AI Governance. */
+  /** A practice pillar, named exactly as in `pillarsNav` (pillar 07 = /information-governance), or AI Governance. */
   area: IndustryArea;
   text: string;
   products?: AdobeProductSlug[];
@@ -51,17 +53,17 @@ export const industries: Industry[] = [
         text: "Classification, access control and retention rules for health and research data, so only permitted data reaches analytics and marketing tools.",
       },
       {
-        area: "Adobe Experience Cloud & MarTech",
+        area: "AI Governance",
+        text: "Risk review and human oversight for AI used in administrative workflows, patient communication or content drafting.",
+      },
+      {
+        area: "MarTech & Adobe Experience Cloud",
         text: "Consent-aware audiences in Real-Time CDP, and accessible patient, member and professional sites in Adobe Experience Manager with review workflows for regulated content.",
         products: ["real-time-cdp", "experience-manager"],
       },
       {
         area: "Experience Design",
         text: "User research and service design for digital-first patient and member workflows, from booking and intake to follow-up.",
-      },
-      {
-        area: "AI Governance",
-        text: "Risk review and human oversight for AI used in administrative workflows, patient communication or content drafting.",
       },
     ],
   },
@@ -77,17 +79,17 @@ export const industries: Industry[] = [
         text: "Data governance, lineage and quality for regulatory reporting, and secure analytics on governed customer data.",
       },
       {
-        area: "Engineering & Technology",
-        text: "Secure cloud platforms on AWS and Azure, with DevOps automation and quality assurance for customer-facing applications.",
+        area: "AI Governance",
+        text: "Documented oversight for AI that influences customer-facing decisions, such as eligibility, pricing or service routing.",
       },
       {
-        area: "Adobe Experience Cloud & MarTech",
+        area: "MarTech & Adobe Experience Cloud",
         text: "Digital banking journeys in Adobe Experience Manager, personalized and tested with Adobe Target, and measured end to end in Adobe Analytics.",
         products: ["experience-manager", "target", "analytics"],
       },
       {
-        area: "AI Governance",
-        text: "Documented oversight for AI that influences customer-facing decisions, such as eligibility, pricing or service routing.",
+        area: "Engineering & Technology",
+        text: "Secure cloud platforms on AWS and Azure, with DevOps automation and quality assurance for customer-facing applications.",
       },
     ],
   },
@@ -99,17 +101,17 @@ export const industries: Industry[] = [
       "Retail and consumer brands aim for personalized web and mobile experiences, timely recommendations and promotions, and sales and marketing systems that share one view of the customer.",
     applications: [
       {
+        area: "MarTech & Adobe Experience Cloud",
+        text: "Audiences built from unified profiles in Real-Time CDP, personalized offers in Adobe Target, and Adobe Commerce storefronts that use the same customer data.",
+        products: ["real-time-cdp", "target", "commerce"],
+      },
+      {
         area: "Data & Analytics",
         text: "Customer and product data quality across commerce, loyalty, CRM and marketing systems.",
       },
       {
         area: "Engineering & Technology",
         text: "Mobile app development and quality assurance engineering for shopping experiences that hold up at peak demand.",
-      },
-      {
-        area: "Adobe Experience Cloud & MarTech",
-        text: "Audiences built from unified profiles in Real-Time CDP, personalized offers in Adobe Target, and Adobe Commerce storefronts that use the same customer data.",
-        products: ["real-time-cdp", "target", "commerce"],
       },
       {
         area: "Experience Design",
@@ -129,7 +131,7 @@ export const industries: Industry[] = [
         text: "Data pipelines that unify high-volume billing, usage and CRM data, with consent, quality and retention controls.",
       },
       {
-        area: "Adobe Experience Cloud & MarTech",
+        area: "MarTech & Adobe Experience Cloud",
         text: "Real-time profiles in Adobe Experience Platform, with Real-Time CDP audiences activated across web, app and assisted channels for lifecycle engagement.",
         products: ["experience-platform", "real-time-cdp"],
       },
@@ -151,21 +153,21 @@ export const industries: Industry[] = [
       "Public bodies are expected to offer responsive self-service portals, digital documents, forms and signatures, and well-governed records, while reducing wait times and in-person visits.",
     applications: [
       {
-        area: "Adobe Experience Cloud & MarTech",
-        text: "Accessible public websites in Adobe Experience Manager, with Adobe Analytics showing where residents struggle to complete tasks online.",
-        products: ["experience-manager", "analytics"],
+        area: "Information Governance & Records",
+        text: "Records programs, retention schedules, requests and role-based access, configured in MapleRecord, our records management platform.",
+      },
+      {
+        area: "AI Governance",
+        text: "Inventories, policies and vendor review for AI in public-facing services.",
       },
       {
         area: "Experience Design",
         text: "Research-led, accessible citizen services that reduce wait times and in-person visits.",
       },
       {
-        area: "Records Management & Compliance",
-        text: "Records programs, retention schedules, requests and role-based access, configured in MapleRecord, our records management platform.",
-      },
-      {
-        area: "AI Governance",
-        text: "Inventories, policies and vendor review for AI in public-facing services.",
+        area: "MarTech & Adobe Experience Cloud",
+        text: "Accessible public websites in Adobe Experience Manager, with Adobe Analytics showing where residents struggle to complete tasks online.",
+        products: ["experience-manager", "analytics"],
       },
     ],
     maplerecord: { href: "/maplerecord", label: "Explore MapleRecord" },
@@ -178,13 +180,13 @@ export const industries: Industry[] = [
       "Media and entertainment organizations want every moment on their sites, streaming services and apps to feel relevant, building long-term relationships based on trust.",
     applications: [
       {
-        area: "Data & Analytics",
-        text: "Trusted audience data, consistent content metadata, and metrics that every team defines the same way.",
-      },
-      {
-        area: "Adobe Experience Cloud & MarTech",
+        area: "MarTech & Adobe Experience Cloud",
         text: "Audience intelligence and journey analytics in Adobe Analytics, with content managed in Adobe Experience Manager and delivered to every channel.",
         products: ["analytics", "experience-manager"],
+      },
+      {
+        area: "Data & Analytics",
+        text: "Trusted audience data, consistent content metadata, and metrics that every team defines the same way.",
       },
       {
         area: "Digital & Product",
@@ -208,13 +210,13 @@ export const industries: Industry[] = [
         text: "ERP, inventory and order data integrated into governed sources, with dashboards that give supply-chain visibility.",
       },
       {
-        area: "Adobe Experience Cloud & MarTech",
-        text: "Self-service ordering for dealers and distributors with Adobe Commerce B2B features such as company accounts, shared catalogs and negotiable quotes.",
-        products: ["commerce"],
-      },
-      {
         area: "Business Transformation & CRM",
         text: "Process and business optimization from order to delivery, with program management and change enablement for the teams involved.",
+      },
+      {
+        area: "MarTech & Adobe Experience Cloud",
+        text: "Self-service ordering for dealers and distributors with Adobe Commerce B2B features such as company accounts, shared catalogs and negotiable quotes.",
+        products: ["commerce"],
       },
     ],
   },
@@ -230,17 +232,17 @@ export const industries: Industry[] = [
         text: "Scalable cloud architecture on AWS and Azure, DevOps and CI/CD automation, and AI/ML enablement for product features.",
       },
       {
-        area: "Adobe Experience Cloud & MarTech",
-        text: "Lead management and nurture in Adobe Marketo Engage, with Adobe Analytics and Adobe Target to improve trial, sign-up and onboarding journeys.",
-        products: ["marketo-engage", "analytics", "target"],
+        area: "AI Governance",
+        text: "Governance for AI features built into your products and for the AI tools your teams use internally.",
       },
       {
         area: "Digital & Product",
         text: "Product vision, product development and go-to-market, with agile delivery that keeps releases moving.",
       },
       {
-        area: "AI Governance",
-        text: "Governance for AI features built into your products and for the AI tools your teams use internally.",
+        area: "MarTech & Adobe Experience Cloud",
+        text: "Lead management and nurture in Adobe Marketo Engage, with Adobe Analytics and Adobe Target to improve trial, sign-up and onboarding journeys.",
+        products: ["marketo-engage", "analytics", "target"],
       },
     ],
   },

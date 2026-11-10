@@ -175,7 +175,10 @@ export function MoliRelationship() {
             </article>
           ))}
         </div>
-        <p className="mt-8 max-w-[62ch] text-muted">{moliRelationship.footer}</p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <p className="max-w-[62ch] text-muted">{moliRelationship.footer}</p>
+          <ArrowLink href={moliRelationship.practice.href}>{moliRelationship.practice.label}</ArrowLink>
+        </div>
       </Container>
     </Section>
   );

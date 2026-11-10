@@ -7,7 +7,10 @@ import type { AdobeNav, NavItem } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { NavMenu } from "./nav-menu";
 
-/** Desktop "Adobe Services" entry: the shared NavMenu disclosure with the Adobe applications panel. */
+/**
+ * Desktop "MarTech" entry: the shared NavMenu disclosure for our MarTech practice, delivered on Adobe Experience
+ * Cloud: the Adobe applications we implement, the platform assessment, and the MarTech overview.
+ */
 export function AdobeMenu({
   item,
   menu,
@@ -21,10 +24,10 @@ export function AdobeMenu({
 }) {
   const pathname = usePathname();
   return (
-    <NavMenu item={item} active={active} linkClassName={linkClassName} >
+    <NavMenu item={item} active={active} linkClassName={linkClassName}>
       <div className="grid grid-cols-[1fr_17rem] gap-10 p-7">
         <div>
-          <p className="px-3 font-mono text-label uppercase text-muted">Adobe applications</p>
+          <p className="px-3 font-mono text-label uppercase text-muted">Adobe Experience Cloud</p>
           <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1">
             {menu.products.map((product) => {
               const current = pathname === product.href;
@@ -80,6 +83,7 @@ export function AdobeMenu({
               {menu.overview.label}
               <ArrowRight aria-hidden className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
+            {menu.overview.description ? <p className="-mt-1 text-sm leading-snug text-pretty text-muted">{menu.overview.description}</p> : null}
           </div>
         </div>
       </div>

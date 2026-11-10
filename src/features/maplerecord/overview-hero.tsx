@@ -234,7 +234,13 @@ export function OverviewHero() {
           <p className={cn("mt-5 max-w-[44ch] text-lead sm:mt-6", styles.lead)}>{mrHero.lead}</p>
           <Tagline text={mrHero.tagline} />
           {/* Ownership line (register MR-03): MapleRecord is Maverick InnoGarage's own product. */}
-          <p className="mt-3 text-sm text-night-muted">{mrHero.maker}</p>
+          <p className="mt-3 text-sm text-night-muted">
+            {mrHero.maker.before}
+            <Link href={mrHero.maker.href} className="text-night-text underline decoration-night-line underline-offset-4 hover:decoration-night-text">
+              {mrHero.maker.label}
+            </Link>
+            {mrHero.maker.after}
+          </p>
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center">
             <ExternalLink href={mrOfficial.demo} variant="primary">
               Request a demo

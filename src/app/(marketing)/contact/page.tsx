@@ -14,7 +14,7 @@ import { isContactDeliveryConfigured } from "@/server/env";
 export const metadata = pageMetadata({
   title: "Contact",
   description:
-    "Talk to Maverick InnoGarage about data, cloud and engineering, Adobe Experience Cloud, experience design, digital products, CRM, MapleRecord or MOLI. Offices across the US and Canada.",
+    "Talk to Maverick InnoGarage about information, data or AI governance, MarTech on Adobe Experience Cloud, MapleRecord or MOLI. Offices across the US and Canada.",
   path: "/contact",
 });
 
@@ -61,8 +61,8 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
             <Eyebrow>Contact</Eyebrow>
             <h1 className="mt-6 max-w-4xl text-h1">Talk to an expert.</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-muted">
-              Tell us what you&apos;re working on, whether that&apos;s your data, a cloud platform, an Adobe implementation, a
-              digital product or a records program.{" "}
+              Tell us what you&apos;re working on, whether that&apos;s information governance and records, data governance, AI
+              governance, MarTech on Adobe Experience Cloud, or the engineering, design and product work around them.{" "}
               {/* Don't promise an email reply while the form can't deliver. */}
               {deliveryConfigured ? "A member of our team will reply by email." : "The quickest way to reach us right now is by phone."}
             </p>
@@ -116,7 +116,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
               </div>
             ) : null}
             <div className="rounded-2xl border border-line-strong p-7 sm:p-8">
-              <h2 className="text-lg font-semibold">Starting with Adobe?</h2>
+              <h2 className="text-lg font-semibold">Already on Adobe Experience Cloud?</h2>
               <p className="mt-2 text-[0.9375rem] text-muted">
                 A platform assessment reviews how your Adobe applications are configured and used, and where the gaps are.
               </p>

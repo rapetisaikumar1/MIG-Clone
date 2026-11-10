@@ -66,22 +66,23 @@ const offices: [Office, ...Office[]] = [
 export const company = {
   name: "Maverick InnoGarage",
   shortName: "MiG",
-  // Positioning per the owner directive of 2026-11-07 and the Capability Matrix (October 2026): MiG delivers
-  // software, platforms, engineering and professional services across seven practice pillars (data, cloud and
-  // engineering, Adobe Experience Cloud and MarTech, human-centric design, digital product, business transformation
-  // and CRM, records management) for enterprises and the public sector, and makes MapleRecord and MOLI.
-  // It is not a consultancy. Use these strings verbatim for self-description; don't repeat a company-type label.
+  // Positioning per the owner direction of 2026-11-10, on top of the directive of 2026-11-07 and the Capability Matrix
+  // (October 2026): MiG leads with four core areas, information governance, data governance, AI governance and MarTech
+  // (delivered on Adobe Experience Cloud), delivered as software, platforms and professional services for enterprises and
+  // the public sector, and makes MapleRecord and MOLI. The deck's other pillars (cloud and engineering, experience design,
+  // digital product, business transformation and CRM) are supporting capabilities. It is not a consultancy. Use these
+  // strings verbatim for self-description; don't repeat a company-type label.
   /** Canonical sentence: About lead, Organization JSON-LD `description`, privacy and cookie notices, long-form intros. */
   descriptor:
-    "Maverick InnoGarage is a digital transformation, data, engineering and MarTech partner for enterprises and the public sector. We deliver data, cloud and engineering, Adobe Experience Cloud and MarTech, human-centric design, CRM and records management end to end, as software, platforms and professional services, and we make MapleRecord and MOLI, our own records management products.",
+    "Maverick InnoGarage delivers information governance, data governance, AI governance and MarTech for enterprises and the public sector, with Adobe Experience Cloud as our MarTech platform. We design, build, implement and run them as software, platforms and professional services, including MapleRecord and MOLI, our own records management products.",
   /** Short variant (≤ 160 characters): default and home meta description, OG and Twitter descriptions. */
   positioning:
-    "Data, cloud & engineering, Adobe Experience Cloud & MarTech and human-centric design for enterprises and the public sector. Makers of MapleRecord and MOLI.",
+    "Information, data and AI governance and MarTech for enterprises and the public sector, as software, platforms and services. Makers of MapleRecord and MOLI.",
   /** One-line footer blurb. */
   blurb:
-    "Data, cloud and engineering, Adobe Experience Cloud and MarTech, human-centric design, CRM and records management, delivered end to end.",
-  /** Belief statement: About "What we believe" and the home page "How it connects" heading. */
-  thesis: "Data, engineering and design deliver more together.",
+    "Information, data and AI governance and MarTech, delivered end to end as software, platforms and professional services.",
+  /** Belief statement: the About "What we believe" heading. */
+  thesis: "Governance is what makes data, AI and MarTech worth trusting.",
   // No email address is published on the current site. Leave null until confirmed.
   email: null as string | null,
   offices,

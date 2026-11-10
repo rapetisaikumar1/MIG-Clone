@@ -14,6 +14,9 @@ import type { ServiceContent } from "@/lib/content/types";
  * optimization), and the deck's records pillar (MapleRecord, MOLI). AI/ML enablement and cloud engineering belong to
  * pillar 02 (/software-development); this page links there instead of repeating them.
  *
+ * This page is our Data Governance core area (owner direction, 2026-11-10), so governance leads the hero. Records and
+ * information governance (pillar 07) live on /information-governance; the records capability links there.
+ *
  * Capability ids are link targets: /data-governance redirects to #governance, /integrated-data-solutions to
  * #integration, and the home page links #quality and #records. Keep those ids.
  */
@@ -26,12 +29,12 @@ export const dataManagement: ServiceContent = {
     // The owner also calls this pillar "Data Management" and the URL uses it, so the page title leads with it.
     title: "Data Management & Analytics",
     description:
-      "Data management and governance, strategy, architecture, integration, data science and visualization that turn fragmented data into governed, AI-ready assets.",
+      "Data governance and data management, strategy, architecture, integration, data science and visualization that turn fragmented data into governed, AI-ready assets.",
   },
   hero: {
-    eyebrow: "Data management · Governance · Analytics",
+    eyebrow: "Data governance · Data management · Analytics",
     title: "Build data your organization can trust and act on.",
-    lead: "Data management and governance come first. We turn fragmented enterprise data into governed, AI-ready assets, with named owners, quality and security controls and modern pipelines, then build the models and dashboards leaders act on.",
+    lead: "Data governance and data management come first. We turn fragmented enterprise data into governed, AI-ready assets, with named owners, quality and security controls and modern pipelines, then build the models and dashboards leaders act on.",
   },
   problem: {
     title: "Most data problems are ownership problems first.",
@@ -158,7 +161,7 @@ export const dataManagement: ServiceContent = {
       items: [
         "Documented, approved datasets for AI and analytics",
         "Data requirements and approvals for AI use cases",
-        "Quality, identity and consent rules for customer profiles",
+        "Quality, identity and consent rules for customer profiles used in MarTech",
         "AI governance for the systems that use the data",
       ],
       platforms: ["Adobe Experience Platform", "Real-Time CDP"],
@@ -175,6 +178,7 @@ export const dataManagement: ServiceContent = {
         "Defensible disposition, with decisions documented",
         "Records management in MapleRecord, our records platform",
         "AI-driven record management with MOLI",
+        "Wider records and information governance through our Information Governance & Records practice",
       ],
       provenance: "verified",
     },
@@ -262,12 +266,12 @@ export const dataManagement: ServiceContent = {
     {
       question: "How does data management support Adobe and AI projects?",
       answer:
-        "Adobe Experience Platform builds customer profiles from the data you send it, so duplicates, errors and missing consent can flow straight into audiences and personalization. We set quality, identity and consent rules before data is activated and apply them in Adobe Experience Platform as part of our Adobe services. AI governance depends on the same groundwork: knowing what data a system uses, who owns it and whether it may be used.",
+        "Adobe Experience Platform builds customer profiles from the data you send it, so duplicates, errors and missing consent can flow straight into audiences and personalization. We set quality, identity and consent rules before data is activated and apply them in Adobe Experience Platform as part of our MarTech work. AI governance depends on the same groundwork: knowing what data a system uses, who owns it and whether it may be used.",
     },
     {
       question: "How do MapleRecord and MOLI fit with your records work?",
       answer:
-        "MapleRecord, our records management platform for electronic and physical records, and MOLI, our AI-driven record management system, are designed and built by Maverick InnoGarage. When a records program needs software, we configure retention schedules, record series and access in them. Schedules and file plans we develop with you don't depend on any particular system.",
+        "MapleRecord, our records management platform for electronic and physical records, and MOLI, our AI-driven record management system, are designed and built by Maverick InnoGarage and are the products behind our Information Governance & Records practice. When a records program needs software, we configure retention schedules, record series and access in them. Schedules and file plans we develop with you don't depend on any particular system.",
     },
   ],
   cta: {

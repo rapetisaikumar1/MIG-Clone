@@ -13,6 +13,10 @@ import type { ServiceContent } from "@/lib/content/types";
  * enterprise systems, customized where standard features stop, and supported over time, by an Adobe Solution
  * Partner. The platform assessment is presented as the first phase of delivery, not as a standalone report.
  *
+ * Owner direction (2026-11-10): this page is the MarTech practice (one of the four core areas, with Information,
+ * Data and AI Governance). It leads with MarTech outcomes, governed and privacy-safe, and presents Adobe Experience
+ * Cloud as the platform we deliver them on. The URL, the Adobe applications, assessment and partner panel are unchanged.
+ *
  * The hub deliberately has no `platforms` matrix: the applications section in
  * src/features/adobe/hub-sections.tsx lists each product once (what it does + verified service types)
  * and carries the product-slug anchors (/adobe-services#target) that the matrix used to provide.
@@ -20,24 +24,25 @@ import type { ServiceContent } from "@/lib/content/types";
 export const adobeServices: ServiceContent = {
   slug: "adobe-services",
   interest: "adobe-services",
-  name: "Adobe Services",
-  // Adobe articles are published under the insights theme "Adobe" (register GL-14).
-  insightTheme: "Adobe",
+  // The navigation label; also the BreadcrumbList and Service names in the page's structured data.
+  name: "MarTech",
+  // Adobe Experience Cloud articles are published under the insights theme "MarTech" (formerly "Adobe", register GL-14).
+  insightTheme: "MarTech",
   meta: {
-    title: "Adobe Experience Cloud & MarTech",
+    title: "MarTech & Adobe Experience Cloud",
     description:
-      "Adobe Experience Cloud designed, implemented and optimized end to end: Experience Platform, Real-Time CDP, Experience Manager, Analytics, Marketo Engage, Target, Commerce and content management.",
+      "Unified customer data and audiences, content, personalization and testing, analytics, B2B marketing automation and commerce, governed and privacy-safe, delivered on Adobe Experience Cloud by an Adobe Solution Partner.",
   },
   hero: {
-    // The pillar name from the Capability Matrix; the header nav keeps the shorter "Adobe Services".
-    eyebrow: "Adobe Experience Cloud & MarTech",
-    title: "Nine Adobe offerings. One connected stack.",
-    lead: "As an Adobe Solution Partner, MiG designs, implements and optimizes Adobe Experience Cloud end to end, from customer data and content to testing, analytics and commerce, and integrates it with the CRM and data systems around it.",
+    // The pillar label in the navigation (pillarsNav 03); the header item is the shorter "MarTech".
+    eyebrow: "MarTech & Adobe Experience Cloud",
+    title: "Governed customer data. Connected customer journeys.",
+    lead: "We implement and run the marketing technology behind your customer experience, from unified customer data and audiences to content, personalization and testing, analytics and attribution, B2B marketing automation and commerce, with consent and usage rules built in. We deliver it on Adobe Experience Cloud as an Adobe Solution Partner.",
   },
   problem: {
     title: "Licensed capability isn't the same as delivered value.",
     body: [
-      "Each Adobe application does a lot on its own, but many organizations implement them as separate projects. The result is customer profiles that don't match analytics, content that can't be personalized, and campaigns built on stale audiences.",
+      "Each application in a marketing stack does a lot on its own, but many organizations implement them as separate projects. The result is customer profiles that don't match analytics, content that can't be personalized, and campaigns built on stale audiences.",
       "The symptoms are manual workarounds, inconsistent customer experiences, and trouble showing a return on the investment. Closing that gap depends less on features than on data design, integration, governance, and how teams run the platforms day to day.",
     ],
     signals: [
@@ -55,7 +60,7 @@ export const adobeServices: ServiceContent = {
     { role: "E-commerce leaders", need: "A commerce platform that scales and connects to the wider experience." },
   ],
   capabilitiesIntro:
-    "We organize our Adobe delivery around what you're trying to achieve, then implement, integrate and customize the applications that serve it.",
+    "We organize our MarTech delivery around what you're trying to achieve, then implement, integrate and customize the Adobe Experience Cloud applications that serve it.",
   // Provenance is per capability. Three items inside "verified" capabilities are proposed extensions
   // (docs/HANDOFF.md), pending owner confirmation: "Profile data governance and quality" (customer-data),
   // "Integration testing" and "Documentation and handover" (integration).
@@ -64,7 +69,7 @@ export const adobeServices: ServiceContent = {
   capabilities: [
     {
       id: "customer-data",
-      title: "Customer data and profiles",
+      title: "Unified customer data and audiences",
       summary: "Schemas, identity and data flows designed so real-time profiles and audiences are accurate and ready to use across channels.",
       items: ["Data model and identity strategy", "Source connections and ingestion", "Audience design and activation", "Profile data governance and quality"],
       platforms: ["Adobe Experience Platform", "Real-Time CDP"],
@@ -80,15 +85,15 @@ export const adobeServices: ServiceContent = {
     },
     {
       id: "measurement",
-      title: "Analytics and measurement",
-      summary: "Numbers teams trust, from tracking design to the dashboards people use to make decisions.",
+      title: "Analytics and attribution",
+      summary: "Numbers teams trust, from tracking design and attribution to the dashboards people use to make decisions.",
       items: ["Measurement plans and tracking implementation", "Custom dashboards and reporting", "Data strategy and measurement planning", "Ongoing optimization"],
       platforms: ["Adobe Analytics"],
       provenance: "verified",
     },
     {
       id: "personalization",
-      title: "Testing and personalization",
+      title: "Personalization and testing",
       summary: "Experiments and targeted experiences built on reliable audience data and content that's ready to vary.",
       items: ["Personalization strategy", "A/B and multivariate test design", "Audience-based targeting", "Campaign optimization"],
       platforms: ["Adobe Target", "Real-Time CDP", "Adobe Experience Manager"],
@@ -96,8 +101,8 @@ export const adobeServices: ServiceContent = {
     },
     {
       id: "automation",
-      title: "Marketing automation",
-      summary: "B2B marketing automation, lead lifecycle management and campaign operations that run reliably across channels.",
+      title: "B2B marketing automation",
+      summary: "Lead lifecycle management, nurture programs and campaign operations that run reliably across channels.",
       items: ["Instance setup and CRM integration", "Campaign and nurture program automation", "Campaign performance reporting", "Instance customization and optimization"],
       platforms: ["Adobe Marketo Engage"],
       provenance: "verified",
@@ -186,12 +191,12 @@ export const adobeServices: ServiceContent = {
     {
       question: "Do you provide training?",
       answer:
-        "Yes. Training and support are part of our Adobe services. We document what we deliver and train the people who will run it, so your teams can operate and extend it without us.",
+        "Yes. Training and support are part of our MarTech services. We document what we deliver and train the people who will run it, so your teams can operate and extend it without us.",
     },
     {
-      question: "How do you handle customer data and consent in Adobe applications?",
+      question: "How do you keep customer data governed and privacy-safe?",
       answer:
-        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow. This is where our Adobe work connects with our Data & Analytics practice.",
+        "We design data models, data usage labels and access so that profiles and audiences are used only in ways your consent records and data governance policies allow, in Adobe Experience Cloud and the systems connected to it. This is where our MarTech work connects with our Data Governance and AI Governance work.",
     },
     {
       question: "Where should we start?",
@@ -205,7 +210,7 @@ export const adobeServices: ServiceContent = {
     },
   ],
   cta: {
-    title: "Get more from your Adobe investment.",
+    title: "Get more from your marketing technology.",
     body: "Tell us which Adobe applications you use and where you want to improve. We'll scope a practical first step with you.",
   },
 };
@@ -247,9 +252,9 @@ export const adobeHub = {
     ],
   },
   applications: {
-    eyebrow: "Adobe offerings",
-    title: "Adobe Experience Cloud and the applications in it",
-    intro: "We work across Adobe Experience Cloud as a whole, and on each application within it. Every application has its own page covering what it does and the services we provide for it.",
+    eyebrow: "The platform we deliver on",
+    title: "MarTech delivered on Adobe Experience Cloud",
+    intro: "Nine Adobe offerings, one connected stack. We work across Adobe Experience Cloud as a whole, and on each application within it. Every application has its own page covering what it does and the services we provide for it.",
   },
   waysToWork: {
     eyebrow: "Ways to work with us",
@@ -294,9 +299,9 @@ export const adobeHub = {
   },
   governance: {
     eyebrow: "Governance built in",
-    title: "Data governance inside your Adobe stack",
+    title: "Governed MarTech, from consent to activation",
     intro:
-      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into Adobe work from the start, drawing on our Data & Analytics practice.",
+      "Profiles and audiences are only as useful as the data behind them, and only as safe as the rules around it. We build consent, usage rules, data quality and documentation into MarTech work from the start, drawing on our Data Governance and AI Governance work.",
     items: [
       {
         title: "Consent-aware profiles",
@@ -315,6 +320,6 @@ export const adobeHub = {
         body: "Data flows between Adobe applications and enterprise systems, documented and handed over to your teams.",
       },
     ],
-    link: { href: "/data-management", label: "Explore Data & Analytics" },
+    link: { href: "/data-management", label: "Explore Data Governance" },
   },
 };

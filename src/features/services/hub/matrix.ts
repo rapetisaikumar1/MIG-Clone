@@ -1,5 +1,5 @@
 import { moliPath, mapleRecordPath, pillarsNav, type PillarNavItem } from "@/config/navigation";
-import { adobeProductPath, getAdobeProduct } from "@/lib/content/adobe";
+import { adobeProductPath, adobeServicesPath, getAdobeProduct } from "@/lib/content/adobe";
 import type { AdobeProductSlug } from "@/lib/content/types";
 
 /**
@@ -9,11 +9,11 @@ import type { AdobeProductSlug } from "@/lib/content/types";
  */
 
 export const matrixIntro = {
-  title: "Seven practice pillars. One accountable partner.",
-  lead: "From data foundations and cloud engineering to Adobe MarTech, experience design, CRM and compliant records management, MiG covers the full digital transformation lifecycle.",
+  title: "Governance and MarTech. One accountable partner.",
+  lead: "We specialize in information governance, data governance, AI governance and MarTech, and deliver them across seven practice pillars, from records and data foundations to cloud engineering, Adobe Experience Cloud, experience design and CRM.",
 };
 
-type CapabilitySource = string | { label: string; adobe: AdobeProductSlug };
+type CapabilitySource = string | { label: string; adobe: AdobeProductSlug } | { label: string; href: string };
 
 /** Deck capability lists, keyed by pillar number. Adobe items name the product page they link to. */
 const capabilitySources: Record<string, CapabilitySource[]> = {
@@ -34,7 +34,7 @@ const capabilitySources: Record<string, CapabilitySource[]> = {
   ],
   "03": [
     { label: "Adobe Experience Platform (AEP)", adobe: "experience-platform" },
-    "Adobe Experience Cloud",
+    { label: "Adobe Experience Cloud", href: adobeServicesPath },
     { label: "Real-Time CDP", adobe: "real-time-cdp" },
     { label: "Adobe Experience Manager (AEM)", adobe: "experience-manager" },
     { label: "Adobe Analytics", adobe: "analytics" },
@@ -70,7 +70,7 @@ const capabilitySources: Record<string, CapabilitySource[]> = {
   ],
 };
 
-/** Pillar 07 is delivered through our two products rather than a service page. */
+/** Pillar 07 (Information Governance & Records) has its own page and is delivered with our two products. */
 const productSources: Record<string, { label: string; href: string; kind: string; summary: string }[]> = {
   "07": [
     {
@@ -95,13 +95,14 @@ export type MatrixPillar = Pick<PillarNavItem, "number" | "label" | "href"> & {
   /** Anchor id on /services, e.g. "pillar-01". */
   id: string;
   capabilities: MatrixCapability[];
-  /** Set for pillar 07: the products that deliver it (the pillar has no page of its own). */
+  /** Set for pillar 07: the products that deliver it, shown as cards beside the pillar's page link. */
   products?: MatrixProduct[];
 };
 
 /** Resolves an Adobe item to its product page, or leaves it unlinked if that page doesn't exist (yet). */
 function resolve(source: CapabilitySource): MatrixCapability {
   if (typeof source === "string") return { label: source };
+  if ("href" in source) return source;
   const product = getAdobeProduct(source.adobe);
   return product ? { label: source.label, href: adobeProductPath(product.slug) } : { label: source.label };
 }

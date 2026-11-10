@@ -29,7 +29,7 @@ test("no page describes Maverick InnoGarage as a consultancy (text, title, meta 
 test("the home page presents the seven Capability Matrix pillars", async ({ page }) => {
   await page.goto("/");
   const main = page.getByRole("main");
-  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli"]) {
+  for (const href of ["/information-governance", "/data-management", "/ai-governance", "/adobe-services", "/software-development", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli"]) {
     await expect(main.locator(`a[href="${href}"]`).first()).toBeAttached();
   }
 });
@@ -37,7 +37,19 @@ test("the home page presents the seven Capability Matrix pillars", async ({ page
 test("every service page is linked from the footer", async ({ page }) => {
   await page.goto("/");
   const footer = page.getByRole("contentinfo");
-  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/ai-governance"]) {
+  for (const href of ["/information-governance", "/data-management", "/ai-governance", "/adobe-services", "/software-development", "/experience-design", "/digital-product", "/business-transformation"]) {
     await expect(footer.locator(`a[href="${href}"]`)).toHaveCount(1);
   }
+});
+
+test("the site leads with the four core areas: information, data and AI governance, and MarTech", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const nav = page.getByRole("navigation", { name: "Primary" });
+  await nav.getByRole("button", { name: "Services menu", exact: true }).click();
+  for (const href of ["/information-governance", "/data-management", "/ai-governance", "/adobe-services"]) {
+    await expect(nav.locator(`a[href="${href}"]`).first()).toBeVisible();
+  }
+  // Adobe is MarTech's platform, not the headline of the business.
+  await expect(page.locator("h1")).not.toContainText(/adobe/i);
 });

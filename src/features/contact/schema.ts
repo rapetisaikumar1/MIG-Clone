@@ -7,14 +7,14 @@ import type { AdobeProductSlug } from "@/lib/content/types";
  * inquiries; the email subject and body take their labels from this list.
  */
 export const contactInterests = [
+  { value: "records-management", label: "Information Governance & Records (MapleRecord, MOLI)" },
   { value: "data-management", label: "Data & Analytics" },
+  { value: "ai-governance", label: "AI Governance" },
+  { value: "adobe-services", label: "MarTech & Adobe Experience Cloud" },
   { value: "software-development", label: "Engineering & Technology" },
-  { value: "adobe-services", label: "Adobe Experience Cloud & MarTech" },
   { value: "experience-design", label: "Experience Design" },
   { value: "digital-product", label: "Digital & Product" },
   { value: "business-transformation", label: "Business Transformation & CRM" },
-  { value: "records-management", label: "Records Management (MapleRecord, MOLI)" },
-  { value: "ai-governance", label: "AI Governance" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 

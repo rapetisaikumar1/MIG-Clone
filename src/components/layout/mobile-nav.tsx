@@ -119,51 +119,55 @@ export function MobileNav({
                       <ArrowRight aria-hidden className="size-4 text-muted transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
                     {isServices ? (
-                      <SubList caption="Practice pillars">
-                        <ul aria-label="Services" className="grid">
-                          {services.pillars.map((pillar) => {
-                            const number = (
-                              <span aria-hidden className="w-6 shrink-0 font-mono text-[0.75rem] tabular-nums text-signal">
-                                {pillar.number}
-                              </span>
-                            );
-                            if (pillar.links?.length) {
-                              // Pillar 07 is delivered through our two products, so it lists them instead of one page.
-                              return (
-                                <li key={pillar.number} className="pt-2.5">
-                                  <p className="flex items-baseline gap-2 text-[0.9375rem] leading-snug text-ink-soft">
-                                    {number}
-                                    {pillar.label}
-                                  </p>
-                                  <ul aria-label={pillar.label} className="ml-8 flex flex-wrap gap-x-6">
-                                    {pillar.links.map((sub) => (
-                                      <li key={sub.href}>
-                                        <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} />
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </li>
-                              );
-                            }
-                            return (
-                              <li key={pillar.href}>
-                                <SubLink href={pillar.href} label={pillar.label} pathname={pathname} onNavigate={() => setOpen(false)} lead={number} />
-                              </li>
-                            );
-                          })}
-                        </ul>
-                        <ul aria-label="More services" className={cn(subListClass, "mt-1 border-t border-line pt-1")}>
-                          {[services.aiGovernance, services.overview].map((sub) => (
+                      <SubList caption="Core expertise">
+                        {/* One column, like the pillars below, so each core area keeps its full name on one line. */}
+                        <ul aria-label="Core expertise" className="grid">
+                          {services.core.map((sub) => (
                             <li key={sub.href}>
-                              <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} exact />
+                              <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} />
                             </li>
                           ))}
+                        </ul>
+                        <p aria-hidden className="mt-1 border-t border-line pt-3 font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-muted">
+                          Practice pillars
+                        </p>
+                        <ul aria-label="Practice pillars" className="grid">
+                          {services.pillars.map((pillar) => (
+                            <li key={pillar.href}>
+                              <SubLink
+                                href={pillar.href}
+                                label={pillar.label}
+                                pathname={pathname}
+                                onNavigate={() => setOpen(false)}
+                                lead={
+                                  <span aria-hidden className="w-6 shrink-0 font-mono text-[0.75rem] tabular-nums text-signal">
+                                    {pillar.number}
+                                  </span>
+                                }
+                              />
+                              {/* Pillar 07 is delivered with our two products, listed under it. */}
+                              {pillar.links?.length ? (
+                                <ul aria-label={`${pillar.label} products`} className="-mt-1 ml-8 flex flex-wrap gap-x-6">
+                                  {pillar.links.map((sub) => (
+                                    <li key={sub.href}>
+                                      <SubLink href={sub.href} label={sub.label} pathname={pathname} onNavigate={() => setOpen(false)} />
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                            </li>
+                          ))}
+                        </ul>
+                        <ul aria-label="More services" className="mt-1 border-t border-line pt-1">
+                          <li>
+                            <SubLink href={services.overview.href} label={services.overview.label} pathname={pathname} onNavigate={() => setOpen(false)} exact />
+                          </li>
                         </ul>
                       </SubList>
                     ) : null}
                     {adobe && item.href === adobe.overview.href ? (
-                      <SubList caption="Adobe applications">
-                        <ul aria-label="Adobe applications" className={subListClass}>
+                      <SubList caption="Adobe Experience Cloud">
+                        <ul aria-label="Adobe Experience Cloud applications" className={subListClass}>
                           {adobe.products.map((sub) => {
                             const current = pathname === sub.href;
                             return (

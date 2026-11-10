@@ -1,10 +1,12 @@
 import type { ServiceContent } from "@/lib/content/types";
 
 /**
- * AI Governance is not a pillar of the 2026 Capability Matrix. The deck lists the work it builds on: Data Governance &
+ * AI Governance is one of our four core areas (owner direction, 2026-11-10: Information, Data and AI Governance and
+ * MarTech), but it is not a pillar of the 2026 Capability Matrix. The deck lists the work it builds on: Data Governance &
  * Data Management and Regulatory Compliance, Data Quality & Security (pillar 01, /data-management) and AI/ML Enablement
- * (pillar 02, /software-development). This page presents responsible-AI work as the extension of that delivery, not as
- * the company's headline. The page links to both pillars from the band in src/app/(marketing)/ai-governance/page.tsx.
+ * (pillar 02, /software-development), so the page stays grounded in that delivery. The page links to both pillars from
+ * the band in src/app/(marketing)/ai-governance/page.tsx, and the data-handling capability links to
+ * /information-governance (records and documents that ground AI).
  *
  * The owner names AI governance as a core expertise (responsible AI, AI risk management, compliance support; Nov 2026),
  * but the deck does not list the individual capabilities, so each stays "proposed" until the owner confirms the scope
@@ -124,6 +126,7 @@ export const aiGovernance: ServiceContent = {
         "Guidance for confidential and personal data in prompts, grounding and training",
         "Approved data sources, with lineage expectations",
         "Alignment with consent, retention and access policies",
+        "Records and documents that ground AI, governed through our Information Governance & Records practice",
         "Built on the governance, quality and security controls from our Data & Analytics practice",
       ],
       provenance: "proposed",
@@ -244,7 +247,7 @@ export const aiGovernance: ServiceContent = {
     {
       question: "How does AI governance relate to your data and AI/ML work?",
       answer:
-        "It extends both. AI is only as reliable as the data it uses, so we build AI oversight on your existing data ownership, quality, consent and retention rules instead of creating a separate structure. If those foundations are missing, our Data & Analytics practice can put them in place. When we build or integrate AI through our AI/ML enablement work, the same risk tiers, owners and monitoring apply.",
+        "AI governance is one of our four core areas, alongside Information Governance, Data Governance and MarTech, and it draws on both. AI is only as reliable as the data it uses, so we build AI oversight on your existing data ownership, quality, consent and retention rules instead of creating a separate structure. If those foundations are missing, our Data & Analytics practice can put them in place. When we build or integrate AI through our AI/ML enablement work, the same risk tiers, owners and monitoring apply.",
     },
     {
       question: "Who needs to be involved from our side?",

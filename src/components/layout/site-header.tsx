@@ -31,7 +31,7 @@ export function SiteHeader() {
           <ButtonLink href={contactCta.href} size="sm" className="hidden whitespace-nowrap sm:inline-flex xl:px-4">
             {contactCta.label}
           </ButtonLink>
-          {/* Below xl the sheet carries the whole menu, with Services, Adobe and MapleRecord expanded into their pages. */}
+          {/* Below xl the sheet carries the whole menu, with Services, MarTech and MapleRecord expanded into their pages. */}
           <MobileNav items={mobileNav} cta={contactCta} services={services} adobe={adobe} mapleRecord={mapleRecord} />
         </div>
       </Container>

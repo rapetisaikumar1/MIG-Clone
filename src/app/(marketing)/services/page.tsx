@@ -3,14 +3,14 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 import { ArrowLink, ButtonLink } from "@/components/ui/button";
 import { Container, Dot, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
 import { breadcrumbJsonLd, JsonLd } from "@/components/seo/json-ld";
-import { aiGovernanceNav, servicesPath } from "@/config/navigation";
+import { servicesNav, servicesPath } from "@/config/navigation";
 import { company, siteUrl } from "@/config/site";
 import { deliveryApproach } from "@/content/home";
 import { industries } from "@/content/industries";
 import { CtaBand } from "@/features/contact/cta-band";
 import { contactHref } from "@/features/contact/links";
-import { AiGovernanceFeature } from "@/features/services/hub/ai-governance-feature";
 import { CapabilityMatrix } from "@/features/services/hub/capability-matrix";
+import { CoreExpertise, getCoreExpertise } from "@/features/services/hub/core-expertise";
 import { getCapabilityMatrix, matrixIntro } from "@/features/services/hub/matrix";
 import { ApproachSteps } from "@/features/services/sections";
 import { pageMetadata } from "@/lib/metadata";
@@ -18,37 +18,42 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata({
   title: "Services",
   description:
-    "Seven practice pillars and AI governance: data and analytics, cloud engineering, Adobe MarTech, experience design, product, CRM and records management.",
+    "Information, data and AI governance and MarTech, delivered across seven practice pillars, from records and data to cloud engineering, Adobe, design and CRM.",
   path: servicesPath,
 });
 
 const crumbs = [{ label: "Home", href: "/" }, { label: "Services" }];
 
-const aiGovernanceId = "ai-governance";
+const coreId = "core-expertise";
 
 const rowArrow =
   "size-4 shrink-0 text-muted transition-colors duration-200 group-hover:text-signal motion-safe:transition-[color,transform] motion-safe:group-hover:translate-x-0.5";
+
+const jumpLink =
+  "group flex min-h-11 items-center gap-4 py-2 text-[0.9375rem] leading-snug text-ink-soft underline-offset-4 hover:text-ink hover:underline";
 
 const jumpArrow =
   "size-4 shrink-0 text-muted group-hover:text-signal motion-safe:transition-transform motion-safe:group-hover:translate-y-0.5";
 
 export default function ServicesPage() {
   const pillars = getCapabilityMatrix();
+  const coreAreas = getCoreExpertise();
 
+  // Every service page, the four core areas first (information, data and AI governance, MarTech), then the other pillars.
   const itemList = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Maverick InnoGarage capability matrix",
+    name: "Maverick InnoGarage services",
     itemListOrder: "https://schema.org/ItemListOrderAscending",
-    numberOfItems: pillars.length,
-    itemListElement: pillars.map((p, i) => ({
+    numberOfItems: servicesNav.length,
+    itemListElement: servicesNav.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "Service",
-        name: p.label,
-        url: `${siteUrl}${p.href}`,
-        description: p.capabilities.map((c) => c.label).join(", "),
+        name: s.label,
+        url: `${siteUrl}${s.href}`,
+        description: s.description,
         provider: { "@type": "Organization", name: company.name, url: siteUrl },
       },
     })),
@@ -58,7 +63,7 @@ export default function ServicesPage() {
     <>
       <JsonLd data={[breadcrumbJsonLd(crumbs, servicesPath), itemList]} />
 
-      {/* Hero: the deck's matrix headline, with a jump list to each pillar and AI Governance on desktop. */}
+      {/* Hero: the deck's matrix headline, with a jump list to the four core areas and the matrix on desktop. */}
       <section className="border-b border-line pb-14 pt-10 sm:pb-16 lg:pb-20 lg:pt-14">
         <Container>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-12">
@@ -76,34 +81,28 @@ export default function ServicesPage() {
               </div>
             </div>
             <nav aria-label="On this page" className="hidden lg:col-span-4 lg:col-start-9 lg:block lg:pt-2">
-              <p className="font-mono text-label uppercase text-muted">Practice pillars</p>
+              <p className="font-mono text-label uppercase text-muted">Core expertise</p>
               <ol className="mt-3 border-t border-line">
-                {pillars.map((p) => (
-                  <li key={p.id} className="border-b border-line">
-                    <Link
-                      href={`#${p.id}`}
-                      className="group flex min-h-11 items-center gap-4 py-2 text-[0.9375rem] leading-snug text-ink-soft underline-offset-4 hover:text-ink hover:underline"
-                    >
-                      <span aria-hidden className="w-6 font-mono text-xs text-muted group-hover:text-signal">
-                        {p.number}
+                {coreAreas.map((a) => (
+                  <li key={a.id} className="border-b border-line">
+                    <Link href={`#${a.id}`} className={jumpLink}>
+                      <span aria-hidden className="flex w-6 items-center">
+                        <Dot />
                       </span>
-                      <span className="flex-1">{p.label}</span>
+                      <span className="flex-1">{a.label}</span>
                       <ArrowDown aria-hidden className={jumpArrow} />
                     </Link>
                   </li>
                 ))}
               </ol>
-              <p className="mt-7 font-mono text-label uppercase text-muted">Responsible AI</p>
+              <p className="mt-7 font-mono text-label uppercase text-muted">Capability matrix</p>
               <ul className="mt-3 border-t border-line">
                 <li className="border-b border-line">
-                  <Link
-                    href={`#${aiGovernanceId}`}
-                    className="group flex min-h-11 items-center gap-4 py-2 text-[0.9375rem] leading-snug text-ink-soft underline-offset-4 hover:text-ink hover:underline"
-                  >
+                  <Link href="#matrix" className={jumpLink}>
                     <span aria-hidden className="flex w-6 items-center">
-                      <Dot />
+                      <Dot className="bg-transparent ring-1 ring-muted ring-inset" />
                     </span>
-                    <span className="flex-1">{aiGovernanceNav.label}</span>
+                    <span className="flex-1">{`${pillars.length === 7 ? "Seven" : pillars.length} practice pillars`}</span>
                     <ArrowDown aria-hidden className={jumpArrow} />
                   </Link>
                 </li>
@@ -112,6 +111,9 @@ export default function ServicesPage() {
           </div>
         </Container>
       </section>
+
+      {/* Core expertise: the four areas we lead with, each linking to the page that delivers it. */}
+      <CoreExpertise id={coreId} areas={coreAreas} />
 
       {/* The capability matrix */}
       <Section id="matrix" aria-labelledby="matrix-title">
@@ -124,17 +126,14 @@ export default function ServicesPage() {
               </h2>
             </div>
             <p className="max-w-[52ch] text-muted lg:col-span-5">
-              Each pillar stands on its own or combines with the others in one engagement. Choose a pillar for the full scope
-              of work, platforms and delivery approach.
+              The seven pillars behind our core expertise. Each stands on its own or combines with the others in one
+              engagement. Choose a pillar for the full scope of work, platforms and delivery approach.
             </p>
           </div>
           <CapabilityMatrix pillars={pillars} />
 
         </Container>
       </Section>
-
-      {/* AI Governance: core expertise beside the seven pillars (it builds on pillars 01 and 02). */}
-      <AiGovernanceFeature id={aiGovernanceId} />
 
       {/* From vision to victory: the deck's delivery approach */}
       <Section tone="night" aria-labelledby="approach-title">

@@ -223,7 +223,7 @@ export const experienceDesign: ServiceContent = {
     {
       question: "How does experience design work with Adobe Experience Cloud?",
       answer:
-        "Adobe applications deliver content, personalization and testing, and they work best when the journeys and content behind them are designed first. We design those journeys and that content, then implement and optimize them in Adobe Experience Manager, Adobe Target and Adobe Analytics through our Adobe services.",
+        "Adobe applications deliver content, personalization and testing, and they work best when the journeys and content behind them are designed first. We design those journeys and that content, then implement and optimize them in Adobe Experience Manager, Adobe Target and Adobe Analytics through our MarTech practice.",
     },
     {
       question: "How does this relate to your Digital & Product services?",

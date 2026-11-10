@@ -4,7 +4,8 @@ import { keepHyphenatedWords } from "@/features/adobe/keep-hyphenated";
 
 /**
  * The Capability Deck presents Experience Design and Digital & Product on one slide ("Human-centric design. Products
- * that ship."), and the content and CX work lands in Adobe Experience Cloud. This band says how the three connect.
+ * that ship."), and the content and CX work lands in our MarTech practice, on Adobe Experience Cloud. This band says how
+ * the three connect.
  * Like the MapleRecord callout it has no bottom padding: the delivery approach that follows is on the same paper
  * background and supplies its own top padding. Two equal columns, as in the MapleRecord callout.
  */
@@ -17,8 +18,9 @@ export function ConnectedPractices() {
     },
     {
       href: "/adobe-services",
-      // A no-break space keeps "&" with "MarTech" when the name wraps, as in the footer.
-      label: "Adobe Experience Cloud &\u00a0MarTech",
+      // The pillar's name as in the navigation and footer: MarTech leads, Adobe Experience Cloud is its platform. A
+      // no-break space keeps "Experience Cloud" together, so "Cloud" never wraps alone beside the arrow.
+      label: "MarTech & Adobe Experience\u00a0Cloud",
       body: "The journeys and content we design, implemented and optimized in Adobe Experience Manager, Target and Analytics.",
     },
   ];
@@ -32,7 +34,7 @@ export function ConnectedPractices() {
               Research and design that carry through to launch.
             </h2>
             <p className="mt-6 max-w-[54ch] text-muted">
-              Experience design works alongside our Digital &amp; Product and Adobe practices, so what we learn from users
+              Experience design works alongside our Digital &amp; Product and MarTech practices, so what we learn from users
               and what we design reaches the product your customers use.
             </p>
           </div>

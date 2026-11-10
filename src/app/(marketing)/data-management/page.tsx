@@ -1,6 +1,7 @@
 import { DataGraphic } from "@/components/graphics/service-graphics";
 import { ServicePage } from "@/features/services/service-page";
 import { MapleRecordCallout } from "@/features/services/maplerecord-callout";
+import { adobeServicesPath } from "@/lib/content/adobe";
 import { getService } from "@/lib/content/services";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -19,6 +20,9 @@ export default function DataManagementPage() {
         MapleRecord: "/maplerecord",
         MOLI: "/moli",
         "AI governance": "/ai-governance",
+        // Records and information governance is its own core area (pillar 07); consented customer data feeds MarTech.
+        "Information Governance & Records": "/information-governance",
+        MarTech: adobeServicesPath,
         // Cloud platforms and AI/ML enablement belong to pillar 02; the bullets that mention them link there.
         "Engineering & Technology": "/software-development",
       }}

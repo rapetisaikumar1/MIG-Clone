@@ -60,7 +60,7 @@ export default function ResourcesPage() {
         </Container>
       </Section>
 
-      <MrCta title="Put these ideas into practice with MapleRecord" body="Discover how MapleRecord can help your organization streamline workflows, support compliance, and unlock the value in your documents." />
+      <MrCta title="Put these ideas into practice with MapleRecord" body="Discover how MapleRecord can help your organization streamline workflows, support compliance, and get more value from your documents." />
     </>
   );
 }

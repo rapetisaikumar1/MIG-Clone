@@ -14,12 +14,12 @@ export function isActivePath(pathname: string, href: string) {
 
 /**
  * Services is "you are here" on the hub and on every page its menu reaches, except pages that have
- * their own top-level item (Adobe Services, MapleRecord), so only one item is ever marked.
+ * their own top-level item (MarTech, MapleRecord), so only one item is ever marked.
  */
 export function isServicesActive(pathname: string, services: ServicesNav, items: NavItem[]) {
   if (isActivePath(pathname, services.overview.href)) return true;
   if (items.some((i) => i.href !== services.overview.href && isActivePath(pathname, i.href))) return false;
-  const hrefs = [...services.pillars.flatMap((p) => [p.href, ...(p.links ?? []).map((l) => l.href)]), services.aiGovernance.href];
+  const hrefs = [...services.core.map((c) => c.href), ...services.pillars.flatMap((p) => [p.href, ...(p.links ?? []).map((l) => l.href)])];
   return hrefs.some((href) => isActivePath(pathname, href));
 }
 

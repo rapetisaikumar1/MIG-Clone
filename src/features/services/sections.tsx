@@ -1,4 +1,4 @@
-import { servicesNav } from "@/config/navigation";
+import { servicesNav, servicesPath } from "@/config/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
@@ -642,41 +642,44 @@ export function FaqSection({ faqs, title = "Frequently asked questions" }: { faq
 export type ReadingLink = { title: string; href: string };
 
 export function RelatedServices({ current, reading }: { current: ServiceContent["slug"]; reading?: ReadingLink[] }) {
-  // Every service page (the Capability Matrix pillars, then AI Governance); each page lists the others.
-  const all = servicesNav.map((s) => ({ slug: s.href.slice(1), name: s.label, line: s.description ?? "" }));
+  // Every other service page (core expertise first, then the remaining pillars), then an "All services" card:
+  // seven related pages plus the hub make an even 4 × 2 from lg and 2 × 4 on tablets.
+  const related = servicesNav
+    .filter((s) => s.href.slice(1) !== current)
+    .map((s) => ({ href: s.href, name: s.label, line: s.description ?? "" }));
+  const all = [...related, { href: servicesPath, name: "All services", line: "Core expertise and all seven practice pillars, in one place." }];
   return (
     <Section tone="deep" spacing="compact" aria-labelledby="related-title">
       <Container>
         <SectionHeading id="related-title" eyebrow="Connected expertise" title="Explore related services" className="reveal" />
         {/*
-          Six cards (every other service page): one column on phones, 2 × 3 on tablets, 3 × 2 from lg. md:auto-rows-fr
-          keeps every card in the grid the same height; the arrow sits beside the name, so a short description
-          doesn't leave an empty band at the bottom of the card.
+          Eight cards: one column on phones, 2 × 4 on tablets and small laptops, 4 × 2 from xl. At lg (1024–1279px) four
+          columns left about 130px for each name, too narrow for words such as "Transformation" beside the arrow, so the
+          4 × 2 grid starts at xl. md:auto-rows-fr keeps every card in the grid the same height; the arrow sits beside the
+          name, so a short description doesn't leave an empty band at the bottom of the card.
         */}
-        <ul className="mt-10 grid gap-4 md:auto-rows-fr md:grid-cols-2 lg:grid-cols-3">
-          {all
-            .filter((s) => s.slug !== current)
-            .map((s) => (
-              <li key={s.slug}>
-                <Link
-                  href={`/${s.slug}`}
-                  className="card-lift group flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink sm:p-7"
-                >
-                  <span className="flex items-start justify-between gap-5">
-                    <span className="font-display text-[1.1875rem] font-semibold leading-snug tracking-[-0.012em] sm:text-[1.3125rem]">
-                      {s.name}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="-mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line-strong text-signal transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white"
-                    >
-                      <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                    </span>
+        <ul className="mt-10 grid gap-4 md:auto-rows-fr md:grid-cols-2 xl:grid-cols-4">
+          {all.map((s) => (
+            <li key={s.href}>
+              <Link
+                href={s.href}
+                className="card-lift group flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-ink sm:p-7"
+              >
+                <span className="flex items-start justify-between gap-3">
+                  <span className="font-display text-[1.1875rem] font-semibold leading-snug tracking-[-0.012em] sm:text-[1.3125rem]">
+                    {s.name}
                   </span>
-                  <span className="mt-3 block max-w-[40ch] text-[0.9375rem] leading-relaxed text-muted">{s.line}</span>
-                </Link>
-              </li>
-            ))}
+                  <span
+                    aria-hidden
+                    className="-mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line-strong text-signal transition-colors group-hover:border-signal group-hover:bg-signal group-hover:text-white"
+                  >
+                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </span>
+                </span>
+                <span className="mt-3 block max-w-[40ch] text-[0.9375rem] leading-relaxed text-muted">{s.line}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
         {reading?.length ? (
           <div className="mt-12 border-t border-line-strong pt-8 sm:flex sm:items-baseline sm:gap-10">

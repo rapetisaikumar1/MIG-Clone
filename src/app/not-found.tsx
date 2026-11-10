@@ -5,19 +5,20 @@ import { ButtonLink } from "@/components/ui/button";
 import { Container, Eyebrow } from "@/components/ui/layout";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader, SkipLink } from "@/components/layout/site-header";
-import { aiGovernanceNav, contactCta, pillarsNav, servicesPath, type NavItem } from "@/config/navigation";
+import { contactCta, coreExpertiseNav, pillarsNav, servicesPath, type NavItem } from "@/config/navigation";
 import { contactHref } from "@/features/contact/links";
 
 export const metadata: Metadata = { title: "Page not found", robots: { index: false, follow: true } };
 
-// The service pillars, our two products (pillar 07), AI Governance, then the hub and company pages:
-// twelve cards fill the two- and three-column grids evenly.
+// The four core areas first, then the supporting pillars, our two products (pillar 07), the services hub and
+// Insights: twelve cards fill the two- and three-column grids evenly.
+const coreHrefs = new Set(coreExpertiseNav.map((c) => c.href));
 const destinations: NavItem[] = [
-  ...pillarsNav.flatMap((p) => p.links ?? [{ label: p.label, href: p.href, description: p.description }]),
-  aiGovernanceNav,
-  { label: "All services", href: servicesPath, description: "The seven practice pillars in one place" },
+  ...coreExpertiseNav,
+  ...pillarsNav.filter((p) => !coreHrefs.has(p.href)).map(({ label, href, description }) => ({ label, href, description })),
+  ...pillarsNav.flatMap((p) => p.links ?? []),
+  { label: "All services", href: servicesPath, description: "Our core expertise and the seven practice pillars" },
   { label: "Insights", href: "/insights", description: "Articles on AI governance, Adobe, data and customer experience" },
-  { label: "About", href: "/about", description: "Who we are and how we deliver" },
 ];
 
 export default function NotFound() {

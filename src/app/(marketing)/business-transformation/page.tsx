@@ -9,7 +9,10 @@ const content = getService("business-transformation");
 
 export const metadata = pageMetadata({ ...content.meta, path: "/business-transformation" });
 
-/** Ways three and four of the deck's "Four ways we modernize how enterprises run": our records management products. */
+/**
+ * The deck's records items (ways three and four of "Four ways we modernize how enterprises run"), now delivered by the
+ * Information Governance & Records practice (pillar 07, /information-governance): our two records management products.
+ */
 const recordsProducts = [
   {
     name: "MapleRecord",
@@ -21,7 +24,7 @@ const recordsProducts = [
     name: "MOLI",
     href: "/moli",
     tagline: "AI-driven record management system",
-    body: "AI-powered search and retrieval, cloud integration across AWS and Azure, and a user-centric design, built to support compliance with GDPR, PDPA, PIPEDA and CCPA.",
+    body: "AI-powered search and retrieval and cloud integration across AWS and Azure, with a user-centric design and controls designed to support GDPR, PDPA, PIPEDA and CCPA compliance.",
   },
 ];
 
@@ -36,15 +39,20 @@ function RecordsPointer() {
         <div className="reveal rounded-3xl border border-line-strong bg-surface p-5 sm:p-10 lg:p-14">
           <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-14">
             <div className="lg:col-span-7">
-              <Eyebrow>Records management &amp; compliance</Eyebrow>
+              <Eyebrow>Information Governance &amp; Records</Eyebrow>
               <h2 id="records-pointer-title" className="mt-5 text-h2">
                 Governed records, run on our own products.
               </h2>
             </div>
-            <p className="max-w-[48ch] text-muted lg:col-span-5">
-              For government and regulated industries, the change often reaches records: how they are captured, retained,
-              found and disposed of.
-            </p>
+            <div className="lg:col-span-5">
+              <p className="max-w-[48ch] text-muted">
+                For government and regulated industries, the change often reaches records: how they are captured,
+                retained, found and disposed of. Our Information Governance &amp; Records practice delivers that work.
+              </p>
+              <ArrowLink href="/information-governance" className="mt-4">
+                Explore Information Governance
+              </ArrowLink>
+            </div>
           </div>
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-12">
             {recordsProducts.map((p) => (

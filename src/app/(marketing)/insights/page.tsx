@@ -11,7 +11,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Insights",
-  description: "Articles on data governance, Adobe platforms and customer experience from Maverick InnoGarage.",
+  description: "Articles on data governance, MarTech on Adobe Experience Cloud and customer experience from Maverick InnoGarage.",
   path: "/insights",
 });
 
@@ -31,7 +31,7 @@ export default async function InsightsPage() {
             <Eyebrow>Insights</Eyebrow>
             <h1 className="mt-6 max-w-4xl text-h1 text-balance">Practical thinking on data and digital experience.</h1>
             <p className="mt-6 max-w-[58ch] text-lead text-muted">
-              Articles from our team on data governance, Adobe platforms and customer experience, organized by theme.
+              Articles from our team on data governance, MarTech and customer experience, organized by theme.
             </p>
           </div>
         </Container>

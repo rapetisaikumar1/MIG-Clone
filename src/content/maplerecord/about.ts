@@ -12,6 +12,8 @@
 // listing unrelated services; the "today" paragraph names the deck's audience. Figures unchanged.
 // Final QA (2026-11-09): the story no longer says "built" in three consecutive paragraphs; the CTA body names the five
 // modules instead of repeating "how MapleRecord can help" from its heading; the Healthcare card is one line shorter.
+// Repositioning (2026-11-10): the closing story paragraph names the Information Governance & Records practice (the
+// deck's pillar 07, renamed) and links it, alongside the MOLI link.
 import type { MrImage } from "@/lib/content/types";
 import { mrScreens } from "./screens";
 
@@ -44,8 +46,9 @@ export const mrAbout = {
   ],
   /** Closing story paragraph, rendered with a link to MOLI (company-sections.tsx). */
   storyRelated: {
-    before:
-      "MapleRecord is part of Maverick InnoGarage’s records management and compliance practice, alongside ",
+    before: "MapleRecord is part of Maverick InnoGarage’s ",
+    practice: { label: "Information Governance & Records practice", href: "/information-governance" },
+    middle: ", alongside ",
     label: "MOLI, our AI-driven record management system",
     href: "/moli",
     after: ".",

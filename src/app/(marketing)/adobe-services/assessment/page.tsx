@@ -18,7 +18,7 @@ export const metadata = pageMetadata({ ...content.meta, path: adobeAssessmentPat
 /** Structured data only: the visible breadcrumb trail was removed site-wide. */
 const breadcrumbs = [
   { label: "Home", href: "/" },
-  { label: "Adobe Services", href: adobeServicesPath },
+  { label: "MarTech", href: adobeServicesPath },
   { label: "Platform assessment" },
 ];
 

@@ -5,16 +5,22 @@ import { hero } from "@/content/home";
 import { CapabilityMap } from "./hero/capability-map";
 import { HeroBackground } from "./hero-background";
 
-/** The headline with its last word and full stop kept together (no orphan), the stop in the logo's red. */
-const lastSpace = hero.title.lastIndexOf(" ");
-const titleHead = hero.title.slice(0, lastSpace + 1);
-const titleTail = hero.title.slice(lastSpace + 1, -1);
+/**
+ * The headline as its two sentences, each starting on its own line. The second keeps its last two words and full
+ * stop together (no orphan); the final stop is in the logo's red.
+ */
+const sentenceBreak = hero.title.indexOf(". ") + 1;
+const titleFirst = hero.title.slice(0, sentenceBreak);
+const titleSecond = hero.title.slice(sentenceBreak + 1);
+const tailStart = titleSecond.lastIndexOf(" ", titleSecond.lastIndexOf(" ") - 1);
+const titleHead = titleSecond.slice(0, tailStart + 1);
+const titleTail = titleSecond.slice(tailStart + 1, -1);
 
 /**
- * Home hero on the dark stage. Left: who we are for and what we deliver (eyebrow, headline, lead with links to
- * our two products, the two actions). Right (below on phones and tablets): the capability map, the platform we
- * build as a layered illustration whose four labels link to the core service pages. All text is server-rendered,
- * so the headline paints immediately; the backdrop and the map's motion are decorative and stop under
+ * Home hero on the dark stage. Left: who we serve and what we deliver (eyebrow, headline naming the four core
+ * areas, lead with links to our two products, the two actions). Right (below on phones and tablets): the
+ * capability map, the four areas as one governed stack whose labels link to the core service pages. All text is
+ * server-rendered, so the headline paints immediately; the backdrop and the map's motion are decorative and stop under
  * prefers-reduced-motion.
  */
 export function HeroBanner() {
@@ -25,7 +31,9 @@ export function HeroBanner() {
     >
       <HeroBackground />
       <Container className="grid gap-14 pb-14 pt-10 sm:pt-12 md:gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:pb-20 lg:pt-14 xl:gap-16">
-        <div>
+        {/* A size container, so the headline scales with the column it sits in. Top-aligned, so the space under the
+            header stays the same whatever the headline's line count; the map is centered beside it. */}
+        <div className="@container lg:self-start">
           <ul
             aria-label="About Maverick InnoGarage"
             className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-label uppercase text-night-muted"
@@ -41,18 +49,22 @@ export function HeroBanner() {
 
           <h1
             id="hero-title"
-            className="mt-6 max-w-[15ch] text-balance font-display text-[clamp(2.5rem,1.45rem+4.4vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.032em] sm:mt-7 lg:text-[clamp(3rem,0.9rem+3.4vw,4.375rem)]"
+            className="mt-6 font-display text-[clamp(2rem,10.2cqi,4rem)] font-semibold leading-[1.06] tracking-[-0.032em] sm:mt-7"
           >
-            {titleHead}
-            <span className="whitespace-nowrap">
-              {titleTail}
-              <span className="text-logo-red">.</span>
+            {/* Sized so "and AI governance." always fits one line: the first sentence breaks into two balanced lines. */}
+            <span className="block text-balance">{titleFirst}</span>{" "}
+            <span className="block">
+              {titleHead}
+              <span className="whitespace-nowrap">
+                {titleTail}
+                <span className="text-logo-red">.</span>
+              </span>
             </span>
           </h1>
 
           <p className="mt-6 max-w-[54ch] text-lead text-night-muted sm:mt-7">
-            {hero.lead} {hero.products.before}
-            {hero.products.links.map((p, i) => (
+            {hero.lead.before}
+            {hero.lead.links.map((p, i) => (
               <span key={p.href}>
                 {i > 0 ? " and " : null}
                 <Link
@@ -63,7 +75,7 @@ export function HeroBanner() {
                 </Link>
               </span>
             ))}
-            .
+            {hero.lead.after}
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -84,7 +96,7 @@ export function HeroBanner() {
           </div>
         </div>
 
-        <CapabilityMap className="w-full max-w-[40rem] lg:max-w-none" />
+        <CapabilityMap className="w-full max-w-[36rem] lg:max-w-none" />
       </Container>
     </section>
   );

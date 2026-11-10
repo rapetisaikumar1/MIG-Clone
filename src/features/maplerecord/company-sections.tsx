@@ -120,6 +120,10 @@ export function MrStorySection() {
             ))}
             <p>
               {mrAbout.storyRelated.before}
+              <Link href={mrAbout.storyRelated.practice.href} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
+                {mrAbout.storyRelated.practice.label}
+              </Link>
+              {mrAbout.storyRelated.middle}
               <Link href={mrAbout.storyRelated.href} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
                 {mrAbout.storyRelated.label}
               </Link>

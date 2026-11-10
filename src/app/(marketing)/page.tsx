@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { moliPath, pillarsNav } from "@/config/navigation";
+import { moliPath } from "@/config/navigation";
 import { connection, deliveryApproach, homeCta, homeDescription, maplerecordFeature, problems } from "@/content/home";
 import { industries } from "@/content/industries";
 import { mrSampleDataNote } from "@/content/maplerecord/overview";
@@ -20,30 +20,31 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({ description: homeDescription, path: "/" });
 
-const pillarLabel = (n: string) => pillarsNav.find((p) => p.number === n)?.label ?? "";
-
 /** One hover pattern for every link row on the page: muted arrow → signal red with a 2px nudge (motion-safe). */
 const rowArrow =
   "size-4 shrink-0 text-muted transition-colors duration-200 group-hover:text-signal motion-safe:transition-[color,transform] motion-safe:group-hover:translate-x-0.5";
 const rowTitle = "decoration-1 underline-offset-4 group-hover:underline";
 
 /*
- * Section order follows the Capability Matrix narrative: who we are (hero) → the seven practice pillars → the
- * problems they solve → how the pillars connect → the featured Adobe practice → how we deliver (three stages) →
- * industries → our products → client impact (hidden until confirmed) → insights → contact.
- * Each figure appears once: "12+ years" in the hero, 7 pillars, 9 Adobe offerings and 8 industries in their own
- * section headings (there is no separate figures strip, which only repeated them).
+ * Section order leads with the four core areas (owner direction, 2026-11-10): hero → the four core areas and the
+ * supporting practice pillars → the problems they solve (core areas first) → how the four areas connect → MarTech,
+ * delivered on Adobe Experience Cloud → how we deliver (three stages) → industries → our products (Information
+ * Governance) → client impact (hidden until confirmed) → insights → contact.
+ * Each figure appears once: "12+ years" in the hero, 7 pillars and 8 industries in their own section headings.
  * Tones alternate so consecutive sections never share a background.
  */
 export default async function HomePage() {
-  const latest = (await getInsights()).slice(0, 3);
+  // Newest article per theme first, so the row reflects the range of our work rather than one platform; then by date.
+  const all = await getInsights();
+  const perTheme = all.filter((a, i) => all.findIndex((b) => b.theme === a.theme) === i);
+  const latest = [...perTheme, ...all.filter((a) => !perTheme.includes(a))].slice(0, 3);
 
   return (
     <>
       <HeroBanner />
       <PillarsSection />
 
-      {/* Business problems, one per pillar */}
+      {/* Business problems: the four core areas first, then two supporting pillars */}
       <Section tone="deep" aria-labelledby="problems-title">
         <Container className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -52,7 +53,7 @@ export default async function HomePage() {
                 id="problems-title"
                 eyebrow="Where we help"
                 title="Problems we help solve"
-                intro="Start from the problem. Each one leads to the pillar that addresses it."
+                intro="Start from the problem. Each one leads to the work that addresses it."
                 className="reveal"
               />
             </div>
@@ -63,7 +64,7 @@ export default async function HomePage() {
                 <Link href={p.href} className="group grid grid-cols-[1fr_auto] items-center gap-6 py-7 sm:gap-10">
                   <span>
                     <span className="block font-mono text-label uppercase text-muted">
-                      {p.pillar} · {pillarLabel(p.pillar)}
+                      {p.area}
                     </span>
                     <span className={`mt-3 block text-balance text-h3 font-semibold ${rowTitle}`}>{p.problem}</span>
                     <span className="mt-2 block text-pretty text-muted">{p.detail}</span>
@@ -76,7 +77,7 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* How the pillars connect */}
+      {/* How the four core areas connect */}
       <Section tone="night" aria-labelledby="connect-title">
         <Container>
           <div className="reveal grid gap-10 lg:grid-cols-12">
@@ -92,7 +93,7 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* Adobe Services section: application map, assessment entry point, partner statement */}
+      {/* MarTech, delivered on Adobe Experience Cloud: application map, assessment entry point, partner statement */}
       <AdobeSection />
 
       {/* Delivery approach: the deck's three stages */}
@@ -135,7 +136,7 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* MapleRecord: our own product, shown with a real product screen */}
+      {/* MapleRecord and MOLI: our own products, delivered as part of Information Governance; a real product screen */}
       <Section tone="deep" aria-labelledby="maplerecord-title">
         {/* reveal on the container, card-lift on the card: each owns its own transform. */}
         <Container className="reveal">
@@ -174,6 +175,16 @@ export default async function HomePage() {
                   <ArrowRight aria-hidden className="size-4 text-logo-red motion-safe:transition-transform motion-safe:group-hover/moli:translate-x-0.5" />
                 </Link>
                 {maplerecordFeature.moli.body}
+              </p>
+              <p className="relative z-10 mt-3 text-[0.9375rem] text-night-muted">
+                {maplerecordFeature.governance.before}
+                <Link
+                  href={maplerecordFeature.governance.href}
+                  className="font-semibold text-night-text underline decoration-night-line underline-offset-4 hover:decoration-logo-red"
+                >
+                  {maplerecordFeature.governance.label}
+                </Link>
+                {maplerecordFeature.governance.after}
               </p>
             </div>
             {/* The screen bleeds off the card's right and bottom edges; from lg it fills the row height (cropped from

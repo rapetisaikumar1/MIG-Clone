@@ -5,10 +5,10 @@ import { company } from "@/config/site";
  * Home page title (≤ 60 characters so search results show it in full). Pages without a `title`
  * use it as an absolute title, so it never depends on the root layout's default.
  */
-export const siteTitle = `${company.name} — Data, Cloud, Adobe MarTech & Design`;
+export const siteTitle = `${company.name} — Information, Data & AI Governance, MarTech`;
 
 /** Alt text for the shared Open Graph image (also exported by app/opengraph-image.tsx). */
-export const ogImageAlt = `${company.name}: data, cloud and engineering, Adobe Experience Cloud and MarTech, and human-centric design for enterprises and the public sector`;
+export const ogImageAlt = `${company.name}: information governance, data governance, AI governance and MarTech on Adobe Experience Cloud, for enterprises and the public sector`;
 
 /** X/Twitter handle derived from the verified social profile URL in config/site.ts. */
 const xHandle = (() => {

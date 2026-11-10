@@ -11,6 +11,7 @@ const screen = mrScreens.recordsRetention;
 const defaultContext = "It puts the retention schedules and access rules described above into daily use.";
 
 /**
+ * Presents MapleRecord as one of our two Information Governance & Records products (with MOLI) and links that practice.
  * Sits directly after the capabilities list on /data-management and /software-development. It has no bottom padding
  * because the next section (the delivery approach) is on the same paper background and supplies its own top padding.
  */
@@ -25,7 +26,7 @@ export function MapleRecordCallout({
       <Container>
         <div className="reveal grid items-center gap-10 overflow-hidden rounded-3xl border border-line-strong bg-surface p-7 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-14">
           <div>
-            <Eyebrow>Our product · MapleRecord</Eyebrow>
+            <Eyebrow>Our product · Information Governance & Records</Eyebrow>
             <h2 id="maplerecord-callout-title" className="mt-5 text-h2">
               Public sector and enterprise records management.
             </h2>
@@ -34,11 +35,13 @@ export function MapleRecordCallout({
               MapleRecord, designed and built by Maverick InnoGarage, is customized records management software for
               government, municipalities and regulated organizations, with workflow automation, a seamless user experience
               and lifecycle governance. Five integrated modules cover electronic and physical records, information
-              requests, workflows, forms and administration. {context}
+              requests, workflows, forms and administration. With MOLI, it is one of our two Information Governance &amp;
+              Records products. {context}
             </p>
-            <ArrowLink href="/maplerecord" className="mt-8">
-              Explore MapleRecord
-            </ArrowLink>
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+              <ArrowLink href="/maplerecord">Explore MapleRecord</ArrowLink>
+              <ArrowLink href="/information-governance">Information Governance &amp; Records</ArrowLink>
+            </div>
           </div>
           <div>
             {/*

@@ -26,7 +26,8 @@ export function generateStaticParams() {
 
 const themeService: Record<InsightTheme, { href: string; label: string; interest: ContactInterest }> = {
   "AI Governance": { href: "/ai-governance", label: "AI Governance services", interest: "ai-governance" },
-  Adobe: { href: "/adobe-services", label: "Adobe Services", interest: "adobe-services" },
+  // MarTech articles (Adobe Experience Cloud applications) link to the MarTech practice page.
+  MarTech: { href: "/adobe-services", label: "MarTech services", interest: "adobe-services" },
   // The Data & Analytics pillar keeps its original /data-management URL.
   "Data & Analytics": { href: "/data-management", label: "Data & Analytics services", interest: "data-management" },
   // Customer experience optimization sits in the Experience Design pillar.

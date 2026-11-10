@@ -9,8 +9,8 @@ const CHANGE_EVENT = "insights-theme-change";
 
 /** "Data & Analytics" -> "data-analytics", used in the shareable `?theme=` query. */
 const toParam = (theme: string) => theme.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-/** Earlier theme names, so bookmarked filters keep working ("Data Management" is now "Data & Analytics"). */
-const legacyParams: Record<string, string> = { "data-management": "data-analytics" };
+/** Earlier theme names, so bookmarked filters keep working ("Data Management" is now "Data & Analytics", "Adobe" is now "MarTech"). */
+const legacyParams: Record<string, string> = { "data-management": "data-analytics", adobe: "martech" };
 
 function subscribe(onChange: () => void) {
   window.addEventListener("popstate", onChange);

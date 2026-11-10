@@ -1,33 +1,23 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import {
-  HERO_VISUAL_HEIGHT,
-  HERO_VISUAL_STACK_WIDTH,
-  HERO_VISUAL_WIDTH,
-  HeroVisual,
-  heroVisualAnchors,
-} from "@/components/graphics/hero-visual";
+import { HERO_VISUAL_HEIGHT, HERO_VISUAL_WIDTH, HeroVisual, heroVisualAnchors } from "@/components/graphics/hero-visual";
 import { heroLayers } from "@/content/home";
 import styles from "./capability-map.module.css";
 
-type MapStyle = CSSProperties & Record<"--map-ratio" | "--stack-share", string>;
 type LabelStyle = CSSProperties & Record<"--x" | "--y", string>;
 
 /**
- * The hero's capability map: the platform stack illustration (decorative) with four linked labels, one per core
- * area. Wide containers lay the labels over the illustration at the end of each leader line; narrow ones (phones)
- * show the stack alone, centred, with the labels as a list of links below it. Hovering or focusing a label lifts
- * its layer in the illustration (CSS :has), so the link and the picture read together.
+ * The hero's capability map: the governed stack illustration (decorative) with four linked labels, one per core
+ * area, in reading order (information, data, AI, MarTech). Wide containers lay the labels over the illustration
+ * at the end of each leader line; narrow ones (phones) show the labels alone as a compact list of links.
+ * Hovering or focusing a label lifts its layer in the illustration (CSS :has), so the link and the picture read
+ * together.
  */
 export function CapabilityMap({ className }: { className?: string }) {
-  const mapStyle: MapStyle = {
-    "--map-ratio": `${HERO_VISUAL_WIDTH} / ${HERO_VISUAL_HEIGHT}`,
-    "--stack-share": `${(HERO_VISUAL_WIDTH / HERO_VISUAL_STACK_WIDTH) * 100}%`,
-  };
   return (
     <div className={`${styles.host} ${className ?? ""}`}>
-      <nav aria-label="Core expertise" className={styles.map} style={mapStyle}>
+      <nav aria-label="Core expertise" className={styles.map}>
         <div className={styles.art}>
           <HeroVisual className={styles.svg} floatClassName={styles.float} pulseClassName={styles.pulse} />
         </div>

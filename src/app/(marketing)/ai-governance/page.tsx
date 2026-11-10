@@ -2,6 +2,7 @@ import { AiGovernanceGraphic } from "@/components/graphics/service-graphics";
 import { ArrowLink } from "@/components/ui/button";
 import { Container, Eyebrow } from "@/components/ui/layout";
 import { pillarsNav } from "@/config/navigation";
+import { adobeServicesPath } from "@/lib/content/adobe";
 import { ServicePage } from "@/features/services/service-page";
 import { getService } from "@/lib/content/services";
 import { pageMetadata } from "@/lib/metadata";
@@ -11,7 +12,7 @@ const content = getService("ai-governance");
 export const metadata = pageMetadata({ ...content.meta, path: "/ai-governance" });
 
 /**
- * The two Capability Matrix pillars this work extends, with the deck items it builds on. Labels and links come from
+ * The two Capability Matrix pillars this work builds on, with the deck items it builds on. Labels and links come from
  * the pillar navigation so they follow any rename.
  */
 const foundations = [
@@ -22,7 +23,7 @@ const foundations = [
   return pillar ? [{ ...pillar, basis }] : [];
 });
 
-/** Sits between the hero and the problem section: places AI governance inside the pillars it extends. */
+/** Sits between the hero and the problem section: shows the pillars this core area is built on. */
 function Foundations() {
   return (
     <section className="border-b border-line bg-surface py-12 sm:py-14" aria-labelledby="foundations-title">
@@ -30,7 +31,7 @@ function Foundations() {
         <div className="lg:col-span-5">
           <Eyebrow>Where this fits</Eyebrow>
           <h2 id="foundations-title" className="mt-5 text-h3 text-balance">
-            An extension of our data governance and AI/ML enablement delivery.
+            One of our four core areas, built on the data governance and AI/ML enablement we deliver.
           </h2>
         </div>
         <ul className="grid gap-6 sm:grid-cols-2 lg:col-span-7">
@@ -62,7 +63,13 @@ export default function AiGovernancePage() {
       graphic={<AiGovernanceGraphic />}
       showBenefits={false}
       afterHero={<Foundations />}
-      capabilityLinks={{ "Data & Analytics": "/data-management", "Engineering & Technology": "/software-development" }}
+      capabilityLinks={{
+        "Data & Analytics": "/data-management",
+        "Engineering & Technology": "/software-development",
+        "Information Governance & Records": "/information-governance",
+        // The third-party evaluation bullet names the Adobe applications we implement in our MarTech practice.
+        "Adobe Experience Cloud applications": adobeServicesPath,
+      }}
     />
   );
 }

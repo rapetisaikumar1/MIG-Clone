@@ -132,3 +132,13 @@ Every page was reviewed in a browser at desktop, tablet and mobile, fixed and re
 | MapleRecord capabilities not shown in screens | Barcode/RFID, 100+ field types, rollback, end-to-end encryption, data residency, named integrations (SAP, Oracle, NetSuite, EMRs, SIS, LIMS/ELN) — from maplerecord.com, unverified |
 | MapleRecord wording | Workflow automation is now consistently "no-code" (overview previously said "low-code") |
 | Privacy notice and cookie policy | Updated for accuracy (email provider wording, MOLI scope, mobile "On this page"); still need legal review |
+
+## Positioning: governance and MarTech (2026-11-10)
+
+Owner direction: lead with **Information Governance, Data Governance, AI Governance and MarTech**; Adobe is the platform we deliver MarTech on, not the headline. Changes:
+
+- New page `/information-governance` (Capability Matrix pillar 07, deck "Records Management & Compliance", now labeled "Information Governance & Records"), delivered with MapleRecord and MOLI.
+- `coreExpertiseNav` in `src/config/navigation.ts` (the four areas); Services menu, footer, 404, home, `/services` and About lead with them. Header item "Adobe Services" is now "MarTech" (same URL, `/adobe-services`); pillar 03 is labeled "MarTech & Adobe Experience Cloud"; the insights theme "Adobe" is now "MarTech".
+- Home hero: "Information, data and AI governance. MarTech built on it."
+
+Needs owner confirmation: the new headlines (home, `/services` "Governance and MarTech. One accountable partner.", `/adobe-services` "Governed customer data. Connected customer journeys.", `/information-governance` "Govern every record from capture to defensible disposition."); calling AI Governance one of four core areas (not a deck pillar); the "Information Governance" label for pillar 07; Information Governance "implementation and support" capability (proposed) and the "configured in weeks" FAQ (from MapleRecord's published FAQ); the summary lines on the core-expertise cards; MR Admin integrations named in the product screens (OpenAI, DocuSign, DiDit, Stripe, Microsoft Entra, SharePoint).

@@ -16,7 +16,7 @@ export type AdobeNavItem = {
   summary?: string;
 };
 
-/** Everything the header, mobile sheet and footer need to link into the Adobe section. */
+/** Everything the header, mobile sheet and footer need to link into the MarTech (Adobe Experience Cloud) section. */
 export type AdobeNav = {
   overview: NavItem;
   products: AdobeNavItem[];
@@ -48,7 +48,9 @@ export type PillarNavItem = NavItem & {
 /**
  * The seven practice pillars of the Maverick InnoGarage Capability Matrix (October 2026), the primary
  * reference for what we offer. URL slugs predate the pillar names and are kept for SEO and legacy links.
- * Pillar 07 has no service page of its own: it is delivered through our two products, MapleRecord and MOLI.
+ * Pillar 07 (the deck's "Records Management & Compliance") is presented as Information Governance & Records
+ * (owner direction, 2026-11-10): a service page, delivered with our two products, MapleRecord and MOLI.
+ * Pillar 03 leads with MarTech; Adobe Experience Cloud is the platform we deliver it on.
  */
 export const pillarsNav: PillarNavItem[] = [
   {
@@ -65,9 +67,9 @@ export const pillarsNav: PillarNavItem[] = [
   },
   {
     number: "03",
-    label: "Adobe Experience Cloud & MarTech",
+    label: "MarTech & Adobe Experience Cloud",
     href: adobeServicesPath,
-    description: "Experience Platform, Real-Time CDP, AEM, Analytics, Target, Marketo, Commerce",
+    description: "Customer data, content, personalization, analytics, marketing automation and commerce on Adobe",
   },
   {
     number: "04",
@@ -89,9 +91,9 @@ export const pillarsNav: PillarNavItem[] = [
   },
   {
     number: "07",
-    label: "Records Management & Compliance",
-    href: mapleRecordPath,
-    description: "MapleRecord and MOLI, our records management products",
+    label: "Information Governance & Records",
+    href: "/information-governance",
+    description: "Records lifecycle, retention and privacy compliance support, with MapleRecord and MOLI",
     links: [
       { label: "MapleRecord", href: mapleRecordPath, description: "Public sector and enterprise records management with workflow automation" },
       { label: "MOLI", href: moliPath, description: "AI-driven record management, designed to support global privacy compliance" },
@@ -107,18 +109,49 @@ export const aiGovernanceNav: NavItem = {
 };
 
 /**
- * Every service page (pillars 01–06, then AI Governance) for the footer, mobile menu, 404 and
- * "Connected expertise". Pillar 07 is reached through its products (MapleRecord, MOLI).
+ * The four core areas we lead with (owner direction, 2026-11-10): Information Governance, Data Governance,
+ * AI Governance and MarTech. Each points at the page that delivers it; Adobe is MarTech's platform, not the headline.
  */
-export const servicesNav: NavItem[] = [
-  ...pillarsNav.filter((p) => p.number !== "07").map(({ label, href, description }) => ({ label, href, description })),
+export const coreExpertiseNav: NavItem[] = [
+  {
+    label: "Information Governance",
+    href: "/information-governance",
+    description: "Records lifecycle, retention and privacy compliance support, with MapleRecord and MOLI",
+  },
+  {
+    label: "Data Governance",
+    href: "/data-management",
+    description: "Data ownership, quality, security and regulatory compliance, with analytics built on top",
+  },
   aiGovernanceNav,
+  {
+    label: "MarTech",
+    href: adobeServicesPath,
+    description: "Customer data, content, personalization and marketing automation on Adobe Experience Cloud",
+  },
 ];
 
-/** Desktop header: a Services menu (the pillars), the Adobe and MapleRecord menus, then company pages. */
+const pillarItem = ({ label, href, description }: PillarNavItem): NavItem => ({ label, href, description });
+const byHref = (href: string) => pillarsNav.find((p) => p.href === href)!;
+
+/**
+ * Every service page for the footer, mobile menu, 404 and "Connected expertise": the pages behind the four
+ * core areas first (pillar 07, pillar 01, AI Governance, pillar 03), then the remaining pillars in deck order.
+ */
+export const servicesNav: NavItem[] = [
+  pillarItem(byHref("/information-governance")),
+  pillarItem(byHref("/data-management")),
+  aiGovernanceNav,
+  pillarItem(byHref(adobeServicesPath)),
+  ...pillarsNav
+    .filter((p) => !["/information-governance", "/data-management", adobeServicesPath].includes(p.href))
+    .map(pillarItem),
+];
+
+/** Desktop header: a Services menu (core expertise and the pillars), the MarTech (Adobe) and MapleRecord menus, then company pages. */
 export const primaryNav: NavItem[] = [
   { label: "Services", href: servicesPath },
-  { label: "Adobe Services", href: adobeServicesPath },
+  { label: "MarTech", href: adobeServicesPath },
   { label: "MapleRecord", href: mapleRecordPath },
   { label: "Industries", href: "/industries" },
   { label: "Insights", href: "/insights" },
@@ -131,16 +164,17 @@ export const mobileNav: NavItem[] = primaryNav;
 /** Everything the header and mobile sheet need for the Services menu (plain data, safe to pass to client components). */
 export type ServicesNav = {
   overview: NavItem;
+  /** The four core areas, listed first in every services menu. */
+  core: NavItem[];
   pillars: PillarNavItem[];
-  aiGovernance: NavItem;
 };
 
 /** Services menu model, passed down as props like `getAdobeNav`. */
 export function getServicesNav(): ServicesNav {
   return {
-    overview: { label: "All services", href: servicesPath, description: "The seven practice pillars and how we deliver them" },
+    overview: { label: "All services", href: servicesPath, description: "Our core expertise and the seven practice pillars" },
+    core: coreExpertiseNav,
     pillars: pillarsNav,
-    aiGovernance: aiGovernanceNav,
   };
 }
 
@@ -150,7 +184,8 @@ export function getServicesNav(): ServicesNav {
  */
 export function getAdobeNav(): AdobeNav {
   return {
-    overview: { label: "All Adobe services", href: adobeServicesPath },
+    // MarTech is the practice; Adobe Experience Cloud is the platform we deliver it on.
+    overview: { label: "MarTech overview", href: adobeServicesPath, description: "How we design, implement and run MarTech on Adobe" },
     products: getAdobeProducts().map((p) => {
       const summary = p.summary.trim();
       return {
@@ -217,7 +252,8 @@ export function getFooterNav(): NavGroup[] {
   return [
     { heading: "Services", items: servicesNav },
     {
-      heading: "Adobe Services",
+      // The MarTech practice's Adobe Experience Cloud applications; the practice page itself is under Services.
+      heading: "MarTech on Adobe",
       // Short labels read as "Adobe Analytics", "Adobe platform assessment"… out of context.
       items: [
         ...adobe.products.map((p) => ({ label: p.label, href: p.href, srPrefix: "Adobe " })),

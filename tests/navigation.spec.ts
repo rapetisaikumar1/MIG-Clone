@@ -9,6 +9,7 @@ const corePages = [
   "/experience-design",
   "/digital-product",
   "/business-transformation",
+  "/information-governance",
   "/ai-governance",
   "/moli",
   "/adobe-services",
@@ -72,7 +73,7 @@ test("every internal link and fragment on core pages resolves", async ({ page, r
 test("primary navigation reaches each section", async ({ page }) => {
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of ["Services", "Adobe Services", "MapleRecord", "Industries", "Insights", "About"]) {
+  for (const label of ["Services", "MarTech", "MapleRecord", "Industries", "Insights", "About"]) {
     await nav.getByRole("link", { name: label, exact: true }).click();
     await expect(page.locator("h1")).toBeVisible();
     await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
@@ -86,7 +87,7 @@ test("the Services menu lists all seven Capability Matrix pillars", async ({ pag
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Primary" });
   await nav.getByRole("button", { name: "Services menu", exact: true }).click();
-  for (const href of ["/data-management", "/software-development", "/adobe-services", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli", "/ai-governance"]) {
+  for (const href of ["/information-governance", "/data-management", "/ai-governance", "/adobe-services", "/software-development", "/experience-design", "/digital-product", "/business-transformation", "/maplerecord", "/moli"]) {
     await expect(nav.locator(`a[href="${href}"]`).first()).toBeVisible();
   }
   await page.keyboard.press("Escape");
