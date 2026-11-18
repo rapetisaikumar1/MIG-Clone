@@ -2,8 +2,8 @@ import Image from "next/image";
 import { company } from "@/config/site";
 
 /**
- * Adobe Solution Partner lockup (Bronze), shown only while status is verified. The official artwork's
- * "BRONZE" line is about an eighth of its height, so on phones the badge takes whatever width the row
+ * Adobe Solution Partner lockup (Silver), shown only while status is verified. The official artwork's
+ * tier line is about an eighth of its height, so on phones the badge takes whatever width the row
  * leaves beside the logo and menu button, up to 44px tall (the tablet size, so it never outweighs the
  * MiG logo), rather than a fixed small size; that keeps the tier legible at 375–390px without
  * overflowing at 360px.

@@ -20,7 +20,7 @@ export function SiteHeader() {
     <header className="site-header sticky top-0 z-40 border-b border-line/80 bg-paper/[0.97] backdrop-blur-md">
       <Container className="flex h-[4.75rem] items-center justify-between gap-4 xl:gap-3">
         <div className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-5 xl:gap-3.5">
-          {/* A little smaller on phones, so the partner badge beside it can be drawn large enough to read "Bronze". */}
+          {/* A little smaller on phones, so the partner badge beside it can be drawn large enough to read "Silver". */}
           <Logo preload width={112} imageClassName="w-24 sm:w-28" />
           <AdobePartnerBadge />
         </div>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Adobe Solution Partner statement. Renders nothing unless company.adobePartner.verified is true.
- * The badge carries the Bronze tier from MiG's co-brand file; the copy names no certification counts or
+ * The badge carries the Silver tier (updated at MiG's request, 2026-11-19); the copy names no certification counts or
  * specializations (none are confirmed — docs/HANDOFF.md). The second line states what we deliver on Adobe
  * (messaging guide §7); it never claims "official", "certified" or "not affiliated with Adobe".
  *
